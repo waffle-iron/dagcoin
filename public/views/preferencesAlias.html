@@ -1,0 +1,43 @@
+<div
+  class="topbar-container"
+  ng-include="'views/includes/topbar.html'"
+  ng-init="titleSection='Wallet Alias'; goBackToState = 'preferences'">
+</div>
+
+<div class="content" ng-controller="preferencesAliasController as prefAlias">
+
+	<div class="introduction-svg">
+		<div class="svg-container wallet">
+			<svg class="icon icon-BG-shapw-2-left">
+				<use xlink:href="s/images/useful/svg/theme/symbol-defs.svg#icon-BG-shapw-2-left"></use>
+			</svg>
+		</div>
+		<div class="svg-container wallet">
+			<svg class="icon icon-BG-shape-1">
+				<use xlink:href="s/images/useful/svg/theme/symbol-defs.svg#icon-BG-shape-1"></use>
+			</svg>
+		</div>
+	</div>
+	<div class="p-share js-introduction">
+		<div class="p-wrap">
+			<form name="settingsAliasForm" ng-submit="prefAlias.save()"class="page-form">
+				<div class="form-group">
+					<div class="title clearfix">
+
+						<span class="name" translate>Alias for <i>{{index.walletName}}</i></span>
+					</div>
+					<div class="input-wrap">
+						<input type="text" id="alias2" type="text" name="alias2" ng-model="prefAlias.alias">
+					</div>
+				</div>
+				<input type="submit" class="button expand btn_red-full round" value="{{'Save'|translate}}">
+			</form>
+			<div class="text-gray size-12 text-center" translate>Changing wallet alias only affects the local wallet name.
+		</div>
+	</div>
+
+  </div>
+</div>
+<div class="extra-margin-bottom"></div>
+
+

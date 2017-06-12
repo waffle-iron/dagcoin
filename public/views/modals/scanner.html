@@ -1,0 +1,19 @@
+<nav class="tab-bar">
+	<header class="c-header c-header-android js-header">
+		<div class="c-header__logo"><a href="#">
+			<svg class="icon icon-logo">
+				<use xlink:href="s/images/useful/svg/theme/symbol-defs.svg#icon-logo"></use>
+			</svg></a></div>
+		<div class="c-header__settings"><span class="settings-trigger">
+
+            <a ng-click="cancel()">
+			<span>Back</span>
+			</a>
+		</span></div>
+
+	</header>
+</nav>
+<div class="modal-content text-center fix-modals-touch" ng-init="init()">
+  <canvas id="qr-canvas" width="200" height="150"></canvas>
+  <video id="qrcode-scanner-video" width="300" height="225"></video>
+</div>

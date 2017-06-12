@@ -1,0 +1,103 @@
+<div
+  class="topbar-container"
+  ng-include="'views/includes/topbar.html'"
+  ng-init="titleSection='Backup'; goBackToState = 'preferencesGlobal'">
+</div>
+
+
+<div class="content" ng-controller="wordsController as wordsC">
+	<div class="introduction-svg">
+		<div class="svg-container wallet">
+			<svg class="icon icon-BG-shapw-2-left">
+				<use xlink:href="s/images/useful/svg/theme/symbol-defs.svg#icon-BG-shapw-2-left"></use>
+			</svg>
+		</div>
+		<div class="svg-container wallet">
+			<svg class="icon icon-BG-shape-1">
+				<use xlink:href="s/images/useful/svg/theme/symbol-defs.svg#icon-BG-shape-1"></use>
+			</svg>
+		</div>
+	</div>
+
+  <div class="box-notification" ng-show="wordsC.error">
+    <span class="text-warning">
+    {{wordsC.error|translate}}
+    </span>
+  </div>
+
+
+
+  <div>
+	  <div class="m10t columns size-14 text-gray">
+		  <span translate>{{wordsC.text}}</span>
+	  </div>
+  </div>
+
+  <div class="m20t" ng-show="wordsC.deleted">
+    <div class="columns size-14 text-gray text-center" translate>
+        Wallet seed not available.
+    </div>
+  </div>
+ 
+  <div ng-show="wordsC.mnemonicWords || (wordsC.credentialsEncrypted && !wordsC.deleted)">
+    <div>
+        <div class="m10t columns">
+          <a class="button outline light-gray expand tiny" ng-click="wordsC.toggle()">
+            <i class="fi-widget m3r"></i>
+            <span translate ng-hide="wordsC.show">Show the Wallet Seed Anyway</span>
+            <span translate ng-hide="!wordsC.show">Hide the Wallet Seed</span>
+            <i ng-if="!wordsC.show" class="icon-arrow-down4"></i>
+            <i ng-if="wordsC.show" class="icon-arrow-up4"></i>
+          </a>
+        </div>
+    </div>
+
+
+    <div class="row m10t m10b" ng-show="wordsC.show">
+      <div class="small-centered  text-gray columns size-14 text-center">
+		<span translate>Your Wallet Seed:</span><br/>
+        <span translate class="text-bold">
+          Write it down and keep it somewhere safe.
+        </span>
+      </div>
+    </div>
+
+    <div ng-show="wordsC.show">
+        <div class="columns">
+        <div class="m10t columns size-14 text-gray" style="background:white;-webkit-user-select: text;" ng-class="{'enable_text_select': index.network == 'testnet'}">
+          <span ng-repeat="word in wordsC.mnemonicWords track by $index"><span style="white-space:nowrap">{{word}}</span><span ng-show="wordsC.useIdeograms">&#x3000;</span> </span>  
+        </div>
+        </div>
+    </div>
+
+    <div class="m10t m20b" ng-show="wordsC.show">
+        <div class="columns" ng-show="wordsC.mnemonicHasPassphrase">
+          <span class="size-12">
+            <i class="fi-alert"></i>
+            <span translate>
+            WARNING: This seed was created with a passphrase. To recover this wallet both the mnemonic and passphrase are needed.
+            </span>
+          </span>
+        </div>
+    </div>
+
+    <div ng-show="wordsC.show">
+        <div class="m10t text-center columns">
+          <div class="size-12 text-gray">
+            <span translate>
+              Once you have written your wallet seed down, it is recommended to delete it from this device.
+            </span>
+          </div>
+          <button class="button outline m10t round dark-gray tiny" ng-click="wordsC.delete()">
+            <i class="fi-trash"></i> 
+            <span translate>
+              DELETE WORDS
+            </span>
+          </button>
+        </div>
+    </div>
+
+  </div>
+
+</div>
+<div class="extra-margin-bottom"></div>

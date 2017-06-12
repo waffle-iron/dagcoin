@@ -1,0 +1,64 @@
+.icon {
+  display: inline-block;
+  width: 1em;
+  height: 1em;
+  stroke-width: 0;
+  stroke: currentColor;
+  fill: currentColor;
+}
+
+/* ==========================================
+Single-colored icons can be modified like so:
+.icon-name {
+  font-size: 32px;
+  color: red;
+}
+========================================== */
+
+.icon-BG-shapw-2-left {
+  width: 0.78125em;
+}
+
+.icon-BG-shape-1 {
+  width: 0.9248046875em;
+}
+
+.icon-BG-shape-3 {
+  width: 0.611328125em;
+}
+
+.icon-BG-shape-2 {
+  width: 1.796875em;
+}
+
+.icon-BG-shapw-2 {
+  width: 0.791015625em;
+}
+
+.icon-arrow-right {
+  width: 4em;
+}
+
+.icon-arrow-left {
+  width: 4em;
+}
+
+.icon-d {
+  width: 0.7333984375em;
+}
+
+.icon-history {
+  width: 1.2109375em;
+}
+
+.icon-logo-big {
+  width: 0.775390625em;
+}
+
+.icon-logo {
+  width: 3.1669921875em;
+}
+
+.icon-BG-shape-12 {
+  width: 0.716796875em;
+}

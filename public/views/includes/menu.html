@@ -1,0 +1,15 @@
+<div class="navbar-wrap">
+	<ul>
+		<li ng-repeat="item in index.menu">
+			<a ng-click="index.setTab(item, false, 0, true)" ng-class="{'active': index.tab == item.link}" id="menu-{{item.link}}">
+				<svg class="icon {{item.icon}}">
+					<use xlink:href="{{index.getSvgSrc(item.icon)}}"></use>
+				</svg>
+				<span>{{ item.title|translate }}</span>
+			</a>
+		</li>
+	</ul>
+	<menu-toggle ng-show="index.menu.length > 5"></menu-toggle>
+</div>
+
+

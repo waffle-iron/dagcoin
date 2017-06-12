@@ -1,0 +1,78 @@
+<div ng-include="'views/includes/topbar.html'"
+	 ng-init="goBackToState = 'preferencesGlobal'">
+</div>
+
+<div class="content" ng-controller="importController as import">
+	<div class="introduction-svg">
+		<div class="svg-container wallet">
+			<svg class="icon icon-BG-shapw-2-left">
+				<use xlink:href="s/images/useful/svg/theme/symbol-defs.svg#icon-BG-shapw-2-left"></use>
+			</svg>
+		</div>
+		<div class="svg-container wallet">
+			<svg class="icon icon-BG-shape-1">
+				<use xlink:href="s/images/useful/svg/theme/symbol-defs.svg#icon-BG-shape-1"></use>
+			</svg>
+		</div>
+	</div>
+	<div class="onGoingProcess" ng-show="import.imported">
+		<div class="onGoingProcess-content" ng-style="{'background-color':'#222'}">
+			<div class="spinner">
+				<div class="rect1"></div>
+				<div class="rect2"></div>
+				<div class="rect3"></div>
+				<div class="rect4"></div>
+				<div class="rect5"></div>
+			</div>
+			<span translate> Importing wallet... </span>
+		</div>
+	</div>
+
+	<div class="box-notification" ng-show="import.error">
+	<span class="text-warning">
+		{{import.error}}
+	</span>
+	</div>
+	<div class="p-share js-introduction">
+		<div class="p-wrap">
+			<form class="page-form" ng-submit="import.walletImport()">
+				<div class="form-group">
+					<div class="title clearfix">
+						<span class="name" translate>Your wallet file:</span>
+					</div>
+					<div class="input-wrap">
+						<input type="file" ng-file-select>
+					</div>
+				</div>
+				<div class="form-group">
+					<div class="title clearfix">
+						<span class="name" translate>Password</span>
+					</div>
+					<div class="input-wrap">
+						<input type="password" placeholder="Password" ng-model="import.password">
+					</div>
+				</div>
+				<div class="page-action">
+					<input ng-disabled="import.imported || import.password == '' || !file" type="submit"
+						   class="button expand btn_red-full round"
+						   value="{{'Import'|translate}}">
+				</div>
+			</form>
+		</div>
+	</div>
+
+	<div ng-show="import.iOs && import.arrBackupFiles.length > 0" style="background-color: #fff">
+		<div class="center">OR</div>
+		<div>
+			<ul class="no-bullet m0" ng-repeat="backupFile in import.arrBackupFiles | orderBy:backupFile.time:true">
+				<li ng-click="import.iosWalletImportFromFile(backupFile.originalName)">
+					<i class="icon-arrow-right3 size-24 right text-gray"></i>
+					<div>{{backupFile.name}}</div>
+				</li>
+			</ul>
+		</div>
+	</div>
+	<div class="text-alert size-12 columns" translate>
+		WARNING: This will permanently delete all your existing wallets!
+	</div>
+</div>
