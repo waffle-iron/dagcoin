@@ -1,6 +1,6 @@
 VERSION=`cut -d '"' -f2 $BUILDDIR/../version.js`
-
-
+prepare-dev:
+	sh devbuilds/prepare-dev.sh
 cordova-base:
 	grunt dist-mobile
 
