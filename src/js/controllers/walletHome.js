@@ -655,14 +655,14 @@ angular.module('copayApp.controllers').controller('walletHomeController', functi
         return;
     }
 
-    var comment = form.comment.$modelValue;
+/*    var comment = form.comment.$modelValue;
 
     // ToDo: use a credential's (or fc's) function for this
     if (comment) {
         var msg = 'Could not add message to imported wallet without shared encrypting key';
         $log.warn(msg);
         return self.setSendError(gettext(msg));
-    }
+    }*/
 
 	var asset = $scope.index.DAGCOIN_ASSET;
 	console.log("asset "+asset);
