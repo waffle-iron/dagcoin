@@ -14,7 +14,8 @@ var EventEmitter = require('events').EventEmitter;
 angular.module('copayApp.controllers').controller('indexController', function($rootScope, $scope, $log, $filter, $timeout, lodash, go, profileService, configService, isCordova, storageService, addressService, gettext, gettextCatalog, amMoment, nodeWebkit, addonManager, txFormatService, uxLanguage, $state, isMobile, addressbookService, notification, animationService, $modal, bwcService, backButton, pushNotificationsService) {
   breadcrumbs.add('index.js');
   var self = this;
-  self.DAGCOIN_ASSET = "j5brqzPhQ0H2VNYi3i59PmlV15p54yAiSzacrQ2KqQQ=";
+  var isTestnet = constants.version.match(/t$/);
+  self.DAGCOIN_ASSET = isTestnet? "xAGoGIhDI40hV7oDmDykM3K0/LfwUjpo6WhpzqAXCr0=":"j5brqzPhQ0H2VNYi3i59PmlV15p54yAiSzacrQ2KqQQ=";
   self.isCordova = isCordova;
   self.isSafari = isMobile.Safari();
   self.onGoingProcess = {};
