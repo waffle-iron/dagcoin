@@ -10,7 +10,19 @@ if ! node -v | grep -q ${NodeVersion}; then
  exit
 fi
 echo "${Green}* Node version OK${CloseColor}"
-echo "${Green}* Installing dependencies...${CloseColor}"
+if ! type bower > /dev/null; then
+  echo "${Red}* ERROR. Please install bower${CloseColor}"
+  echo "${Red}* npm install -g bower${CloseColor}"
+  exit
+fi
+if ! type grunt > /dev/null; then
+  echo "${Red}* ERROR. Please install grunt${CloseColor}"
+  echo "${Red}* npm install -g grunt-cli${CloseColor}"
+  exit
+fi
+echo "${Green}* Installing bower dependencies...${CloseColor}"
+bower install
+echo "${Green}* Installing npm dependencies...${CloseColor}"
 npm install
 
 Sqlite3Path='./node_modules/sqlite3/lib/binding'
