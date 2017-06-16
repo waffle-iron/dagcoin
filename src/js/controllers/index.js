@@ -539,7 +539,7 @@ angular.module('copayApp.controllers').controller('indexController', function($r
   }];
 
   self.getSvgSrc = function(id){
-  	return 's/images/useful/svg/theme/symbol-defs.svg#' + id;
+  	return 'img/svg/symbol-defs.svg#' + id;
   };
 
   self.addonViews = addonManager.addonViews();
