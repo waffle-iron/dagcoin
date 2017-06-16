@@ -4,18 +4,7 @@
 
 
 <div class="content" ng-controller="exportController as export">
-	<div class="introduction-svg">
-		<div class="svg-container wallet">
-			<svg class="icon icon-BG-shapw-2-left">
-				<use xlink:href="img/svg/symbol-defs.svg#icon-BG-shapw-2-left"></use>
-			</svg>
-		</div>
-		<div class="svg-container wallet">
-			<svg class="icon icon-BG-shape-1">
-				<use xlink:href="img/svg/symbol-defs.svg#icon-BG-shape-1"></use>
-			</svg>
-		</div>
-	</div>
+	<div class="introduction-svg" ng-include="'views/includes/background.html'"></div>
 	<div class="onGoingProcess" ng-show="export.exporting">
 		<div class="onGoingProcess-content" ng-style="{'background-color':'#222'}">
 			<div class="spinner">

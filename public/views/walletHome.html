@@ -64,18 +64,7 @@
     -->
 
 	  <div id="walletHome" class="walletHome tab-view tab-in">
-		  <div class="introduction-svg">
-			  <div class="svg-container wallet">
-				  <svg class="icon icon-BG-shapw-2-left">
-					  <use xlink:href="img/svg/symbol-defs.svg#icon-BG-shapw-2-left"></use>
-				  </svg>
-			  </div>
-			  <div class="svg-container wallet">
-				  <svg class="icon icon-BG-shape-1">
-					  <use xlink:href="img/svg/symbol-defs.svg#icon-BG-shape-1"></use>
-				  </svg>
-			  </div>
-		  </div>
+		  <div class="introduction-svg" ng-include="'views/includes/background.html'"></div>
 		  <div class="p-wallet js-introduction">
 			  <div class="p-wallet__price-block">
 				  <div ng-if="!index.anyOnGoingProcess || 1">
@@ -199,18 +188,7 @@
 
     -->
     <div id="receive" class="receive p-share tab-view scrollable" style="padding-bottom: 0px">
-		<div class="introduction-svg">
-			<div class="svg-container wallet">
-				<svg class="icon icon-BG-shapw-2-left">
-					<use xlink:href="img/svg/symbol-defs.svg#icon-BG-shapw-2-left"></use>
-				</svg>
-			</div>
-			<div class="svg-container wallet">
-				<svg class="icon icon-BG-shape-1">
-					<use xlink:href="img/svg/symbol-defs.svg#icon-BG-shape-1"></use>
-				</svg>
-			</div>
-		</div>
+	  <div class="introduction-svg" ng-include="'views/includes/background.html'"></div>
       <div ng-show="index.needsBackup" class="p60t row text-center">
         <div class="large-12 columns">
           <div class="text-warning text-bold m15b">
@@ -296,18 +274,7 @@
 			  </div>
 		  </div>
 
-		  <div class="introduction-svg">
-			  <div class="svg-container wallet">
-				  <svg class="icon icon-BG-shapw-2-left">
-					  <use xlink:href="img/svg/symbol-defs.svg#icon-BG-shapw-2-left"></use>
-				  </svg>
-			  </div>
-			  <div class="svg-container wallet">
-				  <svg class="icon icon-BG-shape-1">
-					  <use xlink:href="img/svg/symbol-defs.svg#icon-BG-shape-1"></use>
-				  </svg>
-			  </div>
-		  </div>
+		  <div class="introduction-svg" ng-include="'views/includes/background.html'"></div>
 		  <div class="p-share js-introduction">
 			  <div class="p-wrap">
 				  <div class="page-heading"><span>Send <span>DAGCOINs</span></span></div>
@@ -395,18 +362,7 @@
     -->
     <div id="history" class="history tab-view scrollable">
 
-		<div class="introduction-svg">
-			<div class="svg-container wallet">
-				<svg class="icon icon-BG-shapw-2-left">
-					<use xlink:href="img/svg/symbol-defs.svg#icon-BG-shapw-2-left"></use>
-				</svg>
-			</div>
-			<div class="svg-container wallet">
-				<svg class="icon icon-BG-shape-1">
-					<use xlink:href="img/svg/symbol-defs.svg#icon-BG-shape-1"></use>
-				</svg>
-			</div>
-		</div>
+	  <div class="introduction-svg" ng-include="'views/includes/background.html'"></div>
       <div class="row m20t text-center" ng-show="index.updatingTxHistory[index.walletId]">
         <div class="columns large-12 medium-12 small-12">
           <div class="spinner">
