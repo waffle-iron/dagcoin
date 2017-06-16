@@ -1,4 +1,4 @@
-module.exports = function(grunt) {
+﻿module.exports = function(grunt) {
 	
 	function getPlatform(){
 		switch(process.platform){
@@ -199,8 +199,8 @@ module.exports = function(grunt) {
           version: '0.14.7',
           zip: false,
           macIcns: './public/img/icons/icon-white-outline.icns',
-          winIco: './public/img/icons/icon-white-outline.ico',
-          exeIco: './public/img/icons/icon-white-outline.ico',
+          winIco: './public/img/icons/dagcoins-icon.ico',
+          exeIco: './public/img/icons/dagcoins-icon.ico',
 		  macPlist: {CFBundleURLTypes: [{CFBundleURLName: 'DAGCOIN action', CFBundleURLSchemes: ['DAGCOIN']}], /*CFBundleIconFile: 'nw.icns',*/ LSHasLocalizedDisplayName: 0}
       },
       src: ['./package.json', './public/**/*', './angular-bitcore-wallet-client/**/*']

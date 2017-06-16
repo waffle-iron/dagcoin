@@ -1,4 +1,4 @@
-'use strict';
+﻿'use strict';
 
 var async = require('async');
 var constants = require('byteballcore/constants.js');
@@ -14,7 +14,7 @@ var EventEmitter = require('events').EventEmitter;
 angular.module('copayApp.controllers').controller('indexController', function($rootScope, $scope, $log, $filter, $timeout, lodash, go, profileService, configService, isCordova, storageService, addressService, gettext, gettextCatalog, amMoment, nodeWebkit, addonManager, txFormatService, uxLanguage, $state, isMobile, addressbookService, notification, animationService, $modal, bwcService, backButton, pushNotificationsService) {
   breadcrumbs.add('index.js');
   var self = this;
-  self.DAGCOIN_ASSET = "j5brqzPhQ0H2VNYi3i59PmlV15p54yAiSzacrQ2KqQQ=";
+  self.DAGCOIN_ASSET = "B9dw3C3gMC+AODL/XqWjFh9jFe31jS08yf2C3zl8XGg=";
   self.isCordova = isCordova;
   self.isSafari = isMobile.Safari();
   self.onGoingProcess = {};
