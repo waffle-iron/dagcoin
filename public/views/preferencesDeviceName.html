@@ -5,18 +5,7 @@
 
 <div class="content " ng-controller="preferencesDeviceNameController as prefDeviceName">
 
-	<div class="introduction-svg">
-		<div class="svg-container wallet">
-			<svg class="icon icon-BG-shapw-2-left">
-				<use xlink:href="s/images/useful/svg/theme/symbol-defs.svg#icon-BG-shapw-2-left"></use>
-			</svg>
-		</div>
-		<div class="svg-container wallet">
-			<svg class="icon icon-BG-shape-1">
-				<use xlink:href="s/images/useful/svg/theme/symbol-defs.svg#icon-BG-shape-1"></use>
-			</svg>
-		</div>
-	</div>
+	<div class="introduction-svg" ng-include="'views/includes/background.html'"></div>
 	<div class="p-share js-introduction">
 		<div class="p-wrap">
 			<form name="settingsDeviceNameForm" ng-submit="prefDeviceName.save()" class="page-form">

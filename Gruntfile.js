@@ -1,5 +1,5 @@
 module.exports = function(grunt) {
-	
+
 	function getPlatform(){
 		switch(process.platform){
 			case 'win32': return 'win64'; // change to 'win' for both 32 and 64
@@ -121,8 +121,8 @@ module.exports = function(grunt) {
       pot: {
         files: {
           'i18n/po/template.pot': [
-            'public/index.html', 
-            'public/views/*.html', 
+            'public/index.html',
+            'public/views/*.html',
             'public/views/**/*.html',
             'src/js/routes.js',
             'src/js/services/*.js',
