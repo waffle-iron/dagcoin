@@ -15,11 +15,6 @@
   src: url('../font/Roboto-ThinItalic.ttf') format('truetype');
   font-weight: thin;
   font-style: italic;
-}
-@font-face {
-  font-family: 'Roboto';
-  src: url('../font/Roboto-Light.ttf') format('truetype');
-  font-weight: light;
   font-style: normal;
 }
 @font-face {
@@ -1470,4 +1465,60 @@ input.ng-invalid-match, input.ng-invalid-match:focus {
 }
 .gray-13.label-aligned-with-select{
 	margin-top: 10px;
+}
+
+.input-wrap{
+  position:relative;
+  display: inline-block;
+  width:18px;
+  height:18px;
+  vertical-align: middle;
+}
+
+.input-wrap + span {
+  display:inline-block;
+  vertical-align: middle;
+  margin-left:10px;
+}
+
+.input-wrap .radio-box{
+  width: 18px;
+  height: 18px;
+  padding: 0px;
+  margin: 0px;
+  position:absolute;
+  top:0px;
+  left:0px;
+  border:2px solid #fff;
+  border-radius: 50%;
+}
+
+.input-wrap input[type="radio"] {
+  display:none;
+  opacity:0;
+  visibility: hidden;
+  position:absolute;
+
+}
+
+.radio-box:before{
+  content: '';
+  position: absolute;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  top: 50%;
+  margin-top: -4px;
+  left: 50%;
+  margin-left: -4px;
+  background:#fff;
+  opacity:0;
+  visibility: hidden;
+  -webkit-transition: opacity .3s ease, visibility .3s ease;
+  transition: opacity .3s ease, visibility .3s ease;
+}
+
+.input-wrap input[type="radio"]:checked + .radio-box:before{
+  opacity:1;
+  visibility: visible;
 }

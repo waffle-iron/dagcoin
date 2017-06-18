@@ -9,8 +9,8 @@
 		color: #8597A7 !important;
 	}
 </style>
-<div class="splash content text-center" 
-	ng-init="splash.init()" 
+<div class="splash content text-center"
+	ng-init="splash.init()"
 	ng-controller="splashController as splash">
 	<div ng-if="!index.hasProfile">
 		<div ng-if="splash.step === 'wallet_type'">
@@ -19,23 +19,37 @@
 
 					<label><span class="text-white size-14" translate>Please choose the type of this wallet</span></label>
 					<p class="text-gray size-14 m0 text-light" translate>This choice cannot be changed later</p>
-					
+
 					<div class="m20t">
-						<input type="radio" name="wallet_type" value="full" ng-model="splash.wallet_type" id="wallet_type_full">
-						<label class="text-gray size-14" style="vertical-align: middle" for="wallet_type_full" translate>Full wallet</label>
+						<label class="text-gray size-14" style="vertical-align: middle" for="wallet_type_full" translate>
+							<div class="input-wrap">
+								<input type="radio" name="wallet_type" value="full" ng-model="splash.wallet_type" id="wallet_type_full">
+								<i class="radio-box"></i>
+							</div>
+							<span>
+								Full wallet
+							</span>
+					</label>
 						<p class="text-gray size-14 m0 text-light" translate>
 							The wallet will contain the most current state of the entire DAGCOIN database.  This option is better for privacy but will consume more resources and the initial sync will take several hours.
 						</p>
 					</div>
-					
+
 					<div class="m20t">
-						<input type="radio" name="wallet_type" value="light" ng-model="splash.wallet_type" id="wallet_type_light">
-						<label class="text-gray size-14" style="vertical-align: middle" for="wallet_type_light" translate>Light wallet</label>
+						<label class="text-gray size-14" style="vertical-align: middle" for="wallet_type_light" translate>
+							<div class="input-wrap">
+								<input type="radio" name="wallet_type" value="light" ng-model="splash.wallet_type" id="wallet_type_light">
+								<i class="radio-box"></i>
+							</div>
+							<span>
+								Light wallet
+							</span>
+					</label>
 						<p class="text-gray size-14 m0 text-light" translate>
 							The wallet will contain minimum information relevant to you.  The wallet vendor will be able to know some of your balances and will be able to see which transactions are yours, but you can start using the wallet immediately.
 						</p>
 					</div>
-					
+
 					<button ng-click="splash.setWalletType()" class="button black expand round size-12 text-spacing m20t" translate>
 						CONTINUE
 					</button>
