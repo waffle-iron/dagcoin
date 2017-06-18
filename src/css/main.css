@@ -1467,7 +1467,7 @@ input.ng-invalid-match, input.ng-invalid-match:focus {
 	margin-top: 10px;
 }
 
-.input-wrap{
+.input-wrap-radio{
   position:relative;
   display: inline-block;
   width:18px;
@@ -1475,13 +1475,13 @@ input.ng-invalid-match, input.ng-invalid-match:focus {
   vertical-align: middle;
 }
 
-.input-wrap + span {
+.input-wrap-radio + span {
   display:inline-block;
   vertical-align: middle;
   margin-left:10px;
 }
 
-.input-wrap .radio-box{
+.input-wrap-radio .radio-box{
   width: 18px;
   height: 18px;
   padding: 0px;
@@ -1493,7 +1493,7 @@ input.ng-invalid-match, input.ng-invalid-match:focus {
   border-radius: 50%;
 }
 
-.input-wrap input[type="radio"] {
+.input-wrap-radio input[type="radio"] {
   display:none;
   opacity:0;
   visibility: hidden;
@@ -1518,7 +1518,7 @@ input.ng-invalid-match, input.ng-invalid-match:focus {
   transition: opacity .3s ease, visibility .3s ease;
 }
 
-.input-wrap input[type="radio"]:checked + .radio-box:before{
+.input-wrap-radio input[type="radio"]:checked + .radio-box:before{
   opacity:1;
   visibility: visible;
 }
