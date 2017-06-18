@@ -734,7 +734,7 @@ input {
   -webkit-border-radius: 40px;
      -moz-border-radius: 40px;
           border-radius: 40px;
-  padding: 14px 40px 14px 22px;
+  padding: 14px 22px 14px 22px;
   font-family: "Montserrat", sans-serif;
   font-size: 14px;
   font-weight: 300;
@@ -747,6 +747,9 @@ input {
      -moz-box-shadow: none;
           box-shadow: none;
 }
+
+
+
 .form-group {
   text-align: left;
   margin-bottom: 23px;
@@ -773,6 +776,11 @@ input {
 .input-wrap {
   position: relative;
 }
+
+.input-icon input{
+  padding: 14px 40px 14px 22px;
+}
+
 .input-wrap .icon {
   position: absolute;
   right: 23px;

@@ -1003,6 +1003,8 @@ input.ng-invalid-match, input.ng-invalid-match:focus {
 .black {
   background-color: #2C3E50;
 }
+.text-brand{color: #D52026;}
+
 .text-italic {font-style: italic;}
 .text-light {font-weight: 200;}
 .text-bold {font-weight: 700;}
@@ -1228,10 +1230,10 @@ input.ng-invalid-match, input.ng-invalid-match:focus {
 
 .splash {
   top: 0;
-  background: #2C3E50;
+  /*background: #2C3E50;
   background-image: -webkit-linear-gradient(#3D5672 0%, #223243 100%);
   background-image: -o-linear-gradient(#3D5672 0%, #223243 100%);
-  background-image: linear-gradient(#3D5672 0%, #223243 100%);
+  background-image: linear-gradient(#3D5672 0%, #223243 100%);*/
 }
 
 .splash .start-button button.black {
@@ -1489,7 +1491,7 @@ input.ng-invalid-match, input.ng-invalid-match:focus {
   position:absolute;
   top:0px;
   left:0px;
-  border:2px solid #fff;
+  border:2px solid #8597A7;
   border-radius: 50%;
 }
 
@@ -1511,7 +1513,7 @@ input.ng-invalid-match, input.ng-invalid-match:focus {
   margin-top: -4px;
   left: 50%;
   margin-left: -4px;
-  background:#fff;
+  background:#D52026;
   opacity:0;
   visibility: hidden;
   -webkit-transition: opacity .3s ease, visibility .3s ease;
