@@ -727,7 +727,7 @@ canvas {
   max-width: 300px;
   margin-left: auto;
   margin-right: auto;
-  margin-bottom: 130px;
+  margin-bottom: 0px;
 }
 input {
   border: 2px solid #eee;
@@ -799,15 +799,19 @@ input {
 .qrcode {
   margin: 0px auto;
 }
-.tab-bar {
-  background-color: transparent;
-  background: transparent;
-}
+
 #main-section {
   position: relative;
   background: #fff;
   height: 100%;
 }
+
+.topbar-transparent .tab-bar{
+  background-color: transparent;
+  background: transparent;
+  border:0px;
+}
+
 /*===============================
 =            modules            =
 ===============================*/
