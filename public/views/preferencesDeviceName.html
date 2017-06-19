@@ -1,11 +1,9 @@
-<div
+<div class="topbar-container topbar-transparent "
 	ng-include="'views/includes/topbar.html'"
 	ng-init="titleSection='Device name'; goBackToState = 'preferencesGlobal'">
 </div>
-
+<div class="introduction-svg" ng-include="'views/includes/background.html'"></div>
 <div class="content " ng-controller="preferencesDeviceNameController as prefDeviceName">
-
-	<div class="introduction-svg" ng-include="'views/includes/background.html'"></div>
 	<div class="p-share js-introduction">
 		<div class="p-wrap">
 			<form name="settingsDeviceNameForm" ng-submit="prefDeviceName.save()" class="page-form">
