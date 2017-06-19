@@ -1525,6 +1525,28 @@ input.ng-invalid-match, input.ng-invalid-match:focus {
   visibility: visible;
 }
 
+.input-wrap > input[type="text"],
+.input-wrap > input[type="number"],
+.input-wrap > input[type="email"],
+.input-wrap > input[type="password"]{
+  border: 2px solid #eee;
+  -webkit-border-radius: 40px;
+     -moz-border-radius: 40px;
+          border-radius: 40px;
+  padding: 14px 22px 14px 22px;
+  height:auto;
+  font-family: "Montserrat", sans-serif;
+  font-size: 14px;
+  font-weight: 300;
+  color: #aaa;
+  max-width: 300px;
+  width: 100%;
+  outline: none;
+  -webkit-appearance: none;
+  -webkit-box-shadow: none;
+     -moz-box-shadow: none;
+          box-shadow: none;
+}
 
 .animated {
 	-webkit-animation-duration: 1s;
