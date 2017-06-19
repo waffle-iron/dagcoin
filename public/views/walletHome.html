@@ -1,5 +1,5 @@
 
-<div class="topbar-container"
+<div class="topbar-container topbar-transparent"
   ng-include="'views/includes/topbar.html'"
 	 ng-init="showCamera = true">
 </div>
@@ -299,7 +299,7 @@
 							  <span class="available">Available <span>{{index.dagBalance.stable / 1e6}}</span></span>
 						  </div>
 
-						  <div class="input-wrap">
+						  <div class="input-wrap input-icon">
 							  <input type="number" id="amount" ng-disabled="home.blockUx || home.lockAmount"
 									 name="amount" ng-attr-placeholder="{{'Amount'|translate}}"
 									 ng-minlength="0.00000001" ng-maxlength="10000000000" ng-model="_amount"
@@ -450,5 +450,3 @@
 </div>
 <div class="extra-margin-bottom"></div>
 <div ng-include="'views/includes/menu.html'" ng-show="!index.noFocusedWallet"></div>
-
-

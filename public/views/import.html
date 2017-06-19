@@ -1,9 +1,10 @@
-<div ng-include="'views/includes/topbar.html'"
+<div class="topbar-container topbar-transparent "
+	 ng-include="'views/includes/topbar.html'"
 	 ng-init="goBackToState = 'preferencesGlobal'">
 </div>
-
+<div class="introduction-svg" ng-include="'views/includes/background.html'"></div>
 <div class="content" ng-controller="importController as import">
-	<div class="introduction-svg" ng-include="'views/includes/background.html'"></div>
+
 	<div class="onGoingProcess" ng-show="import.imported">
 		<div class="onGoingProcess-content" ng-style="{'background-color':'#222'}">
 			<div class="spinner">

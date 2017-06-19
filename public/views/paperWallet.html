@@ -1,11 +1,10 @@
 <div
-	class="topbar-container"
+	class="topbar-container topbar-transparent"
 	ng-include="'views/includes/topbar.html'"
 	ng-init="titleSection='Sweep paper wallet (unimplemented)'; goBackToState = 'preferencesAdvanced';">
 </div>
-
+<div class="introduction-svg" ng-include="'views/includes/background.html'"></div>
 <div class="content" ng-controller="paperWalletController as paperWallet">
-	<div class="introduction-svg" ng-include="'views/includes/background.html'"></div>
 	<h4 ng-show="!paperWallet.error"></h4>
 	<div class="onGoingProcess" ng-show="paperWallet.scanning || paperWallet.sending">
 		<div class="onGoingProcess-content" ng-style="{'background-color':'#222'}">
