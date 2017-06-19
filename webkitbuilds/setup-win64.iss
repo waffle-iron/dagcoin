@@ -34,13 +34,13 @@ Name: "english"; MessagesFile: "compiler:Default.isl"
 ; Name: "spanish"; MessagesFile: "compiler:Languages\Spanish.isl"
 
 [Registry]
-Root: HKLM; Subkey: "Software\Classes\byteball"; Flags: uninsdeletekey
-Root: HKLM; Subkey: "Software\Classes\byteball"; ValueType: string; ValueName: ""; ValueData: "URL:Byteball Protocol"
-Root: HKLM; Subkey: "Software\Classes\byteball"; ValueType: string; ValueName: "URL Protocol"; ValueData: ""
-Root: HKLM; Subkey: "Software\Classes\byteball\DefaultIcon"; ValueType: string; ValueName: ""; ValueData: "{app}\icon.ico"
-Root: HKLM; Subkey: "Software\Classes\byteball\shell"
-Root: HKLM; Subkey: "Software\Classes\byteball\shell\open"
-Root: HKLM; Subkey: "Software\Classes\byteball\shell\open\command"; ValueType: string; ValueName: ""; ValueData: "{app}\{#MyAppExeName} ""%1"""
+Root: HKLM; Subkey: "Software\Classes\dagcoin"; Flags: uninsdeletekey
+Root: HKLM; Subkey: "Software\Classes\dagcoin"; ValueType: string; ValueName: ""; ValueData: "URL:Dagcoin Protocol"
+Root: HKLM; Subkey: "Software\Classes\dagcoin"; ValueType: string; ValueName: "URL Protocol"; ValueData: ""
+Root: HKLM; Subkey: "Software\Classes\dagcoin\DefaultIcon"; ValueType: string; ValueName: ""; ValueData: "{app}\icon.ico"
+Root: HKLM; Subkey: "Software\Classes\dagcoin\shell"
+Root: HKLM; Subkey: "Software\Classes\dagcoin\shell\open"
+Root: HKLM; Subkey: "Software\Classes\dagcoin\shell\open\command"; ValueType: string; ValueName: ""; ValueData: "{app}\{#MyAppExeName} ""%1"""
 
 [Tasks]
 Name: "desktopicon"; Description: "{cm:CreateDesktopIcon}"; GroupDescription: "{cm:AdditionalIcons}"; Flags: unchecked

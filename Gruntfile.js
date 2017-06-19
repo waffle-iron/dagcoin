@@ -196,7 +196,7 @@
           platforms: [getPlatform()],
           appName: 'DAGCOIN',
           buildDir: '../byteballbuilds',
-          version: '0.14.7',
+          version: '0.23.2',
           zip: false,
           macIcns: './public/img/icons/icon-white-outline.icns',
           winIco: './public/img/icons/dagcoins-icon.ico',
