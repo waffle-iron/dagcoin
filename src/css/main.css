@@ -723,6 +723,7 @@ table {
   text-align: left;
   width: 100%;
   border: none;
+  background: transparent;
 }
 
 thead tr{
@@ -734,7 +735,7 @@ table tr td, table tr th {
 }
 
 table tr.even, table tr.alt, table tr:nth-of-type(even) {
-  background: #fff;
+  background: transparent;
 }
 
 table tfoot tr td, table tfoot tr th, table thead tr td, table thead tr th {
