@@ -1890,6 +1890,11 @@ button {
 	color: #fff;
 	background: #D52026;
 }
+.btn_red-full:hover{
+  color: #fff;
+  background: #D52026;
+	background-color: #D52026;
+}
 .btn_red-full:focus,
 .btn_red-full:active {
 	color: #fff;
@@ -2374,5 +2379,6 @@ input {
 
 .button:hover{
   background: #D52026;
+  background-color: #D52026;
   color: #0078a0;
 }

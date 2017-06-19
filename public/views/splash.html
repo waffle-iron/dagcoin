@@ -90,7 +90,9 @@
 				<div class="start-button large-8 medium-8 small-8 medium-centered small-centered large-centered columns">
 
 					<label><span class="text-gray" translate>Please name this device</span></label>
-					<input type="text" id="deviceName" type="text" name="deviceName" ng-model="splash.deviceName" class="text-gray text-center">
+					<div class="input-wrap m20t">
+						<input type="text" id="deviceName" type="text" name="deviceName" ng-model="splash.deviceName" class="text-gray text-center">
+					</div>
 
 					<button ng-click="splash.create()" class="btn btn_red-full m20t" ng-disabled="!splash.deviceName" translate>
 						GET STARTED
