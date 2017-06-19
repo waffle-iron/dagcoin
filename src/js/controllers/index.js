@@ -14,7 +14,9 @@ var EventEmitter = require('events').EventEmitter;
 angular.module('copayApp.controllers').controller('indexController', function($rootScope, $scope, $log, $filter, $timeout, lodash, go, profileService, configService, isCordova, storageService, addressService, gettext, gettextCatalog, amMoment, nodeWebkit, addonManager, txFormatService, uxLanguage, $state, isMobile, addressbookService, notification, animationService, $modal, bwcService, backButton, pushNotificationsService) {
   breadcrumbs.add('index.js');
   var self = this;
-  self.DAGCOIN_ASSET = "B9dw3C3gMC+AODL/XqWjFh9jFe31jS08yf2C3zl8XGg=";
+
+  var isTestnet = constants.version.match(/t$/);
+  self.DAGCOIN_ASSET = isTestnet? "B9dw3C3gMC+AODL/XqWjFh9jFe31jS08yf2C3zl8XGg=":"j5brqzPhQ0H2VNYi3i59PmlV15p54yAiSzacrQ2KqQQ=";
   self.isCordova = isCordova;
   self.isSafari = isMobile.Safari();
   self.onGoingProcess = {};
@@ -538,7 +540,7 @@ angular.module('copayApp.controllers').controller('indexController', function($r
   }];
 
   self.getSvgSrc = function(id){
-  	return 's/images/useful/svg/theme/symbol-defs.svg#' + id;
+  	return 'img/svg/symbol-defs.svg#' + id;
   };
 
   self.addonViews = addonManager.addonViews();

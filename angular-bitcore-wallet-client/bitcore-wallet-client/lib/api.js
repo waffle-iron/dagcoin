@@ -12,7 +12,9 @@ var walletDefinedByKeys;
 var ecdsaSig = require('byteballcore/signature.js');
 var breadcrumbs = require('byteballcore/breadcrumbs.js');
 var constants = require('byteballcore/constants.js');
-constants.DAGCOIN_ASSET = "B9dw3C3gMC+AODL/XqWjFh9jFe31jS08yf2C3zl8XGg=";
+
+var isTestnet = constants.version.match(/t$/);
+constants.DAGCOIN_ASSET = isTestnet? "B9dw3C3gMC+AODL/XqWjFh9jFe31jS08yf2C3zl8XGg=":"j5brqzPhQ0H2VNYi3i59PmlV15p54yAiSzacrQ2KqQQ=";
 
 var _ = require('lodash');
 var $ = require('preconditions').singleton();

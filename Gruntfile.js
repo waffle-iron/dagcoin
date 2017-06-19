@@ -1,5 +1,4 @@
-﻿module.exports = function(grunt) {
-	
+module.exports = function(grunt) {
 	function getPlatform(){
 		switch(process.platform){
 			case 'win32': return 'win64'; // change to 'win' for both 32 and 64
@@ -94,12 +93,13 @@
       },
       css: {
         src: ['src/css/*.css'],
-        dest: 'public/css/byteball.css'
+        dest: 'public/css/dagcoin.css'
       },
       foundation: {
         src: [
           'bower_components/angular/angular-csp.css',
           'bower_components/animate.css/animate.css',
+			    'bower_components/foundation/css/foundation.css',
           'bower_components/angular-ui-switch/angular-ui-switch.css',
           'bower_components/angular-carousel/dist/angular-carousel.css'
         ],
@@ -121,8 +121,8 @@
       pot: {
         files: {
           'i18n/po/template.pot': [
-            'public/index.html', 
-            'public/views/*.html', 
+            'public/index.html',
+            'public/views/*.html',
             'public/views/**/*.html',
             'src/js/routes.js',
             'src/js/services/*.js',
@@ -166,8 +166,8 @@
       linux: {
 		options: {timestamp: true, mode: true},
 		files: [
-		  {expand: true, cwd: './webkitbuilds/', src: ['dagcoin.desktop', '../public/img/icons/icon-white-outline.iconset/icon_256x256.png'], dest: '../byteballbuilds/DAGCOIN/linux32/', flatten: true, filter: 'isFile', options: {timestamp: true, mode: true} },
-		  {expand: true, cwd: './webkitbuilds/', src: ['dagcoin.desktop', '../public/img/icons/icon-white-outline.iconset/icon_256x256.png'], dest: '../byteballbuilds/DAGCOIN/linux64/', flatten: true, filter: 'isFile', options: {timestamp: true, mode: true} },
+		  {expand: true, cwd: './webkitbuilds/', src: ['dagcoin.desktop', '../public/img/icons/icon-white-outline.iconset/icon_256x256.png'], dest: '../byteballbuilds/DAGCOIN-TN/linux32/', flatten: true, filter: 'isFile', options: {timestamp: true, mode: true} },
+		  {expand: true, cwd: './webkitbuilds/', src: ['dagcoin.desktop', '../public/img/icons/icon-white-outline.iconset/icon_256x256.png'], dest: '../byteballbuilds/DAGCOIN-TN/linux64/', flatten: true, filter: 'isFile', options: {timestamp: true, mode: true} },
 		],
       }
     },
@@ -194,7 +194,7 @@
           //platforms: ['win','osx64','linux'],
           //platforms: ['osx64'],
           platforms: [getPlatform()],
-          appName: 'DAGCOIN',
+          appName: 'DAGCOIN-TN',
           buildDir: '../byteballbuilds',
 		  version: '0.14.7',
           zip: false,
@@ -211,7 +211,7 @@
           archive: '../byteballbuilds/dagcoin-linux32.zip'
         },
         expand: true,
-		cwd: '../byteballbuilds/DAGCOIN/linux32/',
+		cwd: '../byteballbuilds/DAGCOIN-TN/linux32/',
         src: ['**/*'],
         dest: 'dagcoin-linux32/'
       },
@@ -220,7 +220,7 @@
           archive: '../byteballbuilds/dagcoin-linux64.zip'
         },
         expand: true,
-        cwd: '../byteballbuilds/DAGCOIN/linux64/',
+        cwd: '../byteballbuilds/DAGCOIN-TN/linux64/',
         src: ['**/*'],
         dest: 'dagcoin-linux64/'
       }
