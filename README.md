@@ -1,8 +1,4 @@
-Byteball is a wallet for storage and transfer of decentralized value.  See [byteball.org](https://byteball.org/).
-
-## Binary Downloads
-
-[Byteball.org](https://byteball.org/)
+Dagcoin as cryptocurrency is built on a new technology called DAG chain, offering scalable, low cost and secure payments. Dagcoin uses byteball network as an underlying platform. Our mission is to provide alternative currency for everyday using, focusing on Asian market to help unbanked people manage their funds better. By doing that, Dagcoin will be the most widely used open source cryptocurrency in the world.
 
 ## Main Features
 
@@ -92,7 +88,7 @@ Dagcoin uses a single extended private key for all wallets, BIP44 is used for wa
 
 * [GitHub Issues](https://github.com/ignite/dagcoin/issues)
   * Open an issue if you are having problems with this project
-* [Email Support](mailto:byteball@byteball.org)
+* [Email Support](mailto:support@dagcoin.org)
 
 ## Credits
 
