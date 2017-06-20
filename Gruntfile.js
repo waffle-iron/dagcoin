@@ -167,8 +167,8 @@ module.exports = function(grunt) {
       linux: {
 		options: {timestamp: true, mode: true},
 		files: [
-		  {expand: true, cwd: './webkitbuilds/', src: ['dagcoin.desktop', '../public/img/icons/icon-white-outline.iconset/icon_256x256.png'], dest: '../byteballbuilds/DAGCOIN-TN/linux32/', flatten: true, filter: 'isFile', options: {timestamp: true, mode: true} },
-		  {expand: true, cwd: './webkitbuilds/', src: ['dagcoin.desktop', '../public/img/icons/icon-white-outline.iconset/icon_256x256.png'], dest: '../byteballbuilds/DAGCOIN-TN/linux64/', flatten: true, filter: 'isFile', options: {timestamp: true, mode: true} },
+		  {expand: true, cwd: './webkitbuilds/', src: ['dagcoin.desktop', '../public/img/icons/icon-white-outline.iconset/icon_256x256.png'], dest: '../byteballbuilds/DAGCOIN/linux32/', flatten: true, filter: 'isFile', options: {timestamp: true, mode: true} },
+		  {expand: true, cwd: './webkitbuilds/', src: ['dagcoin.desktop', '../public/img/icons/icon-white-outline.iconset/icon_256x256.png'], dest: '../byteballbuilds/DAGCOIN/linux64/', flatten: true, filter: 'isFile', options: {timestamp: true, mode: true} },
 		],
       }
     },
@@ -195,14 +195,14 @@ module.exports = function(grunt) {
           //platforms: ['win','osx64','linux'],
           //platforms: ['osx64'],
           platforms: [getPlatform()],
-          appName: 'DAGCOIN-TN',
+          appName: 'DAGCOIN',
           buildDir: '../byteballbuilds',
           version: '0.14.7',
           zip: false,
           macIcns: './public/img/icons/icon-white-outline.icns',
           winIco: './public/img/icons/icon-white-outline.ico',
           exeIco: './public/img/icons/icon-white-outline.ico',
-		  macPlist: {CFBundleURLTypes: [{CFBundleURLName: 'DAGCOIN action', CFBundleURLSchemes: ['DAGCOIN-TN']}], /*CFBundleIconFile: 'nw.icns',*/ LSHasLocalizedDisplayName: 0}
+		  macPlist: {CFBundleURLTypes: [{CFBundleURLName: 'DAGCOIN action', CFBundleURLSchemes: ['DAGCOIN']}], /*CFBundleIconFile: 'nw.icns',*/ LSHasLocalizedDisplayName: 0}
       },
       src: ['./package.json', './public/**/*', './angular-bitcore-wallet-client/**/*']
     },
@@ -212,7 +212,7 @@ module.exports = function(grunt) {
           archive: '../byteballbuilds/dagcoin-linux32.zip'
         },
         expand: true,
-		cwd: '../byteballbuilds/DAGCOIN-TN/linux32/',
+		cwd: '../byteballbuilds/DAGCOIN/linux32/',
         src: ['**/*'],
         dest: 'dagcoin-linux32/'
       },
@@ -221,7 +221,7 @@ module.exports = function(grunt) {
           archive: '../byteballbuilds/dagcoin-linux64.zip'
         },
         expand: true,
-        cwd: '../byteballbuilds/DAGCOIN-TN/linux64/',
+        cwd: '../byteballbuilds/DAGCOIN/linux64/',
         src: ['**/*'],
         dest: 'dagcoin-linux64/'
       }
