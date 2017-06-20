@@ -195,6 +195,7 @@ module.exports = function(grunt) {
           //platforms: ['osx64'],
           platforms: [getPlatform()],
           appName: 'DAGCOIN-TN',
+		  flavor: 'normal',
           buildDir: '../byteballbuilds',
 		  version: '0.14.7',
           zip: false,
