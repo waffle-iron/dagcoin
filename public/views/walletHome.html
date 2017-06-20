@@ -1,5 +1,5 @@
 
-<div class="topbar-container"
+<div class="topbar-container topbar-transparent"
   ng-include="'views/includes/topbar.html'"
 	 ng-init="showCamera = true">
 </div>
@@ -64,18 +64,7 @@
     -->
 
 	  <div id="walletHome" class="walletHome tab-view tab-in">
-		  <div class="introduction-svg">
-			  <div class="svg-container wallet">
-				  <svg class="icon icon-BG-shapw-2-left">
-					  <use xlink:href="s/images/useful/svg/theme/symbol-defs.svg#icon-BG-shapw-2-left"></use>
-				  </svg>
-			  </div>
-			  <div class="svg-container wallet">
-				  <svg class="icon icon-BG-shape-1">
-					  <use xlink:href="s/images/useful/svg/theme/symbol-defs.svg#icon-BG-shape-1"></use>
-				  </svg>
-			  </div>
-		  </div>
+		  <div class="introduction-svg" ng-include="'views/includes/background.html'"></div>
 		  <div class="p-wallet js-introduction">
 			  <div class="p-wallet__price-block">
 				  <div ng-if="!index.anyOnGoingProcess || 1">
@@ -100,7 +89,7 @@
 								{{index.dagBalance.totalStr.split('.')[1]}}
 							</span>
             					<svg class="icon icon-d">
-              						<use xlink:href="s/images/useful/svg/theme/symbol-defs.svg#icon-d"></use>
+              						<use xlink:href="img/svg/symbol-defs.svg#icon-d"></use>
             					</svg>
 							</span>
 							  <span ng-if="index.dagBalance.pending" class="ballance">Pending wallet balance: {{index.dagBalance.pendingStr}}</span>
@@ -162,7 +151,7 @@
 
 										  <span ng-if="btx.action == 'received'"
 												ng-repeat="address in btx.arrPayerAddresses" class="details-info">{{address}}</span>
-										  <span ng-if="btx.action == 'send'"
+										  <span ng-if="btx.action == 'sent'"
 												class="details-info">{{btx.addressTo}}</span>
 									  </div>
 								  </td>
@@ -199,18 +188,7 @@
 
     -->
     <div id="receive" class="receive p-share tab-view scrollable" style="padding-bottom: 0px">
-		<div class="introduction-svg">
-			<div class="svg-container wallet">
-				<svg class="icon icon-BG-shapw-2-left">
-					<use xlink:href="s/images/useful/svg/theme/symbol-defs.svg#icon-BG-shapw-2-left"></use>
-				</svg>
-			</div>
-			<div class="svg-container wallet">
-				<svg class="icon icon-BG-shape-1">
-					<use xlink:href="s/images/useful/svg/theme/symbol-defs.svg#icon-BG-shape-1"></use>
-				</svg>
-			</div>
-		</div>
+	  <div class="introduction-svg" ng-include="'views/includes/background.html'"></div>
       <div ng-show="index.needsBackup" class="p60t row text-center">
         <div class="large-12 columns">
           <div class="text-warning text-bold m15b">
@@ -296,18 +274,7 @@
 			  </div>
 		  </div>
 
-		  <div class="introduction-svg">
-			  <div class="svg-container wallet">
-				  <svg class="icon icon-BG-shapw-2-left">
-					  <use xlink:href="s/images/useful/svg/theme/symbol-defs.svg#icon-BG-shapw-2-left"></use>
-				  </svg>
-			  </div>
-			  <div class="svg-container wallet">
-				  <svg class="icon icon-BG-shape-1">
-					  <use xlink:href="s/images/useful/svg/theme/symbol-defs.svg#icon-BG-shape-1"></use>
-				  </svg>
-			  </div>
-		  </div>
+		  <div class="introduction-svg" ng-include="'views/includes/background.html'"></div>
 		  <div class="p-share js-introduction">
 			  <div class="p-wrap">
 				  <div class="page-heading"><span>Send <span>DAGCOINs</span></span></div>
@@ -332,7 +299,7 @@
 							  <span class="available">Available <span>{{index.dagBalance.stable / 1e6}}</span></span>
 						  </div>
 
-						  <div class="input-wrap">
+						  <div class="input-wrap input-icon">
 							  <input type="number" id="amount" ng-disabled="home.blockUx || home.lockAmount"
 									 name="amount" ng-attr-placeholder="{{'Amount'|translate}}"
 									 ng-minlength="0.00000001" ng-maxlength="10000000000" ng-model="_amount"
@@ -342,7 +309,7 @@
 
 
 							  <svg class="icon icon-d">
-								  <use xlink:href="s/images/useful/svg/theme/symbol-defs.svg#icon-d"></use>
+								  <use xlink:href="img/svg/symbol-defs.svg#icon-d"></use>
 							  </svg>
 
 						  </div>
@@ -395,18 +362,7 @@
     -->
     <div id="history" class="history tab-view scrollable">
 
-		<div class="introduction-svg">
-			<div class="svg-container wallet">
-				<svg class="icon icon-BG-shapw-2-left">
-					<use xlink:href="s/images/useful/svg/theme/symbol-defs.svg#icon-BG-shapw-2-left"></use>
-				</svg>
-			</div>
-			<div class="svg-container wallet">
-				<svg class="icon icon-BG-shape-1">
-					<use xlink:href="s/images/useful/svg/theme/symbol-defs.svg#icon-BG-shape-1"></use>
-				</svg>
-			</div>
-		</div>
+	  <div class="introduction-svg" ng-include="'views/includes/background.html'"></div>
       <div class="row m20t text-center" ng-show="index.updatingTxHistory[index.walletId]">
         <div class="columns large-12 medium-12 small-12">
           <div class="spinner">
@@ -494,5 +450,3 @@
 </div>
 <div class="extra-margin-bottom"></div>
 <div ng-include="'views/includes/menu.html'" ng-show="!index.noFocusedWallet"></div>
-
-

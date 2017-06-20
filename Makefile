@@ -1,5 +1,10 @@
 VERSION=`cut -d '"' -f2 $BUILDDIR/../version.js`
 
+prepare-dev:
+	sh devbuilds/prepare-dev.sh
+
+prepare-package:
+	sh devbuilds/prepare-package.sh
 
 cordova-base:
 	grunt dist-mobile
@@ -47,10 +52,20 @@ android-debug:
 #	cp ./etc/beep.ogg ./cordova/project/plugins/phonegap-plugin-barcodescanner/src/android/LibraryProject/res/raw/beep.ogg
 	cd ../byteballbuilds/project-ANDROID  && cordova run android --device
 
+android-debug-tn:
+	cordova/build.sh ANDROID --dbgjs --clear
+#	cp ./etc/beep.ogg ./cordova/project/plugins/phonegap-plugin-barcodescanner/src/android/LibraryProject/res/raw/beep.ogg
+	cd ../byteballbuilds/project-ANDROID-tn  && cordova run android --device
+
 android-debug-emulator:
 	cordova/build.sh ANDROID --dbgjs --clear
 #	cp ./etc/beep.ogg ./cordova/project/plugins/phonegap-plugin-barcodescanner/src/android/LibraryProject/res/raw/beep.ogg
 	cd ../byteballbuilds/project-ANDROID  && cordova emulate android
+
+android-debug-emulator-tn:
+	cordova/build.sh ANDROID --dbgjs --clear
+#	cp ./etc/beep.ogg ./cordova/project/plugins/phonegap-plugin-barcodescanner/src/android/LibraryProject/res/raw/beep.ogg
+	cd ../byteballbuilds/project-ANDROID-tn  && cordova emulate android
 
 android-debug-fast:
 	cordova/build.sh ANDROID --dbgjs
@@ -58,9 +73,17 @@ android-debug-fast:
 	cd ../byteballbuilds/project-ANDROID && cordova run android --device
 #	cd ../byteballbuilds/project-ANDROID && cordova build android
 
+android-debug-fast-tn:
+	cordova/build.sh ANDROID --dbgjs
+#	cp ./etc/beep.ogg ./cordova/project/plugins/phonegap-plugin-barcodescanner/src/android/LibraryProject/res/raw/beep.ogg
+	cd ../byteballbuilds/project-ANDROID-tn && cordova run android --device
 
 android-debug-fast-emulator:
 	cordova/build.sh ANDROID --dbgjs
 #	cp ./etc/beep.ogg ./cordova/project/plugins/phonegap-plugin-barcodescanner/src/android/LibraryProject/res/raw/beep.ogg
 	cd ../byteballbuilds/project-ANDROID && cordova emulate android
-#	cd ../byteballbuilds/project-ANDROID && cordova build android
+
+android-debug-fast-emulator-tn:
+	cordova/build.sh ANDROID --dbgjs
+#	cp ./etc/beep.ogg ./cordova/project/plugins/phonegap-plugin-barcodescanner/src/android/LibraryProject/res/raw/beep.ogg
+	cd ../byteballbuilds/project-ANDROID-tn && cordova emulate android

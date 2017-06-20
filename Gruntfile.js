@@ -1,5 +1,5 @@
 module.exports = function(grunt) {
-	
+
 	function getPlatform(){
 		switch(process.platform){
 			case 'win32': return 'win64'; // change to 'win' for both 32 and 64
@@ -94,12 +94,13 @@ module.exports = function(grunt) {
       },
       css: {
         src: ['src/css/*.css'],
-        dest: 'public/css/byteball.css'
+        dest: 'public/css/dagcoin.css'
       },
       foundation: {
         src: [
           'bower_components/angular/angular-csp.css',
           'bower_components/animate.css/animate.css',
+			    'bower_components/foundation/css/foundation.css',
           'bower_components/angular-ui-switch/angular-ui-switch.css',
           'bower_components/angular-carousel/dist/angular-carousel.css'
         ],
@@ -121,8 +122,8 @@ module.exports = function(grunt) {
       pot: {
         files: {
           'i18n/po/template.pot': [
-            'public/index.html', 
-            'public/views/*.html', 
+            'public/index.html',
+            'public/views/*.html',
             'public/views/**/*.html',
             'src/js/routes.js',
             'src/js/services/*.js',

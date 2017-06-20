@@ -1,8 +1,4 @@
-Byteball is a wallet for storage and transfer of decentralized value.  See [byteball.org](https://byteball.org/).
-
-## Binary Downloads
-
-[Byteball.org](https://byteball.org/)
+Dagcoin as cryptocurrency is built on a new technology called DAG chain, offering scalable, low cost and secure payments. Dagcoin uses byteball network as an underlying platform. Our mission is to provide alternative currency for everyday using, focusing on Asian market to help unbanked people manage their funds better. By doing that, Dagcoin will be the most widely used open source cryptocurrency in the world.
 
 ## Main Features
 
@@ -15,8 +11,8 @@ Download and install [NW.js v0.14.7 LTS](https://dl.nwjs.io/v0.14.7) and [Node.j
 Clone the source:
 
 ```sh
-git clone https://github.com/byteball/byteball.git
-cd byteball
+git clone https://github.com/ignite/dagcoin.git
+cd dagcoin
 ```
 
 If you are building for testnet, switch to testnet branch:
@@ -31,7 +27,7 @@ npm install -g bower
 npm install -g grunt-cli
 ```
 
-Build Byteball:
+Build Dagcoin:
 
 ```sh
 bower install
@@ -40,31 +36,24 @@ grunt
 ```
 If you are on Windows or using NW.js and Node.js versions other than recommended, see [NW.js instructions about building native modules](http://docs.nwjs.io/en/latest/For%20Users/Advanced/Use%20Native%20Node%20Modules/).
 
-After first run, you'll likely encounter runtime error complaining about node_sqlite3.node not being found, copy the file from the neighboring directory to where the program tries to find it, and run again. (e.g. from `byteball/node_modules/sqlite3/lib/binding/node-v47-darwin-x64` to `byteball/node_modules/sqlite3/lib/binding/node-webkit-v0.14.7-darwin-x64`)
+After first run, you'll likely encounter runtime error complaining about node_sqlite3.node not being found, copy the file from the neighboring directory to where the program tries to find it, and run again. (e.g. from `dagcoin/node_modules/sqlite3/lib/binding/node-v47-darwin-x64` to `dagcoin/node_modules/sqlite3/lib/binding/node-webkit-v0.14.7-darwin-x64`)
 
-Then run Byteball desktop client:
+Then run Dagcoin desktop client:
 
 ```sh
 /path/to/your/nwjs/nwjs .
 ```
 
-## Build Byteball App Bundles
+## Build Dagcoin App Bundles
 
 ### Android
 
 - Install Android SDK
 - Run `make android-debug`
 
-### iOS
-
-- Install Xcode 7 (or newer)
-- Run `make ios-debug`
-
 ### macOS
 
-- `grunt desktop`
-- copy `node_modules` into the app bundle ../byteballbuilds/Byteball/osx64/Byteball.app/Contents/Resources/app.nw, except those that are important only for development (karma, grunt, jasmine)
-- `grunt dmg`
+- run `make prepare-package`
 
 ### Windows
 
@@ -79,17 +68,17 @@ Then run Byteball desktop client:
 - `grunt linux64`
 
 
-## About Byteball
+## About Dagcoin
 
 TBD
 
-## Byteball Backups and Recovery
+## Dagcoin Backups and Recovery
 
-Byteball uses a single extended private key for all wallets, BIP44 is used for wallet address derivation.  There is a BIP39 mnemonic for backing up the wallet key, but it is not enough.  Private payments and co-signers of multisig wallets are stored only in the app's data directory, which you have to back up manually:
+Dagcoin uses a single extended private key for all wallets, BIP44 is used for wallet address derivation.  There is a BIP39 mnemonic for backing up the wallet key, but it is not enough.  Private payments and co-signers of multisig wallets are stored only in the app's data directory, which you have to back up manually:
 
-* macOS: `~/Library/Application Support/byteball`
-* Linux: `~/.config/byteball`
-* Windows: `%LOCALAPPDATA%\byteball`
+* macOS: `~/Library/Application Support/dagcoin`
+* Linux: `~/.config/dagcoin`
+* Windows: `%LOCALAPPDATA%\dagcoin`
 
 
 
@@ -97,14 +86,13 @@ Byteball uses a single extended private key for all wallets, BIP44 is used for w
 
 ## Support
 
-* [GitHub Issues](https://github.com/byteball/byteball/issues)
+* [GitHub Issues](https://github.com/ignite/dagcoin/issues)
   * Open an issue if you are having problems with this project
-* [Email Support](mailto:byteball@byteball.org)
+* [Email Support](mailto:support@dagcoin.org)
 
 ## Credits
 
-The GUI is based on [Copay](https://github.com/bitpay/copay), the most beautiful and easy to use Bitcoin wallet.
-
+Dagcoin is based on [Byteball](https://byteball.org/)
 ## License
 
 MIT.
