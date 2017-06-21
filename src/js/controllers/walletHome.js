@@ -3,14 +3,13 @@
 var constants = require('byteballcore/constants.js');
 var eventBus = require('byteballcore/event_bus.js');
 var breadcrumbs = require('byteballcore/breadcrumbs.js');
-var conf = require('byteballcore/conf.js');
 
 angular.module('copayApp.controllers').controller('walletHomeController', function($scope, $rootScope, $timeout, $filter, $modal, $log, notification, isCordova, profileService, lodash, configService, storageService, gettext, gettextCatalog, nodeWebkit, addressService, confirmDialog, animationService, addressbookService, correspondentListService, autoUpdatingWitnessesList) {
 
   var self = this;
   var home = this;
-  var appName = conf.program_version.match(/t$/) ? 'byteball-tn' : 'byteball';
-  this.protocol = appName;
+  var conf = require('byteballcore/conf.js');
+  this.protocol = conf.program_version.match(/t$/) ? 'byteball-tn' : 'byteball';
   $rootScope.hideMenuBar = false;
   $rootScope.wpInputFocused = false;
   var config = configService.getSync();
