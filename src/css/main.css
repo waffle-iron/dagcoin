@@ -2382,3 +2382,13 @@ input {
   background-color: #D52026;
   color: #0078a0;
 }
+
+.wrappable-menu-item{
+	width: 70%;
+	text-align: right;
+	white-space: normal;
+}
+
+.wrappable-menu-item .arrow-right{
+	float: right;
+}
