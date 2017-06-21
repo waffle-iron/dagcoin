@@ -2383,12 +2383,12 @@ input {
   color: #0078a0;
 }
 
-.device-name{
+.wrappable-menu-item{
 	width: 70%;
 	text-align: right;
 	white-space: normal;
 }
 
-.device-name-arrow{
+.wrappable-menu-item .arrow-right{
 	float: right;
 }
