@@ -1192,8 +1192,12 @@ angular.module('copayApp.controllers').controller('walletHomeController', functi
       };
 
 	  $scope.openInExplorer = function(){
-		var testnet = home.isTestnet ? 'testnet' : '';
-		var url = 'https://'+testnet+'explorer.byteball.org/#'+btx.unit;
+		var url = 'http://188.166.76.39:4000/#'+btx.unit;
+
+		if (home.isTestnet) {
+	        url = 'http://194.204.60.69:4000/#'+btx.unit;
+		}
+
 		if (typeof nw !== 'undefined')
 			nw.Shell.openExternal(url);
 		else if (isCordova)
