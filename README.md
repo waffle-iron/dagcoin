@@ -11,7 +11,7 @@ Download and install [NW.js v0.14.7 LTS](https://dl.nwjs.io/v0.14.7) and [Node.j
 Clone the source:
 
 ```sh
-git clone https://github.com/ignite/dagcoin.git
+git clone https://github.com/dagcoin/dagcoin.git
 cd dagcoin
 ```
 
@@ -86,7 +86,7 @@ Dagcoin uses a single extended private key for all wallets, BIP44 is used for wa
 
 ## Support
 
-* [GitHub Issues](https://github.com/ignite/dagcoin/issues)
+* [GitHub Issues](https://github.com/dagcoin/dagcoin/issues)
   * Open an issue if you are having problems with this project
 * [Email Support](mailto:support@dagcoin.org)
 

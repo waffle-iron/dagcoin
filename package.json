@@ -29,14 +29,14 @@
     "plugin": false
   },
   "chromium-args": "--proxy-server=http://127.1.2.7",
-  "homepage": "https://github.com/ignite/dagcoin",
+  "homepage": "https://github.com/dagcoin/dagcoin",
   "license": "MIT",
   "repository": {
-    "url": "git@github.com:ignite/dagcoin.git",
+    "url": "git@github.com:dagcoin/dagcoin.git",
     "type": "git"
   },
   "bugs": {
-    "url": "https://github.com/ignite/dagcoin/issues"
+    "url": "https://github.com/dagcoin/dagcoin/issues"
   },
   "browser": {
     "request": "browser-request",
