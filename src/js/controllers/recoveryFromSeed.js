@@ -178,11 +178,10 @@ angular.module('copayApp.controllers').controller('recoveryFromSeed',
                   createAddresses(assocMaxAddressIndexes, () => {
                     self.scanning = false;
                     $rootScope.$emit('Local/ShowAlert', `${arrWalletIndexes.length} wallets recovered, please restart the application to finish.`, 'fi-check', () => {
-                    if (navigator && navigator.app) // android
-                    navigator.app.exitApp();
-                    else if (process.exit) // nwjs
-                    process.exit();
-                  });
+                      if (navigator && navigator.app) // android
+                        { navigator.app.exitApp(); } else if (process.exit) // nwjs
+                        { process.exit(); }
+                    });
                   });
                 });
               });

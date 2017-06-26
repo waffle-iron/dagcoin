@@ -195,8 +195,8 @@ angular.module('copayApp.controllers').controller('indexController', function ($
 
   eventBus.on('wallet_declined', (walletId, device_address) => {
     const client = profileService.walletClients[walletId];
-    if (!client) // already deleted (maybe declined by another device)
-      { return; }
+    // already deleted (maybe declined by another device)
+    if (!client) { return; }
     const walletName = client.credentials.walletName;
     const device = require('byteballcore/device.js');
     device.readCorrespondent(device_address, (correspondent) => {
@@ -210,8 +210,7 @@ angular.module('copayApp.controllers').controller('indexController', function ($
   eventBus.on('wallet_completed', (walletId) => {
     console.log(`wallet_completed ${walletId}`);
     const client = profileService.walletClients[walletId];
-    if (!client) // impossible
-      { return; }
+    if (!client) { return; } // impossible
     const walletName = client.credentials.walletName;
     updatePublicKeyRing(client, () => {
       if (!client.isComplete()) { throw Error('not complete'); }
@@ -225,7 +224,7 @@ angular.module('copayApp.controllers').controller('indexController', function ($
     const device = require('byteballcore/device.js');
     const walletDefinedByKeys = require('byteballcore/wallet_defined_by_keys.js');
     device.readCorrespondentsByDeviceAddresses(arrDeviceAddresses, (arrCorrespondentInfos) => {
-            // my own address is not included in arrCorrespondentInfos because I'm not my correspondent
+      // my own address is not included in arrCorrespondentInfos because I'm not my correspondent
       const arrNames = arrCorrespondentInfos.map(correspondent => correspondent.name);
       const name_list = arrNames.join(', ');
       const question = gettextCatalog.getString(`Create new wallet ${walletName} together with ${name_list} ?`);
@@ -235,27 +234,35 @@ angular.module('copayApp.controllers').controller('indexController', function ($
           const createNewWallet = function () {
             walletDefinedByKeys.readNextAccount((account) => {
               const walletClient = bwcService.getClient();
-              if (!profileService.focusedClient.credentials.xPrivKey)
-                {throw Error('no profileService.focusedClient.credentials.xPrivKeyin createNewWallet');}
+              if (!profileService.focusedClient.credentials.xPrivKey) {
+                throw Error('no profileService.focusedClient.credentials.xPrivKeyin createNewWallet');
+              }
               walletClient.seedFromExtendedPrivateKey(profileService.focusedClient.credentials.xPrivKey, account);
-							// walletClient.seedFromMnemonic(profileService.profile.mnemonic, {account: account});
+              // walletClient.seedFromMnemonic(profileService.profile.mnemonic, {account: account});
               walletDefinedByKeys.approveWallet(
-								walletId, walletClient.credentials.xPubKey, account, arrWalletDefinitionTemplate, arrOtherCosigners,
-								() => {
-  walletClient.credentials.walletId = walletId;
-  walletClient.credentials.network = 'livenet';
-  const n = arrDeviceAddresses.length;
-  const m = arrWalletDefinitionTemplate[1].required || n;
-  walletClient.credentials.addWalletInfo(walletName, m, n);
-  updatePublicKeyRing(walletClient);
-  profileService._addWalletClient(walletClient, {}, () => {
-    console.log(`switched to newly approved wallet ${walletId}`);
-  });
-},
-							);
+                walletId,
+                walletClient.credentials.xPubKey,
+                account,
+                arrWalletDefinitionTemplate,
+                arrOtherCosigners, () => {
+                  walletClient.credentials.walletId = walletId;
+                  walletClient.credentials.network = 'livenet';
+                  const n = arrDeviceAddresses.length;
+                  const m = arrWalletDefinitionTemplate[1].required || n;
+                  walletClient.credentials.addWalletInfo(walletName, m, n);
+                  updatePublicKeyRing(walletClient);
+                  profileService._addWalletClient(walletClient, {}, () => {
+                    console.log(`switched to newly approved wallet ${walletId}`);
+                  });
+                },
+              );
             });
           };
-          if (profileService.focusedClient.credentials.xPrivKey) { createNewWallet(); } else						{ profileService.insistUnlockFC(null, createNewWallet); }
+          if (profileService.focusedClient.credentials.xPrivKey) {
+            createNewWallet();
+          } else {
+            profileService.insistUnlockFC(null, createNewWallet);
+          }
         },
         ifNo() {
           console.log('===== NO CLICKED');
@@ -265,12 +272,14 @@ angular.module('copayApp.controllers').controller('indexController', function ($
     });
   });
 
-    // units that were already approved or rejected by user.
-    // if there are more than one addresses to sign from, we won't pop up confirmation dialog for each address, instead we'll use the already obtained approval
+  // units that were already approved or rejected by user.
+  // if there are more than one addresses to sign from,
+  // we won't pop up confirmation dialog for each address,
+  // instead we'll use the already obtained approval
   const assocChoicesByUnit = {};
 
-	// objAddress is local wallet address, top_address is the address that requested the signature,
-	// it may be different from objAddress if it is a shared address
+  // objAddress is local wallet address, top_address is the address that requested the signature,
+  // it may be different from objAddress if it is a shared address
   eventBus.on('signing_request', (objAddress, top_address, objUnit, assocPrivatePayloads, from_address, signing_path) => {
     function createAndSendSignature() {
       const coin = '0';
@@ -306,8 +315,9 @@ angular.module('copayApp.controllers').controller('indexController', function ($
     const unit = objUnit.unit;
     const credentials = lodash.find(profileService.profile.credentials, { walletId: objAddress.wallet });
     mutex.lock([`signing_request-${unit}`], (unlock) => {
-            // apply the previously obtained decision.
-            // Unless the priv key is encrypted in which case the password request would have appeared from nowhere
+      // apply the previously obtained decision.
+      // Unless the priv key is encrypted in which case the password
+      // request would have appeared from nowhere
       if (assocChoicesByUnit[unit] && !profileService.focusedClient.isPrivKeyEncrypted()) {
         if (assocChoicesByUnit[unit] === 'approve') { createAndSendSignature(); } else if (assocChoicesByUnit[unit] === 'refuse') { refuseSignature(); }
         return unlock();
@@ -333,7 +343,9 @@ angular.module('copayApp.controllers').controller('indexController', function ($
                       if (!assocAmountByAssetAndAddress[asset]) { assocAmountByAssetAndAddress[asset] = {}; }
                       payload.outputs.forEach((output) => {
                         if (arrChangeAddresses.indexOf(output.address) === -1) {
-                          if (!assocAmountByAssetAndAddress[asset][output.address]) { assocAmountByAssetAndAddress[asset][output.address] = 0; }
+                          if (!assocAmountByAssetAndAddress[asset][output.address]) {
+                            assocAmountByAssetAndAddress[asset][output.address] = 0;
+                          }
                           assocAmountByAssetAndAddress[asset][output.address] += output.amount;
                         }
                       });
@@ -343,9 +355,7 @@ angular.module('copayApp.controllers').controller('indexController', function ($
                       const arrDestinations = [];
                       for (const asset in assocAmountByAssetAndAddress) {
                         const formatted_asset = isCordova ? asset : (`<span class='small'>${asset}</span><br/>`);
-                        const currency = (asset !== 'base')
-								? (asset === constants.DAGCOIN_ASSET ? 'dag' : `of asset ${formatted_asset}`)
-								: 'bytes';
+                        const currency = (asset !== 'base') ? (asset === constants.DAGCOIN_ASSET ? 'dag' : `of asset ${formatted_asset}`) : 'bytes';
                         for (const address in assocAmountByAssetAndAddress[asset]) { arrDestinations.push(`${assocAmountByAssetAndAddress[asset][address]} ${currency} to ${address}`); }
                       }
                       const dest = (arrDestinations.length > 0) ? arrDestinations.join(', ') : 'to myself';
@@ -460,7 +470,9 @@ angular.module('copayApp.controllers').controller('indexController', function ($
             self.bHasMerkle = bHasMerkle;
             $rootScope.$apply();
           });
-        }			else				{ self.bHasMerkle = false; }
+        } else {
+          self.bHasMerkle = false;
+        }
         self.updateAll();
         self.updateTxHistory();
         $modalInstance.close();
@@ -510,7 +522,7 @@ angular.module('copayApp.controllers').controller('indexController', function ($
   }];
 
   self.getSvgSrc = function (id) {
-  	return `img/svg/symbol-defs.svg#${id}`;
+    return `img/svg/symbol-defs.svg#${id}`;
   };
 
   self.addonViews = addonManager.addonViews();

@@ -554,7 +554,7 @@ API.prototype.getBalance = function (shared_address, cb) {
     if (!assocBalances[constants.DAGCOIN_ASSET]) { assocBalances[constants.DAGCOIN_ASSET] = { stable: 0, pending: 0 }; }
     Wallet.readSharedBalance(walletId, (assocSharedBalances) => {
       for (const asset in assocSharedBalances) {
-        if (!assocBalances[asset])          { assocBalances[asset] = { stable: 0, pending: 0 }; }
+        if (!assocBalances[asset]) { assocBalances[asset] = { stable: 0, pending: 0 }; }
       }
       cb(null, assocBalances, assocSharedBalances);
     });

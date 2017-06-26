@@ -266,12 +266,12 @@ angular.module('copayApp.controllers').controller('correspondentDeviceController
                     ['or', [
                       ['and', [
 											['address', data_address],
-                    arrEventCondition,
-                  ]],
+                        arrEventCondition,
+                      ]],
                       ['and', [
 											['address', expiry_address],
 											['in data feed', [[configService.TIMESTAMPER_ADDRESS], 'timestamp', '>', Date.now() + Math.round(contract.expiry * 24 * 3600 * 1000)]],
-                  ]],
+                      ]],
                     ]],
                   ]],
                   ['and', [
@@ -302,8 +302,8 @@ angular.module('copayApp.controllers').controller('correspondentDeviceController
                     $scope.bWorking = false;
                     $scope.error = err;
                     $timeout(() => {
-                  $scope.$digest();
-                });
+                      $scope.$digest();
+                    });
                   },
                   ifOk(shared_address) {
                     composeAndSend(shared_address, arrDefinition, assocSignersByPath, my_address);
@@ -316,10 +316,9 @@ angular.module('copayApp.controllers').controller('correspondentDeviceController
             function composeAndSend(shared_address, arrDefinition, assocSignersByPath, my_address) {
               let arrSigningDeviceAddresses = []; // empty list means that all signatures are required (such as 2-of-2)
               if (fc.credentials.m < fc.credentials.n) {
- indexScope.copayers.forEach((copayer) => {
-                if (copayer.me || copayer.signs)
-                    arrSigningDeviceAddresses.push(copayer.device_address);
-              });
+                indexScope.copayers.forEach((copayer) => {
+                  if (copayer.me || copayer.signs) { arrSigningDeviceAddresses.push(copayer.device_address); }
+                });
               } else if (indexScope.shared_address) { arrSigningDeviceAddresses = indexScope.copayers.map(copayer => copayer.device_address); }
               profileService.bKeepUnlocked = true;
               const opts = {
@@ -336,12 +335,9 @@ angular.module('copayApp.controllers').controller('correspondentDeviceController
                 $scope.bWorking = false;
                 profileService.bKeepUnlocked = false;
                 if (err) {
-                  if (err.match(/device address/))
-                    {err = 'This is a private asset, please send it only by clicking links from chat';}
-                  if (err.match(/no funded/))
-                    {err = 'Not enough confirmed funds';}
-                  if ($scope)
-                    {$scope.error = err;}
+                  if (err.match(/device address/)) { err = 'This is a private asset, please send it only by clicking links from chat'; }
+                  if (err.match(/no funded/)) { err = 'Not enough confirmed funds'; }
+                  if ($scope) { $scope.error = err; }
                   return;
                 }
                 $rootScope.$emit('NewOutgoingTx');
@@ -362,7 +358,7 @@ angular.module('copayApp.controllers').controller('correspondentDeviceController
                 const paymentRequestText = `[your share of payment to the contract](${paymentRequestCode})`;
                 device.sendMessageToDevice(correspondent.device_address, 'text', paymentRequestText);
                 correspondentListService.messageEventsByCorrespondent[correspondent.device_address].push({ bIncoming: false, message: correspondentListService.formatOutgoingMessage(paymentRequestText) });
-                if (contract.peer_pays_to === 'me')                  { issueNextAddress(); } // make sure the address is not reused
+                if (contract.peer_pays_to === 'me') { issueNextAddress(); } // make sure the address is not reused
               });
               $modalInstance.dismiss('cancel');
             }
@@ -526,7 +522,7 @@ angular.module('copayApp.controllers').controller('correspondentDeviceController
               const assocOutputsByAsset = {};
               objMultiPaymentRequest.payments.forEach((objPayment) => {
                 const asset = objPayment.asset || 'base';
-                if (!assocOutputsByAsset[asset])                  { assocOutputsByAsset[asset] = []; }
+                if (!assocOutputsByAsset[asset]) { assocOutputsByAsset[asset] = []; }
                 assocOutputsByAsset[asset].push({ address: objPayment.address, amount: objPayment.amount });
               });
               const arrNonBaseAssets = Object.keys(assocOutputsByAsset).filter(asset => (asset !== 'base'));
@@ -540,11 +536,10 @@ angular.module('copayApp.controllers').controller('correspondentDeviceController
               const arrAssetOutputs = asset ? assocOutputsByAsset[asset] : null;
               let arrSigningDeviceAddresses = []; // empty list means that all signatures are required (such as 2-of-2)
               if (fc.credentials.m < fc.credentials.n) {
- indexScope.copayers.forEach((copayer) => {
-                if (copayer.me || copayer.signs)
-                    arrSigningDeviceAddresses.push(copayer.device_address);
-              }); 
-} else if (indexScope.shared_address) { arrSigningDeviceAddresses = indexScope.copayers.map(copayer => copayer.device_address); }
+                indexScope.copayers.forEach((copayer) => {
+                  if (copayer.me || copayer.signs) { arrSigningDeviceAddresses.push(copayer.device_address); }
+                });
+              } else if (indexScope.shared_address) { arrSigningDeviceAddresses = indexScope.copayers.map(copayer => copayer.device_address); }
               const current_multi_payment_key = require('crypto').createHash('sha256').update(paymentJson).digest('base64');
               if (current_multi_payment_key === indexScope.current_multi_payment_key) {
                 $rootScope.$emit('Local/ShowErrorAlert', 'This payment is already under way');
@@ -570,7 +565,7 @@ angular.module('copayApp.controllers').controller('correspondentDeviceController
                 }
                 $rootScope.$emit('NewOutgoingTx');
                 const assocPaymentsByAsset = correspondentListService.getPaymentsByAsset(objMultiPaymentRequest);
-                for (const asset in assocPaymentsByAsset)                  { eventBus.emit('sent_payment', recipient_device_address, assocPaymentsByAsset[asset], asset); }
+                for (const asset in assocPaymentsByAsset) { eventBus.emit('sent_payment', recipient_device_address, assocPaymentsByAsset[asset], asset); }
               });
               $modalInstance.dismiss('cancel');
             });
@@ -853,10 +848,9 @@ angular.module('copayApp.controllers').controller('correspondentDeviceController
      scope.$watchCollection('messageEvents', (newCollection) => {
        if (newCollection) {
          $timeout(() => {
-  if (scope.autoScrollEnabled)
-             element[0].scrollTop = element[0].scrollHeight;
-}, 100); 
-}
+           if (scope.autoScrollEnabled) { element[0].scrollTop = element[0].scrollHeight; }
+         }, 100);
+       }
      });
    },
  })).directive('bindToHeight', $window => ({

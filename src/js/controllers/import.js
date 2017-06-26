@@ -169,7 +169,7 @@ angular.module('copayApp.controllers').controller('importController',
             if (err) return showError(err);
             self.imported = false;
             $rootScope.$emit('Local/ShowAlert', 'Import successfully completed, please restart the application.', 'fi-check', () => {
-              if (navigator && navigator.app)                { navigator.app.exitApp(); }              else if (process.exit)                { process.exit(); }
+              if (navigator && navigator.app) { navigator.app.exitApp(); } else if (process.exit) { process.exit(); }
             });
           });
         }

@@ -104,8 +104,7 @@ angular.module('copayApp.controllers').controller('createController',
         opts.cosigners = lodash.uniq(self.cosigners.map(cosigner => cosigner.device_address));
         if (opts.cosigners.length !== $scope.totalCosigners - 1) { return setError('Please select different co-signers'); }
         for (let i = 0; i < opts.cosigners.length; i++) {
-          if (!opts.cosigners[i] || opts.cosigners[i].length !== 33)
-            {return setError('Please fill all co-signers');}
+          if (!opts.cosigners[i] || opts.cosigners[i].length !== 33) { return setError('Please fill all co-signers'); }
         }
       }
 		/*
