@@ -1193,7 +1193,8 @@ angular.module('copayApp.controllers').controller('walletHomeController', functi
 
 	  $scope.openInExplorer = function(){
 		var testnet = home.isTestnet ? 'testnet' : '';
-		var url = 'https://'+testnet+'explorer.dagcoin.org/#'+btx.unit;
+		//todo: should be https
+		var url = 'http://'+testnet+'explorer.dagcoin.org/#'+btx.unit;
 
 		if (typeof nw !== 'undefined')
 			nw.Shell.openExternal(url);
