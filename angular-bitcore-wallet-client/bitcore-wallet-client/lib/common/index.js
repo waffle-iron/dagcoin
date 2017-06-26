@@ -1,4 +1,4 @@
-var Common = {};
+const Common = {};
 
 Common.Constants = require('./constants');
 

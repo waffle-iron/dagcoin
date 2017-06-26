@@ -1,65 +1,63 @@
-'use strict';
+
 
 angular.module('copayApp.controllers').controller('preferencesController',
-  function($scope, $rootScope, $filter, $timeout, $modal, $log, lodash, configService, profileService, uxLanguage) {
-    
-    this.init = function() {
-      var config = configService.getSync();
+  function ($scope, $rootScope, $filter, $timeout, $modal, $log, lodash, configService, profileService, uxLanguage) {
+    this.init = function () {
+      const config = configService.getSync();
       this.unitName = config.wallet.settings.unitName;
       this.currentLanguageName = uxLanguage.getCurrentLanguageName();
       $scope.spendUnconfirmed = config.wallet.spendUnconfirmed;
-      var fc = profileService.focusedClient;
+      const fc = profileService.focusedClient;
       if (fc) {
-        //$scope.encrypt = fc.hasPrivKeyEncrypted();
+        // $scope.encrypt = fc.hasPrivKeyEncrypted();
         this.externalSource = null;
         // TODO externalAccount
-        //this.externalIndex = fc.getExternalIndex();
+        // this.externalIndex = fc.getExternalIndex();
       }
 
       if (window.touchidAvailable) {
-        var walletId = fc.credentials.walletId;
+        const walletId = fc.credentials.walletId;
         this.touchidAvailable = true;
         config.touchIdFor = config.touchIdFor || {};
         $scope.touchid = config.touchIdFor[walletId];
       }
     };
 
-    var unwatchSpendUnconfirmed = $scope.$watch('spendUnconfirmed', function(newVal, oldVal) {
+    const unwatchSpendUnconfirmed = $scope.$watch('spendUnconfirmed', (newVal, oldVal) => {
       if (newVal == oldVal) return;
-      var opts = {
+      const opts = {
         wallet: {
-          spendUnconfirmed: newVal
-        }
+          spendUnconfirmed: newVal,
+        },
       };
-      configService.set(opts, function(err) {
+      configService.set(opts, (err) => {
         $rootScope.$emit('Local/SpendUnconfirmedUpdated');
         if (err) $log.debug(err);
       });
     });
 
 
-    var unwatchRequestTouchid = $scope.$watch('touchid', function(newVal, oldVal) {
+    const unwatchRequestTouchid = $scope.$watch('touchid', (newVal, oldVal) => {
       if (newVal == oldVal || $scope.touchidError) {
         $scope.touchidError = false;
         return;
       }
-      var walletId = profileService.focusedClient.credentials.walletId;
+      const walletId = profileService.focusedClient.credentials.walletId;
 
-      var opts = {
-        touchIdFor: {}
+      const opts = {
+        touchIdFor: {},
       };
       opts.touchIdFor[walletId] = newVal;
 
-      $rootScope.$emit('Local/RequestTouchid', function(err) {
-        if (err) { 
+      $rootScope.$emit('Local/RequestTouchid', (err) => {
+        if (err) {
           $log.debug(err);
-          $timeout(function() {
+          $timeout(() => {
             $scope.touchidError = true;
             $scope.touchid = oldVal;
           }, 100);
-        }
-        else {
-          configService.set(opts, function(err) {
+        } else {
+          configService.set(opts, (err) => {
             if (err) {
               $log.debug(err);
               $scope.touchidError = true;
@@ -70,7 +68,7 @@ angular.module('copayApp.controllers').controller('preferencesController',
       });
     });
 
-    $scope.$on('$destroy', function() {
+    $scope.$on('$destroy', () => {
       unwatchSpendUnconfirmed();
       unwatchRequestTouchid();
     });

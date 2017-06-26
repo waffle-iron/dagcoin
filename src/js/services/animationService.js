@@ -1,9 +1,10 @@
-'use strict';
 
-angular.module('copayApp.services').factory('animationService', function(isCordova) {
-  var root = {};
 
-  var cachedTransitionState, cachedBackPanel;
+angular.module('copayApp.services').factory('animationService', (isCordova) => {
+  const root = {};
+
+  let cachedTransitionState,
+    cachedBackPanel;
 
   // DISABLE ANIMATION ON DESKTOP
   root.modalAnimated = {
@@ -13,7 +14,7 @@ angular.module('copayApp.services').factory('animationService', function(isCordo
     slideOutRight: isCordova ? 'slideOutRight' : 'hideModal',
   };
 
-  var pageWeight = {
+  const pageWeight = {
     walletHome: 0,
     copayers: -1,
     cordova: -1,
@@ -42,18 +43,18 @@ angular.module('copayApp.services').factory('animationService', function(isCordo
     add: 11,
     create: 12,
     import: 12,
-    importLegacy: 13
+    importLegacy: 13,
   };
 
   function cleanUpLater(e, e2) {
-    var cleanedUp = false,
+    let cleanedUp = false,
       timeoutID;
-    var cleanUp = function() {
+    const cleanUp = function () {
       if (cleanedUp) return;
       cleanedUp = true;
 	  if (e2.parentNode) // sometimes it is null
-		  e2.parentNode.removeChild(e2);
-      e2.innerHTML = "";
+		  { e2.parentNode.removeChild(e2); }
+      e2.innerHTML = '';
       e.className = '';
       cachedBackPanel = null;
       cachedTransitionState = '';
@@ -62,35 +63,32 @@ angular.module('copayApp.services').factory('animationService', function(isCordo
         window.clearTimeout(timeoutID);
       }
     };
-    e.addEventListener("animationend", cleanUp, true);
-    e2.addEventListener("animationend", cleanUp, true);
-    e.addEventListener("webkitAnimationEnd", cleanUp, true);
-    e2.addEventListener("webkitAnimationEnd", cleanUp, true);
+    e.addEventListener('animationend', cleanUp, true);
+    e2.addEventListener('animationend', cleanUp, true);
+    e.addEventListener('webkitAnimationEnd', cleanUp, true);
+    e2.addEventListener('webkitAnimationEnd', cleanUp, true);
     timeoutID = setTimeout(cleanUp, 500);
-  };
+  }
 
-  root.transitionAnimated = function(fromState, toState, event) {
-
-    if (isaosp)
-      return true;
+  root.transitionAnimated = function (fromState, toState, event) {
+    if (isaosp) { return true; }
 
     // Animation in progress?
-    var x = document.getElementById('mainSectionDup');
+    const x = document.getElementById('mainSectionDup');
     if (x && !cachedTransitionState) {
       console.log('Anim in progress');
       return true;
     }
 
-    var fromName = fromState.name;
-    var toName = toState.name;
-    if (!fromName || !toName)
-      return true;
+    const fromName = fromState.name;
+    const toName = toState.name;
+    if (!fromName || !toName) { return true; }
 
-    var fromWeight = pageWeight[fromName];
-    var toWeight = pageWeight[toName];
+    const fromWeight = pageWeight[fromName];
+    const toWeight = pageWeight[toName];
 
 
-    var entering = null,
+    let entering = null,
       leaving = null;
 
     // Horizontal Slide Animation?
@@ -105,7 +103,6 @@ angular.module('copayApp.services').factory('animationService', function(isCordo
     } else if (isCordova && fromName && fromWeight >= 0 && toWeight >= 0) {
       if (toWeight) {
         entering = 'CslideInUp';
-
       } else {
         leaving = 'CslideOutDown';
       }
@@ -115,36 +112,33 @@ angular.module('copayApp.services').factory('animationService', function(isCordo
       return true;
     }
 
-    var e = document.getElementById('mainSection');
+    const e = document.getElementById('mainSection');
 
 
-    var desiredTransitionState = (fromName || '-') + ':' + (toName || '-');
+    const desiredTransitionState = `${fromName || '-'}:${toName || '-'}`;
 
     if (desiredTransitionState == cachedTransitionState) {
       e.className = entering || '';
       cachedBackPanel.className = leaving || '';
       cleanUpLater(e, cachedBackPanel);
-      //console.log('USing animation', cachedTransitionState);
+      // console.log('USing animation', cachedTransitionState);
       return true;
-    } else {
-      var sc;
-      // Keep prefDiv scroll
-      var contentDiv = e.getElementsByClassName('content');
-      if (contentDiv && contentDiv[0])
-        sc = contentDiv[0].scrollTop;
-
-      cachedBackPanel = e.cloneNode(true);
-      cachedBackPanel.id = 'mainSectionDup';
-      var c = document.getElementById('sectionContainer');
-      c.appendChild(cachedBackPanel);
-
-      if (sc)
-        cachedBackPanel.getElementsByClassName('content')[0].scrollTop = sc;
-
-      cachedTransitionState = desiredTransitionState;
-      return false;
     }
-  }
+    let sc;
+      // Keep prefDiv scroll
+    const contentDiv = e.getElementsByClassName('content');
+    if (contentDiv && contentDiv[0]) { sc = contentDiv[0].scrollTop; }
+
+    cachedBackPanel = e.cloneNode(true);
+    cachedBackPanel.id = 'mainSectionDup';
+    const c = document.getElementById('sectionContainer');
+    c.appendChild(cachedBackPanel);
+
+    if (sc) { cachedBackPanel.getElementsByClassName('content')[0].scrollTop = sc; }
+
+    cachedTransitionState = desiredTransitionState;
+    return false;
+  };
 
   return root;
 });

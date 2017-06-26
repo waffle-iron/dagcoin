@@ -3,29 +3,28 @@
 //
 //
 //
-var sinon = require('sinon');
-var preconditions = require('preconditions').singleton();
+const sinon = require('sinon');
+const preconditions = require('preconditions').singleton();
 
 
-describe("Angular services", function() {
+describe('Angular services', () => {
   beforeEach(angular.mock.module('copayApp'));
   beforeEach(angular.mock.module('copayApp.services'));
-  beforeEach(module(function($provide) {
+  beforeEach(module(($provide) => {
     $provide.value('request', {
-      'get': function(_, cb) {
+      get(_, cb) {
         cb(null, null, [{
           name: 'USD Dollars',
           code: 'USD',
-          rate: 2
+          rate: 2,
         }]);
-      }
+      },
     });
   }));
 
 
-  beforeEach(inject(function($rootScope) {
-
-    var w = {};
+  beforeEach(inject(($rootScope) => {
+    const w = {};
     w.isComplete = sinon.stub().returns(true);
     w.privateKey = {};
     w.settings = {
@@ -35,17 +34,17 @@ describe("Angular services", function() {
       alternativeIsoCode: 'USD',
     };
     w.addressBook = {
-      'juan': '1',
+      juan: '1',
     };
     w.balanceByAddr = [{
-      'address1': 1
+      address1: 1,
     }];
 
     w.totalCopayers = 2;
     w.getMyCopayerNickname = sinon.stub().returns('nickname');
     w.getMyCopayerId = sinon.stub().returns('id');
     w.privateKey.toObj = sinon.stub().returns({
-      wallet: 'mock'
+      wallet: 'mock',
     });
     w.getSecret = sinon.stub().returns('secret');
     w.getName = sinon.stub().returns('fakeWallet');
@@ -63,23 +62,20 @@ describe("Angular services", function() {
   }));
 
 
-
-
-  describe("Unit: balanceService", function() {
-
-    it('should updateBalance in bits', inject(function(balanceService, $rootScope) {
-      var w = $rootScope.wallet;
+  describe('Unit: balanceService', () => {
+    it('should updateBalance in bits', inject((balanceService, $rootScope) => {
+      const w = $rootScope.wallet;
 
       expect(balanceService.update).not.to.equal(null);
-      var Waddr = Object.keys($rootScope.wallet.balanceByAddr)[0];
-      var a = {};
+      const Waddr = Object.keys($rootScope.wallet.balanceByAddr)[0];
+      const a = {};
       a[Waddr] = 200;
       w.getBalance = sinon.stub().yields(null, 100000001, a, 90000002, 5);
 
 
-      //retuns values in DEFAULT UNIT(bits)
-      balanceService.update(w, function() {
-        var b = w.balanceInfo;
+      // retuns values in DEFAULT UNIT(bits)
+      balanceService.update(w, () => {
+        const b = w.balanceInfo;
         expect(b.totalBalanceBTC).to.be.equal(1.00000001);
         expect(b.availableBalanceBTC).to.be.equal(0.90000002);
         expect(b.lockedBalanceBTC).to.be.equal(0.09999999);
@@ -93,38 +89,37 @@ describe("Angular services", function() {
         expect(b.topAmount).to.equal(899800.02);
       }, false);
     }));
-
   });
 
-  describe("Unit: Notification Service", function() {
-    it('should contain a notification service', inject(function(notification) {
+  describe('Unit: Notification Service', () => {
+    it('should contain a notification service', inject((notification) => {
       expect(notification).not.to.equal(null);
     }));
   });
 
-  describe("Unit: identityService Service", function() {
-    it('should contain a identityService service', inject(function(identityService) {
+  describe('Unit: identityService Service', () => {
+    it('should contain a identityService service', inject((identityService) => {
       expect(identityService).not.to.equal(null);
     }));
   });
 
-  describe("Unit: pinService", function() {
-    it('should contain a pinService service', inject(function(pinService) {
+  describe('Unit: pinService', () => {
+    it('should contain a pinService service', inject((pinService) => {
       expect(pinService).not.to.equal(null);
     }));
-    it('should be able to check -> save -> get ->  clear -> check', function(done) {
-      inject(function(pinService) {
-        pinService.save('123', 'user', 'pass', function(err) {
-          pinService.check(function(err, value) {
+    it('should be able to check -> save -> get ->  clear -> check', (done) => {
+      inject((pinService) => {
+        pinService.save('123', 'user', 'pass', (err) => {
+          pinService.check((err, value) => {
             should.not.exist(err);
             value.should.equal(true);
-            pinService.get('123', function(err, data) {
+            pinService.get('123', (err, data) => {
               should.not.exist(err);
               data.email.should.be.equal('user');
               data.password.should.be.equal('pass');
-              pinService.clear(function(err) {
+              pinService.clear((err) => {
                 should.not.exist(err);
-                pinService.check(function(err, value) {
+                pinService.check((err, value) => {
                   should.not.exist(err);
                   value.should.equal(false);
                   done();
@@ -132,84 +127,82 @@ describe("Angular services", function() {
               });
             });
           });
-        })
-      })
+        });
+      });
     });
   });
 
-  describe("Unit: localstorageService", function() {
-    it('should contain a localstorageService service', inject(function(localstorageService) {
+  describe('Unit: localstorageService', () => {
+    it('should contain a localstorageService service', inject((localstorageService) => {
       expect(localstorageService).not.to.equal(null);
     }));
   });
 
 
-  describe("Unit: Backup Service", function() {
-    it('should contain a backup service', inject(function(backupService) {
+  describe('Unit: Backup Service', () => {
+    it('should contain a backup service', inject((backupService) => {
       expect(backupService).not.to.equal(null);
     }));
-    it('should backup in file', inject(function(backupService) {
-      var mock = sinon.mock(window);
-      var expectation = mock.expects('saveAs');
+    it('should backup in file', inject((backupService) => {
+      const mock = sinon.mock(window);
+      const expectation = mock.expects('saveAs');
       backupService._download({}, 'test');
       expectation.once();
     }));
   });
 
-  describe("Unit: isMobile Service", function() {
-    it('should contain a isMobile service', inject(function(isMobile) {
+  describe('Unit: isMobile Service', () => {
+    it('should contain a isMobile service', inject((isMobile) => {
       expect(isMobile).not.to.equal(null);
     }));
-    it('should not detect mobile by default', inject(function(isMobile) {
+    it('should not detect mobile by default', inject((isMobile) => {
       isMobile.any().should.equal(false);
     }));
-    it('should detect mobile if user agent is Android', inject(function(isMobile) {
-      navigator.__defineGetter__('userAgent', function() {
-        return 'Android 2.2.3';
-      });
+    it('should detect mobile if user agent is Android', inject((isMobile) => {
+      navigator.__defineGetter__('userAgent', () => 'Android 2.2.3');
       isMobile.any().should.equal(true);
     }));
   });
 
-  describe("Unit: uriHandler service", function() {
-    it('should contain a uriHandler service', inject(function(uriHandler) {
+  describe('Unit: uriHandler service', () => {
+    it('should contain a uriHandler service', inject((uriHandler) => {
       should.exist(uriHandler);
     }));
-    it('should register', inject(function(uriHandler) {
-      (function() {
+    it('should register', inject((uriHandler) => {
+      (function () {
         uriHandler.register();
       }).should.not.throw();
     }));
   });
 
-  describe('Unit: Rate Service', function() {
-    it('should be injected correctly', inject(function(rateService) {
+  describe('Unit: Rate Service', () => {
+    it('should be injected correctly', inject((rateService) => {
       should.exist(rateService);
     }));
     it('should be possible to ask if it is available',
-      inject(function(rateService) {
+      inject((rateService) => {
         should.exist(rateService.isAvailable);
-      })
+      }),
     );
     it('should be possible to ask for conversion from fiat',
-      function(done) {
-        inject(function(rateService) {
-          rateService.whenAvailable(function() {
+      (done) => {
+        inject((rateService) => {
+          rateService.whenAvailable(() => {
             (1e8).should.equal(rateService.fromFiat(2, 'USD'));
             done();
           });
-        })
-      }
+        });
+      },
     );
     it('should be possible to ask for conversion to fiat',
-      function(done) {
-        inject(function(rateService) {
-          rateService.whenAvailable(function() {
+      (done) => {
+        inject((rateService) => {
+          rateService.whenAvailable(() => {
             (2).should.equal(rateService.toFiat(1e8, 'USD'));
             done();
           });
-        })
-      }
+        });
+      },
     );
   });
 });
