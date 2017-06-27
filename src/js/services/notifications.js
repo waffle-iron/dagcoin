@@ -1,10 +1,9 @@
-'use strict';
 
-angular.module('copayApp.services').
-factory('notification', ['$timeout',
-  function($timeout) {
 
-    var notifications = [];
+angular.module('copayApp.services')
+.factory('notification', ['$timeout',
+  function ($timeout) {
+    let notifications = [];
 
     /*
     ls.getItem('notifications', function(err, data) {
@@ -14,44 +13,44 @@ factory('notification', ['$timeout',
     });
     */
 
-    var queue = [];
-    var settings = {
+    const queue = [];
+    const settings = {
       info: {
         duration: 6000,
-        enabled: true
+        enabled: true,
       },
       funds: {
         duration: 7000,
-        enabled: true
+        enabled: true,
       },
       version: {
         duration: 60000,
-        enabled: true
+        enabled: true,
       },
       warning: {
         duration: 7000,
-        enabled: true
+        enabled: true,
       },
       error: {
         duration: 7000,
-        enabled: true
+        enabled: true,
       },
       success: {
         duration: 5000,
-        enabled: true
+        enabled: true,
       },
       progress: {
         duration: 0,
-        enabled: true
+        enabled: true,
       },
       custom: {
         duration: 35000,
-        enabled: true
+        enabled: true,
       },
       details: true,
       localStorage: false,
       html5Mode: false,
-      html5DefaultIcon: 'img/icons/favicon-white.ico'
+      html5DefaultIcon: 'img/icons/favicon-white.ico',
     };
 
     function html5Notify(icon, title, content, ondisplay, onclose) {
@@ -59,7 +58,7 @@ factory('notification', ['$timeout',
         if (!icon) {
           icon = 'img/icons/favicon-white.ico';
         }
-        var noti = window.webkitNotifications.createNotification(icon, title, content);
+        const noti = window.webkitNotifications.createNotification(icon, title, content);
         if (typeof ondisplay === 'function') {
           noti.ondisplay = ondisplay;
         }
@@ -77,101 +76,99 @@ factory('notification', ['$timeout',
 
       /* ========== SETTINGS RELATED METHODS =============*/
 
-      disableHtml5Mode: function() {
+      disableHtml5Mode() {
         settings.html5Mode = false;
       },
 
-      disableType: function(notificationType) {
+      disableType(notificationType) {
         settings[notificationType].enabled = false;
       },
 
-      enableHtml5Mode: function() {
+      enableHtml5Mode() {
         // settings.html5Mode = true;
         settings.html5Mode = this.requestHtml5ModePermissions();
       },
 
-      enableType: function(notificationType) {
+      enableType(notificationType) {
         settings[notificationType].enabled = true;
       },
 
-      getSettings: function() {
+      getSettings() {
         return settings;
       },
 
-      toggleType: function(notificationType) {
+      toggleType(notificationType) {
         settings[notificationType].enabled = !settings[notificationType].enabled;
       },
 
-      toggleHtml5Mode: function() {
+      toggleHtml5Mode() {
         settings.html5Mode = !settings.html5Mode;
       },
 
-      requestHtml5ModePermissions: function() {
+      requestHtml5ModePermissions() {
         if (window.webkitNotifications) {
           if (window.webkitNotifications.checkPermission() === 0) {
             return true;
-          } else {
-            window.webkitNotifications.requestPermission(function() {
-              if (window.webkitNotifications.checkPermission() === 0) {
-                settings.html5Mode = true;
-              } else {
-                settings.html5Mode = false;
-              }
-            });
-            return false;
           }
-        } else {
+          window.webkitNotifications.requestPermission(() => {
+            if (window.webkitNotifications.checkPermission() === 0) {
+              settings.html5Mode = true;
+            } else {
+              settings.html5Mode = false;
+            }
+          });
           return false;
         }
+        return false;
       },
 
 
       /* ============ QUERYING RELATED METHODS ============*/
 
-      getAll: function() {
+      getAll() {
         // Returns all notifications that are currently stored
         return notifications;
       },
 
-      getQueue: function() {
+      getQueue() {
         return queue;
       },
 
       /* ============== NOTIFICATION METHODS ==============*/
 
-      info: function(title, content, userData) {
+      info(title, content, userData) {
         return this.awesomeNotify('info', 'fi-info', title, content, userData);
       },
 
-      funds: function(title, content, userData) {
+      funds(title, content, userData) {
         return this.awesomeNotify('funds', 'icon-receive', title, content, userData);
       },
 
-      version: function(title, content, severe) {
+      version(title, content, severe) {
         return this.awesomeNotify('version', severe ? 'fi-alert' : 'fi-flag', title, content);
       },
 
-      error: function(title, content, userData) {
+      error(title, content, userData) {
         return this.awesomeNotify('error', 'fi-x', title, content, userData);
       },
 
-      success: function(title, content, userData) {
+      success(title, content, userData) {
         return this.awesomeNotify('success', 'fi-check', title, content, userData);
       },
 
-      warning: function(title, content, userData) {
+      warning(title, content, userData) {
         return this.awesomeNotify('warning', 'fi-alert', title, content, userData);
       },
 
-      new: function(title, content, userData) {
+      new(title, content, userData) {
         return this.awesomeNotify('warning', 'fi-plus', title, content, userData);
       },
 
-      sent: function(title, content, userData) {
+      sent(title, content, userData) {
         return this.awesomeNotify('warning', 'icon-paperplane', title, content, userData);
       },
 
-      awesomeNotify: function(type, icon, title, content, userData) {
+      awesomeNotify(type, icon, title, content, userData) {
         /**
          * Supposed to wrap the makeNotification method for drawing icons using font-awesome
          * rather than an image.
@@ -185,37 +182,37 @@ factory('notification', ['$timeout',
         return this.makeNotification(type, false, icon, title, content, userData);
       },
 
-      notify: function(image, title, content, userData) {
+      notify(image, title, content, userData) {
         // Wraps the makeNotification method for displaying notifications with images
         // rather than icons
         return this.makeNotification('custom', image, true, title, content, userData);
       },
 
-      makeNotification: function(type, image, icon, title, content, userData) {
-        var notification = {
-          'type': type,
-          'image': image,
-          'icon': icon,
-          'title': title,
-          'content': content,
-          'timestamp': +new Date(),
-          'userData': userData
+      makeNotification(type, image, icon, title, content, userData) {
+        const notification = {
+          type,
+          image,
+          icon,
+          title,
+          content,
+          timestamp: +new Date(),
+          userData,
         };
 
         notifications.push(notification);
 
         if (settings.html5Mode) {
-          html5Notify(image, title, content, function() {
+          html5Notify(image, title, content, () => {
             // inner on display function
-          }, function() {
+          }, () => {
             // inner on close function
           });
         }
 
-        //this is done because html5Notify() changes the variable settings.html5Mode
+        // this is done because html5Notify() changes the variable settings.html5Mode
         if (!settings.html5Mode) {
           queue.push(notification);
-          $timeout(function removeFromQueueTimeout() {
+          $timeout(() => {
             queue.splice(queue.indexOf(notification), 1);
           }, settings[type].duration);
         }
@@ -223,12 +220,12 @@ factory('notification', ['$timeout',
         // Mobile notification
         if (window && window.navigator && window.navigator.vibrate) {
           window.navigator.vibrate([200, 100, 200]);
-        };
+        }
 
         if (document.hidden && (type == 'info' || type == 'funds')) {
           new window.Notification(title, {
             body: content,
-            icon: 'img/notification.png'
+            icon: 'img/notification.png',
           });
         }
 
@@ -239,25 +236,25 @@ factory('notification', ['$timeout',
 
       /* ============ PERSISTENCE METHODS ============ */
 
-      save: function() {
+      save() {
         // Save all the notifications into localStorage
         if (settings.localStorage) {
           localStorage.setItem('notifications', JSON.stringify(notifications));
         }
       },
 
-      restore: function() {
+      restore() {
         // Load all notifications from localStorage
       },
 
-      clear: function() {
+      clear() {
         notifications = [];
         this.save();
-      }
+      },
 
     };
-  }
-]).directive('notifications', function(notification, $compile) {
+  },
+]).directive('notifications', (notification, $compile) => {
   /**
    *
    * It should also parse the arguments passed to it that specify
@@ -268,10 +265,10 @@ factory('notification', ['$timeout',
    * handling all of the notifications from the notification service
    */
   function link(scope, element, attrs) {
-    var position = attrs.notifications;
+    let position = attrs.notifications;
     position = position.split(' ');
     element.addClass('dr-notification-container');
-    for (var i = 0; i < position.length; i++) {
+    for (let i = 0; i < position.length; i++) {
       element.addClass(position[i]);
     }
   }
@@ -280,16 +277,16 @@ factory('notification', ['$timeout',
     restrict: 'A',
     scope: {},
     templateUrl: 'views/includes/notifications.html',
-    link: link,
+    link,
     controller: ['$scope',
       function NotificationsCtrl($scope) {
         $scope.queue = notification.getQueue();
 
-        $scope.removeNotification = function(noti) {
+        $scope.removeNotification = function (noti) {
           $scope.queue.splice($scope.queue.indexOf(noti), 1);
         };
-      }
-    ]
+      },
+    ],
 
   };
 });

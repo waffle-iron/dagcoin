@@ -1,32 +1,31 @@
-'use strict';
+
 
 angular.module('copayApp.controllers').controller('preferencesAliasController',
-  function($scope, $timeout, configService, profileService, go) {
+  function ($scope, $timeout, configService, profileService, go) {
     var config = configService.getSync();
-    var fc = profileService.focusedClient;
-    var walletId = fc.credentials.walletId;
+    const fc = profileService.focusedClient;
+    const walletId = fc.credentials.walletId;
 
     var config = configService.getSync();
     config.aliasFor = config.aliasFor || {};
     this.alias = config.aliasFor[walletId] || fc.credentials.walletName;
 
-    this.save = function() {
-      var self = this;
-      var opts = {
-        aliasFor: {}
+    this.save = function () {
+      const self = this;
+      const opts = {
+        aliasFor: {},
       };
       opts.aliasFor[walletId] = self.alias;
 
-      configService.set(opts, function(err) {
+      configService.set(opts, (err) => {
         if (err) {
           $scope.$emit('Local/DeviceError', err);
           return;
         }
         $scope.$emit('Local/AliasUpdated');
-        $timeout(function(){
+        $timeout(() => {
           go.path('preferences');
         }, 50);
       });
-
     };
   });

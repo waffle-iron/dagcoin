@@ -1,42 +1,39 @@
-'use strict';
+
 
 angular.module('copayApp.controllers').controller('sidebarController',
-  function($rootScope, $timeout, lodash, profileService, configService, go, isMobile, isCordova) {
-    var self = this;
+  function ($rootScope, $timeout, lodash, profileService, configService, go, isMobile, isCordova) {
+    const self = this;
     self.isWindowsPhoneApp = isMobile.Windows() && isCordova;
     self.walletSelection = false;
 
 
-    $rootScope.$on('Local/ColorUpdated', function(event) {
+    $rootScope.$on('Local/ColorUpdated', (event) => {
       self.setWallets();
     });
 
-    $rootScope.$on('Local/AliasUpdated', function(event) {
+    $rootScope.$on('Local/AliasUpdated', (event) => {
       self.setWallets();
     });
 
 
-    self.signout = function() {
+    self.signout = function () {
       profileService.signout();
     };
 
-    self.setWallets = function() {
+    self.setWallets = function () {
       if (!profileService.profile) return;
-      var config = configService.getSync();
+      const config = configService.getSync();
       config.colorFor = config.colorFor || {};
       config.aliasFor = config.aliasFor || {};
-      var ret = lodash.map(profileService.profile.credentials, function(c) {
-        return {
-          m: c.m,
-          n: c.n,
-          name: config.aliasFor[c.walletId] || c.walletName,
-          id: c.walletId,
-          color: config.colorFor[c.walletId] || '#4A90E2'
-        };
-      });
+      const ret = lodash.map(profileService.profile.credentials, c => ({
+        m: c.m,
+        n: c.n,
+        name: config.aliasFor[c.walletId] || c.walletName,
+        id: c.walletId,
+        color: config.colorFor[c.walletId] || '#4A90E2',
+      }));
       self.wallets = lodash.sortBy(ret, 'name');
     };
 
     self.setWallets();
-
   });

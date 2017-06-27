@@ -1,11 +1,10 @@
-'use strict';
 
 
-angular.module('copayApp.services').factory('authService', function() {
-    var root = {};
+angular.module('copayApp.services').factory('authService', () => {
+  const root = {};
 
-    root.objRequest = null;
+  root.objRequest = null;
 
 
-    return root;
+  return root;
 });

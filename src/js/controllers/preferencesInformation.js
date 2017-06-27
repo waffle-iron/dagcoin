@@ -1,14 +1,14 @@
-'use strict';
+
 
 angular.module('copayApp.controllers').controller('preferencesInformation',
-  function($scope, $log, $timeout, isMobile, gettextCatalog, lodash, profileService, storageService, go, configService) {
-	var constants = require('byteballcore/constants.js');
-    var fc = profileService.focusedClient;
-    var c = fc.credentials;
+  function ($scope, $log, $timeout, isMobile, gettextCatalog, lodash, profileService, storageService, go, configService) {
+    const constants = require('byteballcore/constants.js');
+    const fc = profileService.focusedClient;
+    const c = fc.credentials;
 
-    this.init = function() {
-      var basePath = c.getBaseAddressDerivationPath();
-      var config = configService.getSync().wallet.settings;
+    this.init = function () {
+      const basePath = c.getBaseAddressDerivationPath();
+      const config = configService.getSync().wallet.settings;
 
       $scope.walletName = c.walletName;
       $scope.walletId = c.walletId;
@@ -20,13 +20,13 @@ angular.module('copayApp.controllers').controller('preferencesInformation',
       $scope.addrs = null;
 
       fc.getAddresses({
-        doNotVerify: true
-      }, function(err, addrs) {
+        doNotVerify: true,
+      }, (err, addrs) => {
         if (err) {
           $log.warn(err);
           return;
-        };
-        /*var last10 = [],
+        }
+        /* var last10 = [],
           i = 0,
           e = addrs.pop();
         while (i++ < 10 && e) {
@@ -36,43 +36,40 @@ angular.module('copayApp.controllers').controller('preferencesInformation',
         }
         $scope.addrs = last10;*/
         $scope.addrs = addrs;
-        $timeout(function() {
+        $timeout(() => {
           $scope.$apply();
         });
-
       });
-      
-      fc.getListOfBalancesOnAddresses(function(listOfBalances) {
-      	listOfBalances = listOfBalances.map(function(row) {
-      		if (row.asset == 'base' || row.asset == constants.DAGCOIN_ASSET) {
-      			var assetName = row.asset !== "base" ? 'DAG' : 'base';
-      			var unitName = row.asset !== "base" ? config.dagUnitName : config.unitName;
-				row.amount = profileService.formatAmount(row.amount, assetName, {dontRound: true}) + ' ' + unitName;
-				return row;
-			}
-			else {
-				return row;
-			}
-		});
-      	//groupBy address
-      	var assocListOfBalances = {};
-      	listOfBalances.forEach(function(row) {
-			if (assocListOfBalances[row.address] === undefined) assocListOfBalances[row.address] = [];
-			assocListOfBalances[row.address].push(row);
-		});
-      	$scope.assocListOfBalances = assocListOfBalances;
-      	$timeout(function() {
-      		$scope.$apply();
-		});
-      });			
-    };
-    
-    $scope.hasListOfBalances = function() {
-    	return !!Object.keys($scope.assocListOfBalances || {}).length;
-	};
 
-    this.sendAddrs = function() {
-      var self = this;
+      fc.getListOfBalancesOnAddresses((listOfBalances) => {
+      	listOfBalances = listOfBalances.map((row) => {
+      		if (row.asset == 'base' || row.asset == constants.DAGCOIN_ASSET) {
+      			const assetName = row.asset !== 'base' ? 'DAG' : 'base';
+      			const unitName = row.asset !== 'base' ? config.dagUnitName : config.unitName;
+        row.amount = `${profileService.formatAmount(row.amount, assetName, { dontRound: true })} ${unitName}`;
+        return row;
+      }
+        return row;
+      });
+      	// groupBy address
+      	const assocListOfBalances = {};
+      	listOfBalances.forEach((row) => {
+        if (assocListOfBalances[row.address] === undefined) assocListOfBalances[row.address] = [];
+        assocListOfBalances[row.address].push(row);
+      });
+      	$scope.assocListOfBalances = assocListOfBalances;
+      	$timeout(() => {
+      		$scope.$apply();
+      });
+      });
+    };
+
+    $scope.hasListOfBalances = function () {
+    	return !!Object.keys($scope.assocListOfBalances || {}).length;
+    };
+
+    this.sendAddrs = function () {
+      const self = this;
 
       if (isMobile.Android() || isMobile.Windows()) {
         window.ignoreMobilePause = true;
@@ -81,7 +78,7 @@ angular.module('copayApp.controllers').controller('preferencesInformation',
       self.loading = true;
 
       function formatDate(ts) {
-        var dateObj = new Date(ts * 1000);
+        const dateObj = new Date(ts * 1000);
         if (!dateObj) {
           $log.debug('Error formating a date');
           return 'DateError';
@@ -90,23 +87,21 @@ angular.module('copayApp.controllers').controller('preferencesInformation',
           return '';
         }
         return dateObj.toJSON();
-      };
+      }
 
-      $timeout(function() {
+      $timeout(() => {
         fc.getAddresses({
-          doNotVerify: true
-        }, function(err, addrs) {
+          doNotVerify: true,
+        }, (err, addrs) => {
           self.loading = false;
           if (err) {
             $log.warn(err);
             return;
-          };
+          }
 
-          var body = 'Byteball Wallet "' + $scope.walletName + '" Addresses.\n\n';
-          body += "\n";
-          body += addrs.map(function(v) {
-            return ('* ' + v.address + ' ' + v.path + ' ' + formatDate(v.createdOn));
-          }).join("\n");
+          let body = `Byteball Wallet "${$scope.walletName}" Addresses.\n\n`;
+          body += '\n';
+          body += addrs.map(v => (`* ${v.address} ${v.path} ${formatDate(v.createdOn)}`)).join('\n');
 
           window.plugins.socialsharing.shareViaEmail(
             body,
@@ -115,22 +110,22 @@ angular.module('copayApp.controllers').controller('preferencesInformation',
             null, // CC: must be null or an array
             null, // BCC: must be null or an array
             null, // FILES: can be null, a string, or an array
-            function() {},
-            function() {}
+            () => {},
+            () => {},
           );
 
-          $timeout(function() {
+          $timeout(() => {
             $scope.$apply();
           }, 1000);
         });
       }, 100);
     };
 
-    this.clearTransactionHistory = function() {
-        $scope.$emit('Local/ClearHistory');
+    this.clearTransactionHistory = function () {
+      $scope.$emit('Local/ClearHistory');
 
-        $timeout(function() {
-          go.walletHome();
-        }, 100);
-    }
+      $timeout(() => {
+        go.walletHome();
+      }, 100);
+    };
   });

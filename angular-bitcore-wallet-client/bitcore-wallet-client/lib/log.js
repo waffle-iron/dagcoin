@@ -1,4 +1,4 @@
-var _ = require('lodash');
+const _ = require('lodash');
 /**
  * @desc
  * A simple logger that wraps the <tt>console.log</tt> methods when available.
@@ -15,33 +15,32 @@ var _ = require('lodash');
  * @param {string} name - a name for the logger. This will show up on every log call
  * @constructor
  */
-var Logger = function(name) {
+const Logger = function (name) {
   this.name = name || 'log';
   this.level = 2;
 };
 
-Logger.prototype.getLevels = function() {
+Logger.prototype.getLevels = function () {
   return levels;
 };
 
 
 var levels = {
-  'debug': 0,
-  'info': 1,
-  'log': 2,
-  'warn': 3,
-  'error': 4,
-  'fatal': 5
+  debug: 0,
+  info: 1,
+  log: 2,
+  warn: 3,
+  error: 4,
+  fatal: 5,
 };
 
-_.each(levels, function(level, levelName) {
-  Logger.prototype[levelName] = function() {
+_.each(levels, (level, levelName) => {
+  Logger.prototype[levelName] = function () {
     if (level >= levels[this.level]) {
-
       if (Error.stackTraceLimit && this.level == 'debug') {
-        var old = Error.stackTraceLimit;
+        const old = Error.stackTraceLimit;
         Error.stackTraceLimit = 2;
-        var stack;
+        let stack;
 
         // this hack is to be compatible with IE11
         try {
@@ -49,18 +48,18 @@ _.each(levels, function(level, levelName) {
         } catch (e) {
           stack = e.stack;
         }
-        var lines = stack.split('\n');
+        const lines = stack.split('\n');
         var caller = lines[2];
-        caller = ':' + caller.substr(6);
+        caller = `:${caller.substr(6)}`;
         Error.stackTraceLimit = old;
       }
 
-      var str = '[' + levelName + (caller || '') + '] ' + arguments[0],
+      var str = `[${levelName}${caller || ''}] ${arguments[0]}`,
         extraArgs,
         extraArgs = [].slice.call(arguments, 1);
       if (console[levelName]) {
         extraArgs.unshift(str);
-        console[levelName].apply(console, extraArgs);
+        console[levelName](...extraArgs);
       } else {
         if (extraArgs.length) {
           str += JSON.stringify(extraArgs);
@@ -79,7 +78,7 @@ _.each(levels, function(level, levelName) {
  *
  * @param {number} level - the name of the logging level
  */
-Logger.prototype.setLevel = function(level) {
+Logger.prototype.setLevel = function (level) {
   this.level = level;
 };
 
@@ -120,7 +119,7 @@ Logger.prototype.setLevel = function(level) {
  * @param {*} args - the arguments to be logged.
  */
 
-var logger = new Logger('byteball');
-var error = new Error();
+const logger = new Logger('byteball');
+const error = new Error();
 logger.setLevel('info');
 module.exports = logger;

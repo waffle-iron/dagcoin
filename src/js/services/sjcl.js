@@ -1,7 +1,7 @@
 
-'use strict';
+
 angular.module('copayApp.services')
-  .factory('sjcl', function bitcoreFactory(bwcService) {
-    var sjcl = bwcService.getSJCL();
+  .factory('sjcl', (bwcService) => {
+    const sjcl = bwcService.getSJCL();
     return sjcl;
   });
