@@ -1,41 +1,40 @@
-module.exports = function(grunt) {
-
-	function getPlatform(){
-		switch(process.platform){
-			case 'win32': return 'win64'; // change to 'win' for both 32 and 64
-			case 'linux': return 'linux64';
-			case 'darwin': return 'osx64';
-			default: throw Error("unknown platform "+process.platform);
-		}
-	}
+module.exports = function (grunt) {
+  function getPlatform() {
+    switch (process.platform) {
+      case 'win32': return 'win64'; // change to 'win' for both 32 and 64
+      case 'linux': return 'linux64';
+      case 'darwin': return 'osx64';
+      default: throw Error(`unknown platform ${process.platform}`);
+    }
+  }
 
   // Project Configuration
   grunt.initConfig({
     pkg: grunt.file.readJSON('package.json'),
     exec: {
       version: {
-        command: 'node ./util/version.js'
+        command: 'node ./util/version.js',
       },
       clear: {
-        command: 'rm -Rf bower_components node_modules'
+        command: 'rm -Rf bower_components node_modules',
       },
       osx64: {
-        command: '../byteballbuilds/build-osx.sh osx64'
+        command: '../byteballbuilds/build-osx.sh osx64',
       },
       osx32: {
-        command: '../byteballbuilds/build-osx.sh osx32'
-      }
+        command: '../byteballbuilds/build-osx.sh osx32',
+      },
     },
     watch: {
       options: {
-        dateFormat: function(time) {
-          grunt.log.writeln('The watch finished in ' + time + 'ms at ' + (new Date()).toString());
+        dateFormat(time) {
+          grunt.log.writeln(`The watch finished in ${time}ms at ${(new Date()).toString()}`);
           grunt.log.writeln('Waiting for more changes...');
         },
       },
       css: {
         files: ['src/css/*.css'],
-        tasks: ['concat:css']
+        tasks: ['concat:css'],
       },
       main: {
         files: [
@@ -46,15 +45,15 @@ module.exports = function(grunt) {
           'src/js/routes.js',
           'src/js/services/*.js',
           'src/js/models/*.js',
-          'src/js/controllers/*.js'
+          'src/js/controllers/*.js',
         ],
-        tasks: ['concat:js']
-      }
+        tasks: ['concat:js'],
+      },
     },
     concat: {
       options: {
         sourceMap: false,
-        sourceMapStyle: 'link' // embed, link, inline
+        sourceMapStyle: 'link', // embed, link, inline
       },
       angular: {
         src: [
@@ -75,7 +74,7 @@ module.exports = function(grunt) {
           'bower_components/angular-elastic/elastic.js',
           'bower_components/ui-router-extras/release/ct-ui-router-extras.js',
         ],
-        dest: 'public/angular.js'
+        dest: 'public/angular.js',
       },
       js: {
         src: [
@@ -88,13 +87,13 @@ module.exports = function(grunt) {
           'src/js/services/*.js',
           'src/js/controllers/*.js',
           'src/js/version.js',
-          'src/js/init.js'
+          'src/js/init.js',
         ],
-        dest: 'public/dagcoin.js'
+        dest: 'public/dagcoin.js',
       },
       css: {
         src: ['src/css/*.css'],
-        dest: 'public/css/dagcoin.css'
+        dest: 'public/css/dagcoin.css',
       },
       foundation: {
         src: [
@@ -102,21 +101,21 @@ module.exports = function(grunt) {
           'bower_components/animate.css/animate.css',
 			    'bower_components/foundation/css/foundation.css',
           'bower_components/angular-ui-switch/angular-ui-switch.css',
-          'bower_components/angular-carousel/dist/angular-carousel.css'
+          'bower_components/angular-carousel/dist/angular-carousel.css',
         ],
-        dest: 'public/css/foundation.css'
-      }
+        dest: 'public/css/foundation.css',
+      },
     },
     uglify: {
       options: {
-        mangle: false
+        mangle: false,
       },
       prod: {
         files: {
           'public/dagcoin.js': ['public/dagcoin.js'],
-          'public/angular.js': ['public/angular.js']
-        }
-      }
+          'public/angular.js': ['public/angular.js'],
+        },
+      },
     },
     nggettext_extract: {
       pot: {
@@ -127,27 +126,27 @@ module.exports = function(grunt) {
             'public/views/**/*.html',
             'src/js/routes.js',
             'src/js/services/*.js',
-            'src/js/controllers/*.js'
-          ]
-        }
+            'src/js/controllers/*.js',
+          ],
+        },
       },
     },
     nggettext_compile: {
       all: {
         options: {
-		  format: "json",
-          module: 'copayApp'
+		  format: 'json',
+          module: 'copayApp',
         },
-		files: [
-			{
-				expand: true,
-				dot: true,
-				cwd: "i18n/po",
-				dest: "public/languages",
-				src: ["*.po"],
-				ext: ".json"
-			}
-		]
+        files: [
+          {
+            expand: true,
+            dot: true,
+            cwd: 'i18n/po',
+            dest: 'public/languages',
+            src: ['*.po'],
+            ext: '.json',
+          },
+        ],
       },
     },
     copy: {
@@ -155,31 +154,31 @@ module.exports = function(grunt) {
         expand: true,
         flatten: true,
         src: 'bower_components/foundation-icon-fonts/foundation-icons.*',
-        dest: 'public/icons/'
+        dest: 'public/icons/',
       },
       osx: {
         expand: true,
         flatten: true,
-        options: {timestamp: true, mode: true},
+        options: { timestamp: true, mode: true },
         src: ['webkitbuilds/build-osx.sh', 'webkitbuilds/Background.png'],
-        dest: '../byteballbuilds/'
+        dest: '../byteballbuilds/',
       },
       linux: {
-		options: {timestamp: true, mode: true},
-		files: [
-		  {expand: true, cwd: './webkitbuilds/', src: ['dagcoin.desktop', '../public/img/icons/icon-white-outline.iconset/icon_256x256.png'], dest: '../byteballbuilds/DAGCOIN/linux32/', flatten: true, filter: 'isFile', options: {timestamp: true, mode: true} },
-		  {expand: true, cwd: './webkitbuilds/', src: ['dagcoin.desktop', '../public/img/icons/icon-white-outline.iconset/icon_256x256.png'], dest: '../byteballbuilds/DAGCOIN/linux64/', flatten: true, filter: 'isFile', options: {timestamp: true, mode: true} },
-		],
-      }
+        options: { timestamp: true, mode: true },
+        files: [
+		  { expand: true, cwd: './webkitbuilds/', src: ['dagcoin.desktop', '../public/img/icons/icon-white-outline.iconset/icon_256x256.png'], dest: '../byteballbuilds/DAGCOIN/linux32/', flatten: true, filter: 'isFile', options: { timestamp: true, mode: true } },
+		  { expand: true, cwd: './webkitbuilds/', src: ['dagcoin.desktop', '../public/img/icons/icon-white-outline.iconset/icon_256x256.png'], dest: '../byteballbuilds/DAGCOIN/linux64/', flatten: true, filter: 'isFile', options: { timestamp: true, mode: true } },
+        ],
+      },
     },
     karma: {
       unit: {
-        configFile: 'test/karma.conf.js'
+        configFile: 'test/karma.conf.js',
       },
       prod: {
         configFile: 'test/karma.conf.js',
-        singleRun: true
-      }
+        singleRun: true,
+      },
     },
     coveralls: {
       options: {
@@ -187,87 +186,88 @@ module.exports = function(grunt) {
         coverageDir: 'coverage/report-lcov',
         dryRun: true,
         force: true,
-        recursive: false
-      }
+        recursive: false,
+      },
     },
     nwjs: {
       options: {
-          //platforms: ['win','osx64','linux'],
-          //platforms: ['osx64'],
-          platforms: [getPlatform()],
-          appName: 'DAGCOIN',
-          buildDir: '../byteballbuilds',
-          version: '0.14.7',
-          zip: false,
-          macIcns: './public/img/icons/icon-white-outline.icns',
-          winIco: './public/img/icons/icon-white-outline.ico',
-          exeIco: './public/img/icons/icon-white-outline.ico',
-		  macPlist: {CFBundleURLTypes: [{CFBundleURLName: 'DAGCOIN action', CFBundleURLSchemes: ['DAGCOIN']}], /*CFBundleIconFile: 'nw.icns',*/ LSHasLocalizedDisplayName: 0}
+          // platforms: ['win','osx64','linux'],
+          // platforms: ['osx64'],
+        platforms: [getPlatform()],
+        appName: 'DAGCOIN',
+		  flavor: 'normal',
+        buildDir: '../byteballbuilds',
+        version: '0.14.7',
+        zip: false,
+        macIcns: './public/img/icons/icon-white-outline.icns',
+        winIco: './public/img/icons/icon-white-outline.ico',
+        exeIco: './public/img/icons/icon-white-outline.ico',
+		  macPlist: { CFBundleURLTypes: [{ CFBundleURLName: 'DAGCOIN action', CFBundleURLSchemes: ['DAGCOIN'] }], /* CFBundleIconFile: 'nw.icns',*/ LSHasLocalizedDisplayName: 0 },
       },
-      src: ['./package.json', './public/**/*', './angular-bitcore-wallet-client/**/*']
+      src: ['./package.json', './public/**/*', './angular-bitcore-wallet-client/**/*'],
     },
     compress: {
       linux32: {
         options: {
-          archive: '../byteballbuilds/dagcoin-linux32.zip'
+          archive: '../byteballbuilds/dagcoin-linux32.zip',
         },
         expand: true,
-		cwd: '../byteballbuilds/DAGCOIN/linux32/',
+        cwd: '../byteballbuilds/DAGCOIN/linux32/',
         src: ['**/*'],
-        dest: 'dagcoin-linux32/'
+        dest: 'dagcoin-linux32/',
       },
       linux64: {
         options: {
-          archive: '../byteballbuilds/dagcoin-linux64.zip'
+          archive: '../byteballbuilds/dagcoin-linux64.zip',
         },
         expand: true,
         cwd: '../byteballbuilds/DAGCOIN/linux64/',
         src: ['**/*'],
-        dest: 'dagcoin-linux64/'
-      }
+        dest: 'dagcoin-linux64/',
+      },
     },
     browserify: {
-        dist:{
-            options:{
-                exclude: ['sqlite3', 'nw.gui', 'mysql', 'ws', 'regedit']
-            },
-            src: 'public/dagcoin.js',
-            dest: 'public/dagcoin.js'
-        }
+      dist: {
+        options: {
+          exclude: ['sqlite3', 'nw.gui', 'mysql', 'ws', 'regedit'],
+        },
+        src: 'public/dagcoin.js',
+        dest: 'public/dagcoin.js',
+      },
     },
     // .deb proved to be very slow to produce and install: lintian spends a lot of time verifying a .bin file
     debian_package: {
-        linux64: {
-            files: [
-                {expand: true, cwd: '../byteballbuilds/dagcoin-test/linux64/', src: ['**/*'], dest: '/opt/dagcoin-test/'},
+      linux64: {
+        files: [
+                { expand: true, cwd: '../byteballbuilds/dagcoin-test/linux64/', src: ['**/*'], dest: '/opt/dagcoin-test/' },
                 //{expand: true, cwd: '../byteballbuilds/byteball-test/linux64', src: ['dagcoin.desktop'], dest: '/usr/share/applications/byteball-test.desktop'}
-            ],
-            options: {
-                maintainer: {
-                    name: 'DAGCOIN',
-                    email: 'byteball@byteball.org'
-                },
-                long_description: 'A wallet for decentralized value',
-                target_architecture: 'amd64'
-            }
-        }
+        ],
+        options: {
+          maintainer: {
+            name: 'DAGCOIN',
+            email: 'byteball@byteball.org',
+          },
+          long_description: 'A wallet for decentralized value',
+          target_architecture: 'amd64',
+        },
+      },
     },
     innosetup_compiler: {
-        win64: {
-            options: {
-                gui: false,
-                verbose: false
-            },
-            script: 'webkitbuilds/setup-win64.iss'
+      win64: {
+        options: {
+          gui: false,
+          verbose: false,
         },
-        win32: {
-            options: {
-                gui: false,
-                verbose: false
-            },
-            script: 'webkitbuilds/setup-win32.iss'
-        }
-    }
+        script: 'webkitbuilds/setup-win64.iss',
+      },
+      win32: {
+        options: {
+          gui: false,
+          verbose: false,
+        },
+        script: 'webkitbuilds/setup-win32.iss',
+      },
+    },
   });
 
   grunt.loadNpmTasks('grunt-contrib-concat');
@@ -281,17 +281,17 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-karma-coveralls');
   grunt.loadNpmTasks('grunt-nw-builder');
   grunt.loadNpmTasks('grunt-contrib-compress');
-  //grunt.loadNpmTasks('grunt-debian-package');
+  // grunt.loadNpmTasks('grunt-debian-package');
   grunt.loadNpmTasks('innosetup-compiler');
 
   grunt.registerTask('default', ['nggettext_compile', 'exec:version', 'concat', 'copy:icons']);
   grunt.registerTask('cordova', ['default', 'browserify']);
   grunt.registerTask('cordova-prod', ['cordova', 'uglify']);
-  //grunt.registerTask('prod', ['default', 'uglify']);
+  // grunt.registerTask('prod', ['default', 'uglify']);
   grunt.registerTask('translate', ['nggettext_extract']);
   grunt.registerTask('test', ['karma:unit']);
   grunt.registerTask('test-coveralls', ['karma:prod', 'coveralls']);
-  //grunt.registerTask('desktop', ['prod', 'nwjs', 'copy:linux', 'compress:linux32', 'compress:linux64', 'copy:osx', 'exec:osx32', 'exec:osx64']);
+  // grunt.registerTask('desktop', ['prod', 'nwjs', 'copy:linux', 'compress:linux32', 'compress:linux64', 'copy:osx', 'exec:osx32', 'exec:osx64']);
   grunt.registerTask('desktop', ['default', 'nwjs']);
   grunt.registerTask('dmg', ['copy:osx', 'exec:osx64']);
   grunt.registerTask('linux64', ['copy:linux', 'compress:linux64']);

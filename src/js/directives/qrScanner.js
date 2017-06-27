@@ -1,86 +1,82 @@
-'use strict';
+
 
 var breadcrumbs = require('byteballcore/breadcrumbs.js');
 
 angular.module('copayApp.directives')
     .directive('qrScanner', ['$rootScope', '$timeout', '$modal', 'isCordova', 'gettextCatalog',
-      function($rootScope, $timeout, $modal, isCordova, gettextCatalog) {
-
-        var controller = function($scope) {
-
-          $scope.cordovaOpenScanner = function() {
+      function ($rootScope, $timeout, $modal, isCordova, gettextCatalog) {
+        const controller = function ($scope) {
+          $scope.cordovaOpenScanner = function () {
             window.ignoreMobilePause = true;
             window.plugins.spinnerDialog.show(null, gettextCatalog.getString('Preparing camera...'), true);
-            $timeout(function() {
+            $timeout(() => {
               cordova.plugins.barcodeScanner.scan(
-                  function onSuccess(result) {
-                    $timeout(function() {
+                  (result) => {
+                    $timeout(() => {
                       window.plugins.spinnerDialog.hide();
                       window.ignoreMobilePause = false;
                     }, 100);
                     if (result.cancelled) return;
 
-                    $timeout(function() {
-                      var data = result.text;
-                      $scope.onScan({ data: data });
+                    $timeout(() => {
+                      const data = result.text;
+                      $scope.onScan({ data });
                     }, 1000);
                   },
-                  function onError(error) {
-                    $timeout(function() {
+                  (error) => {
+                    $timeout(() => {
                       window.ignoreMobilePause = false;
                       window.plugins.spinnerDialog.hide();
                     }, 100);
                     alert('Scanning error');
-                  }
-              );
+                  });
               if ($scope.beforeScan) {
                 $scope.beforeScan();
               }
             }, 100);
           };
 
-          $scope.modalOpenScanner = function() {
-            var parentScope = $scope;
-            var ModalInstanceCtrl = function($scope, $rootScope, $modalInstance) {
+          $scope.modalOpenScanner = function () {
+            const parentScope = $scope;
+            const ModalInstanceCtrl = function ($scope, $rootScope, $modalInstance) {
               // QR code Scanner
-              var video;
-              var canvas;
-              var $video;
-              var context;
-              var localMediaStream;
-              var prevResult;
+              let video;
+              let canvas;
+              let $video;
+              let context;
+              let localMediaStream;
+              let prevResult;
 
-              var _scan = function(evt) {
+              var _scan = function (evt) {
                 if (localMediaStream) {
                   context.drawImage(video, 0, 0, 300, 225);
                   try {
                     qrcode.decode();
                   } catch (e) {
-                    //qrcodeError(e);
+                    // qrcodeError(e);
                   }
                 }
                 $timeout(_scan, 800);
               };
 
-              var _scanStop = function() {
+              const _scanStop = function () {
                 if (localMediaStream && localMediaStream.active) {
-                  var localMediaStreamTrack = localMediaStream.getTracks();
-                  for (var i = 0; i < localMediaStreamTrack.length; i++) {
+                  const localMediaStreamTrack = localMediaStream.getTracks();
+                  for (let i = 0; i < localMediaStreamTrack.length; i++) {
                     localMediaStreamTrack[i].stop();
                   }
                 } else {
                   try {
                     localMediaStream.stop();
-                  } catch(e) {
+                  } catch (e) {
                     // Older Chromium not support the STOP function
-                  };
+                  }
                 }
                 localMediaStream = null;
-				if (video)
-					video.src = '';
+                if (video) { video.src = ''; }
               };
 
-              qrcode.callback = function(data) {
+              qrcode.callback = function (data) {
                 if (prevResult != data) {
                   prevResult = data;
                   return;
@@ -89,19 +85,19 @@ angular.module('copayApp.directives')
                 $modalInstance.close(data);
               };
 
-              var _successCallback = function(stream) {
+              const _successCallback = function (stream) {
                 video.src = (window.URL && window.URL.createObjectURL(stream)) || stream;
                 localMediaStream = stream;
                 video.play();
                 $timeout(_scan, 1000);
               };
 
-              var _videoError = function(err) {
-				breadcrumbs.add('qr scanner video error');
+              const _videoError = function (err) {
+                breadcrumbs.add('qr scanner video error');
                 $scope.cancel();
               };
 
-              var setScanner = function() {
+              const setScanner = function () {
                 navigator.getUserMedia = navigator.getUserMedia ||
                     navigator.webkitGetUserMedia || navigator.mozGetUserMedia ||
                     navigator.msGetUserMedia;
@@ -109,15 +105,14 @@ angular.module('copayApp.directives')
                     window.mozURL || window.msURL;
               };
 
-              $scope.init = function() {
+              $scope.init = function () {
                 setScanner();
-                $timeout(function() {
+                $timeout(() => {
                   if (parentScope.beforeScan) {
                     parentScope.beforeScan();
                   }
                   canvas = document.getElementById('qr-canvas');
-				  if (!canvas)
-					  return;
+				  if (!canvas)					  { return; }
                   context = canvas.getContext('2d');
 
 
@@ -128,42 +123,39 @@ angular.module('copayApp.directives')
                   context.clearRect(0, 0, 300, 225);
 
                   navigator.getUserMedia({
-                    video: true
+                    video: true,
                   }, _successCallback, _videoError);
                 }, 500);
               };
 
-              $scope.cancel = function() {
-				breadcrumbs.add('qr scanner cancel');
+              $scope.cancel = function () {
+                breadcrumbs.add('qr scanner cancel');
                 _scanStop();
-				try{
+                try {
                 	$modalInstance.dismiss('cancel');
-				}
-				catch(e){
-					e.bIgnore = true;
+                }				catch (e) {
+                  e.bIgnore = true;
 				//	throw e;
-				}
+                }
               };
             };
 
-            var modalInstance = $modal.open({
+            const modalInstance = $modal.open({
               templateUrl: 'views/modals/scanner.html',
               windowClass: 'full',
               controller: ModalInstanceCtrl,
-              backdrop : 'static',
-              keyboard: false
+              backdrop: 'static',
+              keyboard: false,
             });
-            modalInstance.result.then(function(data) {
-              parentScope.onScan({ data: data });
+            modalInstance.result.then((data) => {
+              parentScope.onScan({ data });
             });
-
           };
 
-          $scope.openScanner = function() {
+          $scope.openScanner = function () {
             if (isCordova) {
               $scope.cordovaOpenScanner();
-            }
-            else {
+            } else {
               $scope.modalOpenScanner();
             }
           };
@@ -172,12 +164,12 @@ angular.module('copayApp.directives')
         return {
           restrict: 'E',
           scope: {
-            onScan: "&",
-            beforeScan: "&"
+            onScan: '&',
+            beforeScan: '&',
           },
-          controller: controller,
+          controller,
           replace: true,
-          template: '<a id="camera-icon" class="btn btn_red" ng-click="openScanner()">Scan QR Code</a>'
-        }
-      }
+          template: '<a id="camera-icon" class="btn btn_red" ng-click="openScanner()">Scan QR Code</a>',
+        };
+      },
     ]);

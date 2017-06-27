@@ -1,5 +1,3 @@
-'use strict';
-
 var eventBus = require('byteballcore/event_bus.js');
 
 angular.module('copayApp.services').factory('go', function($window, $rootScope, $location, $state, profileService, nodeWebkit, notification, gettextCatalog, authService, $deepStateRedirect, $stickyState) {
@@ -142,7 +140,7 @@ angular.module('copayApp.services').factory('go', function($window, $rootScope, 
 			}
 		});
 	}
-	
+
 	function extractByteballArgFromCommandLine(commandLine){
 		var conf = require('byteballcore/conf.js');
 		var re = new RegExp('^'+conf.program+':', 'i');
@@ -154,11 +152,11 @@ angular.module('copayApp.services').factory('go', function($window, $rootScope, 
 		}
 		return null;
 	}
-	
+
 	function registerWindowsProtocolHandler(){
 		// now we do it in inno setup
 	}
-	
+
 	function createLinuxDesktopFile(){
 		console.log("will write .desktop file");
 		var fs = require('fs'+'');
@@ -190,14 +188,14 @@ X-Ubuntu-StageHint=SideStage\n", {mode: 0755}, function(err){
 			});
 		});
 	}
-	
+
 	var gui;
 	try{
 		gui = require('nw.gui');
 	}
 	catch(e){
 	}
-	
+
 	if (gui){ // nwjs
 		var removeListenerForOnopen = $rootScope.$on('Local/BalanceUpdatedAndWalletUnlocked', function(){
 			removeListenerForOnopen();
@@ -268,10 +266,10 @@ X-Ubuntu-StageHint=SideStage\n", {mode: 0755}, function(err){
 			$rootScope.$emit('Local/Resume');
 		}, false);
 	}
-   
-	
+
+
 	root.handleUri = handleUri;
-	
+
 	return root;
 }).factory('$exceptionHandler', function($log){
 	return function myExceptionHandler(exception, cause) {
@@ -303,4 +301,3 @@ process.on('uncaughtException', function(e){
 	console.log("uncaughtException");
 	eventBus.emit('uncaught_error', "Uncaught exception: "+e, e);
 });
-

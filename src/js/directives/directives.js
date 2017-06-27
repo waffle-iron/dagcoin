@@ -1,122 +1,117 @@
-'use strict';
+
 
 function selectText(element) {
-  var doc = document;
+  const doc = document;
   if (doc.body.createTextRange) { // ms
     var range = doc.body.createTextRange();
     range.moveToElementText(element);
     range.select();
   } else if (window.getSelection) {
-    var selection = window.getSelection();
+    const selection = window.getSelection();
     var range = doc.createRange();
     range.selectNodeContents(element);
     selection.removeAllRanges();
     selection.addRange(range);
-
   }
 }
 angular.module('copayApp.directives')
 .directive('validAddress', ['$rootScope', 'profileService',
-    function($rootScope, profileService) {
-      return {
-        require: 'ngModel',
-        link: function(scope, elem, attrs, ctrl) {
-          var ValidationUtils = require('byteballcore/validation_utils.js');
-          var validator = function(value) {
-            if (!profileService.focusedClient)
-              return;
-			  
-            if (typeof value == 'undefined') {
-              ctrl.$pristine = true;
-              return;
-            }
+  function ($rootScope, profileService) {
+    return {
+      require: 'ngModel',
+      link(scope, elem, attrs, ctrl) {
+        const ValidationUtils = require('byteballcore/validation_utils.js');
+        const validator = function (value) {
+          if (!profileService.focusedClient) { return; }
+
+          if (typeof value === 'undefined') {
+            ctrl.$pristine = true;
+            return;
+          }
 
             // Regular url
-            if (/^https?:\/\//.test(value)) {
-              ctrl.$setValidity('validAddress', true);
-              return value;
-            }
+          if (/^https?:\/\//.test(value)) {
+            ctrl.$setValidity('validAddress', true);
+            return value;
+          }
 
             // byteball uri
-			var conf = require('byteballcore/conf.js');
-			var re = new RegExp('^'+conf.program+':([A-Z2-7]{32})\b', 'i');
-			var arrMatches = value.match(re);
-            if (arrMatches) {
-              ctrl.$setValidity('validAddress', ValidationUtils.isValidAddress(arrMatches[1]));
-              return value;
-            }
+          const conf = require('byteballcore/conf.js');
+          const re = new RegExp(`^${conf.program}:([A-Z2-7]{32})\b`, 'i');
+          const arrMatches = value.match(re);
+          if (arrMatches) {
+            ctrl.$setValidity('validAddress', ValidationUtils.isValidAddress(arrMatches[1]));
+            return value;
+          }
 
             // Regular Address
-            ctrl.$setValidity('validAddress', ValidationUtils.isValidAddress(value));
+          ctrl.$setValidity('validAddress', ValidationUtils.isValidAddress(value));
+          return value;
+        };
+
+        ctrl.$parsers.unshift(validator);
+        ctrl.$formatters.unshift(validator);
+      },
+    };
+  },
+])
+  .directive('validUrl', [
+
+    function () {
+      return {
+        require: 'ngModel',
+        link(scope, elem, attrs, ctrl) {
+          const validator = function (value) {
+            // Regular url
+            if (/^https?:\/\//.test(value)) {
+              ctrl.$setValidity('validUrl', true);
+              return value;
+            }
+            ctrl.$setValidity('validUrl', false);
             return value;
           };
 
           ctrl.$parsers.unshift(validator);
           ctrl.$formatters.unshift(validator);
-        }
+        },
       };
-    }
-  ])
-  .directive('validUrl', [
-
-    function() {
-      return {
-        require: 'ngModel',
-        link: function(scope, elem, attrs, ctrl) {
-          var validator = function(value) {
-            // Regular url
-            if (/^https?:\/\//.test(value)) {
-              ctrl.$setValidity('validUrl', true);
-              return value;
-            } else {
-              ctrl.$setValidity('validUrl', false);
-              return value;
-            }
-          };
-
-          ctrl.$parsers.unshift(validator);
-          ctrl.$formatters.unshift(validator);
-        }
-      };
-    }
+    },
   ])
   .directive('validAmount', ['configService',
-    function(configService) {
-
+    function (configService) {
       return {
         require: 'ngModel',
-        link: function(scope, element, attrs, ctrl) {
-          var val = function(value) {
-			//console.log('-- scope', ctrl);
-			/*if (scope.home && scope.home.bSendAll){
+        link(scope, element, attrs, ctrl) {
+          const val = function (value) {
+			// console.log('-- scope', ctrl);
+			/* if (scope.home && scope.home.bSendAll){
 				console.log('-- send all');
 				ctrl.$setValidity('validAmount', true);
 				return value;
 			}*/
-			//console.log('-- amount');
-			var constants = require('byteballcore/constants.js');
-			var asset = attrs.validAmount;
-            var settings = configService.getSync().wallet.settings;
-			var unitValue = 1;
-			var decimals = 0;
-			if (asset === 'base'){
-				unitValue = settings.unitValue;
-				decimals = Number(settings.unitDecimals);
-			}
-			else if (asset === constants.DAGCOIN_ASSET){
-				unitValue = settings.dagUnitValue;
-				decimals = Number(settings.dagUnitDecimals);
-			}
-			  
-            var vNum = Number((value * unitValue).toFixed(0));
+			// console.log('-- amount');
+            const constants = require('byteballcore/constants.js');
+            const asset = attrs.validAmount;
+            const settings = configService.getSync().wallet.settings;
+            let unitValue = 1;
+            let decimals = 0;
+            if (asset === 'base') {
+              unitValue = settings.unitValue;
+              decimals = Number(settings.unitDecimals);
+            }			else if (asset === constants.DAGCOIN_ASSET) {
+              unitValue = settings.dagUnitValue;
+              decimals = Number(settings.dagUnitDecimals);
+            }
+
+            const vNum = Number((value * unitValue).toFixed(0));
 
             if (typeof value === 'undefined' || value === 0) {
               ctrl.$pristine = true;
             }
 
-            if (typeof vNum === "number" && vNum > 0) {
-              var sep_index = ('' + value).indexOf('.');
-              var str_value = ('' + value).substring(sep_index + 1);
+            if (typeof vNum === 'number' && vNum > 0) {
+              const sep_index = (`${value}`).indexOf('.');
+              const str_value = (`${value}`).substring(sep_index + 1);
               if (sep_index > 0 && str_value.length > decimals) {
                 ctrl.$setValidity('validAmount', false);
               } else {
@@ -126,195 +121,166 @@ angular.module('copayApp.directives')
               ctrl.$setValidity('validAmount', false);
             }
             return value;
-          }
+          };
           ctrl.$parsers.unshift(val);
           ctrl.$formatters.unshift(val);
-        }
+        },
       };
-    }
+    },
   ])
-  .directive('loading', function() {
-    return {
-      restrict: 'A',
-      link: function($scope, element, attr) {
-        var a = element.html();
-        var text = attr.loading;
-        element.on('click', function() {
-          element.html('<i class="size-21 fi-bitcoin-circle icon-rotate spinner"></i> ' + text + '...');
-        });
-        $scope.$watch('loading', function(val) {
-          if (!val) {
-            element.html(a);
-          }
-        });
-      }
-    }
-  })
-  .directive('ngFileSelect', function() {
-    return {
-      link: function($scope, el) {
-        el.bind('change', function(e) {
-          $scope.file = (e.srcElement || e.target).files[0];
-          $scope.getFile();
-        });
-      }
-    }
-  })
-  .directive('contact', ['addressbookService', function(addressbookService) {
+  .directive('loading', () => ({
+    restrict: 'A',
+    link($scope, element, attr) {
+      const a = element.html();
+      const text = attr.loading;
+      element.on('click', () => {
+        element.html(`<i class="size-21 fi-bitcoin-circle icon-rotate spinner"></i> ${text}...`);
+      });
+      $scope.$watch('loading', (val) => {
+        if (!val) {
+          element.html(a);
+        }
+      });
+    },
+  }))
+  .directive('ngFileSelect', () => ({
+    link($scope, el) {
+      el.bind('change', (e) => {
+        $scope.file = (e.srcElement || e.target).files[0];
+        $scope.getFile();
+      });
+    },
+  }))
+  .directive('contact', ['addressbookService', function (addressbookService) {
     return {
       restrict: 'E',
-      link: function(scope, element, attrs) {
-        var addr = attrs.address;
-        addressbookService.getLabel(addr, function(label) {
+      link(scope, element, attrs) {
+        const addr = attrs.address;
+        addressbookService.getLabel(addr, (label) => {
           if (label) {
             element.append(label);
           } else {
             element.append(addr);
           }
         });
-      }
+      },
     };
   }])
-  .directive('highlightOnChange', function() {
-    return {
-      restrict: 'A',
-      link: function(scope, element, attrs) {
-        scope.$watch(attrs.highlightOnChange, function(newValue, oldValue) {
-          element.addClass('highlight');
-          setTimeout(function() {
-            element.removeClass('highlight');
-          }, 500);
-        });
-      }
-    }
-  })
-  .directive('checkStrength', function() {
-    return {
-      replace: false,
-      restrict: 'EACM',
-      require: 'ngModel',
-      link: function(scope, element, attrs) {
+  .directive('highlightOnChange', () => ({
+    restrict: 'A',
+    link(scope, element, attrs) {
+      scope.$watch(attrs.highlightOnChange, (newValue, oldValue) => {
+        element.addClass('highlight');
+        setTimeout(() => {
+          element.removeClass('highlight');
+        }, 500);
+      });
+    },
+  }))
+  .directive('checkStrength', () => ({
+    replace: false,
+    restrict: 'EACM',
+    require: 'ngModel',
+    link(scope, element, attrs) {
+      const MIN_LENGTH = 8;
+      const MESSAGES = ['Very Weak', 'Very Weak', 'Weak', 'Medium', 'Strong', 'Very Strong'];
+      const COLOR = ['#dd514c', '#dd514c', '#faa732', '#faa732', '#16A085', '#16A085'];
 
-        var MIN_LENGTH = 8;
-        var MESSAGES = ['Very Weak', 'Very Weak', 'Weak', 'Medium', 'Strong', 'Very Strong'];
-        var COLOR = ['#dd514c', '#dd514c', '#faa732', '#faa732', '#16A085', '#16A085'];
-
-        function evaluateMeter(password) {
-          var passwordStrength = 0;
-          var text;
-          if (password.length > 0) passwordStrength = 1;
-          if (password.length >= MIN_LENGTH) {
-            if ((password.match(/[a-z]/)) && (password.match(/[A-Z]/))) {
-              passwordStrength++;
-            } else {
-              text = ', add mixed case';
-            }
-            if (password.match(/\d+/)) {
-              passwordStrength++;
-            } else {
-              if (!text) text = ', add numerals';
-            }
-            if (password.match(/.[!,@,#,$,%,^,&,*,?,_,~,-,(,)]/)) {
-              passwordStrength++;
-            } else {
-              if (!text) text = ', add punctuation';
-            }
-            if (password.length > 12) {
-              passwordStrength++;
-            } else {
-              if (!text) text = ', add characters';
-            }
+      function evaluateMeter(password) {
+        let passwordStrength = 0;
+        let text;
+        if (password.length > 0) passwordStrength = 1;
+        if (password.length >= MIN_LENGTH) {
+          if ((password.match(/[a-z]/)) && (password.match(/[A-Z]/))) {
+            passwordStrength++;
           } else {
-            text = ', that\'s short';
+            text = ', add mixed case';
           }
-          if (!text) text = '';
-
-          return {
-            strength: passwordStrength,
-            message: MESSAGES[passwordStrength] + text,
-            color: COLOR[passwordStrength]
-          }
+          if (password.match(/\d+/)) {
+            passwordStrength++;
+          } else if (!text) text = ', add numerals';
+          if (password.match(/.[!,@,#,$,%,^,&,*,?,_,~,-,(,)]/)) {
+            passwordStrength++;
+          } else if (!text) text = ', add punctuation';
+          if (password.length > 12) {
+            passwordStrength++;
+          } else if (!text) text = ', add characters';
+        } else {
+          text = ', that\'s short';
         }
+        if (!text) text = '';
 
-        scope.$watch(attrs.ngModel, function(newValue, oldValue) {
-          if (newValue && newValue !== '') {
-            var info = evaluateMeter(newValue);
-            scope[attrs.checkStrength] = info;
-          }
-        });
+        return {
+          strength: passwordStrength,
+          message: MESSAGES[passwordStrength] + text,
+          color: COLOR[passwordStrength],
+        };
       }
-    };
-  })
-  .directive('showFocus', function($timeout) {
-    return function(scope, element, attrs) {
-      scope.$watch(attrs.showFocus,
-        function(newValue) {
-          $timeout(function() {
+
+      scope.$watch(attrs.ngModel, (newValue, oldValue) => {
+        if (newValue && newValue !== '') {
+          const info = evaluateMeter(newValue);
+          scope[attrs.checkStrength] = info;
+        }
+      });
+    },
+  }))
+  .directive('showFocus', $timeout => function (scope, element, attrs) {
+    scope.$watch(attrs.showFocus,
+        (newValue) => {
+          $timeout(() => {
             newValue && element[0].focus();
           });
         }, true);
-    };
   })
-  .directive('match', function() {
-    return {
-      require: 'ngModel',
-      restrict: 'A',
-      scope: {
-        match: '='
-      },
-      link: function(scope, elem, attrs, ctrl) {
-        scope.$watch(function() {
-          return (ctrl.$pristine && angular.isUndefined(ctrl.$modelValue)) || scope.match === ctrl.$modelValue;
-        }, function(currentValue) {
-          ctrl.$setValidity('match', currentValue);
-        });
-      }
-    };
-  })
-  .directive('clipCopy', function() {
-    return {
-      restrict: 'A',
-      scope: {
-        clipCopy: '=clipCopy'
-      },
-      link: function(scope, elm) {
+  .directive('match', () => ({
+    require: 'ngModel',
+    restrict: 'A',
+    scope: {
+      match: '=',
+    },
+    link(scope, elem, attrs, ctrl) {
+      scope.$watch(() => (ctrl.$pristine && angular.isUndefined(ctrl.$modelValue)) || scope.match === ctrl.$modelValue, (currentValue) => {
+        ctrl.$setValidity('match', currentValue);
+      });
+    },
+  }))
+  .directive('clipCopy', () => ({
+    restrict: 'A',
+    scope: {
+      clipCopy: '=clipCopy',
+    },
+    link(scope, elm) {
         // TODO this does not work (FIXME)
-        elm.attr('tooltip', 'Press Ctrl+C to Copy');
-        elm.attr('tooltip-placement', 'top');
+      elm.attr('tooltip', 'Press Ctrl+C to Copy');
+      elm.attr('tooltip-placement', 'top');
 
-        elm.bind('click', function() {
-          selectText(elm[0]);
-        });
-      }
-    };
-  })
-  .directive('menuToggle', function() {
-    return {
-      restrict: 'E',
-      replace: true,
-      templateUrl: 'views/includes/menu-toggle.html'
-    }
-  })
-  .directive('logo', function() {
-    return {
-      restrict: 'E',
-      scope: {
-        width: "@",
-        negative: "="
-      },
-      controller: function($scope) {
-        //$scope.logo_url = $scope.negative ? 'img/logo-negative.svg' : 'img/logo.svg';
-        $scope.logo_url = $scope.negative ? 'img/icons/icon-white-32.png' : 'img/icons/icon-black-32.png';
-      },
-      replace: true,
-      //template: '<img ng-src="{{ logo_url }}" alt="Byteball">'
-      template: '<div><img ng-src="{{ logo_url }}" alt="Byteball"><br>Byteball</div>'
-    }
-  })
-  .directive('availableBalance', function() {
-    return {
-      restrict: 'E',
-      replace: true,
-      templateUrl: 'views/includes/available-balance.html'
-    }
-  });
+      elm.bind('click', () => {
+        selectText(elm[0]);
+      });
+    },
+  }))
+  .directive('menuToggle', () => ({
+    restrict: 'E',
+    replace: true,
+    templateUrl: 'views/includes/menu-toggle.html',
+  }))
+  .directive('logo', () => ({
+    restrict: 'E',
+    scope: {
+      width: '@',
+      negative: '=',
+    },
+    controller($scope) {
+        // $scope.logo_url = $scope.negative ? 'img/logo-negative.svg' : 'img/logo.svg';
+      $scope.logo_url = $scope.negative ? 'img/icons/icon-white-32.png' : 'img/icons/icon-black-32.png';
+    },
+    replace: true,
+      // template: '<img ng-src="{{ logo_url }}" alt="Byteball">'
+    template: '<div><img ng-src="{{ logo_url }}" alt="Byteball"><br>Byteball</div>',
+  }))
+  .directive('availableBalance', () => ({
+    restrict: 'E',
+    replace: true,
+    templateUrl: 'views/includes/available-balance.html',
+  }));

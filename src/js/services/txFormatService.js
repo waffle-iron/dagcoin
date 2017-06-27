@@ -1,32 +1,31 @@
-'use strict';
+
 
 var constants = require('byteballcore/constants.js');
 
-angular.module('copayApp.services').factory('txFormatService', function(profileService, configService, lodash) {
-  var root = {};
+angular.module('copayApp.services').factory('txFormatService', (profileService, configService, lodash) => {
+  const root = {};
 
-  var formatAmountStr = function(amount, asset) {
+  const formatAmountStr = function (amount, asset) {
     if (!amount) return;
-      if (asset !== "base" && asset !==  constants.DAGCOIN_ASSET)
-          return amount;
-    var config = configService.getSync().wallet.settings;
-    var assetName = asset !== "base" ? 'dag' : 'base';
-	return profileService.formatAmount(amount, assetName);
+    if (asset !== 'base' && asset !== constants.DAGCOIN_ASSET) { return amount; }
+    const config = configService.getSync().wallet.settings;
+    const assetName = asset !== 'base' ? 'dag' : 'base';
+    return profileService.formatAmount(amount, assetName);
   };
-	
-	var formatFeeStr = function(fee) {
-		if (!fee) return;
-		return fee + ' bytes';
-	};
 
-  root.processTx = function(tx) {
-    if (!tx) return; 
+  const formatFeeStr = function (fee) {
+    if (!fee) return;
+    return `${fee} bytes`;
+  };
 
-    var outputs = tx.outputs ? tx.outputs.length : 0;
+  root.processTx = function (tx) {
+    if (!tx) return;
+
+    const outputs = tx.outputs ? tx.outputs.length : 0;
     if (outputs > 1 && tx.action != 'received') {
       tx.hasMultiplesOutputs = true;
       tx.recipientCount = outputs;
-      tx.amount = lodash.reduce(tx.outputs, function(total, o) {
+      tx.amount = lodash.reduce(tx.outputs, (total, o) => {
         o.amountStr = formatAmountStr(o.amount, tx.asset);
         return total + o.amount;
       }, 0);

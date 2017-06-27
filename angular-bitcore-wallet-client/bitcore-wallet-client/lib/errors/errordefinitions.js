@@ -1,10 +1,10 @@
-'use strict';
 
-var _ = require('lodash');
 
-var ClientError = require('./clienterror');
+const _ = require('lodash');
 
-var errors = {
+const ClientError = require('./clienterror');
+
+const errors = {
   INVALID_BACKUP: 'Invalid Backup',
   WALLET_DOES_NOT_EXIST: 'Wallet does not exist. Need to recreate',
   MISSING_PRIVATE_KEY: 'Missing private keys to sign',
@@ -14,12 +14,8 @@ var errors = {
   INSUFFICIENT_FUNDS: 'Insufficient funds',
 };
 
-var errorObjects = _.zipObject(_.map(errors, function(msg, code) {
-  return [code, new ClientError(code, msg)];
-}));
+const errorObjects = _.zipObject(_.map(errors, (msg, code) => [code, new ClientError(code, msg)]));
 
-errorObjects.codes = _.mapValues(errors, function(v, k) {
-  return k;
-});
+errorObjects.codes = _.mapValues(errors, (v, k) => k);
 
 module.exports = errorObjects;
