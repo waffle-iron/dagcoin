@@ -1132,15 +1132,16 @@ angular.module('copayApp.controllers').controller('walletHomeController', functi
         return self.getUnitName();
       };
 
-	  $scope.openInExplorer = function () {
-    const testnet = home.isTestnet ? 'testnet' : '';
-    const url = `https://${testnet}explorer.byteball.org/#${btx.unit}`;
-    if (typeof nw !== 'undefined') {
-      nw.Shell.openExternal(url);
-    } else if (isCordova) {
-      cordova.InAppBrowser.open(url, '_system');
-    }
-  };
+	  $scope.openInExplorer = function(){
+		var testnet = home.isTestnet ? 'testnet' : '';
+		//todo: should be https
+		var url = 'http://'+testnet+'explorer.dagcoin.org/#'+btx.unit;
+
+		if (typeof nw !== 'undefined')
+			nw.Shell.openExternal(url);
+		else if (isCordova)
+			cordova.InAppBrowser.open(url, '_system');
+	  };
 
       $scope.copyAddress = function (addr) {
         if (!addr) return;
