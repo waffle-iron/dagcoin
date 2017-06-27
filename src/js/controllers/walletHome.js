@@ -1322,6 +1322,20 @@ angular.module('copayApp.controllers').controller('walletHomeController', functi
 
   /* Start setup */
 
+  this.getFontSizeForWalletNumber = function(str, type){
+
+    if(str){
+      var visible_width = window.innerWidth - 50;
+      str = str.toString().split('.');
+
+      var length = str[0].length + ((str[1] || 0).length/2);
+      var size = ((visible_width/length) < 70 ? visible_width/length+10 : 80);
+
+      return {'font-size': (!type ? size : size/2) + "px"};
+    }
+
+  };
+
   this.bindTouchDown();
   if (profileService.focusedClient) {
     this.setAddress();
