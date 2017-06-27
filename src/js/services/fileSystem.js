@@ -106,23 +106,26 @@ angular.module('copayApp.services')
     if (isCordova) {
       root.init(() => {
         window.resolveLocalFileSystemURL(path,
-					(fileSystem) => {
-  const reader = fileSystem.createReader();
-  reader.readEntries(
-							(entries) => {
-  cb(null, entries.map(entry => entry.name));
-},
-							(err) => {
-  cb(err);
-},
-						);
-}, (err) => {
-  cb(err);
-},
-				);
+          (fileSystem) => {
+            const reader = fileSystem.createReader();
+            reader.readEntries(
+              (entries) => {
+                cb(null, entries.map(entry => entry.name));
+              },
+              (err) => {
+                cb(err);
+              });
+          }, (err) => {
+            cb(err);
+          });
       });
-    }		else {
-      fs.readdir(path, (err, entries) => err ? cb(err) : cb(null, entries));
+    } else {
+      fs.readdir(path, (err, entries) => {
+        if (err) {
+          cb(err);
+        }
+        cb(null, entries);
+      });
     }
   };
 

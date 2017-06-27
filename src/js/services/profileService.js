@@ -1,6 +1,6 @@
 
 
-const breadcrumbs = require('byteballcore/breadcrumbs.js');
+var breadcrumbs = require('byteballcore/breadcrumbs.js');
 
 angular.module('copayApp.services')
   .factory('profileService', ($rootScope, $location, $timeout, $filter, $log, lodash, storageService, bwcService, configService, pushNotificationsService, isCordova, gettext, gettextCatalog, nodeWebkit, uxLanguage) => {

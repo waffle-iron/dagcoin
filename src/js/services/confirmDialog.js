@@ -19,8 +19,7 @@ angular.module('copayApp.services').factory('confirmDialog', ($log, $timeout, ge
             return cb(false);
           }
         },
-        confirmMsg, [acceptMsg, cancelMsg],
-      );
+        confirmMsg, [acceptMsg, cancelMsg]);
     } else {
       return cb(confirm(msg));
     }
@@ -28,4 +27,3 @@ angular.module('copayApp.services').factory('confirmDialog', ($log, $timeout, ge
 
   return root;
 });
-

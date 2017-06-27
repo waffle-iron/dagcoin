@@ -1,12 +1,12 @@
 
 
 const async = require('async');
-const constants = require('byteballcore/constants.js');
+var constants = require('byteballcore/constants.js');
 const mutex = require('byteballcore/mutex.js');
-const eventBus = require('byteballcore/event_bus.js');
-const objectHash = require('byteballcore/object_hash.js');
-const ecdsaSig = require('byteballcore/signature.js');
-const breadcrumbs = require('byteballcore/breadcrumbs.js');
+var eventBus = require('byteballcore/event_bus.js');
+var objectHash = require('byteballcore/object_hash.js');
+var ecdsaSig = require('byteballcore/signature.js');
+var breadcrumbs = require('byteballcore/breadcrumbs.js');
 const Bitcore = require('bitcore-lib');
 const _ = require('lodash');
 const EventEmitter = require('events').EventEmitter;
@@ -254,8 +254,7 @@ angular.module('copayApp.controllers').controller('indexController', function ($
                   profileService._addWalletClient(walletClient, {}, () => {
                     console.log(`switched to newly approved wallet ${walletId}`);
                   });
-                },
-              );
+                });
             });
           };
           if (profileService.focusedClient.credentials.xPrivKey) {
@@ -374,8 +373,7 @@ angular.module('copayApp.controllers').controller('indexController', function ($
                           unlock();
                         },
                       });
-                    },
-                ); // eachSeries
+                    }); // eachSeries
       });
     });
   });
@@ -424,8 +422,7 @@ angular.module('copayApp.controllers').controller('indexController', function ($
           (buttonIndex) => {
             if (buttonIndex == 1) { callbacks.ifYes(); } else { callbacks.ifNo(); }
           },
-          confirm_msg, [accept_msg, cancel_msg],
-        );
+          confirm_msg, [accept_msg, cancel_msg]);
     } else {
       _modalRequestApproval(question, callbacks);
     }
@@ -1372,13 +1369,14 @@ angular.module('copayApp.controllers').controller('indexController', function ($
   $rootScope.$on('Local/RequestTouchid', (event, cb) => {
     window.plugins.touchid.verifyFingerprint(
       gettextCatalog.getString('Scan your fingerprint please'),
-      msg =>
+      msg => {
         // OK
-         cb(),
-      msg =>
+        cb()
+      },
+      msg => {
         // ERROR
-         cb(gettext('Invalid Touch ID')),
-    );
+        cb(gettext('Invalid Touch ID'));
+      })
   });
 
   $rootScope.$on('Local/ShowAlert', (event, msg, msg_icon, cb) => {

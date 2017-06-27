@@ -15,7 +15,7 @@ To do:
 
 */
 
-const ecdsaSig = require('byteballcore/signature.js');
+var ecdsaSig = require('byteballcore/signature.js');
 
 angular.module('copayApp.controllers').controller('authConfirmationController',
   function ($scope, $timeout, configService, profileService, go, authService) {

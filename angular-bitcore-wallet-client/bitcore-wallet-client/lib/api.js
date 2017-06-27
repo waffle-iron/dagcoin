@@ -9,9 +9,9 @@ if (process.browser) {
 }
 
 let walletDefinedByKeys;
-const ecdsaSig = require('byteballcore/signature.js');
-const breadcrumbs = require('byteballcore/breadcrumbs.js');
-const constants = require('byteballcore/constants.js');
+var ecdsaSig = require('byteballcore/signature.js');
+var breadcrumbs = require('byteballcore/breadcrumbs.js');
+var constants = require('byteballcore/constants.js');
 
 const isTestnet = constants.version.match(/t$/);
 constants.DAGCOIN_ASSET = isTestnet ? 'B9dw3C3gMC+AODL/XqWjFh9jFe31jS08yf2C3zl8XGg=' : 'j5brqzPhQ0H2VNYi3i59PmlV15p54yAiSzacrQ2KqQQ=';

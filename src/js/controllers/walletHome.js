@@ -1,8 +1,8 @@
 
 
-const constants = require('byteballcore/constants.js');
-const eventBus = require('byteballcore/event_bus.js');
-const breadcrumbs = require('byteballcore/breadcrumbs.js');
+var constants = require('byteballcore/constants.js');
+var eventBus = require('byteballcore/event_bus.js');
+var breadcrumbs = require('byteballcore/breadcrumbs.js');
 
 angular.module('copayApp.controllers').controller('walletHomeController', function ($scope, $rootScope, $timeout, $filter, $modal, $log, notification, isCordova, profileService, lodash, configService, storageService, gettext, gettextCatalog, nodeWebkit, addressService, confirmDialog, animationService, addressbookService, correspondentListService, autoUpdatingWitnessesList) {
   const self = this;

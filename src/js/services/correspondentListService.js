@@ -1,9 +1,9 @@
 
 
-const constants = require('byteballcore/constants.js');
-const eventBus = require('byteballcore/event_bus.js');
+var constants = require('byteballcore/constants.js');
+var eventBus = require('byteballcore/event_bus.js');
 const ValidationUtils = require('byteballcore/validation_utils.js');
-const objectHash = require('byteballcore/object_hash.js');
+var objectHash = require('byteballcore/object_hash.js');
 
 angular.module('copayApp.services').factory('correspondentListService', ($state, $rootScope, $sce, $compile, configService, storageService, profileService, go, lodash, $stickyState, $deepStateRedirect, $timeout) => {
   const root = {};

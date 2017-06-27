@@ -78,7 +78,7 @@ angular.element(document).ready(() => {
 
       window.plugins.touchid.isAvailable(
         (msg) => { window.touchidAvailable = true; }, // success handler: TouchID available
-        (msg) => { window.touchidAvailable = false; }, // error handler: no TouchID available
+        (msg) => { window.touchidAvailable = false; }  // error handler: no TouchID available
       );
 
       startAngular();
@@ -94,4 +94,3 @@ angular.element(document).ready(() => {
     startAngular();
   }
 });
-

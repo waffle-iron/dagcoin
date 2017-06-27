@@ -5,7 +5,7 @@ angular.module('copayApp.controllers').controller('recoveryFromSeed',
   const async = require('async');
   const conf = require('byteballcore/conf.js');
   const wallet_defined_by_keys = require('byteballcore/wallet_defined_by_keys.js');
-  const objectHash = require('byteballcore/object_hash.js');
+  var objectHash = require('byteballcore/object_hash.js');
   try {
     var ecdsa = isCordova ? null : require('secp256k1' + '');
   }		catch (e) {

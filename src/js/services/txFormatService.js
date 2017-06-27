@@ -1,6 +1,6 @@
 
 
-const constants = require('byteballcore/constants.js');
+var constants = require('byteballcore/constants.js');
 
 angular.module('copayApp.services').factory('txFormatService', (profileService, configService, lodash) => {
   const root = {};

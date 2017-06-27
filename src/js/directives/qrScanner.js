@@ -1,6 +1,6 @@
 
 
-const breadcrumbs = require('byteballcore/breadcrumbs.js');
+var breadcrumbs = require('byteballcore/breadcrumbs.js');
 
 angular.module('copayApp.directives')
     .directive('qrScanner', ['$rootScope', '$timeout', '$modal', 'isCordova', 'gettextCatalog',
@@ -29,8 +29,7 @@ angular.module('copayApp.directives')
                       window.plugins.spinnerDialog.hide();
                     }, 100);
                     alert('Scanning error');
-                  },
-              );
+                  });
               if ($scope.beforeScan) {
                 $scope.beforeScan();
               }

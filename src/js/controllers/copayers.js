@@ -88,8 +88,7 @@ angular.module('copayApp.controllers').controller('copayersController',
               _deleteWallet();
             }
           },
-          confirm_msg, [accept_msg, cancel_msg],
-        );
+          confirm_msg, [accept_msg, cancel_msg]);
       } else {
         _modalDeleteWallet();
       }

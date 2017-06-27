@@ -1,6 +1,6 @@
 
 
-const eventBus = require('byteballcore/event_bus.js');
+var eventBus = require('byteballcore/event_bus.js');
 
 angular.module('copayApp.controllers').controller('inviteCorrespondentDeviceController',
   function ($scope, $timeout, profileService, go, isCordova, correspondentListService, gettextCatalog) {

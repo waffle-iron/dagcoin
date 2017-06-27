@@ -1,6 +1,6 @@
 
 
-const constants = require('byteballcore/constants.js');
+var constants = require('byteballcore/constants.js');
 
 angular.module('copayApp.controllers').controller('correspondentDeviceController',
   function ($scope, $rootScope, $timeout, $sce, $modal, configService, profileService, animationService, isCordova, go, correspondentListService, addressService, lodash, $deepStateRedirect, $state, backButton) {
@@ -440,30 +440,37 @@ angular.module('copayApp.controllers').controller('correspondentDeviceController
 						SELECT shared_address AS address FROM shared_addresses WHERE shared_address IN(?)',
 						[arrAllMemberAddresses, arrAllMemberAddresses],
 						(rows) => {
-  const arrMyAddresses = rows.map(row => row.address);
-  for (var destinationAddress in assocMemberAddressesByDestAddress) {
-    const arrMemberAddresses = assocMemberAddressesByDestAddress[destinationAddress];
-    if (lodash.intersection(arrMemberAddresses, arrMyAddresses).length > 0) { assocSharedDestinationAddresses[destinationAddress] = true; }
-  }
-  createMovementLines();
-  $scope.arrHumanReadableDefinitions = [];
-  for (var destinationAddress in objMultiPaymentRequest.definitions) {
-    const arrDefinition = objMultiPaymentRequest.definitions[destinationAddress].definition;
-    $scope.arrHumanReadableDefinitions.push({
-      destinationAddress,
-      humanReadableDefinition: correspondentListService.getHumanReadableDefinition(arrDefinition, arrMyAddresses, []),
-    });
-  }
-  cb();
-},
-					);
+              const arrMyAddresses = rows.map(row => row.address);
+              for (var destinationAddress in assocMemberAddressesByDestAddress) {
+                const arrMemberAddresses = assocMemberAddressesByDestAddress[destinationAddress];
+                if (lodash.intersection(arrMemberAddresses, arrMyAddresses).length > 0) {
+                  assocSharedDestinationAddresses[destinationAddress] = true;
+                }
+              }
+              createMovementLines();
+              $scope.arrHumanReadableDefinitions = [];
+              for (var destinationAddress in objMultiPaymentRequest.definitions) {
+                const arrDefinition = objMultiPaymentRequest.definitions[destinationAddress].definition;
+                $scope.arrHumanReadableDefinitions.push({
+                  destinationAddress,
+                  humanReadableDefinition: correspondentListService.getHumanReadableDefinition(arrDefinition, arrMyAddresses, []),
+                });
+              }
+              cb();
+            });
           };
           arrFuncs.push(findMyAddresses);
           async.series(arrFuncs, (err) => {
-            if (err) { $scope.error = err; } else						{ $scope.bDisabled = false; }
+            if (err) {
+              $scope.error = err;
+            } else {
+              $scope.bDisabled = false;
+            }
             $scope.$apply();
           });
-        }			else				{ $scope.bDisabled = false; }
+        } else {
+          $scope.bDisabled = false;
+        }
 
         function insertSharedAddress(shared_address, arrDefinition, signers, cb) {
           db.query('SELECT 1 FROM shared_addresses WHERE shared_address=?', [shared_address], (rows) => {
