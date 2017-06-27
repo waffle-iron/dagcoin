@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-
+'use strict';
 
 const fs = require('fs');
 const shell = require('shelljs');
@@ -22,4 +22,3 @@ console.log(`v${json.version} #${commitHash}`);
 let content = `window.version="${json.version}";`;
 content = `${content}\nwindow.commitHash="${commitHash}";`;
 fs.writeFileSync('./src/js/version.js', content);
-
