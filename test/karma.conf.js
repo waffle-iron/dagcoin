@@ -1,7 +1,7 @@
 // Karma configuration
 // Generated on Thu Mar 12 2015 18:13:33 GMT-0300 (ART)
 
-module.exports = function(config) {
+module.exports = function (config) {
   config.set({
 
     // base path that will be used to resolve all patterns (eg. files, exclude)
@@ -31,7 +31,7 @@ module.exports = function(config) {
       'bower_components/angular-ui-switch/angular-ui-switch.js',
       'node_modules/angular-mocks/angular-mocks.js',
       'src/js/**/*.js',
-      'test/**/*.js'
+      'test/**/*.js',
     ],
 
 
@@ -40,14 +40,14 @@ module.exports = function(config) {
       'src/js/translations.js',
       'src/js/version.js',
       'test/karma.conf.js',
-      'test/old/*'
+      'test/old/*',
     ],
 
 
     // preprocess matching files before serving them to the browser
     // available preprocessors: https://npmjs.org/browse/keyword/karma-preprocessor
     preprocessors: {
-      'src/js/**/*.js': ['coverage']
+      'src/js/**/*.js': ['coverage'],
     },
 
 
@@ -61,13 +61,13 @@ module.exports = function(config) {
       dir: 'coverage/',
       reporters: [{
         type: 'html',
-        subdir: 'report-html'
+        subdir: 'report-html',
       }, {
         type: 'lcov',
-        subdir: 'report-lcov'
+        subdir: 'report-lcov',
       }, {
-        type: 'text-summary'
-      }]
+        type: 'text-summary',
+      }],
     },
 
     // web server port
@@ -94,6 +94,6 @@ module.exports = function(config) {
 
     // Continuous Integration mode
     // if true, Karma captures browsers, runs the tests and exits
-    singleRun: false
+    singleRun: false,
   });
 };

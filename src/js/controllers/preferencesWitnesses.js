@@ -1,21 +1,21 @@
-'use strict';
+
 
 angular.module('copayApp.controllers').controller('preferencesWitnessesController',
-  function($scope, go, witnessListService, autoUpdatingWitnessesList){
-    var self = this;
+  function ($scope, go, witnessListService, autoUpdatingWitnessesList) {
+    const self = this;
     this.witnesses = [];
     console.log('preferencesWitnessesController');
 
     $scope.autoUpdWitnessesList = autoUpdatingWitnessesList.autoUpdate;
 
-    var myWitnesses = require('byteballcore/my_witnesses.js');
-    myWitnesses.readMyWitnesses(function(arrWitnesses){
-        self.witnesses = arrWitnesses;
-        $scope.$apply();
-        console.log('preferencesWitnessesController set witnesses '+arrWitnesses);
+    const myWitnesses = require('byteballcore/my_witnesses.js');
+    myWitnesses.readMyWitnesses((arrWitnesses) => {
+      self.witnesses = arrWitnesses;
+      $scope.$apply();
+      console.log(`preferencesWitnessesController set witnesses ${arrWitnesses}`);
     }, 'wait');
 
-    this.edit = function(witness) {
+    this.edit = function (witness) {
       if ($scope.autoUpdWitnessesList) return;
 
       witnessListService.currentWitness = witness;
@@ -23,7 +23,7 @@ angular.module('copayApp.controllers').controller('preferencesWitnessesControlle
     };
 
 
-    var unwatchAutoUpdWitnessesList = $scope.$watch('autoUpdWitnessesList', function(val){
+    const unwatchAutoUpdWitnessesList = $scope.$watch('autoUpdWitnessesList', (val) => {
       autoUpdatingWitnessesList.setAutoUpdate(val);
 
       if (val) {
@@ -31,7 +31,7 @@ angular.module('copayApp.controllers').controller('preferencesWitnessesControlle
       }
     });
 
-    $scope.$on('$destroy', function(){
+    $scope.$on('$destroy', () => {
       unwatchAutoUpdWitnessesList();
     });
   });

@@ -1,28 +1,28 @@
-'use strict';
+
 
 // Detect mobile devices
 var isMobile = {
-  Android: function() {
+  Android() {
     return !!navigator.userAgent.match(/Android/i);
   },
-  BlackBerry: function() {
+  BlackBerry() {
     return !!navigator.userAgent.match(/BlackBerry/i);
   },
-  iOS: function() {
+  iOS() {
     return !!navigator.userAgent.match(/iPhone|iPad|iPod/i);
   },
-  Opera: function() {
+  Opera() {
     return !!navigator.userAgent.match(/Opera Mini/i);
   },
-  Windows: function() {
+  Windows() {
     return !!navigator.userAgent.match(/IEMobile/i);
   },
-  Safari: function() {
+  Safari() {
     return Object.prototype.toString.call(window.HTMLElement).indexOf('Constructor') > 0;
   },
-  any: function() {
+  any() {
     return (isMobile.Android() || isMobile.BlackBerry() || isMobile.iOS() || isMobile.Opera() || isMobile.Windows());
-  }
+  },
 };
 
 

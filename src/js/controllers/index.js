@@ -1054,7 +1054,7 @@ angular.module('copayApp.controllers').controller('indexController', function($r
 
         return cb();
     });
-  }
+  };
 
   self.showAllHistory = function() {
     self.historyShowShowAll = false;

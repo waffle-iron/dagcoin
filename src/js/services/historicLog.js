@@ -1,17 +1,17 @@
-'use strict';
-var logs = [];
-angular.module('copayApp.services')
-  .factory('historicLog', function historicLog() {
-    var root = {};
 
-    root.add = function(level, msg) {
+const logs = [];
+angular.module('copayApp.services')
+  .factory('historicLog', () => {
+    const root = {};
+
+    root.add = function (level, msg) {
       logs.push({
-        level: level,
-        msg: msg,
+        level,
+        msg,
       });
     };
 
-    root.get = function() {
+    root.get = function () {
       return logs;
     };
 

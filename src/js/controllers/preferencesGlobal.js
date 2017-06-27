@@ -1,14 +1,13 @@
-'use strict';
+
 
 angular.module('copayApp.controllers').controller('preferencesGlobalController',
-  function($scope, $rootScope, $log, configService, uxLanguage, pushNotificationsService, profileService) {
-	
-		var conf = require('byteballcore/conf.js');
-  
+  function ($scope, $rootScope, $log, configService, uxLanguage, pushNotificationsService, profileService) {
+    const conf = require('byteballcore/conf.js');
+
     $scope.encrypt = !!profileService.profile.xPrivKeyEncrypted;
-    
-    this.init = function() {
-      var config = configService.getSync();
+
+    this.init = function () {
+      const config = configService.getSync();
       this.unitName = config.wallet.settings.unitName;
       this.dagUnitName = config.wallet.settings.dagUnitName;
       this.deviceName = config.deviceName;
@@ -20,61 +19,56 @@ angular.module('copayApp.controllers').controller('preferencesGlobalController',
     };
 
 
-    var unwatchPushNotifications = $scope.$watch('pushNotifications', function(newVal, oldVal) {
+    const unwatchPushNotifications = $scope.$watch('pushNotifications', (newVal, oldVal) => {
       if (newVal == oldVal) return;
-      var opts = {
+      const opts = {
         pushNotifications: {
-          enabled: newVal
-        }
+          enabled: newVal,
+        },
       };
-      configService.set(opts, function(err) {
-        if (opts.pushNotifications.enabled)
-          pushNotificationsService.pushNotificationsInit();
-        else
-          pushNotificationsService.pushNotificationsUnregister();
+      configService.set(opts, (err) => {
+        if (opts.pushNotifications.enabled) { pushNotificationsService.pushNotificationsInit(); } else { pushNotificationsService.pushNotificationsUnregister(); }
         if (err) $log.debug(err);
       });
     });
 
-    var unwatchEncrypt = $scope.$watch('encrypt', function(val) {
-      var fc = profileService.focusedClient;
+    const unwatchEncrypt = $scope.$watch('encrypt', (val) => {
+      const fc = profileService.focusedClient;
       if (!fc) return;
 
       if (val && !fc.hasPrivKeyEncrypted()) {
-        $rootScope.$emit('Local/NeedsPassword', true, null, function(err, password) {
+        $rootScope.$emit('Local/NeedsPassword', true, null, (err, password) => {
           if (err || !password) {
             $scope.encrypt = false;
             return;
           }
-          profileService.setPrivateKeyEncryptionFC(password, function() {
+          profileService.setPrivateKeyEncryptionFC(password, () => {
             $rootScope.$emit('Local/NewEncryptionSetting');
             $scope.encrypt = true;
           });
         });
-      } else {
-        if (!val && fc.hasPrivKeyEncrypted())  {
-          profileService.unlockFC(null, function(err){
+      } else if (!val && fc.hasPrivKeyEncrypted()) {
+        profileService.unlockFC(null, (err) => {
+          if (err) {
+            $scope.encrypt = true;
+            return;
+          }
+          profileService.disablePrivateKeyEncryptionFC((err) => {
+            $rootScope.$emit('Local/NewEncryptionSetting');
             if (err) {
               $scope.encrypt = true;
+              $log.error(err);
               return;
             }
-            profileService.disablePrivateKeyEncryptionFC(function(err) {
-              $rootScope.$emit('Local/NewEncryptionSetting');
-              if (err) {
-                $scope.encrypt = true;
-                $log.error(err);
-                return;
-              }
-              $scope.encrypt = false;
-            });
+            $scope.encrypt = false;
           });
-        }
+        });
       }
     });
 
 
-    $scope.$on('$destroy', function() {
-        unwatchPushNotifications();
-        unwatchEncrypt();
+    $scope.$on('$destroy', () => {
+      unwatchPushNotifications();
+      unwatchEncrypt();
     });
   });
