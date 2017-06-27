@@ -1,5 +1,4 @@
 module.exports = function (grunt) {
-
     function getPlatform() {
         switch (process.platform) {
             case 'win32':

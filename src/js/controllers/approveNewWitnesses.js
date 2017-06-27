@@ -1,22 +1,22 @@
-'use strict';
 
-angular.module('copayApp.controllers').controller('approveNewWitnesses', function($scope, $modalInstance, $document, autoUpdatingWitnessesList){
+
+angular.module('copayApp.controllers').controller('approveNewWitnesses', ($scope, $modalInstance, $document, autoUpdatingWitnessesList) => {
   $scope.addWitnesses = autoUpdatingWitnessesList.addWitnesses;
   $scope.delWitnesses = autoUpdatingWitnessesList.delWitnesses;
 
 
-  $scope.replace = function(){
-    var oldWitnesses = $scope.delWitnesses;
-    var newWitnesses = $scope.addWitnesses;
+  $scope.replace = function () {
+    const oldWitnesses = $scope.delWitnesses;
+    const newWitnesses = $scope.addWitnesses;
 
-    var n = 0, l = newWitnesses.length;
+    let n = 0,
+      l = newWitnesses.length;
 
-    function replaceWitness(n, oldWitnesses, newWitnesses){
-	  var myWitnesses = require('byteballcore/my_witnesses.js');
-      myWitnesses.replaceWitness(oldWitnesses[n], newWitnesses[n], function(err){
-
+    function replaceWitness(n, oldWitnesses, newWitnesses) {
+	  const myWitnesses = require('byteballcore/my_witnesses.js');
+      myWitnesses.replaceWitness(oldWitnesses[n], newWitnesses[n], (err) => {
         if (l < n) {
-          replaceWitness(n++, oldWitnesses, newWitnesses)
+          replaceWitness(n++, oldWitnesses, newWitnesses);
         } else {
           $modalInstance.close('closed result');
         }
@@ -26,7 +26,7 @@ angular.module('copayApp.controllers').controller('approveNewWitnesses', functio
     replaceWitness(n, oldWitnesses, newWitnesses);
   };
 
-  $scope.later = function(){
+  $scope.later = function () {
     $modalInstance.close('closed result');
   };
 });
