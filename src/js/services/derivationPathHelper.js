@@ -1,16 +1,15 @@
-'use strict';
 
-angular.module('copayApp.services').factory('derivationPathHelper', function(lodash) {
-  var root = {};
 
-  root.default = "m/44'/0'/0'"
-  root.parse = function(str) {
-    var arr = str.split('/');
+angular.module('copayApp.services').factory('derivationPathHelper', (lodash) => {
+  const root = {};
 
-    var ret = {};
+  root.default = "m/44'/0'/0'";
+  root.parse = function (str) {
+    const arr = str.split('/');
 
-    if (arr[0] != 'm')
-      return false;
+    const ret = {};
+
+    if (arr[0] != 'm') { return false; }
 
     switch (arr[1]) {
       case "44'":
@@ -21,7 +20,7 @@ angular.module('copayApp.services').factory('derivationPathHelper', function(lod
         break;
       default:
         return false;
-    };
+    }
 
     switch (arr[2]) {
       case "0'":
@@ -32,12 +31,11 @@ angular.module('copayApp.services').factory('derivationPathHelper', function(lod
         break;
       default:
         return false;
-    };
+    }
 
-    var match = arr[3].match(/(\d+)'/);
-    if (!match)
-      return false;
-    ret.account = + match[1]
+    const match = arr[3].match(/(\d+)'/);
+    if (!match) { return false; }
+    ret.account = +match[1];
 
     return ret;
   };

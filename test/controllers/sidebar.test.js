@@ -1,11 +1,12 @@
-'use strict';
- 
-describe('sidebarController', function(){
-  var scope, controller;
+
+
+describe('sidebarController', () => {
+  let scope,
+    controller;
 
   beforeEach(angular.mock.module('copayApp.controllers'));
 
-  it('wallet selection', function(){
+  it('wallet selection', () => {
     expect(true).not.toBeUndefined();
   });
 });
