@@ -19,9 +19,8 @@ if (window.location.href.indexOf('chrome') > -1) {
       if (path.indexOf('.css') > -1 || path.indexOf('.scss') > -1) {
         const styles = document.querySelectorAll('link[rel=stylesheet]');
 
-        for (let x = 0, maxLen = styles; x < maxLen; x += 1) {
+        for (let x = 0, maxLen = styles.length; x < maxLen; x += 1) {
           const style = styles[x];
-
           const restyled = `${style.getAttribute('href')}?v=${Math.floor((Math.random() * 10000) + 1)}`;
           style.setAttribute('href', restyled);
         }
