@@ -1,6 +1,6 @@
-'use strict';
 
-var modules = [
+
+const modules = [
   'ui.router',
   'angularMoment',
   'angular-carousel',
@@ -16,10 +16,10 @@ var modules = [
   'copayApp.controllers',
   'copayApp.directives',
   'copayApp.addons',
-  'ct.ui.router.extras'
+  'ct.ui.router.extras',
 ];
 
-var copayApp = window.copayApp = angular.module('copayApp', modules);
+const copayApp = window.copayApp = angular.module('copayApp', modules);
 
 angular.module('copayApp.filters', []);
 angular.module('copayApp.services', []);

@@ -1,31 +1,30 @@
-'use strict';
+
 
 angular.module('copayApp.controllers').controller('passwordController',
-  function($rootScope, $scope, $timeout, profileService, notification, go, gettext) {
+  function ($rootScope, $scope, $timeout, profileService, notification, go, gettext) {
+    const self = this;
 
-    var self = this;
-
-    var pass1;
+    let pass1;
 
     self.isVerification = false;
 
-    document.getElementById("passwordInput").focus();
+    document.getElementById('passwordInput').focus();
 
-    self.close = function(cb) {
+    self.close = function (cb) {
       return cb('No password given');
     };
 
-    self.set = function(isSetup, cb) {
+    self.set = function (isSetup, cb) {
       self.error = false;
 
       if (isSetup && !self.isVerification) {
-        document.getElementById("passwordInput").focus();
+        document.getElementById('passwordInput').focus();
         self.isVerification = true;
         pass1 = self.password;
         self.password = null;
-        $timeout(function() {
+        $timeout(() => {
           $rootScope.$apply();
-        })
+        });
         return;
       }
       if (isSetup) {
@@ -40,5 +39,4 @@ angular.module('copayApp.controllers').controller('passwordController',
       }
       return cb(null, self.password);
     };
-
   });

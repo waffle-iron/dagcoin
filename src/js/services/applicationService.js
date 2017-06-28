@@ -1,24 +1,23 @@
-'use strict';
-angular.module('copayApp.services')
-  .factory('applicationService', function($rootScope, $timeout, isCordova, nodeWebkit, go) {
-    var root = {};
 
-    root.restart = function() {
-      var hashIndex = window.location.href.indexOf('#/');
+angular.module('copayApp.services')
+  .factory('applicationService', ($rootScope, $timeout, isCordova, nodeWebkit, go) => {
+    const root = {};
+
+    root.restart = function () {
+      const hashIndex = window.location.href.indexOf('#/');
       if (isCordova) {
         window.location = window.location.href.substr(0, hashIndex);
-        $timeout(function() {
+        $timeout(() => {
           $rootScope.$digest();
         }, 1);
-
       } else {
         // Go home reloading the application
         if (nodeWebkit.isDefined()) {
           go.walletHome();
-          $timeout(function() {
-            var win = require('nw.gui').Window.get();
+          $timeout(() => {
+            const win = require('nw.gui').Window.get();
             win.reload(3);
-            //or
+            // or
             win.reloadDev();
           }, 100);
         } else {

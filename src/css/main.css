@@ -2181,7 +2181,6 @@ canvas {
 .transactions__table {
 	margin-top: 20px;
 	overflow-x: hidden;
-	overflow-y: scroll;
 }
 .transactions__table.sm-height {
 	height: 200px;
