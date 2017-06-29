@@ -1,4 +1,4 @@
-
+﻿
 
 var breadcrumbs = require('byteballcore/breadcrumbs.js');
 
@@ -13,8 +13,9 @@ angular.module('copayApp.services')
 
     root.Utils = bwcService.getUtils();
     root.formatAmount = function (amount, asset, opts) {
-    	debugger;
-      const config = configService.getSync().wallet.settings;
+	  opts = opts || { dontRound: true };
+      
+	  const config = configService.getSync().wallet.settings;
       // if (config.unitCode == 'byte') return amount;
 
       // TODO : now only works for english, specify opts to change thousand separator and decimal separator
