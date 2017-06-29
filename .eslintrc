@@ -8,3 +8,6 @@ globals:
   cordova: true
 extends:
   - airbnb-base
+rules:
+  no-console: 0
+  no-useless-escape: 0

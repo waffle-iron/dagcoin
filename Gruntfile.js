@@ -88,6 +88,7 @@ module.exports = function (grunt) {
           'src/js/controllers/*.js',
           'src/js/version.js',
           'src/js/init.js',
+          'src/js/live-reload.js'
         ],
         dest: 'public/dagcoin.js',
       },
