@@ -1,21 +1,22 @@
 const chokidar = require('chokidar');
 
-function triggerReload() {
-  console.warn('Reloading app...');
+(() => {
+  function triggerReload() {
+    console.warn('Reloading app...');
 
-  if (location) {
-    location.reload();
+    if (location) {
+      location.reload();
+    }
   }
-}
 
-if (window.location.href.indexOf('chrome') > -1) {
-  const watcher = chokidar.watch('.', {
-    ignored: /[\/\\]\./,
-  });
-  let reloading = false;
+  if (window.location.href.indexOf('chrome') > -1 && window.version && window.version.indexOf('t') > -1) {
+    const watcher = chokidar.watch('public', {
+      ignored: /[\/\\]\./,
+      persistent: true,
+    });
+    let reloading = false;
 
-  watcher.on('all', (event, path) => {
-    if (event === 'change' && path && (path.indexOf('public/') > -1 || path.indexOf('src/') > -1)) {
+    watcher.on('change', (path) => {
       if (path.indexOf('.css') > -1 || path.indexOf('.scss') > -1) {
         const styles = document.querySelectorAll('link[rel=stylesheet]');
 
@@ -28,6 +29,6 @@ if (window.location.href.indexOf('chrome') > -1) {
         reloading = true;
         setInterval(triggerReload, 100);
       }
-    }
-  });
-}
+    });
+  }
+})();

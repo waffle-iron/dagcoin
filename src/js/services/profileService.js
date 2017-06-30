@@ -10,7 +10,6 @@ angular.module('copayApp.services')
     root.focusedClient = null;
     root.walletClients = {};
 
-
     root.Utils = bwcService.getUtils();
     root.formatAmount = function (amount, asset, opts) {
       const options = opts || { dontRound: true };
