@@ -10,26 +10,24 @@ const chokidar = require('chokidar');
   }
 
   if (window.location.href.indexOf('chrome') > -1 && window.version && window.version.indexOf('t') > -1) {
-    const watcher = chokidar.watch('.', {
+    const watcher = chokidar.watch('public', {
       ignored: /[\/\\]\./,
       persistent: true,
     });
     let reloading = false;
 
     watcher.on('change', (path) => {
-      if (path && (path.indexOf('public/') > -1 || path.indexOf('src/') > -1)) {
-        if (path.indexOf('.css') > -1 || path.indexOf('.scss') > -1) {
-          const styles = document.querySelectorAll('link[rel=stylesheet]');
+      if (path.indexOf('.css') > -1 || path.indexOf('.scss') > -1) {
+        const styles = document.querySelectorAll('link[rel=stylesheet]');
 
-          for (let x = 0, maxLen = styles.length; x < maxLen; x += 1) {
-            const style = styles[x];
-            const restyled = `${style.getAttribute('href')}?v=${Math.floor((Math.random() * 10000) + 1)}`;
-            style.setAttribute('href', restyled);
-          }
-        } else if (!reloading) {
-          reloading = true;
-          setInterval(triggerReload, 100);
+        for (let x = 0, maxLen = styles.length; x < maxLen; x += 1) {
+          const style = styles[x];
+          const restyled = `${style.getAttribute('href')}?v=${Math.floor((Math.random() * 10000) + 1)}`;
+          style.setAttribute('href', restyled);
         }
+      } else if (!reloading) {
+        reloading = true;
+        setInterval(triggerReload, 100);
       }
     });
   }
