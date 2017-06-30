@@ -10,10 +10,8 @@ angular.module('copayApp.services')
     root.focusedClient = null;
     root.walletClients = {};
 
-
     root.Utils = bwcService.getUtils();
     root.formatAmount = function (amount, asset, opts) {
-    	debugger;
       const config = configService.getSync().wallet.settings;
       // if (config.unitCode == 'byte') return amount;
 
