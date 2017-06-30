@@ -13,16 +13,15 @@ angular.module('copayApp.services')
 
     root.Utils = bwcService.getUtils();
     root.formatAmount = function (amount, asset, opts) {
-	  opts = opts || { dontRound: true };
-      
-	  const config = configService.getSync().wallet.settings;
+      const options = opts || { dontRound: true };
+      const config = configService.getSync().wallet.settings;
       // if (config.unitCode == 'byte') return amount;
 
       // TODO : now only works for english, specify opts to change thousand separator and decimal separator
       if (asset.toLowerCase() === 'dag') {
-        return this.Utils.formatAmount(amount, config.dagUnitCode, opts);
+        return this.Utils.formatAmount(amount, config.dagUnitCode, options);
       }
-      return this.Utils.formatAmount(amount, config.unitCode, opts);
+      return this.Utils.formatAmount(amount, config.unitCode, options);
     };
 
     root._setFocus = function (walletId, cb) {
