@@ -17,6 +17,7 @@ angular.module('copayApp.controllers').controller('exportController',
 
 		var self = this;
 		self.error = null;
+		self.passError = null;
 		self.success = null;
 		self.password = null;
 		self.repeatpassword = null;
@@ -169,8 +170,22 @@ angular.module('copayApp.controllers').controller('exportController',
 		};
 
 		self.walletExport = function() {
-			self.exporting = true;
 			self.error = '';
+			
+			if (!self.password) {
+				self.passError = 'Please enter password';
+			} else if (self.password != self.repeatpassword) {
+				self.passError = 'These passwords don\'t match';
+			} else {
+				self.passError = '';
+			}
+			
+			if (self.passError) {
+				return;
+			}
+			
+			self.exporting = true;
+			
 			var db = require('byteballcore/db');
 			db.takeConnectionFromPool(function(connection) {
 				if (isCordova) {
