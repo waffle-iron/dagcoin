@@ -9,31 +9,31 @@ This should be rewritten!
 */
 
 angular.module('copayApp.controllers').controller('paperWalletController',
-  function($scope, $http, $timeout, $log, configService, profileService, go, addressService, txStatus, bitcore) {
+  function ($scope, $http, $timeout, $log, configService, profileService, go, addressService, txStatus, bitcore) {
     self = this;
-    var fc = profileService.focusedClient;
-    var rawTx;
+    const fc = profileService.focusedClient;
+    let rawTx;
 
-    self.onQrCodeScanned = function(data) {
+    self.onQrCodeScanned = function (data) {
       $scope.inputData = data;
       self.onData(data);
-    }
+    };
 
-    self.onData = function(data) {
+    self.onData = function (data) {
       self.error = '';
       self.scannedKey = data;
       self.isPkEncrypted = (data.charAt(0) == '6');
-    }
+    };
 
-    self._scanFunds = function(cb) {
+    self._scanFunds = function (cb) {
       function getPrivateKey(scannedKey, isPkEncrypted, passphrase, cb) {
         if (!isPkEncrypted) return cb(null, scannedKey);
         fc.decryptBIP38PrivateKey(scannedKey, passphrase, null, cb);
-      };
+      }
 
       function getBalance(privateKey, cb) {
         fc.getBalanceFromPrivateKey(privateKey, cb);
-      };
+      }
 
       function checkPrivateKey(privateKey) {
         try {
@@ -44,28 +44,28 @@ angular.module('copayApp.controllers').controller('paperWalletController',
         return true;
       }
 
-      getPrivateKey(self.scannedKey, self.isPkEncrypted, $scope.passphrase, function(err, privateKey) {
+      getPrivateKey(self.scannedKey, self.isPkEncrypted, $scope.passphrase, (err, privateKey) => {
         if (err) return cb(err);
         if (!checkPrivateKey(privateKey)) return cb(new Error('Invalid private key'));
 
-        getBalance(privateKey, function(err, balance) {
+        getBalance(privateKey, (err, balance) => {
           if (err) return cb(err);
           return cb(null, privateKey, balance);
         });
       });
-    }
+    };
 
-    self.scanFunds = function() {
+    self.scanFunds = function () {
 	  self.error = 'Unimplemented';
 	  return;
-		
+
       self.scanning = true;
       self.privateKey = '';
       self.balanceBytes = 0;
       self.error = '';
 
-      $timeout(function() {
-        self._scanFunds(function(err, privateKey, balance) {
+      $timeout(() => {
+        self._scanFunds((err, privateKey, balance) => {
           self.scanning = false;
           if (err) {
             $log.error(err);
@@ -73,26 +73,26 @@ angular.module('copayApp.controllers').controller('paperWalletController',
           } else {
             self.privateKey = privateKey;
             self.balanceBytes = balance;
-            var config = configService.getSync().wallet.settings;
-            self.balance = profileService.formatAmount(balance) + ' ' + config.unitName;
+            const config = configService.getSync().wallet.settings;
+            self.balance = `${profileService.formatAmount(balance)} ${config.unitName}`;
           }
 
           $scope.$apply();
         });
       }, 100);
-    }
+    };
 
-    self._sweepWallet = function(cb) {
-      addressService.getAddress(fc.credentials.walletId, true, function(err, destinationAddress) {
+    self._sweepWallet = function (cb) {
+      addressService.getAddress(fc.credentials.walletId, true, (err, destinationAddress) => {
         if (err) return cb(err);
 
-        fc.buildTxFromPrivateKey(self.privateKey, destinationAddress, null, function(err, tx) {
+        fc.buildTxFromPrivateKey(self.privateKey, destinationAddress, null, (err, tx) => {
           if (err) return cb(err);
 
           fc.broadcastRawTx({
             rawTx: tx.serialize(),
-            network: 'livenet'
-          }, function(err, txid) {
+            network: 'livenet',
+          }, (err, txid) => {
             if (err) return cb(err);
             return cb(null, destinationAddress, txid);
           });
@@ -100,12 +100,12 @@ angular.module('copayApp.controllers').controller('paperWalletController',
       });
     };
 
-    self.sweepWallet = function() {
+    self.sweepWallet = function () {
       self.sending = true;
       self.error = '';
 
-      $timeout(function() {
-        self._sweepWallet(function(err, destinationAddress, txid) {
+      $timeout(() => {
+        self._sweepWallet((err, destinationAddress, txid) => {
           self.sending = false;
 
           if (err) {
@@ -113,8 +113,8 @@ angular.module('copayApp.controllers').controller('paperWalletController',
             $log.error(err);
           } else {
             txStatus.notify({
-              status: 'broadcasted'
-            }, function() {
+              status: 'broadcasted',
+            }, () => {
               go.walletHome();
             });
           }
@@ -122,5 +122,5 @@ angular.module('copayApp.controllers').controller('paperWalletController',
           $scope.$apply();
         });
       }, 100);
-    }
+    };
   });

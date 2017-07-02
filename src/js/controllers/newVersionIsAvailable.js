@@ -1,6 +1,6 @@
-//'use strict';
+// 'use strict';
 //
-//angular.module('copayApp.controllers').controller('newVersionIsAvailable', function($scope, $modalInstance, go, newVersion){
+// angular.module('copayApp.controllers').controller('newVersionIsAvailable', function($scope, $modalInstance, go, newVersion){
 //
 //  $scope.version = newVersion.version;
 //
@@ -21,4 +21,4 @@
 //  $scope.later = function(){
 //    $modalInstance.close('closed result');
 //  };
-//});
+// });

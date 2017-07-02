@@ -1,14 +1,13 @@
-'use strict';
 
 
-angular.module('copayApp.services').factory('witnessListService', function($state, $rootScope, go) {
-    var root = {};
-    
-    console.log("witnessListService");
+angular.module('copayApp.services').factory('witnessListService', ($state, $rootScope, go) => {
+  const root = {};
 
-    
-    root.currentWitness = null;
+  console.log('witnessListService');
 
 
-    return root;
+  root.currentWitness = null;
+
+
+  return root;
 });

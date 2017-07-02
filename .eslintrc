@@ -1,0 +1,13 @@
+env:
+  node: true
+  browser: true
+  jasmine: true
+globals:
+  angular: true
+  nw: true
+  cordova: true
+extends:
+  - airbnb-base
+rules:
+  no-console: 0
+  no-useless-escape: 0

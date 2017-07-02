@@ -1,18 +1,18 @@
-'use strict';
 
-angular.module('copayApp.services').factory('txStatus', function($modal, lodash, profileService, $timeout) {
-  var root = {};
 
-  root.notify = function(txp, cb) {
-    var fc = profileService.focusedClient;
-    var status = txp.status;
-    var type;
-    var INMEDIATE_SECS = 10;
+angular.module('copayApp.services').factory('txStatus', ($modal, lodash, profileService, $timeout) => {
+  const root = {};
+
+  root.notify = function (txp, cb) {
+    const fc = profileService.focusedClient;
+    const status = txp.status;
+    let type;
+    const INMEDIATE_SECS = 10;
 
     if (status == 'broadcasted') {
       type = 'broadcasted';
     } else {
-        throw Error("unsupported status");
+      throw Error('unsupported status');
         /*
       var n = txp.actions.length;
       var action = lodash.find(txp.actions, {
@@ -39,26 +39,26 @@ angular.module('copayApp.services').factory('txStatus', function($modal, lodash,
     openModal(type, txp, cb);
   };
 
-  root._templateUrl = function(type, txp) {
+  root._templateUrl = function (type, txp) {
     return 'views/modals/tx-status.html';
   };
 
-  var openModal = function(type, txp, cb) {
-    var ModalInstanceCtrl = function($scope, $modalInstance) {
+  var openModal = function (type, txp, cb) {
+    const ModalInstanceCtrl = function ($scope, $modalInstance) {
       $scope.type = type;
-      $scope.cancel = function() {
+      $scope.cancel = function () {
         $modalInstance.dismiss('cancel');
       };
       if (cb) $timeout(cb, 100);
     };
-    var modalInstance = $modal.open({
+    const modalInstance = $modal.open({
       templateUrl: root._templateUrl(type, txp),
       windowClass: 'popup-tx-status full',
       controller: ModalInstanceCtrl,
     });
 
-    modalInstance.result.finally(function() {
-      var m = angular.element(document.getElementsByClassName('reveal-modal'));
+    modalInstance.result.finally(() => {
+      const m = angular.element(document.getElementsByClassName('reveal-modal'));
       m.addClass('hideModal');
     });
   };

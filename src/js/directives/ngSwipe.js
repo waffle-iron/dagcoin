@@ -1,6 +1,6 @@
-'use strict';
 
-/*  
+
+/*
  * This is a modification from https://github.com/angular/angular.js/blob/master/src/ngTouch/swipe.js
  */
 
@@ -8,18 +8,19 @@
 function makeSwipeDirective(directiveName, direction, eventName) {
   angular.module('copayApp.directives')
     .directive(directiveName, ['$parse', '$swipe',
-      function($parse, $swipe) {
+      function ($parse, $swipe) {
         // The maximum vertical delta for a swipe should be less than 75px.
-        var MAX_VERTICAL_DISTANCE = 75;
+        const MAX_VERTICAL_DISTANCE = 75;
         // Vertical distance should not be more than a fraction of the horizontal distance.
-        var MAX_VERTICAL_RATIO = 0.4;
+        const MAX_VERTICAL_RATIO = 0.4;
         // At least a 30px lateral motion is necessary for a swipe.
-        var MIN_HORIZONTAL_DISTANCE = 30;
+        const MIN_HORIZONTAL_DISTANCE = 30;
 
-        return function(scope, element, attr) {
-          var swipeHandler = $parse(attr[directiveName]);
+        return function (scope, element, attr) {
+          const swipeHandler = $parse(attr[directiveName]);
 
-          var startCoords, valid;
+          let startCoords,
+            valid;
 
           function validSwipe(coords) {
             // Check that it's within the coordinates.
@@ -31,8 +32,8 @@ function makeSwipeDirective(directiveName, direction, eventName) {
             // illegal ones a negative delta.
             // Therefore this delta must be positive, and larger than the minimum.
             if (!startCoords) return false;
-            var deltaY = Math.abs(coords.y - startCoords.y);
-            var deltaX = (coords.x - startCoords.x) * direction;
+            const deltaY = Math.abs(coords.y - startCoords.y);
+            const deltaX = (coords.x - startCoords.x) * direction;
             return valid && // Short circuit for already-invalidated swipes.
               deltaY < MAX_VERTICAL_DISTANCE &&
               deltaX > 0 &&
@@ -40,25 +41,25 @@ function makeSwipeDirective(directiveName, direction, eventName) {
               deltaY / deltaX < MAX_VERTICAL_RATIO;
           }
 
-          var pointerTypes = ['touch'];
+          const pointerTypes = ['touch'];
           $swipe.bind(element, {
-            'start': function(coords, event) {
+            start(coords, event) {
               startCoords = coords;
               valid = true;
             },
-            'move': function(coords, event) {
+            move(coords, event) {
               if (validSwipe(coords)) {
-                scope.$apply(function() {
+                scope.$apply(() => {
                   element.triggerHandler(eventName);
                   swipeHandler(scope, {
-                    $event: event
+                    $event: event,
                   });
                 });
               }
-            }
+            },
           }, pointerTypes);
         };
-      }
+      },
     ]);
 }
 /*

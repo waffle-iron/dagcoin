@@ -2181,7 +2181,6 @@ canvas {
 .transactions__table {
 	margin-top: 20px;
 	overflow-x: hidden;
-	overflow-y: scroll;
 }
 .transactions__table.sm-height {
 	height: 200px;
@@ -2381,4 +2380,14 @@ input {
   background: #D52026;
   background-color: #D52026;
   color: #0078a0;
+}
+
+.wrappable-menu-item{
+	width: 70%;
+	text-align: right;
+	white-space: normal;
+}
+
+.wrappable-menu-item .arrow-right{
+	float: right;
 }

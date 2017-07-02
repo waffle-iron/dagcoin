@@ -1,29 +1,25 @@
 
-'use strict';
 
-angular.module('copayApp.services').factory('confirmDialog', function($log, $timeout, gettextCatalog, isCordova) {
-  var root = {};
+angular.module('copayApp.services').factory('confirmDialog', ($log, $timeout, gettextCatalog, isCordova) => {
+  const root = {};
 
 
-  var acceptMsg = gettextCatalog.getString('Accept');
-  var cancelMsg = gettextCatalog.getString('Cancel');
-  var confirmMsg = gettextCatalog.getString('Confirm');
+  const acceptMsg = gettextCatalog.getString('Accept');
+  const cancelMsg = gettextCatalog.getString('Cancel');
+  const confirmMsg = gettextCatalog.getString('Confirm');
 
-  root.show = function(msg, cb) {
+  root.show = function (msg, cb) {
     if (isCordova) {
       navigator.notification.confirm(
         msg,
-        function(buttonIndex) {
+        (buttonIndex) => {
           if (buttonIndex == 1) {
-            $timeout(function() {
-              return cb(true);
-            }, 1);
+            $timeout(() => cb(true), 1);
           } else {
             return cb(false);
           }
         },
-        confirmMsg, [acceptMsg, cancelMsg]
-      );
+        confirmMsg, [acceptMsg, cancelMsg]);
     } else {
       return cb(confirm(msg));
     }
@@ -31,4 +27,3 @@ angular.module('copayApp.services').factory('confirmDialog', function($log, $tim
 
   return root;
 });
-

@@ -1,9 +1,8 @@
-'use strict';
 
-angular.element(document).ready(function() {
 
+angular.element(document).ready(() => {
   // Run copayApp after device is ready.
-  var startAngular = function() {
+  const startAngular = function () {
     angular.bootstrap(document, ['copayApp']);
   };
 
@@ -24,9 +23,7 @@ angular.element(document).ready(function() {
 
   /* Cordova specific Init */
   if (window.cordova !== undefined) {
-
-    document.addEventListener('deviceready', function() {
-
+    document.addEventListener('deviceready', () => {
         /*
       document.addEventListener('pause', function() {
         if (!window.ignoreMobilePause) {
@@ -65,11 +62,11 @@ angular.element(document).ready(function() {
       }, false);
         */
 
-      document.addEventListener('menubutton', function() {
+      document.addEventListener('menubutton', () => {
         window.location = '#/preferences';
       }, false);
 
-      setTimeout(function() {
+      setTimeout(() => {
         navigator.splashscreen.hide();
       }, 2000);
 
@@ -80,8 +77,8 @@ angular.element(document).ready(function() {
         */
 
       window.plugins.touchid.isAvailable(
-        function(msg) { window.touchidAvailable = true; }, // success handler: TouchID available
-        function(msg) { window.touchidAvailable = false; } // error handler: no TouchID available
+        (msg) => { window.touchidAvailable = true; }, // success handler: TouchID available
+        (msg) => { window.touchidAvailable = false; }  // error handler: no TouchID available
       );
 
       startAngular();
@@ -96,9 +93,4 @@ angular.element(document).ready(function() {
     */
     startAngular();
   }
-
 });
-
-
-
-
