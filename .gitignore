@@ -6,6 +6,10 @@ src/js/translations.js
 # version
 src/js/version.js
 
+# dev css
+src/css/main.css
+src/css/main.css.map
+
 # cordova
 cordova/project/*
 cordova/*.keystore
