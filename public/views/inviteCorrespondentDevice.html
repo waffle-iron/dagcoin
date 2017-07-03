@@ -8,7 +8,7 @@
 
 <div ng-controller="inviteCorrespondentDeviceController">
 
-    
+
 
     <div class="m20b">
 
@@ -22,17 +22,17 @@
                 <div class="secret m10t m20b enable_text_select">{{code}}</div>
             </div>
           <div class="row">
-              <input type="button" 
-                     class="button expand outline dark-gray round" 
+              <input type="button"
+                     class="button expand outline dark-gray round"
                      ng-click="$root.go(goBackToState, resetState || false); goBackToState = null"
                      value="{{'Done'|translate}}">
           </div>
         </div>
-      
+
       </div>
 
     </div>
 
-    
+
 </div>
 <div ng-include="'views/includes/menu.html'" ng-show="!index.noFocusedWallet"></div>
