@@ -11,3 +11,7 @@ extends:
 rules:
   no-console: 0
   no-useless-escape: 0
+  max-len:
+    - error
+    - 200
+    - ignoreComments : true

@@ -89,3 +89,4 @@ public/languages
 
 # IntelliJ Idea
 .idea/*
+.sass-cache
