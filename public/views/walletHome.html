@@ -341,12 +341,13 @@
 						  <div class="input-wrap">
 							  <input class="m0" type="text" id="address"
 									 name="address"
-									 ng-disabled="home.blockUx || home.lockAddress || !home.canSendExternalPayment()"
 									 ng-attr-placeholder="{{home.canSendExternalPayment() ? 'DAG address' : 'DAG address of your other wallet &#8594;'}}"
 									 ng-model="_address" valid-address required
 									 ng-blur="home.formFocus(false)">
 
 						  </div>
+
+
 					  </div>
 
 				  </form>
@@ -358,8 +359,7 @@
 				  </div>
 
 			  </div>
-
-		  </div>
+	  </div>
 
 
     <!--
