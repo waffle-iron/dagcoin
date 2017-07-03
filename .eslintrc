@@ -11,3 +11,11 @@ extends:
 rules:
   no-console: 0
   no-useless-escape: 0
+  global-require: 0
+  strict: 0
+  no-use-before-define:
+    - error
+    - functions: false
+  no-param-reassign:
+    - error
+    - props: false

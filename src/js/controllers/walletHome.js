@@ -82,7 +82,14 @@ angular.module('copayApp.controllers').controller('walletHomeController', functi
         $rootScope.$emit('Local/NeedFreshHistory');
         break;
       case 'send':
+
+        $scope.sendForm.$setPristine(); // Reset form on tabs' change.
+
+        self.resetForm();
         self.resetError();
+        break;
+      default:
+      // do nothing
     }
   });
 
@@ -1000,7 +1007,6 @@ angular.module('copayApp.controllers').controller('walletHomeController', functi
       this.lockAsset = false;
     }
   };
-
 
   this.resetForm = function () {
     this.resetError();
