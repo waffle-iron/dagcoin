@@ -80,21 +80,28 @@
 						  <button class=" btn_red tiny round" translate>Tap to retry</button>
 					  </div>
 
-					  <div ng-show="!index.updateError && index.walletScanStatus != 'error'">
-						  <div ng-click='index.updateAll(); index.updateHistoryFromNetwork()'>
-							<span class="price">
-								{{index.dagBalance.totalStr.split('.')[0]}}
-							<span class="sup">
+					  <div ng-show="!index.updateError && index.walletScanStatus != 'error'" ng-click='index.updateAll(); index.updateHistoryFromNetwork()'>
 
-								{{index.dagBalance.totalStr.split('.')[1]}}
-							</span>
-            					<svg class="icon icon-d">
-              						<use xlink:href="img/svg/symbol-defs.svg#icon-d"></use>
-            					</svg>
-							</span>
+							<div class="price-wrapper">
+
+								<div class="price">
+									<svg class="price-icon icon icon-d">
+										<use xlink:href="img/svg/symbol-defs.svg#icon-d"></use>
+									</svg>
+									<div class="price_digits">
+										<div class="price_digits_wrapper">
+											<span class="price-number" ng-style="home.getFontSizeForWalletNumber(index.dagBalance.totalStr)">{{index.dagBalance.totalStr.split('.')[0]}}</span>
+											<span class="price-sup" ng-style="home.getFontSizeForWalletNumber(index.dagBalance.totalStr, 'sup')">{{index.dagBalance.totalStr.split('.')[1]}}</span>
+										</div>
+									</div>
+								</div>
+
+							</div>
+
+
 							  <span ng-if="index.dagBalance.pending" class="ballance">Pending wallet balance: {{index.dagBalance.pendingStr}}</span>
 							  <span ng-if="!index.dagBalance.pending" class="ballance">Wallet balance</span>
-						  </div>
+
 					  </div>
 
 				  </div>

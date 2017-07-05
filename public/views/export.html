@@ -22,9 +22,17 @@
 			<i class="fi-alert size-12"></i>
 			<span translate> Failed to export </span>
 		</div>
+			
 		<div class="p-share js-introduction">
 			<div class="p-wrap">
 				<form class="page-form">
+					<div class="form-group">
+						<div class="box-notification" ng-show="export.passError">
+							<span class="text-warning">
+								{{export.passError|translate}}
+							</span>
+						</div>
+					</div>
 					<div class="form-group">
 						<div class="title clearfix">
 							<span class="name" translate>Set up a Password </span>
