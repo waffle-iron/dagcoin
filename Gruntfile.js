@@ -36,6 +36,10 @@ module.exports = function (grunt) {
         files: ['src/css/*.css'],
         tasks: ['concat:css'],
       },
+      sass: {
+        files: ['src/css/*.scss'],
+        tasks: ['sass', 'concat:css'],
+      },
       main: {
         files: [
           'src/js/init.js',
@@ -50,6 +54,18 @@ module.exports = function (grunt) {
         tasks: ['concat:js'],
       },
     },
+
+    sass: {
+      dist: {
+        options: {
+          style: 'expanded',
+        },
+        files: {
+          'src/css/main.css': 'src/css/main.scss',
+        },
+      },
+    },
+
     concat: {
       options: {
         sourceMap: false,
@@ -135,7 +151,7 @@ module.exports = function (grunt) {
     nggettext_compile: {
       all: {
         options: {
-		  format: 'json',
+          format: 'json',
           module: 'copayApp',
         },
         files: [
@@ -167,8 +183,23 @@ module.exports = function (grunt) {
       linux: {
         options: { timestamp: true, mode: true },
         files: [
-		  { expand: true, cwd: './webkitbuilds/', src: ['dagcoin.desktop', '../public/img/icons/icon-white-outline.iconset/icon_256x256.png'], dest: '../byteballbuilds/DAGCOIN-TN/linux32/', flatten: true, filter: 'isFile', options: { timestamp: true, mode: true } },
-		  { expand: true, cwd: './webkitbuilds/', src: ['dagcoin.desktop', '../public/img/icons/icon-white-outline.iconset/icon_256x256.png'], dest: '../byteballbuilds/DAGCOIN-TN/linux64/', flatten: true, filter: 'isFile', options: { timestamp: true, mode: true } },
+          { expand: true,
+            cwd: './webkitbuilds/',
+            src: ['dagcoin.desktop', '../public/img/icons/icon-white-outline.iconset/icon_256x256.png'],
+            dest: '../byteballbuilds/DAGCOIN-TN/linux32/',
+            flatten: true,
+            filter: 'isFile',
+            options: { timestamp: true, mode: true },
+          },
+          {
+            expand: true,
+            cwd: './webkitbuilds/',
+            src: ['dagcoin.desktop', '../public/img/icons/icon-white-outline.iconset/icon_256x256.png'],
+            dest: '../byteballbuilds/DAGCOIN-TN/linux64/',
+            flatten: true,
+            filter: 'isFile',
+            options: { timestamp: true, mode: true },
+          },
         ],
       },
     },
@@ -196,14 +227,18 @@ module.exports = function (grunt) {
           // platforms: ['osx64'],
         platforms: [getPlatform()],
         appName: 'DAGCOIN-TN',
-		  flavor: 'normal',
+        flavor: 'normal',
         buildDir: '../byteballbuilds',
         version: '0.14.7',
         zip: false,
         macIcns: './public/img/icons/icon-white-outline.icns',
         winIco: './public/img/icons/icon-white-outline.ico',
         exeIco: './public/img/icons/icon-white-outline.ico',
-		  macPlist: { CFBundleURLTypes: [{ CFBundleURLName: 'DAGCOIN action', CFBundleURLSchemes: ['DAGCOIN-TN'] }], /* CFBundleIconFile: 'nw.icns',*/ LSHasLocalizedDisplayName: 0 },
+        macPlist: {
+          CFBundleURLTypes: [{ CFBundleURLName: 'DAGCOIN action', CFBundleURLSchemes: ['DAGCOIN-TN'] }],
+          LSHasLocalizedDisplayName: 0,
+          /* CFBundleIconFile: 'nw.icns',*/
+        },
       },
       src: ['./package.json', './public/**/*', './angular-bitcore-wallet-client/**/*'],
     },
@@ -240,7 +275,11 @@ module.exports = function (grunt) {
     debian_package: {
       linux64: {
         files: [
-                { expand: true, cwd: '../byteballbuilds/dagcoin-test/linux64/', src: ['**/*'], dest: '/opt/dagcoin-test/' },
+          {
+            expand: true,
+            cwd: '../byteballbuilds/dagcoin-test/linux64/',
+            src: ['**/*'],
+            dest: '/opt/dagcoin-test/' },
                 //{expand: true, cwd: '../byteballbuilds/byteball-test/linux64', src: ['dagcoin.desktop'], dest: '/usr/share/applications/byteball-test.desktop'}
         ],
         options: {
@@ -271,6 +310,7 @@ module.exports = function (grunt) {
     },
   });
 
+  grunt.loadNpmTasks('grunt-contrib-sass');
   grunt.loadNpmTasks('grunt-contrib-concat');
   grunt.loadNpmTasks('grunt-contrib-copy');
   grunt.loadNpmTasks('grunt-contrib-watch');
@@ -285,7 +325,9 @@ module.exports = function (grunt) {
   // grunt.loadNpmTasks('grunt-debian-package');
   grunt.loadNpmTasks('innosetup-compiler');
 
-  grunt.registerTask('default', ['nggettext_compile', 'exec:version', 'concat', 'copy:icons']);
+  grunt.registerTask('dev', ['watch']);
+
+  grunt.registerTask('default', ['nggettext_compile', 'exec:version', 'sass', 'concat', 'copy:icons']);
   grunt.registerTask('cordova', ['default', 'browserify']);
   grunt.registerTask('cordova-prod', ['cordova', 'uglify']);
   // grunt.registerTask('prod', ['default', 'uglify']);
