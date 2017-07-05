@@ -119,7 +119,7 @@ Logger.prototype.setLevel = function (level) {
  * @param {*} args - the arguments to be logged.
  */
 
-const logger = new Logger('byteball');
+const logger = new Logger('dagcoin');
 const error = new Error();
 logger.setLevel('info');
 module.exports = logger;
