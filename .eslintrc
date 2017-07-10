@@ -26,3 +26,4 @@ rules:
   key-spacing:
     - error
     - align : colon
+  func-names: 0
