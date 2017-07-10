@@ -61,7 +61,8 @@
     "innosetup-compiler": "^5.5.9"
   },
   "scripts": {
-    "test": "./node_modules/.bin/grunt test-coveralls"
+    "test": "./node_modules/.bin/grunt test-coveralls",
+	"eslint": "./node_modules/eslint/bin/eslint.js --cache ./"
   },
   "devDependencies": {
     "adm-zip": "^0.4.7",
