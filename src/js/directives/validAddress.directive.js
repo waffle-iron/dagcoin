@@ -21,7 +21,7 @@
   function validAddress($rootScope, profileService) {
     return {
       restrict: 'A',
-      require: 'ngModel',
+      require : 'ngModel',
       link(scope, elem, attrs, ctrl) {
         const validator = (value) => {
           if (!profileService.focusedClient) {
