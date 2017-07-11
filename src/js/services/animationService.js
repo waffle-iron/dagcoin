@@ -1,10 +1,8 @@
-
-
 angular.module('copayApp.services').factory('animationService', (isCordova) => {
   const root = {};
 
-  let cachedTransitionState,
-    cachedBackPanel;
+  let cachedTransitionState;
+  let cachedBackPanel;
 
   // DISABLE ANIMATION ON DESKTOP
   root.modalAnimated = {
@@ -47,13 +45,15 @@ angular.module('copayApp.services').factory('animationService', (isCordova) => {
   };
 
   function cleanUpLater(e, e2) {
-    let cleanedUp = false,
-      timeoutID;
+    let cleanedUp = false;
+    let timeoutID;
     const cleanUp = function () {
       if (cleanedUp) return;
       cleanedUp = true;
-	  if (e2.parentNode) // sometimes it is null
-		  { e2.parentNode.removeChild(e2); }
+      // sometimes it is null
+      if (e2.parentNode) {
+        e2.parentNode.removeChild(e2);
+      }
       e2.innerHTML = '';
       e.className = '';
       cachedBackPanel = null;
@@ -70,9 +70,7 @@ angular.module('copayApp.services').factory('animationService', (isCordova) => {
     timeoutID = setTimeout(cleanUp, 500);
   }
 
-  root.transitionAnimated = function (fromState, toState, event) {
-    if (isaosp) { return true; }
-
+  root.transitionAnimated = function (fromState, toState) {
     // Animation in progress?
     const x = document.getElementById('mainSectionDup');
     if (x && !cachedTransitionState) {
@@ -82,14 +80,16 @@ angular.module('copayApp.services').factory('animationService', (isCordova) => {
 
     const fromName = fromState.name;
     const toName = toState.name;
-    if (!fromName || !toName) { return true; }
+    if (!fromName || !toName) {
+      return true;
+    }
 
     const fromWeight = pageWeight[fromName];
     const toWeight = pageWeight[toName];
 
 
-    let entering = null,
-      leaving = null;
+    let entering = null;
+    let leaving = null;
 
     // Horizontal Slide Animation?
     if (isCordova && fromWeight && toWeight) {
@@ -117,7 +117,7 @@ angular.module('copayApp.services').factory('animationService', (isCordova) => {
 
     const desiredTransitionState = `${fromName || '-'}:${toName || '-'}`;
 
-    if (desiredTransitionState == cachedTransitionState) {
+    if (desiredTransitionState === cachedTransitionState) {
       e.className = entering || '';
       cachedBackPanel.className = leaving || '';
       cleanUpLater(e, cachedBackPanel);
@@ -125,16 +125,20 @@ angular.module('copayApp.services').factory('animationService', (isCordova) => {
       return true;
     }
     let sc;
-      // Keep prefDiv scroll
+    // Keep prefDiv scroll
     const contentDiv = e.getElementsByClassName('content');
-    if (contentDiv && contentDiv[0]) { sc = contentDiv[0].scrollTop; }
+    if (contentDiv && contentDiv[0]) {
+      sc = contentDiv[0].scrollTop;
+    }
 
     cachedBackPanel = e.cloneNode(true);
     cachedBackPanel.id = 'mainSectionDup';
     const c = document.getElementById('sectionContainer');
     c.appendChild(cachedBackPanel);
 
-    if (sc) { cachedBackPanel.getElementsByClassName('content')[0].scrollTop = sc; }
+    if (sc) {
+      cachedBackPanel.getElementsByClassName('content')[0].scrollTop = sc;
+    }
 
     cachedTransitionState = desiredTransitionState;
     return false;
