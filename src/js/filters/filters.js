@@ -1,25 +1,23 @@
-
-
 angular.module('copayApp.filters', [])
-  .filter('amTimeAgo', ['amMoment',
-    function (amMoment) {
-      return function (input) {
-        return amMoment.preprocessDate(input).fromNow();
-      };
-    },
-  ])
-  .filter('paged', () => function (elements) {
-    if (elements) {
-      return elements.filter(Boolean);
-    }
+.filter('amTimeAgo', ['amMoment',
+  function (amMoment) {
+    return function (input) {
+      return amMoment.preprocessDate(input).fromNow();
+    };
+  },
+])
+.filter('paged', () => function (elements) {
+  if (elements) {
+    return elements.filter(Boolean);
+  }
 
-    return false;
-  })
-  .filter('removeEmpty', () => function (elements) {
-    elements = elements || [];
-      // Hide empty change addresses from other copayers
-    return elements.filter(e => !e.isChange || e.balance > 0);
-  })
+  return false;
+})
+.filter('removeEmpty', () => function (elements) {
+  const elem = elements || [];
+  // Hide empty change addresses from other copayers
+  return elem.filter(e => !e.isChange || e.balance > 0);
+})
 
 .filter('noFractionNumber', ['$filter', '$locale', 'configService',
   function (filter, locale, configService) {
