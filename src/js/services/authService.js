@@ -1,5 +1,3 @@
-
-
 angular.module('copayApp.services').factory('authService', () => {
   const root = {};
 

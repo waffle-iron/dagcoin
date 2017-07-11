@@ -1,5 +1,3 @@
-
-
 angular.module('copayApp.services')
 .factory('autoUpdatingWitnessesList', ($timeout, $modal, $rootScope, configService) => {
   const root = {};
@@ -15,10 +13,10 @@ angular.module('copayApp.services')
     device.getWitnessesFromHub((err, arrWitnessesFromHub) => {
       if (arrWitnessesFromHub) {
         myWitnesses.readMyWitnesses((arrWitnesses) => {
-          root.addWitnesses = arrWitnessesFromHub.filter(witness => arrWitnesses.indexOf(witness) == -1);
-          root.delWitnesses = arrWitnesses.filter(witness => arrWitnessesFromHub.indexOf(witness) == -1);
+          root.addWitnesses = arrWitnessesFromHub.filter(witness => arrWitnesses.indexOf(witness) === -1);
+          root.delWitnesses = arrWitnesses.filter(witness => arrWitnessesFromHub.indexOf(witness) === -1);
 
-          if (root.addWitnesses.length != 0) {
+          if (root.addWitnesses.length !== 0) {
             const modalInstance = $modal.open({
               templateUrl: 'views/modals/approveNewWitnesses.html',
               controller: 'approveNewWitnesses',
