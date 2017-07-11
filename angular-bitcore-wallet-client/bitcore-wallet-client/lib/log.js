@@ -20,9 +20,9 @@ const lodash = require('lodash');
 
 const levels = {
   debug: 0,
-  info : 1,
-  log  : 2,
-  warn : 3,
+  info: 1,
+  log: 2,
+  warn: 3,
   error: 4,
   fatal: 5,
 };

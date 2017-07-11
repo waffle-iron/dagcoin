@@ -1,5 +1,3 @@
-
-
 /**
  * Profile
  *
@@ -10,21 +8,27 @@ function Profile() {
 }
 
 Profile.create = function (opts) {
-  opts = opts || {};
+  const options = opts || {};
 
   const x = new Profile();
   x.createdOn = Date.now();
-  x.credentials = opts.credentials || [];
-  if (!opts.xPrivKey && !opts.xPrivKeyEncrypted) { throw Error('no xPrivKey, even encrypted'); }
-  if (!opts.mnemonic && !opts.mnemonicEncrypted) { throw Error('no mnemonic, even encrypted'); }
-  if (!opts.tempDeviceKey) { throw Error('no tempDeviceKey'); }
-  x.xPrivKey = opts.xPrivKey;
-  x.mnemonic = opts.mnemonic;
-  x.xPrivKeyEncrypted = opts.xPrivKeyEncrypted;
-  x.mnemonicEncrypted = opts.mnemonicEncrypted;
-  x.tempDeviceKey = opts.tempDeviceKey;
-  x.prevTempDeviceKey = opts.prevTempDeviceKey; // optional
-  x.my_device_address = opts.my_device_address;
+  x.credentials = options.credentials || [];
+  if (!options.xPrivKey && !options.xPrivKeyEncrypted) {
+    throw Error('no xPrivKey, even encrypted');
+  }
+  if (!options.mnemonic && !options.mnemonicEncrypted) {
+    throw Error('no mnemonic, even encrypted');
+  }
+  if (!options.tempDeviceKey) {
+    throw Error('no tempDeviceKey');
+  }
+  x.xPrivKey = options.xPrivKey;
+  x.mnemonic = options.mnemonic;
+  x.xPrivKeyEncrypted = options.xPrivKeyEncrypted;
+  x.mnemonicEncrypted = options.mnemonicEncrypted;
+  x.tempDeviceKey = options.tempDeviceKey;
+  x.prevTempDeviceKey = options.prevTempDeviceKey; // optional
+  x.my_device_address = options.my_device_address;
   return x;
 };
 
@@ -35,12 +39,18 @@ Profile.fromObj = function (obj) {
   x.createdOn = obj.createdOn;
   x.credentials = obj.credentials;
 
-  if (x.credentials[0] && typeof x.credentials[0] !== 'object') { throw ('credentials should be an object'); }
+  if (x.credentials[0] && typeof x.credentials[0] !== 'object') {
+    throw Error('credentials should be an object');
+  }
 
-  if (!obj.xPrivKey && !obj.xPrivKeyEncrypted) { throw Error('no xPrivKey, even encrypted'); }
-//	if (!obj.mnemonic && !obj.mnemonicEncrypted)
-//		throw Error("no mnemonic, even encrypted");
-  if (!obj.tempDeviceKey) { throw Error('no tempDeviceKey'); }
+  if (!obj.xPrivKey && !obj.xPrivKeyEncrypted) {
+    throw Error('no xPrivKey, even encrypted');
+  }
+// if (!obj.mnemonic && !obj.mnemonicEncrypted)
+// throw Error("no mnemonic, even encrypted");
+  if (!obj.tempDeviceKey) {
+    throw Error('no tempDeviceKey');
+  }
   x.xPrivKey = obj.xPrivKey;
   x.mnemonic = obj.mnemonic;
   x.xPrivKeyEncrypted = obj.xPrivKeyEncrypted;

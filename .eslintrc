@@ -23,7 +23,4 @@ rules:
     - error
     - 200
     - ignoreComments : true
-  key-spacing:
-    - error
-    - align : colon
   func-names: 0

@@ -76,12 +76,11 @@ angular.element(document).ready(() => {
 
       window.plugins.touchid.isAvailable(
         () => {
-          window.touchidAvailable = true;
-        }, // success handler: TouchID available
+          window.touchidAvailable = true; // success handler: TouchID available
+        },
         () => {
-          window.touchidAvailable = false;
-        }, // error handler: no TouchID available
-      );
+          window.touchidAvailable = false; // error handler: no TouchID available
+        });
 
       startAngular();
     }, false);

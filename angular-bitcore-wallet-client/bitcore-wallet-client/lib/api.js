@@ -536,9 +536,9 @@ API.prototype.getAddresses = function (opts, cb) {
   const self = this;
   walletDefinedByKeys.readAddresses(this.credentials.walletId, opts, (arrAddressInfos) => {
     cb(null, arrAddressInfos.map(addressInfo => ({
-      address  : addressInfo.address,
+      address: addressInfo.address,
       createdOn: addressInfo.creation_ts,
-      path     : `m/44'/${coin}'/${self.credentials.account}'/${addressInfo.is_change}/${addressInfo.address_index}`,
+      path: `m/44'/${coin}'/${self.credentials.account}'/${addressInfo.is_change}/${addressInfo.address_index}`,
     })));
   });
 };
