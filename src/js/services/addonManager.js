@@ -1,5 +1,3 @@
-
-
 angular.module('copayApp.services').service('addonManager', function (lodash) {
   const addons = [];
 
