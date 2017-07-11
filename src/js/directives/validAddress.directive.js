@@ -1,8 +1,6 @@
 /* global angular */
 
-(() => {
-  'use strict';
-
+(function () {
   const ValidationUtils = require('byteballcore/validation_utils.js');
 
 // byteball uri
@@ -56,4 +54,4 @@
       },
     };
   }
-})();
+}());

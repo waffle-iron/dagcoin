@@ -262,6 +262,32 @@ module.exports = function (grunt) {
         dest: 'dagcoin-linux64/',
       },
     },
+    babel: {
+      options: {
+        sourceMap: false,
+        presets: ['es2015'],
+      },
+      src: {
+        files: [
+          {
+            expand: true,
+            cwd: 'src/js/',
+            src: ['**/*.js'],
+            dest: 'build/src',
+          },
+        ],
+      },
+      test: {
+        files: [
+          {
+            expand: true,
+            cwd: 'test/',
+            src: ['**/*.js', '!karma.conf.js'],
+            dest: 'build/test',
+          },
+        ],
+      },
+    },
     browserify: {
       dist: {
         options: {
@@ -311,6 +337,7 @@ module.exports = function (grunt) {
   });
 
   grunt.loadNpmTasks('grunt-contrib-sass');
+  grunt.loadNpmTasks('grunt-babel');
   grunt.loadNpmTasks('grunt-contrib-concat');
   grunt.loadNpmTasks('grunt-contrib-copy');
   grunt.loadNpmTasks('grunt-contrib-watch');
@@ -332,7 +359,7 @@ module.exports = function (grunt) {
   grunt.registerTask('cordova-prod', ['cordova', 'uglify']);
   // grunt.registerTask('prod', ['default', 'uglify']);
   grunt.registerTask('translate', ['nggettext_extract']);
-  grunt.registerTask('test', ['karma:prod']);
+  grunt.registerTask('test', ['babel', 'karma:prod']);
   grunt.registerTask('test-coveralls', ['karma:prod', 'coveralls']);
   // grunt.registerTask('desktop', ['prod', 'nwjs', 'copy:linux', 'compress:linux32', 'compress:linux64', 'copy:osx', 'exec:osx32', 'exec:osx64']);
   grunt.registerTask('desktop', ['default', 'nwjs']);

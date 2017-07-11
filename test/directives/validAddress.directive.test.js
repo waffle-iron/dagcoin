@@ -1,9 +1,7 @@
-describe("copayApp.directives.validAddress", function() {
-  var a;
+define(['byteballcore/validation_utils.js'], (ValidationUtils) => {
 
-  it("and so is a spec", function() {
-    a = true;
+  describe('just checking', () => {
+    expect(typeof ValidationUtils === 'object').toBe(true);
+  })
 
-    expect(a).toBe(true);
-  });
 });
