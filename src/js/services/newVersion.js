@@ -16,7 +16,7 @@
 //      //     controller: 'newVersionIsAvailable'
 //      // });
 //      // $rootScope.$on('closeModal', function() {
-//      // 	  modalInstance.dismiss('cancel');
+//      // modalInstance.dismiss('cancel');
 //      // });
 //      root.shown = true;
 //      startTimerNextShow();

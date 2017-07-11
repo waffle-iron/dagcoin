@@ -1,33 +1,33 @@
-
+/* eslint-disable no-alert,consistent-return,no-shadow */
 angular.module('copayApp.services')
 .factory('pushNotificationsService', ($http, $rootScope, $log, isMobile, storageService, configService, lodash, isCordova) => {
   const root = {};
-  const defaults = configService.getDefaults();
   const usePushNotifications = isCordova && !isMobile.Windows();
   let projectNumber;
-  let _ws;
+  let wsLocal;
 
   const eventBus = require('byteballcore/event_bus.js');
 
   function sendRequestEnableNotification(ws, registrationId) {
     const network = require('byteballcore/network.js');
     network.sendRequest(ws, 'hub/enable_notification', registrationId, false, (ws, request, response) => {
-      if (!response || (response && response !== 'ok')) return $log.error('Error sending push info');
+      if (!response || (response && response !== 'ok')) {
+        return $log.error('Error sending push info');
+      }
     });
   }
 
   window.onNotification = function (data) {
     if (data.event === 'registered') {
-      storageService.setPushInfo(projectNumber, data.regid, true, () => {
-        sendRequestEnableNotification(_ws, data.regid);
+      return storageService.setPushInfo(projectNumber, data.regid, true, () => {
+        sendRequestEnableNotification(wsLocal, data.regid);
       });
-    }		else {
-      return false;
     }
+    return false;
   };
 
   eventBus.on('receivedPushProjectNumber', (ws, data) => {
-    _ws = ws;
+    wsLocal = ws;
     if (data && data.projectNumber !== undefined) {
       storageService.getPushInfo((err, pushInfo) => {
         const config = configService.getSync();
@@ -36,7 +36,7 @@ angular.module('copayApp.services')
           root.pushNotificationsUnregister(() => {
 
           });
-        }				else if (projectNumber && config.pushNotifications.enabled) {
+        } else if (projectNumber && config.pushNotifications.enabled) {
           root.pushNotificationsInit();
         }
       });
@@ -46,26 +46,28 @@ angular.module('copayApp.services')
   root.pushNotificationsInit = function () {
     if (!usePushNotifications) return;
 
-    window.plugins.pushNotification.register((data) => {
+    window.plugins.pushNotification.register(() => {
     },
-			(e) => {
-  alert(`err= ${e}`);
-}, {
-  senderID: projectNumber,
-  ecb: 'onNotification',
-});
+      (e) => {
+        alert(`err= ${e}`);
+      }, {
+        senderID: projectNumber,
+        ecb: 'onNotification',
+      });
 
     configService.set({ pushNotifications: { enabled: true } }, (err) => {
       if (err) $log.debug(err);
     });
   };
 
-  function disable_notification() {
+  function disableNotification() {
     storageService.getPushInfo((err, pushInfo) => {
       storageService.removePushInfo(() => {
         const network = require('byteballcore/network.js');
-        network.sendRequest(_ws, 'hub/disable_notification', pushInfo.registrationId, false, (ws, request, response) => {
-          if (!response || (response && response !== 'ok')) return $log.error('Error sending push info');
+        network.sendRequest(wsLocal, 'hub/disable_notification', pushInfo.registrationId, false, (ws, request, response) => {
+          if (!response || (response && response !== 'ok')) {
+            return $log.error('Error sending push info');
+          }
         });
       });
     });
@@ -77,9 +79,9 @@ angular.module('copayApp.services')
   root.pushNotificationsUnregister = function () {
     if (!usePushNotifications) return;
     window.plugins.pushNotification.unregister(() => {
-      disable_notification();
+      disableNotification();
     }, () => {
-      disable_notification();
+      disableNotification();
     });
   };
 

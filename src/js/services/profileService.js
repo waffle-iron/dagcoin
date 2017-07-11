@@ -205,8 +205,8 @@
           options.mnemonic = root.normalizeMnemonic(options.mnemonic);
           walletClient.seedFromMnemonic(options.mnemonic, {
             network,
-            passphrase        : options.passphrase,
-            account           : options.account || 0,
+            passphrase: options.passphrase,
+            account: options.account || 0,
             derivationStrategy: options.derivationStrategy || 'BIP44',
           });
         } catch (ex) {
@@ -223,7 +223,7 @@
       } else if (options.extendedPublicKey) {
         try {
           walletClient.seedFromExtendedPublicKey(options.extendedPublicKey, options.externalSource, options.entropySource, {
-            account           : options.account || 0,
+            account: options.account || 0,
             derivationStrategy: options.derivationStrategy || 'BIP44',
           });
         } catch (ex) {
@@ -237,8 +237,8 @@
           walletClient.seedFromRandomWithMnemonic({
             network,
             passphrase: options.passphrase,
-            language  : lang,
-            account   : options.account || 0,
+            language: lang,
+            account: options.account || 0,
           });
         } catch (e) {
           $log.info(`Error creating seed: ${e.message}`);
@@ -247,7 +247,7 @@
             walletClient.seedFromRandomWithMnemonic({
               network,
               passphrase: options.passphrase,
-              account   : options.account || 0,
+              account: options.account || 0,
             });
           } else {
             return cb(e);
@@ -284,10 +284,10 @@
           const mnemonic = walletClient.credentials.mnemonic;
           console.log(`mnemonic: ${mnemonic}`);
           const p = Profile.create({
-            credentials      : [JSON.parse(walletClient.export())],
+            credentials: [JSON.parse(walletClient.export())],
             xPrivKey,
             mnemonic,
-            tempDeviceKey    : tempDeviceKey.toString('base64'),
+            tempDeviceKey: tempDeviceKey.toString('base64'),
             my_device_address: device.getMyDeviceAddress(),
           });
           device.setTempKeys(tempDeviceKey, null, saveTempKeys);
@@ -326,8 +326,8 @@
           }
 
           return walletClient.createWallet(opts.name, opts.m, opts.n, {
-            network  : opts.networkName,
-            account  : opts.account,
+            network: opts.networkName,
+            account: opts.account,
             cosigners: opts.cosigners,
           }, (error) => {
             if (error) {
@@ -421,7 +421,7 @@
       try {
         walletClient.import(str, {
           compressed: opts.compressed,
-          password  : opts.password,
+          password: opts.password,
         });
       } catch (err) {
         $log.warn(err);
@@ -470,9 +470,9 @@
 
       const inputWords = root.normalizeMnemonic(words);
       walletClient.importFromMnemonic(inputWords, {
-        network   : opts.networkName,
+        network: opts.networkName,
         passphrase: opts.passphrase,
-        account   : opts.account || 0,
+        account: opts.account || 0,
       }, (err) => {
         if (err) {
           return cb(`${gettext('Could not import')}: ${err}`);
@@ -487,7 +487,7 @@
       $log.debug('Importing Wallet XPubKey');
 
       walletClient.importFromExtendedPublicKey(opts.extendedPublicKey, opts.externalSource, opts.entropySource, {
-        account           : opts.account || 0,
+        account: opts.account || 0,
         derivationStrategy: opts.derivationStrategy || 'BIP44',
       }, (err) => {
         if (err) {
@@ -673,13 +673,13 @@
       config.colorFor = config.colorFor || {};
       config.aliasFor = config.aliasFor || {};
       let ret = lodash.map(root.profile.credentials, c => ({
-        m          : c.m,
-        n          : c.n,
+        m: c.m,
+        n: c.n,
         is_complete: (c.publicKeyRing && c.publicKeyRing.length === c.n),
-        name       : config.aliasFor[c.walletId] || c.walletName,
-        id         : c.walletId,
-        network    : c.network,
-        color      : config.colorFor[c.walletId] || '#2C3E50',
+        name: config.aliasFor[c.walletId] || c.walletName,
+        id: c.walletId,
+        network: c.network,
+        color: config.colorFor[c.walletId] || '#2C3E50',
       }));
       ret = lodash.filter(ret, w => (w.network === network && w.is_complete));
       return lodash.sortBy(ret, 'name');

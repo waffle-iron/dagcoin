@@ -1,6 +1,4 @@
-
-
-angular.module('copayApp.services').factory('derivationPathHelper', (lodash) => {
+angular.module('copayApp.services').factory('derivationPathHelper', () => {
   const root = {};
 
   root.default = "m/44'/0'/0'";
@@ -9,7 +7,9 @@ angular.module('copayApp.services').factory('derivationPathHelper', (lodash) => 
 
     const ret = {};
 
-    if (arr[0] != 'm') { return false; }
+    if (arr[0] !== 'm') {
+      return false;
+    }
 
     switch (arr[1]) {
       case "44'":
@@ -34,7 +34,9 @@ angular.module('copayApp.services').factory('derivationPathHelper', (lodash) => 
     }
 
     const match = arr[3].match(/(\d+)'/);
-    if (!match) { return false; }
+    if (!match) {
+      return false;
+    }
     ret.account = +match[1];
 
     return ret;

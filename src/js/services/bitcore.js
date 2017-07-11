@@ -1,2 +1,5 @@
+/* eslint-disable arrow-body-style */
 angular.module('copayApp.services')
-.factory('bitcore', bwcService => bwcService.getBitcore());
+.factory('bitcore', (bwcService) => {
+  return bwcService.getBitcore();
+});

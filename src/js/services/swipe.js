@@ -1,4 +1,5 @@
-
+/* eslint-disable no-param-reassign,no-unused-expressions,one-var */
+// todo: we aren't using swipe functionality. this might be removed in futuire.
 
 /*
  * This is a modification from https://github.com/angular/angular.js/blob/master/src/ngTouch/swipe.js

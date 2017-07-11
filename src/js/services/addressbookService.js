@@ -8,10 +8,10 @@ angular.module('copayApp.services').factory('addressbookService', (storageServic
       if (storageServiceError) {
         return cb('Could not get the Addressbook');
       }
-      let addressBook;
-      if (ab) {
-        addressBook = JSON.parse(ab);
+      if (!ab) {
+        return cb();
       }
+      const addressBook = JSON.parse(ab);
       if (addressBook[addr]) {
         return cb(addressBook[addr]);
       }

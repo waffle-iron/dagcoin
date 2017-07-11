@@ -1,5 +1,4 @@
-
-
+/* eslint-disable import/no-unresolved,import/no-extraneous-dependencies */
 angular.module('copayApp.services').factory('nodeWebkit', () => {
   const root = {};
 
@@ -11,6 +10,8 @@ angular.module('copayApp.services').factory('nodeWebkit', () => {
       } catch (e) {
         return false;
       }
+    } else {
+      return false;
     }
   };
 
@@ -23,20 +24,20 @@ angular.module('copayApp.services').factory('nodeWebkit', () => {
     if (!isNodeWebkit()) return;
     const gui = require('nw.gui');
     const clipboard = gui.Clipboard.get();
-    return clipboard.get();
+    clipboard.get();
   };
 
   root.writeToClipboard = function (text) {
     if (!isNodeWebkit()) return;
     const gui = require('nw.gui');
     const clipboard = gui.Clipboard.get();
-    return clipboard.set(text);
+    clipboard.set(text);
   };
 
   root.openExternalLink = function (url) {
     if (!isNodeWebkit()) return;
     const gui = require('nw.gui');
-    return gui.Shell.openExternal(url);
+    gui.Shell.openExternal(url);
   };
 
   return root;

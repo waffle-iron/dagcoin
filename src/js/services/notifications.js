@@ -1,17 +1,15 @@
-
-
 angular.module('copayApp.services')
 .factory('notification', ['$timeout',
   function ($timeout) {
     let notifications = [];
 
     /*
-    ls.getItem('notifications', function(err, data) {
-      if (data) {
-        notifications = JSON.parse(data);
-      }
-    });
-    */
+     ls.getItem('notifications', function(err, data) {
+     if (data) {
+     notifications = JSON.parse(data);
+     }
+     });
+     */
 
     const queue = [];
     const settings = {
@@ -55,10 +53,11 @@ angular.module('copayApp.services')
 
     function html5Notify(icon, title, content, ondisplay, onclose) {
       if (window.webkitNotifications && window.webkitNotifications.checkPermission() === 0) {
-        if (!icon) {
-          icon = 'img/icons/favicon-white.ico';
+        let notifyIcon = icon;
+        if (!notifyIcon) {
+          notifyIcon = 'img/icons/favicon-white.ico';
         }
-        const noti = window.webkitNotifications.createNotification(icon, title, content);
+        const noti = window.webkitNotifications.createNotification(notifyIcon, title, content);
         if (typeof ondisplay === 'function') {
           noti.ondisplay = ondisplay;
         }
@@ -222,8 +221,8 @@ angular.module('copayApp.services')
           window.navigator.vibrate([200, 100, 200]);
         }
 
-        if (document.hidden && (type == 'info' || type == 'funds')) {
-          new window.Notification(title, {
+        if (document.hidden && (type === 'info' || type === 'funds')) {
+          window.Notification(title, {
             body: content,
             icon: 'img/notification.png',
           });
@@ -254,7 +253,7 @@ angular.module('copayApp.services')
 
     };
   },
-]).directive('notifications', (notification, $compile) => {
+]).directive('notifications', (notification) => {
   /**
    *
    * It should also parse the arguments passed to it that specify
@@ -268,7 +267,7 @@ angular.module('copayApp.services')
     let position = attrs.notifications;
     position = position.split(' ');
     element.addClass('dr-notification-container');
-    for (let i = 0; i < position.length; i++) {
+    for (let i = 0; i < position.length; i += 1) {
       element.addClass(position[i]);
     }
   }
