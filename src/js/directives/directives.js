@@ -137,9 +137,9 @@ angular.module('copayApp.directives')
   },
 }))
 .directive('checkStrength', () => ({
-  replace : false,
+  replace: false,
   restrict: 'EACM',
-  require : 'ngModel',
+  require: 'ngModel',
   link(scope, element, attrs) {
     const MIN_LENGTH = 8;
     const MESSAGES = ['Very Weak', 'Very Weak', 'Weak', 'Medium', 'Strong', 'Very Strong'];
@@ -171,8 +171,8 @@ angular.module('copayApp.directives')
 
       return {
         strength: passwordStrength,
-        message : MESSAGES[passwordStrength] + text,
-        color   : COLOR[passwordStrength],
+        message: MESSAGES[passwordStrength] + text,
+        color: COLOR[passwordStrength],
       };
     }
 
@@ -192,9 +192,9 @@ angular.module('copayApp.directives')
     }, true);
 })
 .directive('match', () => ({
-  require : 'ngModel',
+  require: 'ngModel',
   restrict: 'A',
-  scope   : {
+  scope: {
     match: '=',
   },
   link(scope, elem, attrs, ctrl) {
@@ -205,7 +205,7 @@ angular.module('copayApp.directives')
 }))
 .directive('clipCopy', () => ({
   restrict: 'A',
-  scope   : {
+  scope: {
     clipCopy: '=clipCopy',
   },
   link(scope, elm) {
@@ -219,26 +219,26 @@ angular.module('copayApp.directives')
   },
 }))
 .directive('menuToggle', () => ({
-  restrict   : 'E',
-  replace    : true,
+  restrict: 'E',
+  replace: true,
   templateUrl: 'views/includes/menu-toggle.html',
 }))
 .directive('logo', () => ({
   restrict: 'E',
-  scope   : {
-    width   : '@',
+  scope: {
+    width: '@',
     negative: '=',
   },
   controller($scope) {
     // $scope.logo_url = $scope.negative ? 'img/logo-negative.svg' : 'img/logo.svg';
     $scope.logo_url = $scope.negative ? 'img/icons/icon-white-32.png' : 'img/icons/icon-black-32.png';
   },
-  replace : true,
+  replace: true,
   // template: '<img ng-src="{{ logo_url }}" alt="Byteball">'
   template: '<div><img ng-src="{{ logo_url }}" alt="Byteball"><br>Byteball</div>',
 }))
 .directive('availableBalance', () => ({
-  restrict   : 'E',
-  replace    : true,
+  restrict: 'E',
+  replace: true,
   templateUrl: 'views/includes/available-balance.html',
 }));

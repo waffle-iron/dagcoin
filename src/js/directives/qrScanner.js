@@ -1,4 +1,4 @@
-/* eslint-disable no-unused-vars,no-undef */
+/* eslint-disable no-unused-vars,no-undef,no-alert */
 (() => {
   'use strict';
 
@@ -148,9 +148,9 @@
           const modalInstance = $modal.open({
             templateUrl: 'views/modals/scanner.html',
             windowClass: 'full',
-            controller : ModalInstanceCtrl,
-            backdrop   : 'static',
-            keyboard   : false,
+            controller: ModalInstanceCtrl,
+            backdrop: 'static',
+            keyboard: false,
           });
           modalInstance.result.then((data) => {
             parentScope.onScan({ data });
@@ -168,12 +168,12 @@
 
       return {
         restrict: 'E',
-        scope   : {
-          onScan    : '&',
+        scope: {
+          onScan: '&',
           beforeScan: '&',
         },
         controller,
-        replace : true,
+        replace: true,
         template: '<a id="camera-icon" class="btn btn_red" ng-click="openScanner()">Scan QR Code</a>',
       };
     },

@@ -1,6 +1,5 @@
-const chokidar = require('chokidar');
-
-(() => {
+(function () {
+  const chokidar = require('chokidar');
   function triggerReload() {
     console.warn('Reloading app...');
 
@@ -11,7 +10,7 @@ const chokidar = require('chokidar');
 
   if (window.location.href.indexOf('chrome') > -1 && window.version && window.version.indexOf('t') > -1) {
     const watcher = chokidar.watch('public', {
-      ignored   : /[\/\\]\./,
+      ignored: /[\/\\]\./,
       persistent: true,
     });
     let reloading = false;
@@ -31,4 +30,4 @@ const chokidar = require('chokidar');
       }
     });
   }
-})();
+}());
