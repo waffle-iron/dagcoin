@@ -1,6 +1,5 @@
-
-
-const UriHandler = function () {};
+const UriHandler = function () {
+};
 
 UriHandler.prototype.register = function () {
   const base = `${window.location.origin}/`;
