@@ -17,6 +17,10 @@ cordova/*.keystore
 # node-webkit
 cache
 
+# testing
+build/src
+build/test
+
 
 # Logs
 logs
