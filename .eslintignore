@@ -6,6 +6,9 @@ src/js/controllers/correspondentDevice.js
 src/js/controllers/correspondentDevices.js
 src/js/controllers/editCorrespondentDevice.js
 src/js/controllers/inviteCorrespondentDevice.js
+src/js/controllers/preferencesEditWitness.js
+src/js/controllers/preferencesColor.js
+src/js/controllers/preferencesAdvanced.js
 
 # version
 src/js/version.js
