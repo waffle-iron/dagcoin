@@ -1,4 +1,4 @@
-/* eslint-disable no-undef */
+/* eslint-disable no-undef,arrow-body-style */
 angular.module('copayApp.services')
 .factory('storageService', (logHeader, fileStorageService, localStorageService, sjcl, $log, lodash, isCordova, isMobile) => {
   const root = {};

@@ -1,15 +1,15 @@
-
-
+/* eslint-disable no-undef,arrow-body-style */
 angular.module('copayApp.services')
 .factory('fileSystemService', ($log, isCordova) => {
-  let root = {},
-    bFsInitialized = false;
+  const root = {};
+  let bFsInitialized = false;
 
-  const fs = require('fs' + '');
+  const fs = require('fs');
+  let desktopApp;
   try {
-    var desktopApp = require('byteballcore/desktop_app.js' + '');
+    desktopApp = require('byteballcore/desktop_app.js');
   } catch (e) {
-
+    // continue regardless of error
   }
 
   root.init = function (cb) {
@@ -27,7 +27,7 @@ angular.module('copayApp.services')
       return cb(msg);
     }
 
-    window.requestFileSystem(LocalFileSystem.PERSISTENT, 0, onFileSystemSuccess, fail);
+    return window.requestFileSystem(LocalFileSystem.PERSISTENT, 0, onFileSystemSuccess, fail);
   };
 
   root.readFileFromForm = function (file, cb) {
@@ -37,10 +37,9 @@ angular.module('copayApp.services')
         const fileBuffer = Buffer.from(new Uint8Array(this.result));
         cb(null, fileBuffer);
       };
-      reader.readAsArrayBuffer(file);
-    }		else {
-      return cb(null, fs.createReadStream(file.path));
+      return reader.readAsArrayBuffer(file);
     }
+    return cb(null, fs.createReadStream(file.path));
   };
 
   root.readFile = function (path, cb) {
@@ -54,8 +53,10 @@ angular.module('copayApp.services')
           throw new Error(`error: ${JSON.stringify(e)}`);
         });
       });
-    }		else {
-      fs.readFile(path, (err, data) => err ? cb(err) : cb(null, data));
+    } else {
+      fs.readFile(path, (err, data) => {
+        return err ? cb(err) : cb(null, data);
+      });
     }
   };
 
@@ -65,39 +66,44 @@ angular.module('copayApp.services')
 
   root.nwWriteFile = function (path, data, cb) {
     if (!isCordova) {
-      fs.writeFile(path, data, err => err ? cb(err) : cb(null));
-    }		else {
+      fs.writeFile((path, data, (err) => {
+        return err ? cb(err) : cb(null);
+      }));
+    } else {
       cb('use cordovaWriteFile');
     }
   };
 
-	// example: fileSystemService.cordovaWriteFile(cordova.file.externalRootDirectory, 'testFolder', 'testFile.txt', 'testText :)', function(err) {
+  // example: fileSystemService.cordovaWriteFile(cordova.file.externalRootDirectory, 'testFolder', 'testFile.txt', 'testText :)', function(err) {
   root.cordovaWriteFile = function (cordovaFile, path, fileName, data, cb) {
     if (isCordova) {
       root.init(() => {
         window.resolveLocalFileSystemURL(cordovaFile, (dirEntry) => {
-          if (!path || path == '.' || path == '/') {
-            _cordovaWriteFile(dirEntry, fileName, data, cb);
-          }					else {
+          if (!path || path === '.' || path === '/') {
+            cordovaWriteFile(dirEntry, fileName, data, cb);
+          } else {
             dirEntry.getDirectory(path, { create: true, exclusive: false }, (dirEntry1) => {
-              _cordovaWriteFile(dirEntry1, fileName, data, cb);
+              cordovaWriteFile(dirEntry1, fileName, data, cb);
             }, cb);
           }
         }, cb);
       });
-    }		else {
+    } else {
       cb('use nwWriteFile');
     }
   };
 
-  function _cordovaWriteFile(dirEntry, name, data, cb) {
-    if (typeof data !== 'string') data = data.buffer;
+  function cordovaWriteFile(dirEntry, name, data, cb) {
+    let inputData = data;
+    if (typeof inputData !== 'string') {
+      inputData = inputData.buffer;
+    }
     dirEntry.getFile(name, { create: true, exclusive: false }, (file) => {
       file.createWriter((writer) => {
         writer.onwriteend = function () {
           cb(null);
         };
-        writer.write(data);
+        writer.write(inputData);
       }, cb);
     }, cb);
   }
