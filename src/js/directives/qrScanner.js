@@ -1,7 +1,5 @@
-/* eslint-disable no-unused-vars,no-undef,no-alert */
-(() => {
-  'use strict';
-
+/* eslint-disable no-alert,no-shadow,no-undef,no-unused-vars */
+(function () {
   angular.module('copayApp.directives')
   .directive('qrScanner', ['$rootScope', '$timeout', '$modal', 'isCordova', 'gettextCatalog',
     function ($rootScope, $timeout, $modal, isCordova, gettextCatalog) {
@@ -24,7 +22,7 @@
                   $scope.onScan({ data });
                 }, 1000);
               },
-              (error) => {
+              () => {
                 $timeout(() => {
                   window.ignoreMobilePause = false;
                   window.plugins.spinnerDialog.hide();
@@ -39,7 +37,7 @@
 
         $scope.modalOpenScanner = function () {
           const parentScope = $scope;
-          const ModalInstanceCtrl = function ($modalInstance) {
+          const ModalInstanceCtrl = function ($scope, $rootScope, $modalInstance) {
             // QR code Scanner
             let video;
             let canvas;
@@ -48,7 +46,7 @@
             let localMediaStream;
             let prevResult;
 
-            const scan = function (evt) {
+            const scan = function () {
               if (localMediaStream) {
                 context.drawImage(video, 0, 0, 300, 225);
                 try {
@@ -95,7 +93,7 @@
               $timeout(scan, 1000);
             };
 
-            const videoError = function (err) {
+            const videoError = function () {
               breadcrumbs.add('qr scanner video error');
               $scope.cancel();
             };
@@ -178,5 +176,4 @@
       };
     },
   ]);
-})();
-
+}());
