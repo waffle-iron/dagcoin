@@ -1,32 +1,35 @@
+(function () {
+  angular.module('copayApp.controllers')
+  .controller('approveNewWitnesses', ($scope, $modalInstance, $document, autoUpdatingWitnessesList) => {
+    $scope.addWitnesses = autoUpdatingWitnessesList.addWitnesses;
+    $scope.delWitnesses = autoUpdatingWitnessesList.delWitnesses;
 
 
-angular.module('copayApp.controllers').controller('approveNewWitnesses', ($scope, $modalInstance, $document, autoUpdatingWitnessesList) => {
-  $scope.addWitnesses = autoUpdatingWitnessesList.addWitnesses;
-  $scope.delWitnesses = autoUpdatingWitnessesList.delWitnesses;
+    $scope.replace = function () {
+      const oldWitnesses = $scope.delWitnesses;
+      const newWitnesses = $scope.addWitnesses;
 
+      const n = 0;
+      const l = newWitnesses.length;
 
-  $scope.replace = function () {
-    const oldWitnesses = $scope.delWitnesses;
-    const newWitnesses = $scope.addWitnesses;
+      function replaceWitness(index, oldW, newW) {
+        const myWitnesses = require('byteballcore/my_witnesses.js');
+        myWitnesses.replaceWitness(oldWitnesses[index], newWitnesses[index], () => {
+          if (l < index) {
+            let i = index;
+            i += 1;
+            replaceWitness(i, oldW, newW);
+          } else {
+            $modalInstance.close('closed result');
+          }
+        });
+      }
 
-    let n = 0,
-      l = newWitnesses.length;
+      replaceWitness(n, oldWitnesses, newWitnesses);
+    };
 
-    function replaceWitness(n, oldWitnesses, newWitnesses) {
-	  const myWitnesses = require('byteballcore/my_witnesses.js');
-      myWitnesses.replaceWitness(oldWitnesses[n], newWitnesses[n], (err) => {
-        if (l < n) {
-          replaceWitness(n++, oldWitnesses, newWitnesses);
-        } else {
-          $modalInstance.close('closed result');
-        }
-      });
-    }
-
-    replaceWitness(n, oldWitnesses, newWitnesses);
-  };
-
-  $scope.later = function () {
-    $modalInstance.close('closed result');
-  };
-});
+    $scope.later = function () {
+      $modalInstance.close('closed result');
+    };
+  });
+}());

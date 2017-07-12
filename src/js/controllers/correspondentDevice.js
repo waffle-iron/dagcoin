@@ -314,6 +314,7 @@ angular.module('copayApp.controllers').controller('correspondentDeviceController
 
 					// compose and send
             function composeAndSend(shared_address, arrDefinition, assocSignersByPath, my_address) {
+              debugger
               let arrSigningDeviceAddresses = []; // empty list means that all signatures are required (such as 2-of-2)
               if (fc.credentials.m < fc.credentials.n) {
                 indexScope.copayers.forEach((copayer) => {
