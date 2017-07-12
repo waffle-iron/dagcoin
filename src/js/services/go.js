@@ -1,5 +1,7 @@
 /* eslint-disable import/no-extraneous-dependencies,import/no-unresolved,consistent-return,arrow-body-style */
 (function () {
+  'use strinct';
+
   const eventBus = require('byteballcore/event_bus.js');
   angular.module('copayApp.services')
   .factory('go',

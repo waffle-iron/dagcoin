@@ -1,4 +1,6 @@
 (function () {
+  'use strict';
+
   angular.module('copayApp.controllers').controller('preferencesController',
     function ($scope, $rootScope, $filter, $timeout, $modal, $log, lodash, configService, profileService, uxLanguage) {
       this.init = function () {

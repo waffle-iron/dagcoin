@@ -1,4 +1,6 @@
 (function () {
+  'use strict';
+
   angular.module('copayApp.controllers')
   .controller('approveNewWitnesses', ($scope, $modalInstance, $document, autoUpdatingWitnessesList) => {
     $scope.addWitnesses = autoUpdatingWitnessesList.addWitnesses;

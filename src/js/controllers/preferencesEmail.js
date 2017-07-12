@@ -1,4 +1,6 @@
 (function () {
+  'use strict';
+
   angular.module('copayApp.controllers').controller('preferencesEmailController',
     function ($scope, go) {
       this.save = function () {

@@ -1,5 +1,7 @@
 /* eslint-disable radix,no-nested-ternary,no-shadow,no-plusplus,consistent-return,no-underscore-dangle,no-unused-vars,no-use-before-define,comma-dangle */
 (function () {
+  'use strict';
+
   angular.module('copayApp.controllers')
   .controller('walletHomeController',
     function (

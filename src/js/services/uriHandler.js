@@ -1,13 +1,17 @@
-const UriHandler = function () {
-};
+(function () {
+  'use strict';
 
-UriHandler.prototype.register = function () {
-  const base = `${window.location.origin}/`;
-  const url = `${base}#/uri-payment/%s`;
+  const UriHandler = function () {
+  };
 
-  if (navigator.registerProtocolHandler) {
-    navigator.registerProtocolHandler('bitcoin', url, 'Copay');
-  }
-};
+  UriHandler.prototype.register = function () {
+    const base = `${window.location.origin}/`;
+    const url = `${base}#/uri-payment/%s`;
 
-angular.module('copayApp.services').value('uriHandler', new UriHandler());
+    if (navigator.registerProtocolHandler) {
+      navigator.registerProtocolHandler('bitcoin', url, 'Copay');
+    }
+  };
+
+  angular.module('copayApp.services').value('uriHandler', new UriHandler());
+}());

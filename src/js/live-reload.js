@@ -1,4 +1,6 @@
 (function () {
+  'use strict';
+
   const chokidar = require('chokidar');
   function triggerReload() {
     console.warn('Reloading app...');

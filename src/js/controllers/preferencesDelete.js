@@ -1,5 +1,7 @@
 /* eslint-disable no-shadow */
 (function () {
+  'use strict';
+
   angular.module('copayApp.controllers').controller('preferencesDeleteWalletController',
     function ($scope, $rootScope, $filter, $timeout, $modal, $log, storageService, notification, profileService, isCordova, go, gettext, gettextCatalog, animationService) {
       this.isCordova = isCordova;

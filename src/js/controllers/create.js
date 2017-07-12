@@ -1,5 +1,7 @@
 /* eslint-disable radix */
 (function () {
+  'use strict';
+
   angular.module('copayApp.controllers').controller('createController',
     function ($scope, $rootScope, $location, $timeout, $log, lodash, go, profileService, configService, isCordova, gettext, isMobile, derivationPathHelper, correspondentListService) {
       const self = this;

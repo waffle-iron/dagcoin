@@ -1,6 +1,6 @@
 // todo: temporarily disabled no-undef,no-unused-vars.
 /* eslint-disable no-undef,no-unused-vars,func-names */
-(() => {
+(function () {
   'use strict';
 
   angular.module('copayApp.services')
@@ -709,4 +709,5 @@
     };
     return root;
   });
-})();
+}());
+

@@ -1,18 +1,22 @@
-const logs = [];
-angular.module('copayApp.services')
-.factory('historicLog', () => {
-  const root = {};
+(function () {
+  'use strict';
 
-  root.add = function (level, msg) {
-    logs.push({
-      level,
-      msg,
-    });
-  };
+  const logs = [];
+  angular.module('copayApp.services')
+  .factory('historicLog', () => {
+    const root = {};
 
-  root.get = function () {
-    return logs;
-  };
+    root.add = function (level, msg) {
+      logs.push({
+        level,
+        msg,
+      });
+    };
 
-  return root;
-});
+    root.get = function () {
+      return logs;
+    };
+
+    return root;
+  });
+}());

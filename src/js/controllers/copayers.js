@@ -1,5 +1,7 @@
 /* eslint-disable no-shadow */
 (function () {
+  'use strict';
+
   angular.module('copayApp.controllers').controller('copayersController',
     function ($scope, $rootScope, $timeout, $log, $modal, profileService, go, notification, isCordova, gettext, gettextCatalog, animationService) {
       const self = this;

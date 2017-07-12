@@ -1,5 +1,7 @@
 /* eslint-disable new-cap,no-undef */
 (function () {
+  'use strict';
+
   /*
 
    This is incomplete!

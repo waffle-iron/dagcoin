@@ -1,6 +1,7 @@
 /* global angular */
-
 (function () {
+  'use strict';
+
   const ValidationUtils = require('byteballcore/validation_utils.js');
 
 // byteball uri

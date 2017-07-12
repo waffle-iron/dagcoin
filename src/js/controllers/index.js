@@ -1,5 +1,7 @@
 /* eslint-disable no-unused-vars,no-mixed-operators,no-use-before-define,new-cap,no-nested-ternary,no-shadow,no-plusplus,consistent-return */
 (function () {
+  'use strict';
+
   angular.module('copayApp.controllers')
   .controller('indexController',
     function (

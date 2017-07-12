@@ -1,4 +1,6 @@
 (function () {
+  'use strict';
+
   angular.module('copayApp.controllers').controller('preferencesGlobalController',
     function ($scope, $rootScope, $log, configService, uxLanguage, pushNotificationsService, profileService) {
       const conf = require('byteballcore/conf.js');

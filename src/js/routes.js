@@ -1,5 +1,7 @@
 /* eslint-disable default-case,no-undef,import/no-extraneous-dependencies,import/no-unresolved,prefer-rest-params */
 (function () {
+  'use strict';
+
   let unsupported;
   let isaosp;
 

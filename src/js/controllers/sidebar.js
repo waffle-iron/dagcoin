@@ -1,4 +1,6 @@
 (function () {
+  'use strict';
+
   angular.module('copayApp.controllers').controller('sidebarController',
     function ($rootScope, $timeout, lodash, profileService, configService, go, isMobile, isCordova) {
       const self = this;

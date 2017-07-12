@@ -1,38 +1,42 @@
-angular.module('copayApp.services')
-.factory('localStorageService', () => {
-  const root = {};
-  const ls = ((typeof window.localStorage !== 'undefined') ? window.localStorage : null);
+(function () {
+  'use strict';
 
-  if (!ls) {
-    throw new Error('localstorage not available');
-  }
+  angular.module('copayApp.services')
+  .factory('localStorageService', () => {
+    const root = {};
+    const ls = ((typeof window.localStorage !== 'undefined') ? window.localStorage : null);
 
-  root.get = function (k, cb) {
-    return cb(null, ls.getItem(k));
-  };
+    if (!ls) {
+      throw new Error('localstorage not available');
+    }
 
-  /**
-   * Same as setItem, but fails if an item already exists
-   */
-  root.create = function (name, value, callback) {
-    root.get(name,
-      (err, data) => {
-        if (data) {
-          return callback('EEXISTS');
-        }
-        return root.set(name, value, callback);
-      });
-  };
+    root.get = function (k, cb) {
+      return cb(null, ls.getItem(k));
+    };
 
-  root.set = function (k, v, cb) {
-    ls.setItem(k, v);
-    return cb();
-  };
+    /**
+     * Same as setItem, but fails if an item already exists
+     */
+    root.create = function (name, value, callback) {
+      root.get(name,
+        (err, data) => {
+          if (data) {
+            return callback('EEXISTS');
+          }
+          return root.set(name, value, callback);
+        });
+    };
 
-  root.remove = function (k, cb) {
-    ls.removeItem(k);
-    return cb();
-  };
+    root.set = function (k, v, cb) {
+      ls.setItem(k, v);
+      return cb();
+    };
 
-  return root;
-});
+    root.remove = function (k, cb) {
+      ls.removeItem(k);
+      return cb();
+    };
+
+    return root;
+  });
+}());

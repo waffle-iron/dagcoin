@@ -8,6 +8,8 @@
  */
 
 (function () {
+  'use strict';
+
   angular.module('copayApp.controllers').controller('paperWalletController',
     function ($scope, $http, $timeout, $log, configService, profileService, go, addressService, txStatus, bitcore) {
       const self = this;

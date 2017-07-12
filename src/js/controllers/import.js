@@ -1,5 +1,7 @@
 /* eslint-disable radix,no-unused-vars,no-alert,no-undef,import/no-dynamic-require */
 (function () {
+  'use strict';
+
   angular.module('copayApp.controllers').controller('importController',
     function ($scope, $rootScope, $location, $timeout, $log, storageService, fileSystemService, isCordova, isMobile) {
       const JSZip = require('jszip');

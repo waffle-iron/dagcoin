@@ -1,5 +1,7 @@
 /* eslint-disable import/no-extraneous-dependencies,import/no-unresolved,radix */
 (function () {
+  'use strict';
+
   angular.module('copayApp.controllers').controller('recoveryFromSeed',
     function ($rootScope, $scope, $log, $timeout, profileService, isCordova) {
       const async = require('async');

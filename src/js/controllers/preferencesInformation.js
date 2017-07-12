@@ -1,5 +1,7 @@
 /* eslint-disable comma-dangle */
 (function () {
+  'use strict';
+
   angular.module('copayApp.controllers').controller('preferencesInformation',
     function ($scope, $log, $timeout, isMobile, gettextCatalog, lodash, profileService, storageService, go, configService) {
       const constants = require('byteballcore/constants.js');

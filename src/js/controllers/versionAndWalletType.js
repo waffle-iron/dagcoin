@@ -1,4 +1,6 @@
 (function () {
+  'use strict';
+
   angular.module('copayApp.controllers').controller('versionAndWalletTypeController', function () {
     // wallet type
     const conf = require('byteballcore/conf.js');

@@ -1,4 +1,6 @@
 (function () {
+  'use strict';
+
   angular.module('copayApp.controllers').controller('passwordController',
     function ($rootScope, $scope, $timeout, profileService, notification, go, gettext) {
       const self = this;

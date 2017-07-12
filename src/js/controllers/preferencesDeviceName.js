@@ -1,4 +1,6 @@
 (function () {
+  'use strict';
+
   angular.module('copayApp.controllers').controller('preferencesDeviceNameController',
     function ($scope, $timeout, configService, go) {
       const config = configService.getSync();

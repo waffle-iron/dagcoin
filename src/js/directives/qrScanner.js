@@ -1,5 +1,7 @@
 /* eslint-disable no-alert,no-shadow,no-undef,no-unused-vars */
 (function () {
+  'use strict';
+
   angular.module('copayApp.directives')
   .directive('qrScanner', ['$rootScope', '$timeout', '$modal', 'isCordova', 'gettextCatalog',
     function ($rootScope, $timeout, $modal, isCordova, gettextCatalog) {
