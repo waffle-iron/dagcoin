@@ -2812,6 +2812,12 @@ input {
   }
 }
 
+.topbar-container{
+  position: relative;
+  z-index: 2;
+  border-bottom: 1px solid #eee;
+}
+
 .button:hover {
   background: #D52026;
   color: #0078a0;
