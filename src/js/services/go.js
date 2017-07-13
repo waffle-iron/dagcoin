@@ -17,6 +17,7 @@
      $deepStateRedirect,
      $stickyState) => {
       const root = {};
+      let removeListener;
       const hideSidebars = function () {
         if (typeof document === 'undefined') {
           return;
@@ -129,6 +130,9 @@
       };
 
       function handleUri(uri) {
+        const conf = require('byteballcore/conf.js');
+        this.protocol = conf.program_version.match(/t$/) ? 'byteball-tn' : 'byteball';
+        uri = uri.replace(`${this.protocol}`, conf.program);
         console.log(`handleUri ${uri}`);
         require('byteballcore/uri.js').parseUri(uri, {
           ifError(err) {
@@ -220,7 +224,7 @@
             if (commandLine) {
               const file = extractByteballArgFromCommandLine(commandLine);
               if (!file) {
-                console.log('no byteball: arg found');
+                return console.log('no byteball: arg found');
               }
               handleUri(file);
               gui.Window.get().focus();

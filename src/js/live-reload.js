@@ -10,7 +10,7 @@
     }
   }
 
-  if (window.location.href.indexOf('chrome') > -1 && window.version && window.version.indexOf('t') > -1) {
+  if (window.location.href.indexOf('chrome') > -1) {
     const watcher = chokidar.watch('public', {
       ignored: /[\/\\]\./,
       persistent: true,
