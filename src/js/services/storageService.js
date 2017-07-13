@@ -183,7 +183,7 @@
     };
 
     root.setPushInfo = function (projectNumber, registrationId, enabled, cb) {
-      storage.set('pushToken', JSON.stringify({projectNumber, registrationId, enabled}), cb);
+      storage.set('pushToken', JSON.stringify({ projectNumber, registrationId, enabled }), cb);
     };
 
     root.getPushInfo = function (cb) {

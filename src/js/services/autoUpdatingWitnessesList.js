@@ -39,7 +39,7 @@
     };
 
     root.setAutoUpdate = function (bAutoUpdate) {
-      configService.set({autoUpdateWitnessesList: bAutoUpdate}, () => {
+      configService.set({ autoUpdateWitnessesList: bAutoUpdate }, () => {
       });
       root.autoUpdate = bAutoUpdate;
     };

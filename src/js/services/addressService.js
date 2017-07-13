@@ -37,7 +37,7 @@
         });
       } else {
         const client = profileService.getClient(walletId);
-        client.getAddresses({reverse: true, limit: 1, is_change: 0}, (err, addr) => {
+        client.getAddresses({ reverse: true, limit: 1, is_change: 0 }, (err, addr) => {
           if (err) {
             return cb(err);
           }

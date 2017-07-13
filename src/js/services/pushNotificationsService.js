@@ -49,8 +49,7 @@
     root.pushNotificationsInit = function () {
       if (!usePushNotifications) return;
 
-      window.plugins.pushNotification.register(() => {
-        },
+      window.plugins.pushNotification.register(() => {},
         (e) => {
           alert(`err= ${e}`);
         }, {
@@ -58,7 +57,7 @@
           ecb: 'onNotification',
         });
 
-      configService.set({pushNotifications: {enabled: true}}, (err) => {
+      configService.set({ pushNotifications: { enabled: true } }, (err) => {
         if (err) $log.debug(err);
       });
     };
@@ -74,7 +73,7 @@
           });
         });
       });
-      configService.set({pushNotifications: {enabled: false}}, (err) => {
+      configService.set({ pushNotifications: { enabled: false } }, (err) => {
         if (err) $log.debug(err);
       });
     }

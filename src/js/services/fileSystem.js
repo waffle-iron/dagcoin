@@ -85,7 +85,7 @@
             if (!path || path === '.' || path === '/') {
               cordovaWriteFile(dirEntry, fileName, data, cb);
             } else {
-              dirEntry.getDirectory(path, {create: true, exclusive: false}, (dirEntry1) => {
+              dirEntry.getDirectory(path, { create: true, exclusive: false }, (dirEntry1) => {
                 cordovaWriteFile(dirEntry1, fileName, data, cb);
               }, cb);
             }
@@ -101,7 +101,7 @@
       if (typeof inputData !== 'string') {
         inputData = inputData.buffer;
       }
-      dirEntry.getFile(name, {create: true, exclusive: false}, (file) => {
+      dirEntry.getFile(name, { create: true, exclusive: false }, (file) => {
         file.createWriter((writer) => {
           writer.onwriteend = function () {
             cb(null);

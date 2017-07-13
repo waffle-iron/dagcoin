@@ -132,9 +132,9 @@
       function handleUri(uri) {
         const conf = require('byteballcore/conf.js');
         this.protocol = conf.program_version.match(/t$/) ? 'byteball-tn' : 'byteball';
-        uri = uri.replace(`${this.protocol}`, conf.program);
-        console.log(`handleUri ${uri}`);
-        require('byteballcore/uri.js').parseUri(uri, {
+        const tmpUri = uri.replace(`${this.protocol}`, conf.program);
+        console.log(`handleUri ${tmpUri}`);
+        require('byteballcore/uri.js').parseUri(tmpUri, {
           ifError(err) {
             console.log(err);
             notification.error(err);
@@ -234,7 +234,7 @@
         console.log(`argv: ${gui.App.argv}`);
         if (gui.App.argv[0]) {
           // wait till the wallet fully loads
-          const removeListener = $rootScope.$on('Local/BalanceUpdatedAndWalletUnlocked', () => {
+          removeListener = $rootScope.$on('Local/BalanceUpdatedAndWalletUnlocked', () => {
             setTimeout(() => {
               handleUri(gui.App.argv[0]);
             }, 100);
@@ -268,7 +268,7 @@
         // console.log("go service: setting temp handleOpenURL");
         // window.handleOpenURL = tempHandleUri;
         // wait till the wallet fully loads
-        const removeListener = $rootScope.$on('Local/BalanceUpdatedAndWalletUnlocked', () => {
+        removeListener = $rootScope.$on('Local/BalanceUpdatedAndWalletUnlocked', () => {
           console.log('setting permanent handleOpenURL');
           window.handleOpenURL = handleUri;
           if (window.open_url) { // use cached url at startup
