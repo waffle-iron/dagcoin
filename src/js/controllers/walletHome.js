@@ -82,7 +82,14 @@ angular.module('copayApp.controllers').controller('walletHomeController', functi
         $rootScope.$emit('Local/NeedFreshHistory');
         break;
       case 'send':
+
+        $scope.sendForm.$setPristine(); // Reset form on tabs' change.
+
+        self.resetForm();
         self.resetError();
+        break;
+      default:
+      // do nothing
     }
   });
 
@@ -1001,7 +1008,6 @@ angular.module('copayApp.controllers').controller('walletHomeController', functi
     }
   };
 
-
   this.resetForm = function () {
     this.resetError();
     delete this.binding;
@@ -1132,16 +1138,15 @@ angular.module('copayApp.controllers').controller('walletHomeController', functi
         return self.getUnitName();
       };
 
-	  $scope.openInExplorer = function(){
-		var testnet = home.isTestnet ? 'testnet' : '';
-		//todo: should be https
-		var url = 'http://'+testnet+'explorer.dagcoin.org/#'+btx.unit;
-
-		if (typeof nw !== 'undefined')
-			nw.Shell.openExternal(url);
-		else if (isCordova)
-			cordova.InAppBrowser.open(url, '_system');
-	  };
+      $scope.openInExplorer = function () {
+        const testnet = home.isTestnet ? 'testnet' : '';
+        const url = `https://${testnet}explorer.dagcoin.org/#${btx.unit}`;
+        if (typeof nw !== 'undefined') {
+          nw.Shell.openExternal(url);
+        } else if (isCordova) {
+          cordova.InAppBrowser.open(url, '_system');
+        }
+      };
 
       $scope.copyAddress = function (addr) {
         if (!addr) return;
@@ -1259,6 +1264,19 @@ angular.module('copayApp.controllers').controller('walletHomeController', functi
   };
 
   /* Start setup */
+
+  this.getFontSizeForWalletNumber = (value, type) => {
+    if (value) {
+      const visibleWidth = window.innerWidth - 50;
+      const str = value.toString().split('.');
+
+      const length = str[0].length + ((str[1] || 0).length / 2);
+      const size = ((visibleWidth / length) < 70 ? ((visibleWidth / length) + 10) : 80);
+
+      return { 'font-size': `${(!type ? size : size / 2)}px` };
+    }
+    return { 'font-size': '80px' };
+  };
 
   this.bindTouchDown();
   if (profileService.focusedClient) {

@@ -80,21 +80,28 @@
 						  <button class=" btn_red tiny round" translate>Tap to retry</button>
 					  </div>
 
-					  <div ng-show="!index.updateError && index.walletScanStatus != 'error'">
-						  <div ng-click='index.updateAll(); index.updateHistoryFromNetwork()'>
-							<span class="price">
-								{{index.dagBalance.totalStr.split('.')[0]}}
-							<span class="sup">
+					  <div ng-show="!index.updateError && index.walletScanStatus != 'error'" ng-click='index.updateAll(); index.updateHistoryFromNetwork()'>
 
-								{{index.dagBalance.totalStr.split('.')[1]}}
-							</span>
-            					<svg class="icon icon-d">
-              						<use xlink:href="img/svg/symbol-defs.svg#icon-d"></use>
-            					</svg>
-							</span>
+							<div class="price-wrapper">
+
+								<div class="price">
+									<svg class="price-icon icon icon-d">
+										<use xlink:href="img/svg/symbol-defs.svg#icon-d"></use>
+									</svg>
+									<div class="price_digits">
+										<div class="price_digits_wrapper">
+											<span class="price-number" ng-style="home.getFontSizeForWalletNumber(index.dagBalance.totalStr)">{{index.dagBalance.totalStr.split('.')[0]}}</span>
+											<span class="price-sup" ng-style="home.getFontSizeForWalletNumber(index.dagBalance.totalStr, 'sup')">{{index.dagBalance.totalStr.split('.')[1]}}</span>
+										</div>
+									</div>
+								</div>
+
+							</div>
+
+
 							  <span ng-if="index.dagBalance.pending" class="ballance">Pending wallet balance: {{index.dagBalance.pendingStr}}</span>
 							  <span ng-if="!index.dagBalance.pending" class="ballance">Wallet balance</span>
-						  </div>
+
 					  </div>
 
 				  </div>
@@ -211,7 +218,7 @@
 
           <!-- Address-->
 
-            <h2 class="text-center m10t" translate><div class="page-heading"><span>Receive <span>DAGCOIN's</span></span></div> </h2>
+            <h2 class="text-center m10t" translate><div class="page-heading"><span>Receive <span>Dagcoin's</span></span></div> </h2>
             <div class="page-qr text-center">
               <div class="box-notification" ng-show="home.addrError">
                 <span class="text-warning">
@@ -261,7 +268,7 @@
     send
 
     -->
-	  <div id="send" class="send tab-view">
+	  <div id="send" class="send scrollable tab-view">
 		  <div class="row m20t text-center" ng-show="home.current_payment_key">
 			  <div class="columns large-12 medium-12 small-12">
 				  <div class="spinner">
@@ -277,7 +284,7 @@
 		  <div class="introduction-svg" ng-include="'views/includes/background.html'"></div>
 		  <div class="p-share js-introduction">
 			  <div class="p-wrap">
-				  <div class="page-heading"><span>Send <span>DAGCOINs</span></span></div>
+				  <div class="page-heading"><span>Send <span>Dagcoins</span></span></div>
 				  <form class="page-form" name="sendForm" ng-submit="home.submitForm()"
 						ng-disabled="home.blockUx || home.onGoingProcess" novalidate>
 					  <div class="box-notification" ng-show="home.error" ng-click="home.resetError()">
@@ -301,7 +308,7 @@
 
 						  <div class="input-wrap input-icon">
 							  <input type="number" id="amount" ng-disabled="home.blockUx || home.lockAmount"
-									 name="amount" ng-attr-placeholder="{{'Amount'|translate}}"
+									 name="amount" ng-attr-placeholder="{{'Amount'|translate}}" min="0.00000001"
 									 ng-minlength="0.00000001" ng-maxlength="10000000000" ng-model="_amount"
 									 ng-required="!home.bSendAll"
 									 autocomplete="off" ng-focus="home.formFocus('amount')"
@@ -334,12 +341,13 @@
 						  <div class="input-wrap">
 							  <input class="m0" type="text" id="address"
 									 name="address"
-									 ng-disabled="home.blockUx || home.lockAddress || !home.canSendExternalPayment()"
 									 ng-attr-placeholder="{{home.canSendExternalPayment() ? 'DAG address' : 'DAG address of your other wallet &#8594;'}}"
 									 ng-model="_address" valid-address required
 									 ng-blur="home.formFocus(false)">
 
 						  </div>
+
+
 					  </div>
 
 				  </form>
@@ -351,8 +359,7 @@
 				  </div>
 
 			  </div>
-
-		  </div>
+	  </div>
 
 
     <!--
@@ -400,7 +407,7 @@
 
 					<div ng-show="index.txHistory[0] && !index.updatingTxHistory[index.walletId]">
 					<div class="transactions__head"><span></span></div>
-					<div class="transactions__table ">
+					<div class="transactions__table">
 						<table>
 							<tbody>
 							<tr  ng-repeat="btx in index.txHistory" ng-click="home.openTxModal(btx)"
@@ -439,8 +446,6 @@
 				</div>
 			</div>
 		</div>
-
-      <div class="extra-margin-bottom"></div>
     </div> <!-- END History -->
 
     <div id="{{view.id}}" class="{{view.class}} tab-view" ng-repeat="view in index.addonViews" ng-include="view.template">

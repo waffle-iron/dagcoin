@@ -1,22 +1,22 @@
 var eventBus = require('byteballcore/event_bus.js');
 
 angular.module('copayApp.services').factory('go', function($window, $rootScope, $location, $state, profileService, nodeWebkit, notification, gettextCatalog, authService, $deepStateRedirect, $stickyState) {
-	var root = {};
-
-	var hideSidebars = function() {
+	let removeListener;
+	const root = {};
+	const hideSidebars = function() {
 		if (typeof document === 'undefined')
 			return;
 
-		var elem = document.getElementById('off-canvas-wrap');
+		const elem = document.getElementById('off-canvas-wrap');
 		elem.className = 'off-canvas-wrap';
 	};
 
-	var toggleSidebar = function(invert) {
+	const toggleSidebar = function(invert) {
 		if (typeof document === 'undefined')
 			return;
 
-		var elem = document.getElementById('off-canvas-wrap');
-		var leftbarActive = elem.className.indexOf('move-right') >= 0;
+		const elem = document.getElementById('off-canvas-wrap');
+		const leftbarActive = elem.className.indexOf('move-right') >= 0;
 
 		if (invert) {
 			if (profileService.profile && !$rootScope.hideNavigation) {
@@ -35,7 +35,7 @@ angular.module('copayApp.services').factory('go', function($window, $rootScope, 
 		}
 		else {
 			target = target || '_blank';
-			var ref = window.open(url, target, 'location=no');
+			const ref = window.open(url, target, 'location=no');
 		}
 	};
 
@@ -114,6 +114,9 @@ angular.module('copayApp.services').factory('go', function($window, $rootScope, 
 
 
 	function handleUri(uri){
+		const conf = require('byteballcore/conf.js');
+		this.protocol = conf.program_version.match(/t$/) ? 'byteball-tn' : 'byteball';
+		uri = uri.replace(`${this.protocol}`, conf.program);
 		console.log("handleUri "+uri);
 		require('byteballcore/uri.js').parseUri(uri, {
 			ifError: function(err){
@@ -142,11 +145,11 @@ angular.module('copayApp.services').factory('go', function($window, $rootScope, 
 	}
 
 	function extractByteballArgFromCommandLine(commandLine){
-		var conf = require('byteballcore/conf.js');
-		var re = new RegExp('^'+conf.program+':', 'i');
-		var arrParts = commandLine.split(' '); // on windows includes exe and all args, on mac just our arg
-		for (var i=0; i<arrParts.length; i++){
-			var part = arrParts[i].trim();
+		const conf = require('byteballcore/conf.js');
+		const re = new RegExp('^' + conf.program + ':', 'i');
+		const arrParts = commandLine.split(' '); // on windows includes exe and all args, on mac just our arg
+		for (let i=0; i<arrParts.length; i++){
+			let part = arrParts[i].trim();
 			if (part.match(re))
 				return part;
 		}
@@ -159,23 +162,23 @@ angular.module('copayApp.services').factory('go', function($window, $rootScope, 
 
 	function createLinuxDesktopFile(){
 		console.log("will write .desktop file");
-		var fs = require('fs'+'');
-		var path = require('path'+'');
-		var child_process = require('child_process'+'');
-		var package = require('../package.json'+''); // relative to html root
-		var applicationsDir = process.env.HOME + '/.local/share/applications';
+		const fs = require('fs' + '');
+		const path = require('path' + '');
+		const child_process = require('child_process' + '');
+		const packageName = require('../package.json' + ''); // relative to html root
+		const applicationsDir = process.env.HOME + '/.local/share/applications';
 		fs.mkdir(applicationsDir, parseInt('700', 8), function(err){
 			console.log('mkdir applications: '+err);
-			fs.writeFile(applicationsDir + '/' +package.name+'.desktop', "[Desktop Entry]\n\
+			fs.writeFile(applicationsDir + '/' +packageName.name+'.desktop', "[Desktop Entry]\n\
 Type=Application\n\
 Version=1.0\n\
-Name="+package.name+"\n\
-Comment="+package.description+"\n\
+Name="+packageName.name+"\n\
+Comment="+packageName.description+"\n\
 Exec="+process.execPath.replace(/ /g, '\\ ')+" %u\n\
 Icon="+path.dirname(process.execPath)+"/public/img/icons/icon-white-outline.iconset/icon_256x256.png\n\
 Terminal=false\n\
 Categories=Office;Finance;\n\
-MimeType=x-scheme-handler/"+package.name+";\n\
+MimeType=x-scheme-handler/"+packageName.name+";\n\
 X-Ubuntu-Touch=true\n\
 X-Ubuntu-StageHint=SideStage\n", {mode: 0755}, function(err){
 				if (err)
@@ -189,7 +192,7 @@ X-Ubuntu-StageHint=SideStage\n", {mode: 0755}, function(err){
 		});
 	}
 
-	var gui;
+	let gui;
 	try{
 		gui = require('nw.gui');
 	}
@@ -197,11 +200,11 @@ X-Ubuntu-StageHint=SideStage\n", {mode: 0755}, function(err){
 	}
 
 	if (gui){ // nwjs
-		var removeListenerForOnopen = $rootScope.$on('Local/BalanceUpdatedAndWalletUnlocked', function(){
+		const removeListenerForOnopen = $rootScope.$on('Local/BalanceUpdatedAndWalletUnlocked', function () {
 			removeListenerForOnopen();
-			gui.App.on('open', function(commandLine) {
+			gui.App.on('open', function (commandLine) {
 				console.log("Open url: " + commandLine);
-				if (commandLine){
+				if (commandLine) {
 					var file = extractByteballArgFromCommandLine(commandLine);
 					if (!file)
 						return console.log("no byteball: arg found");
@@ -213,8 +216,8 @@ X-Ubuntu-StageHint=SideStage\n", {mode: 0755}, function(err){
 		console.log("argv: "+gui.App.argv);
 		if (gui.App.argv[0]){
 			// wait till the wallet fully loads
-			var removeListener = $rootScope.$on('Local/BalanceUpdatedAndWalletUnlocked', function(){
-				setTimeout(function(){
+			removeListener = $rootScope.$on('Local/BalanceUpdatedAndWalletUnlocked', function () {
+				setTimeout(function () {
 					handleUri(gui.App.argv[0]);
 				}, 100);
 				removeListener();
@@ -222,8 +225,8 @@ X-Ubuntu-StageHint=SideStage\n", {mode: 0755}, function(err){
 		}
 		if (process.platform === 'win32' || process.platform === 'linux'){
 			// wait till the wallet fully loads
-			var removeRegListener = $rootScope.$on('Local/BalanceUpdated', function(){
-				setTimeout(function(){
+			const removeRegListener = $rootScope.$on('Local/BalanceUpdated', function () {
+				setTimeout(function () {
 					(process.platform === 'win32') ? registerWindowsProtocolHandler() : createLinuxDesktopFile();
 					gui.desktop = process.env.HOME + '/.local/share/applications';
 				}, 200);
@@ -244,12 +247,12 @@ X-Ubuntu-StageHint=SideStage\n", {mode: 0755}, function(err){
 		//console.log("go service: setting temp handleOpenURL");
 		//window.handleOpenURL = tempHandleUri;
 		// wait till the wallet fully loads
-		var removeListener = $rootScope.$on('Local/BalanceUpdatedAndWalletUnlocked', function(){
+		removeListener = $rootScope.$on('Local/BalanceUpdatedAndWalletUnlocked', function () {
 			console.log("setting permanent handleOpenURL");
 			window.handleOpenURL = handleUri;
-			if (window.open_url){ // use cached url at startup
-				console.log("using cached open url "+window.open_url);
-				setTimeout(function(){
+			if (window.open_url) { // use cached url at startup
+				console.log("using cached open url " + window.open_url);
+				setTimeout(function () {
 					handleUri(window.open_url);
 				}, 100);
 			}

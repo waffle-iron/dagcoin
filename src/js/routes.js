@@ -396,11 +396,11 @@ angular
         },
       })
       .state('recoveryFromSeed', {
-	      url: '/recoveryFromSeed',
-	      templateUrl: 'views/recoveryFromSeed.html',
-	      walletShouldBeComplete: true,
-	      needProfile: true,
-	      views: {
+        url: '/recoveryFromSeed',
+        templateUrl: 'views/recoveryFromSeed.html',
+        walletShouldBeComplete: true,
+        needProfile: true,
+        views: {
 		      main: {
 			      templateUrl: 'views/recoveryFromSeed.html',
 		      },
@@ -488,7 +488,7 @@ angular
       win.menu = nativeMenuBar;
     }
 
-    $rootScope.$on('$stateChangeStart', (event, toState, toParams, fromState, fromParams) => {
+    $rootScope.$on('$stateChangeStart', (event, toState, toParams, fromState) => {
       if (!profileService.profile && toState.needProfile) {
         // Give us time to open / create the profile
         event.preventDefault();
@@ -512,7 +512,11 @@ angular
         });
       }
 
-      if (profileService.focusedClient && !profileService.focusedClient.isComplete() && toState.walletShouldBeComplete) {
+      if (
+        profileService.focusedClient &&
+        !profileService.focusedClient.isComplete() &&
+        toState.walletShouldBeComplete
+      ) {
         $state.transitionTo('copayers');
         event.preventDefault();
       }
