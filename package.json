@@ -12,7 +12,7 @@
   ],
   "main": "public/index.html",
   "window": {
-    "title": "DAGCOIN wallet",
+    "title": "Dagcoin wallet",
     "icon": "./public/img/icons/icon_256x256.png",
     "show": true,
     "visible": true,
