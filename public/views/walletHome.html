@@ -308,7 +308,7 @@
 
 						  <div class="input-wrap input-icon">
 							  <input type="number" id="amount" ng-disabled="home.blockUx || home.lockAmount"
-									 name="amount" ng-attr-placeholder="{{'Amount'|translate}}"
+									 name="amount" ng-attr-placeholder="{{'Amount'|translate}}" min="0.00000001"
 									 ng-minlength="0.00000001" ng-maxlength="10000000000" ng-model="_amount"
 									 ng-required="!home.bSendAll"
 									 autocomplete="off" ng-focus="home.formFocus('amount')"
