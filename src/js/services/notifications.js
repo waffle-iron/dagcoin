@@ -50,13 +50,13 @@ angular.module('copayApp.services')
       details: true,
       localStorage: false,
       html5Mode: false,
-      html5DefaultIcon: 'img/icons/favicon-white.ico',
+      html5DefaultIcon: 'img/icons/dagcoin.ico',
     };
 
     function html5Notify(icon, title, content, ondisplay, onclose) {
       if (window.webkitNotifications && window.webkitNotifications.checkPermission() === 0) {
         if (!icon) {
-          icon = 'img/icons/favicon-white.ico';
+          icon = 'img/icons/dagcoin.ico';
         }
         const noti = window.webkitNotifications.createNotification(icon, title, content);
         if (typeof ondisplay === 'function') {

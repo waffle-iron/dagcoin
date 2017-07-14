@@ -11,7 +11,7 @@ angular.module('copayApp.controllers').controller('wordsController',
     if (isCordova) { self.text = 'To protect your funds, please use multisig wallets with redundancy, e.g. 1-of-2 wallet with one key on this device and another key on your laptop computer.  Just the wallet seed is not enough.'; } else {
       const desktopApp = require('byteballcore/desktop_app.js' + '');
       const appDataDir = desktopApp.getAppDataDir();
-      self.text = `To restore your wallets, you will need a full backup of DAGCOIN data at ${appDataDir}.  Better yet, use multisig wallets with redundancy, e.g. 1-of-2 wallet with one key on this device and another key on your smartphone.  Just the wallet seed is not enough.`;
+      self.text = `To restore your wallets, you will need a full backup of Dagcoin data at ${appDataDir}.  Better yet, use multisig wallets with redundancy, e.g. 1-of-2 wallet with one key on this device and another key on your smartphone.  Just the wallet seed is not enough.`;
     }
 
 
