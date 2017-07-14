@@ -407,7 +407,7 @@
 
 					<div ng-show="index.txHistory[0] && !index.updatingTxHistory[index.walletId]">
 					<div class="transactions__head"><span></span></div>
-					<div class="transactions__table" ng-class="{'full-history': !index.historyShowShowAll}">
+					<div class="transactions__table">
 						<table>
 							<tbody>
 							<tr  ng-repeat="btx in index.txHistory" ng-click="home.openTxModal(btx)"

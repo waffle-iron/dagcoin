@@ -1,4 +1,4 @@
-/*
+﻿/*
  *
  * Byteball main CSS
  *
@@ -678,10 +678,7 @@ input[type=number]::-webkit-outer-spin-button {
   .transactions {
     padding-bottom: 0px;
     .transactions__table {
-      max-height: 50vh;
-      &.full-history {
-        max-height: 59vh;
-      }
+      overflow-y: auto;
     }
   }
   .page-action {
