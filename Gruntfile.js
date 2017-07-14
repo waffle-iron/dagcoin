@@ -359,7 +359,7 @@ module.exports = function (grunt) {
   grunt.registerTask('cordova-prod', ['cordova', 'uglify']);
   // grunt.registerTask('prod', ['default', 'uglify']);
   grunt.registerTask('translate', ['nggettext_extract']);
-  grunt.registerTask('test', ['babel', 'karma:prod']);
+  grunt.registerTask('test', [/*'babel',*/ 'karma:prod']);
   grunt.registerTask('test-coveralls', ['karma:prod', 'coveralls']);
   // grunt.registerTask('desktop', ['prod', 'nwjs', 'copy:linux', 'compress:linux32', 'compress:linux64', 'copy:osx', 'exec:osx32', 'exec:osx64']);
   grunt.registerTask('desktop', ['default', 'nwjs']);

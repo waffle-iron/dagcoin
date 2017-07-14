@@ -15,7 +15,7 @@ module.exports = function (config) {
 
     // list of files / patterns to load in the browser
     files: [
-      'bower_components/fastclick/lib/fastclick.js',
+/*      'bower_components/fastclick/lib/fastclick.js',
       'bower_components/qrcode-generator/js/qrcode.js',
       'bower_components/qrcode-decoder-js/lib/qrcode-decoder.js',
       'bower_components/moment/min/moment-with-locales.js',
@@ -30,23 +30,11 @@ module.exports = function (config) {
       'bower_components/angular-carousel/dist/angular-carousel.js',
       'bower_components/angular-ui-switch/angular-ui-switch.js',
       'bower_components/angular-elastic/elastic.js',
-      'bower_components/ui-router-extras/release/ct-ui-router-extras.js',
+      'bower_components/ui-router-extras/release/ct-ui-router-extras.js',*/
       'bower_components/angular/angular.js', // angular
       'bower_components/angular-mocks/angular-mocks.js', // angular mocks
-      'angular-bitcore-wallet-client/index.js',
-      'src/js/app.js',
-      'src/js/routes.js',
-      'src/js/directives/*.js',
-      'src/js/filters/*.js',
-      'src/js/models/*.js',
-      'src/js/services/*.js',
-      'src/js/controllers/*.js',
-      'src/js/version.js',
-      'src/js/init.js',
 
-      'build/src/!**!/!*.directive.js',
-
-      'build/test/**/*.js',
+      'test/**/*.js',
     ],
 
 
@@ -62,7 +50,21 @@ module.exports = function (config) {
     // preprocess matching files before serving them to the browser
     // available preprocessors: https://npmjs.org/browse/keyword/karma-preprocessor
     preprocessors: {
-      'src/js/**/*.js': ['coverage'],
+      'src/js/**/*.js': ['babel','coverage'],
+      'test/**/*.js': ['babel']
+    },
+
+    babelPreprocessor: {
+      options: {
+        presets: ['es2015'], // use the es2015 preset
+        sourceMap: 'inline' // inline source maps inside compiled files
+      },
+      filename: function (file) {
+        return file.originalPath.replace(/\.js$/, '.es5.js');
+      },
+      sourceFileName: function (file) {
+        return file.originalPath;
+      }
     },
 
 
