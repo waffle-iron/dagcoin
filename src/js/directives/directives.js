@@ -15,47 +15,7 @@ function selectText(element) {
   }
 }
 angular.module('copayApp.directives')
-.directive('validAddress', ['$rootScope', 'profileService',
-  function ($rootScope, profileService) {
-    return {
-      require: 'ngModel',
-      link(scope, elem, attrs, ctrl) {
-        const ValidationUtils = require('byteballcore/validation_utils.js');
-        const validator = function (value) {
-          if (!profileService.focusedClient) { return; }
-
-          if (typeof value === 'undefined') {
-            ctrl.$pristine = true;
-            return;
-          }
-
-            // Regular url
-          if (/^https?:\/\//.test(value)) {
-            ctrl.$setValidity('validAddress', true);
-            return value;
-          }
-
-            // byteball uri
-          const conf = require('byteballcore/conf.js');
-          const re = new RegExp(`^${conf.program}:([A-Z2-7]{32})\b`, 'i');
-          const arrMatches = value.match(re);
-          if (arrMatches) {
-            ctrl.$setValidity('validAddress', ValidationUtils.isValidAddress(arrMatches[1]));
-            return value;
-          }
-
-            // Regular Address
-          ctrl.$setValidity('validAddress', ValidationUtils.isValidAddress(value));
-          return value;
-        };
-
-        ctrl.$parsers.unshift(validator);
-        ctrl.$formatters.unshift(validator);
-      },
-    };
-  },
-])
-  .directive('validUrl', [
+.directive('validUrl', [
 
     function () {
       return {
@@ -273,7 +233,7 @@ angular.module('copayApp.directives')
     },
     controller($scope) {
         // $scope.logo_url = $scope.negative ? 'img/logo-negative.svg' : 'img/logo.svg';
-      $scope.logo_url = $scope.negative ? 'img/icons/icon-white-32.png' : 'img/icons/icon-black-32.png';
+      $scope.logo_url = $scope.negative ? 'img/icons/icon-white-outline.iconset/icon_32x32.png' : 'img/icons/icon-black-32.png';
     },
     replace: true,
       // template: '<img ng-src="{{ logo_url }}" alt="Byteball">'

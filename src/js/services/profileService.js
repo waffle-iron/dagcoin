@@ -10,18 +10,17 @@ angular.module('copayApp.services')
     root.focusedClient = null;
     root.walletClients = {};
 
-
     root.Utils = bwcService.getUtils();
     root.formatAmount = function (amount, asset, opts) {
-    	debugger;
+      const options = opts || { dontRound: true };
       const config = configService.getSync().wallet.settings;
       // if (config.unitCode == 'byte') return amount;
 
       // TODO : now only works for english, specify opts to change thousand separator and decimal separator
       if (asset.toLowerCase() === 'dag') {
-        return this.Utils.formatAmount(amount, config.dagUnitCode, opts);
+        return this.Utils.formatAmount(amount, config.dagUnitCode, options);
       }
-      return this.Utils.formatAmount(amount, config.unitCode, opts);
+      return this.Utils.formatAmount(amount, config.unitCode, options);
     };
 
     root._setFocus = function (walletId, cb) {
@@ -444,7 +443,7 @@ angular.module('copayApp.services')
       }, (err) => {
         if (err) {
           // in HW wallets, req key is always the same. They can't addAccess.
-          if (err.code == 'NOT_AUTHORIZED') { err.code = 'WALLET_DOES_NOT_EXIST'; }
+          if (err.code === 'NOT_AUTHORIZED') { err.code = 'WALLET_DOES_NOT_EXIST'; }
 
           return cb(`${gettext('Could not import')}: ${err}`);
         }
@@ -615,7 +614,7 @@ angular.module('copayApp.services')
         network: c.network,
         color: config.colorFor[c.walletId] || '#2C3E50',
       }));
-      ret = lodash.filter(ret, w => (w.network == network && w.is_complete));
+      ret = lodash.filter(ret, w => (w.network === network && w.is_complete));
       return lodash.sortBy(ret, 'name');
     };
 
