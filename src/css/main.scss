@@ -1,4 +1,4 @@
-/*
+﻿/*
  *
  * Byteball main CSS
  *
@@ -672,6 +672,18 @@ input[type=number]::-webkit-outer-spin-button {
   width: 57px;
   text-align: center;
   font-size: 65%;
+}
+
+.history {
+  .transactions {
+    padding-bottom: 0px;
+    .transactions__table {
+      overflow-y: auto;
+    }
+  }
+  .page-action {
+    margin-top: 20px;
+  }
 }
 
 .bg-alert {
@@ -2208,7 +2220,6 @@ canvas {
 .transactions__table {
 	margin-top: 20px;
 	overflow-x: hidden;
-	overflow-y: scroll;
 }
 .transactions__table.sm-height {
 	height: 200px;

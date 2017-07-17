@@ -3,12 +3,12 @@
 		version="1.8.5"
 		android-versionCode="1038"
 		ios-CFBundleVersion="1.8.5">
-    <name>DAGCOIN</name>
+    <name>Dagcoin</name>
     <description>
-		DAGCOIN wallet for testnet.
+	    Dagcoin wallet for testnet.
     </description>
     <author email="byteball@byteball.org" href="https://byteball.org">
-        DAGCOIN
+	    Dagcoin
     </author>
     <content src="index.html" />
     <access origin="*" />

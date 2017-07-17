@@ -232,10 +232,10 @@ module.exports = function (grunt) {
         version: '0.14.7',
         zip: false,
         macIcns: './public/img/icons/icon-white-outline.icns',
-        winIco: './public/img/icons/icon-white-outline.ico',
-        exeIco: './public/img/icons/icon-white-outline.ico',
+        winIco: './public/img/icons/dagcoin.ico',
+        exeIco: './public/img/icons/dagcoin.ico',
         macPlist: {
-          CFBundleURLTypes: [{ CFBundleURLName: 'DAGCOIN action', CFBundleURLSchemes: ['DAGCOIN-TN'] }],
+          CFBundleURLTypes: [{ CFBundleURLName: 'Dagcoin action', CFBundleURLSchemes: ['DAGCOIN-TN'] }],
           LSHasLocalizedDisplayName: 0,
           /* CFBundleIconFile: 'nw.icns',*/
         },
@@ -310,7 +310,7 @@ module.exports = function (grunt) {
         ],
         options: {
           maintainer: {
-            name: 'DAGCOIN',
+            name: 'Dagcoin',
             email: 'byteball@byteball.org',
           },
           long_description: 'A wallet for decentralized value',
