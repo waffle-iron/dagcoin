@@ -9,7 +9,10 @@ src/js/controllers/inviteCorrespondentDevice.js
 src/js/controllers/preferencesEditWitness.js
 src/js/controllers/preferencesColor.js
 src/js/controllers/preferencesAdvanced.js
-src/js/controllers/newVersionIsAvailable.js
 
 # version
 src/js/version.js
+
+#generated files
+public/angular.js
+public/dagcoin.js
