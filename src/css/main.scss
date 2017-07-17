@@ -574,6 +574,21 @@ ul.manage li {
 
 .m10 {
   margin: 10px;
+
+.history {
+  .transactions {
+    padding-bottom: 0px;
+    .transactions__table {
+      overflow-y: auto;
+    }
+  }
+  .page-action {
+    margin-top: 20px;
+  }
+}
+
+.bg-alert {
+  background-color: #ED4A43;
 }
 
 .m10b {
@@ -2582,7 +2597,7 @@ canvas {
 }
 
 .transactions__table {
-  margin-top: 20px;
+margin-top: 20px;
   overflow-x: hidden;
   overflow-y: scroll;
 }

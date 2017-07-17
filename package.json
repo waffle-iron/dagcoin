@@ -2,7 +2,7 @@
   "name": "dagcoin-tn",
   "description": "A wallet for decentralized value",
   "author": "Dagcoin",
-  "version": "1.0.0t",
+  "version": "1.1.0t",
   "keywords": [
     "wallet",
     "dagcoin",
@@ -12,7 +12,7 @@
   ],
   "main": "public/index.html",
   "window": {
-    "title": "DAGCOIN wallet",
+    "title": "Dagcoin wallet",
     "icon": "./public/img/icons/icon_256x256.png",
     "show": true,
     "visible": true,
