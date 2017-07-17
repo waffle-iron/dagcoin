@@ -32,12 +32,8 @@ module.exports = function (grunt) {
           grunt.log.writeln('Waiting for more changes...');
         },
       },
-      css: {
-        files: ['src/css/*.css'],
-        tasks: ['concat:css'],
-      },
       sass: {
-        files: ['src/css/*.scss'],
+        files: ['src/css/*.scss', 'src/css/icons.css'],
         tasks: ['sass', 'concat:css'],
       },
       main: {
@@ -58,7 +54,8 @@ module.exports = function (grunt) {
     sass: {
       dist: {
         options: {
-          style: 'expanded',
+          style: 'compressed',
+          sourcemap: 'none'
         },
         files: {
           'src/css/main.css': 'src/css/main.scss',
