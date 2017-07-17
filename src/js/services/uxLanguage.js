@@ -1,5 +1,9 @@
+/* eslint-disable no-cond-assign */
+// todo: removed rule for if. it is realted to agent.
+(function () {
+  'use strict';
 
-angular.module('copayApp.services')
+  angular.module('copayApp.services')
   .factory('uxLanguage', ($log, lodash, gettextCatalog, amMoment, configService) => {
     const root = {};
 
@@ -57,10 +61,10 @@ angular.module('copayApp.services')
 
     root.currentLanguage = null;
 
-    root._detect = function () {
+    root.detect = function () {
       // Auto-detect browser language
-      let userLang,
-        androidLang;
+      let userLang;
+      let androidLang;
 
       if (navigator && navigator.userAgent && (androidLang = navigator.userAgent.match(/android.*\W(\w\w)-(\w\w)\W/i))) {
         userLang = androidLang[1];
@@ -73,10 +77,12 @@ angular.module('copayApp.services')
       return userLang;
     };
 
-    root._set = function (lang) {
+    root.set = function (lang) {
       $log.debug(`Setting default language: ${lang}`);
       gettextCatalog.setCurrentLanguage(lang);
-	  if (lang !== 'en')		  { gettextCatalog.loadRemote(`languages/${lang}.json`); }
+      if (lang !== 'en') {
+        gettextCatalog.loadRemote(`languages/${lang}.json`);
+      }
       amMoment.changeLocale(lang);
       root.currentLanguage = lang;
     };
@@ -100,18 +106,18 @@ angular.module('copayApp.services')
     };
 
     root.init = function () {
-      root._set(root._detect());
+      root.set(root.detect());
     };
 
     root.update = function () {
       let userLang = configService.getSync().wallet.settings.defaultLanguage;
 
       if (!userLang) {
-        userLang = root._detect();
+        userLang = root.detect();
       }
 
-      if (userLang != gettextCatalog.getCurrentLanguage()) {
-        root._set(userLang);
+      if (userLang !== gettextCatalog.getCurrentLanguage()) {
+        root.set(userLang);
       }
       return userLang;
     };
@@ -124,3 +130,4 @@ angular.module('copayApp.services')
 
     return root;
   });
+}());

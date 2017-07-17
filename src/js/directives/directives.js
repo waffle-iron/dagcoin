@@ -1,21 +1,24 @@
+(function () {
+  'use strict';
 
-
-function selectText(element) {
-  const doc = document;
-  if (doc.body.createTextRange) { // ms
-    var range = doc.body.createTextRange();
-    range.moveToElementText(element);
-    range.select();
-  } else if (window.getSelection) {
-    const selection = window.getSelection();
-    var range = doc.createRange();
-    range.selectNodeContents(element);
-    selection.removeAllRanges();
-    selection.addRange(range);
+  /* eslint-disable no-unused-expressions */
+  function selectText(element) {
+    const doc = document;
+    if (doc.body.createTextRange) { // ms
+      const range = doc.body.createTextRange();
+      range.moveToElementText(element);
+      range.select();
+    } else if (window.getSelection) {
+      const selection = window.getSelection();
+      const range = doc.createRange();
+      range.selectNodeContents(element);
+      selection.removeAllRanges();
+      selection.addRange(range);
+    }
   }
-}
-angular.module('copayApp.directives')
-.directive('validUrl', [
+
+  angular.module('copayApp.directives')
+  .directive('validUrl', [
 
     function () {
       return {
@@ -43,13 +46,13 @@ angular.module('copayApp.directives')
         require: 'ngModel',
         link(scope, element, attrs, ctrl) {
           const val = function (value) {
-			// console.log('-- scope', ctrl);
-			/* if (scope.home && scope.home.bSendAll){
-				console.log('-- send all');
-				ctrl.$setValidity('validAmount', true);
-				return value;
-			}*/
-			// console.log('-- amount');
+            // console.log('-- scope', ctrl);
+            /* if (scope.home && scope.home.bSendAll){
+             console.log('-- send all');
+             ctrl.$setValidity('validAmount', true);
+             return value;
+             }*/
+            // console.log('-- amount');
             const constants = require('byteballcore/constants.js');
             const asset = attrs.validAmount;
             const settings = configService.getSync().wallet.settings;
@@ -58,7 +61,7 @@ angular.module('copayApp.directives')
             if (asset === 'base') {
               unitValue = settings.unitValue;
               decimals = Number(settings.unitDecimals);
-            }			else if (asset === constants.DAGCOIN_ASSET) {
+            } else if (asset === constants.DAGCOIN_ASSET) {
               unitValue = settings.dagUnitValue;
               decimals = Number(settings.dagUnitDecimals);
             }
@@ -70,9 +73,9 @@ angular.module('copayApp.directives')
             }
 
             if (typeof vNum === 'number' && vNum > 0) {
-              const sep_index = (`${value}`).indexOf('.');
-              const str_value = (`${value}`).substring(sep_index + 1);
-              if (sep_index > 0 && str_value.length > decimals) {
+              const sepIndex = (`${value}`).indexOf('.');
+              const strValue = (`${value}`).substring(sepIndex + 1);
+              if (sepIndex > 0 && strValue.length > decimals) {
                 ctrl.$setValidity('validAmount', false);
               } else {
                 ctrl.$setValidity('validAmount', true);
@@ -129,7 +132,7 @@ angular.module('copayApp.directives')
   .directive('highlightOnChange', () => ({
     restrict: 'A',
     link(scope, element, attrs) {
-      scope.$watch(attrs.highlightOnChange, (newValue, oldValue) => {
+      scope.$watch(attrs.highlightOnChange, () => {
         element.addClass('highlight');
         setTimeout(() => {
           element.removeClass('highlight');
@@ -152,18 +155,18 @@ angular.module('copayApp.directives')
         if (password.length > 0) passwordStrength = 1;
         if (password.length >= MIN_LENGTH) {
           if ((password.match(/[a-z]/)) && (password.match(/[A-Z]/))) {
-            passwordStrength++;
+            passwordStrength += 1;
           } else {
             text = ', add mixed case';
           }
           if (password.match(/\d+/)) {
-            passwordStrength++;
+            passwordStrength += 1;
           } else if (!text) text = ', add numerals';
           if (password.match(/.[!,@,#,$,%,^,&,*,?,_,~,-,(,)]/)) {
-            passwordStrength++;
+            passwordStrength += 1;
           } else if (!text) text = ', add punctuation';
           if (password.length > 12) {
-            passwordStrength++;
+            passwordStrength += 1;
           } else if (!text) text = ', add characters';
         } else {
           text = ', that\'s short';
@@ -177,21 +180,20 @@ angular.module('copayApp.directives')
         };
       }
 
-      scope.$watch(attrs.ngModel, (newValue, oldValue) => {
+      scope.$watch(attrs.ngModel, (newValue) => {
         if (newValue && newValue !== '') {
-          const info = evaluateMeter(newValue);
-          scope[attrs.checkStrength] = info;
+          scope[attrs.checkStrength] = evaluateMeter(newValue);
         }
       });
     },
   }))
   .directive('showFocus', $timeout => function (scope, element, attrs) {
     scope.$watch(attrs.showFocus,
-        (newValue) => {
-          $timeout(() => {
-            newValue && element[0].focus();
-          });
-        }, true);
+      (newValue) => {
+        $timeout(() => {
+          newValue && element[0].focus();
+        });
+      }, true);
   })
   .directive('match', () => ({
     require: 'ngModel',
@@ -211,7 +213,7 @@ angular.module('copayApp.directives')
       clipCopy: '=clipCopy',
     },
     link(scope, elm) {
-        // TODO this does not work (FIXME)
+      // TODO this does not work (FIXME)
       elm.attr('tooltip', 'Press Ctrl+C to Copy');
       elm.attr('tooltip-placement', 'top');
 
@@ -232,11 +234,11 @@ angular.module('copayApp.directives')
       negative: '=',
     },
     controller($scope) {
-        // $scope.logo_url = $scope.negative ? 'img/logo-negative.svg' : 'img/logo.svg';
+      // $scope.logo_url = $scope.negative ? 'img/logo-negative.svg' : 'img/logo.svg';
       $scope.logo_url = $scope.negative ? 'img/icons/icon-white-outline.iconset/icon_32x32.png' : 'img/icons/icon-black-32.png';
     },
     replace: true,
-      // template: '<img ng-src="{{ logo_url }}" alt="Byteball">'
+    // template: '<img ng-src="{{ logo_url }}" alt="Byteball">'
     template: '<div><img ng-src="{{ logo_url }}" alt="Byteball"><br>Byteball</div>',
   }))
   .directive('availableBalance', () => ({
@@ -244,3 +246,4 @@ angular.module('copayApp.directives')
     replace: true,
     templateUrl: 'views/includes/available-balance.html',
   }));
+}());

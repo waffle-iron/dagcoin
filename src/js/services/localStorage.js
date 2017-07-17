@@ -1,11 +1,14 @@
+(function () {
+  'use strict';
 
-
-angular.module('copayApp.services')
-  .factory('localStorageService', ($timeout) => {
+  angular.module('copayApp.services')
+  .factory('localStorageService', () => {
     const root = {};
     const ls = ((typeof window.localStorage !== 'undefined') ? window.localStorage : null);
 
-    if (!ls) { throw new Error('localstorage not available'); }
+    if (!ls) {
+      throw new Error('localstorage not available');
+    }
 
     root.get = function (k, cb) {
       return cb(null, ls.getItem(k));
@@ -36,3 +39,4 @@ angular.module('copayApp.services')
 
     return root;
   });
+}());

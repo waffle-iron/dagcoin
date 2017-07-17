@@ -1,9 +1,11 @@
+(function () {
+  'use strict';
 
-angular.module('copayApp.services')
+  angular.module('copayApp.services')
   .factory('backupService', ($log, $timeout, profileService, sjcl) => {
     const root = {};
 
-    const _download = function (ew, filename, cb) {
+    const download = function (ew, filename, cb) {
       const NewBlob = function (data, datatype) {
         let out;
 
@@ -18,12 +20,12 @@ angular.module('copayApp.services')
             window.MozBlobBuilder ||
             window.MSBlobBuilder;
 
-          if (e.name == 'TypeError' && window.BlobBuilder) {
-            const bb = new BlobBuilder();
+          if (e.name === 'TypeError' && window.BlobBuilder) {
+            const bb = new window.BlobBuilder();
             bb.append(data);
             out = bb.getBlob(datatype);
             $log.debug('case 2');
-          } else if (e.name == 'InvalidStateError') {
+          } else if (e.name === 'InvalidStateError') {
             // InvalidStateError (tested on FF13 WinXP)
             out = new Blob([data], {
               type: datatype,
@@ -53,10 +55,10 @@ angular.module('copayApp.services')
     };
 
     root.addMetadata = function (b, opts) {
-      b = JSON.parse(b);
-      if (opts.historyCache) b.historyCache = opts.historyCache;
-      if (opts.addressBook) b.addressBook = opts.addressBook;
-      return JSON.stringify(b);
+      const metadata = JSON.parse(b);
+      if (opts.historyCache) metadata.historyCache = opts.historyCache;
+      if (opts.addressBook) metadata.addressBook = opts.addressBook;
+      return JSON.stringify(metadata);
     };
 
     root.walletExport = function (password, opts) {
@@ -65,14 +67,12 @@ angular.module('copayApp.services')
       }
       const fc = profileService.focusedClient;
       try {
-        opts = opts || {};
-        let b = fc.export(opts);
-        if (opts.historyCache || opts.addressBook) b = root.addMetadata(b, opts);
-
-        const e = sjcl.encrypt(password, b, {
+        const options = opts || {};
+        let b = fc.export(options);
+        if (options.historyCache || options.addressBook) b = root.addMetadata(b, options);
+        return sjcl.encrypt(password, b, {
           iter: 10000,
         });
-        return e;
       } catch (err) {
         $log.debug('Error exporting wallet: ', err);
         return null;
@@ -87,7 +87,8 @@ angular.module('copayApp.services')
       let walletName = (fc.alias || '') + (fc.alias ? '-' : '') + fc.credentials.walletName;
       if (opts.noSign) walletName += '-noSign';
       const filename = `${walletName}-Copaybackup.aes.json`;
-      _download(ew, filename, cb);
+      return download(ew, filename, cb);
     };
     return root;
   });
+}());

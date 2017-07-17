@@ -1,5 +1,3 @@
-
-
 const _ = require('lodash');
 
 const ClientError = require('./clienterror');

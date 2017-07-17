@@ -61,17 +61,22 @@
     "innosetup-compiler": "^5.5.9"
   },
   "scripts": {
-    "test": "./node_modules/.bin/grunt test-coveralls"
+    "test": "./node_modules/.bin/grunt test-coveralls",
+    "eslint": "./node_modules/eslint/bin/eslint.js --cache ./"
   },
   "devDependencies": {
     "adm-zip": "^0.4.7",
     "angular-mocks": "^1.3.14",
+    "babel-preset-es2015": "^6.24.1",
+    "babelify": "^7.3.0",
     "bhttp": "^1.2.1",
+    "browserify": "^14.4.0",
     "eslint": "^3.19.0",
     "eslint-config-airbnb-base": "^11.2.0",
     "eslint-plugin-import": "^2.5.0",
     "grunt": "^1.0.1",
     "grunt-angular-gettext": "^2.2.3",
+    "grunt-babel": "^6.0.0",
     "grunt-browserify": "^5.0.0",
     "grunt-contrib-compress": "^1.3.0",
     "grunt-contrib-concat": "^1.0.1",
@@ -84,11 +89,19 @@
     "grunt-karma": "^1.0.0",
     "grunt-karma-coveralls": "^2.5.3",
     "grunt-nw-builder": "3.1.0",
+    "jasmine-core": "^2.6.4",
     "jshint": "^2.9.4",
-    "karma": "^1.1.0",
+    "karma": "^1.7.0",
+    "karma-babel-preprocessor": "^6.0.1",
+    "karma-browserify": "^5.1.1",
     "karma-cli": "0.0.4",
     "karma-coverage": "^0.2.7",
-    "karma-jasmine": "^0.3.5",
-    "karma-phantomjs-launcher": "^0.1.4"
+    "karma-es5-shim": "0.0.4",
+    "karma-es6-shim": "^1.0.0",
+    "karma-jasmine": "^0.3.8",
+    "karma-nodewebkit-launcher": "0.0.13",
+    "karma-phantomjs-launcher": "^0.1.4",
+    "phantomjs": "^2.1.7",
+    "stringify": "^5.1.0"
   }
 }

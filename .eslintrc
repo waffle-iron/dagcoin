@@ -23,3 +23,4 @@ rules:
     - error
     - 200
     - ignoreComments : true
+  func-names: 0

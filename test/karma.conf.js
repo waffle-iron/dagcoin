@@ -15,22 +15,25 @@ module.exports = function (config) {
 
     // list of files / patterns to load in the browser
     files: [
+/*      'bower_components/fastclick/lib/fastclick.js',
       'bower_components/qrcode-generator/js/qrcode.js',
       'bower_components/qrcode-decoder-js/lib/qrcode-decoder.js',
       'bower_components/moment/min/moment-with-locales.js',
       'bower_components/angular/angular.js',
       'bower_components/angular-ui-router/release/angular-ui-router.js',
-      'bower_components/angular-foundation/mm-foundation.js',
       'bower_components/angular-foundation/mm-foundation-tpls.js',
-      'bower_components/angular-animate/angular-animate.js',
       'bower_components/angular-moment/angular-moment.js',
       'bower_components/ng-lodash/build/ng-lodash.js',
-      'bower_components/angular-qrcode/qrcode.js',
+      'bower_components/angular-qrcode/angular-qrcode.js',
       'bower_components/angular-gettext/dist/angular-gettext.js',
       'bower_components/angular-touch/angular-touch.js',
+      'bower_components/angular-carousel/dist/angular-carousel.js',
       'bower_components/angular-ui-switch/angular-ui-switch.js',
-      'node_modules/angular-mocks/angular-mocks.js',
-      'src/js/**/*.js',
+      'bower_components/angular-elastic/elastic.js',
+      'bower_components/ui-router-extras/release/ct-ui-router-extras.js',*/
+      'bower_components/angular/angular.js', // angular
+      'bower_components/angular-mocks/angular-mocks.js', // angular mocks
+
       'test/**/*.js',
     ],
 
@@ -47,14 +50,28 @@ module.exports = function (config) {
     // preprocess matching files before serving them to the browser
     // available preprocessors: https://npmjs.org/browse/keyword/karma-preprocessor
     preprocessors: {
-      'src/js/**/*.js': ['coverage'],
+      'src/js/**/*.js': ['babel','coverage'],
+      'test/**/*.js': ['babel']
+    },
+
+    babelPreprocessor: {
+      options: {
+        presets: ['es2015'], // use the es2015 preset
+        sourceMap: 'inline' // inline source maps inside compiled files
+      },
+      filename: function (file) {
+        return file.originalPath.replace(/\.js$/, '.es5.js');
+      },
+      sourceFileName: function (file) {
+        return file.originalPath;
+      }
     },
 
 
     // test results reporter to use
     // possible values: 'dots', 'progress'
     // available reporters: https://npmjs.org/browse/keyword/karma-reporter
-    reporters: ['progress', , 'coverage'],
+    reporters: ['progress', 'coverage'],
 
     // optionally, configure the reporter
     coverageReporter: {
@@ -89,7 +106,7 @@ module.exports = function (config) {
 
     // start these browsers
     // available browser launchers: https://npmjs.org/browse/keyword/karma-launcher
-    browsers: ['PhantomJS'],
+    browsers: ['NodeWebkit'],
 
 
     // Continuous Integration mode

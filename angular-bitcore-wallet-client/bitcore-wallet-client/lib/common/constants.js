@@ -1,5 +1,3 @@
-
-
 const Constants = {};
 
 Constants.DERIVATION_STRATEGIES = {
@@ -15,8 +13,8 @@ Constants.UNITS = {
   },
   oneByte: {
     value: 1,
-	  maxDecimals: 0,
-	  minDecimals: 0,
+    maxDecimals: 0,
+    minDecimals: 0,
   },
 };
 

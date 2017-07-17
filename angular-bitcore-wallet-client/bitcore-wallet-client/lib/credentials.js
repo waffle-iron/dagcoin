@@ -1,8 +1,10 @@
+// todo:temp disabled some rules
+/* eslint-disable no-unused-vars,new-cap,default-case */
 
 
 const crypto = require('crypto');
 const $ = require('preconditions').singleton();
-const _ = require('lodash');
+const lodash = require('lodash');
 
 const Bitcore = require('bitcore-lib');
 const Mnemonic = require('bitcore-mnemonic');
@@ -37,19 +39,19 @@ function Credentials() {
   this.account = 0;
 }
 
-function _checkNetwork(network) {
-  if (!_.includes(['livenet', 'testnet'], network)) throw new Error('Invalid network');
+function checkNetwork(network) {
+  if (!lodash.includes(['livenet', 'testnet'], network)) throw new Error('Invalid network');
 }
 
 Credentials.create = function (network, account) {
-  _checkNetwork(network);
+  checkNetwork(network);
 
   const x = new Credentials();
 
   x.network = network;
   x.account = account;
   x.xPrivKey = (new Bitcore.HDPrivateKey(network)).toString();
-  x._expand();
+  x.expand();
   return x;
 };
 
@@ -62,8 +64,10 @@ const wordsForLang = {
 };
 
 Credentials.createWithMnemonic = function (network, passphrase, language, account) {
-  _checkNetwork(network);
-  if (!wordsForLang[language]) { throw new Error('Unsupported language'); }
+  checkNetwork(network);
+  if (!wordsForLang[language]) {
+    throw new Error('Unsupported language');
+  }
   $.shouldBeNumber(account);
 
   let m = new Mnemonic(wordsForLang[language]);
@@ -75,7 +79,7 @@ Credentials.createWithMnemonic = function (network, passphrase, language, accoun
   x.network = network;
   x.account = account;
   x.xPrivKey = m.toHDPrivateKey(passphrase, network).toString();
-  x._expand();
+  x.expand();
   x.mnemonic = m.phrase;
   x.mnemonicHasPassphrase = !!passphrase;
 
@@ -88,15 +92,15 @@ Credentials.fromExtendedPrivateKey = function (xPrivKey, account) {
   const x = new Credentials();
   x.xPrivKey = xPrivKey;
   x.account = account || 0;
-  x._expand();
+  x.expand();
   return x;
 };
 
 // note that mnemonic / passphrase is NOT stored. Now stored
 Credentials.fromMnemonic = function (network, words, passphrase, account, derivationStrategy) {
-  _checkNetwork(network);
+  checkNetwork(network);
   $.shouldBeNumber(account);
-  $.checkArgument(_.includes(_.values(Constants.DERIVATION_STRATEGIES), derivationStrategy));
+  $.checkArgument(lodash.includes(lodash.values(Constants.DERIVATION_STRATEGIES), derivationStrategy));
 
   const m = new Mnemonic(words);
   const x = new Credentials();
@@ -105,7 +109,7 @@ Credentials.fromMnemonic = function (network, words, passphrase, account, deriva
   x.mnemonicHasPassphrase = !!passphrase;
   x.account = account;
   x.derivationStrategy = derivationStrategy;
-  x._expand();
+  x.expand();
   return x;
 };
 
@@ -123,7 +127,7 @@ Credentials.fromMnemonic = function (network, words, passphrase, account, deriva
 Credentials.fromExtendedPublicKey = function (xPubKey, source, entropySourceHex, account, derivationStrategy) {
   $.checkArgument(entropySourceHex);
   $.shouldBeNumber(account);
-  $.checkArgument(_.includes(_.values(Constants.DERIVATION_STRATEGIES), derivationStrategy));
+  $.checkArgument(lodash.includes(lodash.values(Constants.DERIVATION_STRATEGIES), derivationStrategy));
 
   const entropyBuffer = new Buffer(entropySourceHex, 'hex');
   // require at least 112 bits of entropy
@@ -135,18 +139,18 @@ Credentials.fromExtendedPublicKey = function (xPubKey, source, entropySourceHex,
   x.account = account;
   x.derivationStrategy = derivationStrategy;
   x.externalSource = source;
-  x._expand();
+  x.expand();
   return x;
 };
 
 // Get network from extended private key or extended public key
-Credentials._getNetworkFromExtendedKey = function (xKey) {
-  $.checkArgument(xKey && _.isString(xKey));
-  return xKey.charAt(0) == 't' ? 'testnet' : 'livenet';
+Credentials.getNetworkFromExtendedKey = function (xKey) {
+  $.checkArgument(xKey && lodash.isString(xKey));
+  return xKey.charAt(0) === 't' ? 'testnet' : 'livenet';
 };
 
 
-Credentials.prototype._hashFromEntropy = function (prefix, length) {
+Credentials.prototype.hashFromEntropy = function (prefix, length) {
   $.checkState(prefix);
   const b = new Buffer(this.entropySource, 'hex');
   const b2 = Bitcore.crypto.Hash.sha256hmac(b, new Buffer(prefix));
@@ -154,12 +158,12 @@ Credentials.prototype._hashFromEntropy = function (prefix, length) {
 };
 
 
-Credentials.prototype._expand = function () {
+Credentials.prototype.expand = function () {
   $.checkState(this.xPrivKey || (this.xPubKey && this.entropySource));
 
-  const network = Credentials._getNetworkFromExtendedKey(this.xPrivKey || this.xPubKey);
+  const network = Credentials.getNetworkFromExtendedKey(this.xPrivKey || this.xPubKey);
   if (this.network) {
-    $.checkState(this.network == network);
+    $.checkState(this.network === network);
   } else {
     this.network = network;
   }
@@ -170,9 +174,7 @@ Credentials.prototype._expand = function () {
     // this extra derivation is not to share a non hardened xPubKey to the server.
     const addressDerivation = xPrivKey.derive(this.getBaseAddressDerivationPath());
     this.xPubKey = (new Bitcore.HDPublicKey(addressDerivation)).toString();
-  } else {
   }
-
 
   this.publicKeyRing = [{
     xPubKey: this.xPubKey,
@@ -182,7 +184,7 @@ Credentials.prototype._expand = function () {
 Credentials.fromObj = function (obj) {
   const x = new Credentials();
 
-  _.each(FIELDS, (k) => {
+  lodash.each(FIELDS, (k) => {
     x[k] = obj[k];
   });
 
@@ -196,11 +198,15 @@ Credentials.fromObj = function (obj) {
 Credentials.prototype.toObj = function () {
   const self = this;
 
-  if (self.hasPrivKeyEncrypted()) { self.lock(); }
+  if (self.hasPrivKeyEncrypted()) {
+    self.lock();
+  }
 
   const x = {};
-  _.each(FIELDS, (k) => {
-    if (k !== 'xPrivKey' && k !== 'mnemonic' && k !== 'xPrivKeyEncrypted' && k !== 'mnemonicEncrypted') { x[k] = self[k]; }
+  lodash.each(FIELDS, (k) => {
+    if (k !== 'xPrivKey' && k !== 'mnemonic' && k !== 'xPrivKeyEncrypted' && k !== 'mnemonicEncrypted') {
+      x[k] = self[k];
+    }
   });
   return x;
 };
@@ -216,7 +222,7 @@ Credentials.prototype.getBaseAddressDerivationPath = function () {
       break;
   }
 
-  const coin = (this.network == 'livenet' ? '0' : '1');
+  const coin = (this.network === 'livenet' ? '0' : '1');
   return `m/${purpose}'/${coin}'/${this.account}'`;
 };
 
@@ -238,7 +244,7 @@ Credentials.prototype.addWalletInfo = function (walletName, m, n) {
     this.derivationStrategy = Constants.DERIVATION_STRATEGIES.BIP48;
   }
 
-  if (n == 1) {
+  if (n === 1) {
     this.addPublicKeyRing([{
       xPubKey: this.xPubKey,
     }]);
@@ -258,22 +264,34 @@ Credentials.prototype.hasPrivKeyEncrypted = function () {
 };
 
 Credentials.prototype.setPrivateKeyEncryption = function (password, opts) {
-  if (this.xPrivKeyEncrypted) { throw new Error('Encrypted Privkey Already exists'); }
+  if (this.xPrivKeyEncrypted) {
+    throw new Error('Encrypted Privkey Already exists');
+  }
 
-  if (!this.xPrivKey) { throw new Error('No private key to encrypt'); }
+  if (!this.xPrivKey) {
+    throw new Error('No private key to encrypt');
+  }
 
 
   this.xPrivKeyEncrypted = sjcl.encrypt(password, this.xPrivKey, opts);
-  if (!this.xPrivKeyEncrypted) { throw new Error('Could not encrypt'); }
+  if (!this.xPrivKeyEncrypted) {
+    throw new Error('Could not encrypt');
+  }
 
-  if (this.mnemonic) { this.mnemonicEncrypted = sjcl.encrypt(password, this.mnemonic, opts); }
+  if (this.mnemonic) {
+    this.mnemonicEncrypted = sjcl.encrypt(password, this.mnemonic, opts);
+  }
 };
 
 
 Credentials.prototype.disablePrivateKeyEncryption = function () {
-  if (!this.xPrivKeyEncrypted) { throw new Error('Private Key is not encrypted'); }
+  if (!this.xPrivKeyEncrypted) {
+    throw new Error('Private Key is not encrypted');
+  }
 
-  if (!this.xPrivKey) { throw new Error('Wallet is locked, cannot disable encryption'); }
+  if (!this.xPrivKey) {
+    throw new Error('Wallet is locked, cannot disable encryption');
+  }
 
   this.xPrivKeyEncrypted = null;
   this.mnemonicEncrypted = null;
@@ -281,7 +299,9 @@ Credentials.prototype.disablePrivateKeyEncryption = function () {
 
 
 Credentials.prototype.lock = function () {
-  if (!this.xPrivKeyEncrypted) { throw new Error('Could not lock, no encrypted private key'); }
+  if (!this.xPrivKeyEncrypted) {
+    throw new Error('Could not lock, no encrypted private key');
+  }
 
   delete this.xPrivKey;
   delete this.mnemonic;
@@ -299,7 +319,7 @@ Credentials.prototype.unlock = function (password) {
 };
 
 Credentials.prototype.addPublicKeyRing = function (publicKeyRing) {
-  this.publicKeyRing = _.clone(publicKeyRing);
+  this.publicKeyRing = lodash.clone(publicKeyRing);
 };
 
 Credentials.prototype.canSign = function () {
@@ -314,9 +334,10 @@ Credentials.prototype.setNoSign = function () {
 };
 
 Credentials.prototype.isComplete = function () {
-  if (!this.m || !this.n) return false;
-  if (!this.publicKeyRing || this.publicKeyRing.length != this.n) return false;
-  return true;
+  if (!this.m || !this.n) {
+    return false;
+  }
+  return !(!this.publicKeyRing || this.publicKeyRing.length !== this.n);
 };
 
 Credentials.prototype.hasExternalSource = function () {

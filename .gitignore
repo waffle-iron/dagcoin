@@ -17,6 +17,10 @@ cordova/*.keystore
 # node-webkit
 cache
 
+# testing
+build/src
+build/test
+
 
 # Logs
 logs
@@ -94,3 +98,6 @@ public/languages
 # IntelliJ Idea
 .idea/*
 .sass-cache
+
+# eslint
+.eslintcache

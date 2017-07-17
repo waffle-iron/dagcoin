@@ -1,6 +1,9 @@
+(function () {
+  'use strict';
 
-angular.module('copayApp.services')
+  /* eslint-disable arrow-body-style */
+  angular.module('copayApp.services')
   .factory('bitcore', (bwcService) => {
-    const bitcore = bwcService.getBitcore();
-    return bitcore;
+    return bwcService.getBitcore();
   });
+}());
