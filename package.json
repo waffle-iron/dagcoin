@@ -29,14 +29,14 @@
     "plugin": false
   },
   "chromium-args": "--proxy-server=http://127.1.2.7",
-  "homepage": "https://github.com/byteball/byteball",
+  "homepage": "https://github.com/dagcoin/dagcoin",
   "license": "MIT",
   "repository": {
-    "url": "git://github.com/byteball/byteball.git",
+    "url": "git@github.com:dagcoin/dagcoin.git",
     "type": "git"
   },
   "bugs": {
-    "url": "https://github.com/byteball/byteball/issues"
+    "url": "https://github.com/dagcoin/dagcoin/issues"
   },
   "browser": {
     "request": "browser-request",
@@ -82,7 +82,7 @@
     "grunt-contrib-concat": "^1.0.1",
     "grunt-contrib-copy": "^1.0.0",
     "grunt-contrib-sass": "^1.0.0",
-    "grunt-contrib-uglify": "^1.0.1",
+    "grunt-contrib-uglify": "git://github.com/gruntjs/grunt-contrib-uglify.git#harmony",
     "grunt-contrib-watch": "^1.0.0",
     "grunt-debian-package": "^0.1.11",
     "grunt-exec": "^1.0.0",
