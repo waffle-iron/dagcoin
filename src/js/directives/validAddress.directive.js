@@ -4,8 +4,7 @@
 
   const ValidationUtils = require('byteballcore/validation_utils.js');
 
-// byteball uri
-  const conf = require('byteballcore/conf.js');
+
 
   /**
    * @desc validating DAG address
@@ -38,6 +37,8 @@
             return value;
           }
 
+          // byteball uri
+          const conf = require('byteballcore/conf.js');
           const re = new RegExp(`^${conf.program}:([A-Z2-7]{32})\b`, 'i');
           const arrMatches = value.match(re);
           if (arrMatches) {
