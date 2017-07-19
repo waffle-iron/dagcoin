@@ -34,7 +34,7 @@ module.exports = function (grunt) {
       },
       sass: {
         files: ['src/css/*.scss', 'src/css/icons.css'],
-        tasks: ['sass', 'concat:css'],
+        tasks: ['stylelint', 'sass', 'concat:css', 'postcss'],
       },
       main: {
         files: [
@@ -61,6 +61,25 @@ module.exports = function (grunt) {
           'src/css/main.css': 'src/css/main.scss',
         },
       },
+    },
+
+    postcss: {
+      options: {
+        map: true, // inline sourcemaps
+
+        processors: [
+          require('pixrem')(), // add fallbacks for rem units
+          require('autoprefixer')({browsers: 'last 4 versions'}), // add vendor prefixes
+          require('cssnano')() // minify the result
+        ]
+      },
+      dist: {
+        src: 'public/css/dagcoin.css'
+      }
+    },
+
+    stylelint: {
+      all: ['src/css/*.scss']
     },
 
     concat: {
@@ -333,7 +352,7 @@ module.exports = function (grunt) {
     },
   });
 
-  grunt.loadNpmTasks('grunt-contrib-sass');
+
   grunt.loadNpmTasks('grunt-babel');
   grunt.loadNpmTasks('grunt-contrib-concat');
   grunt.loadNpmTasks('grunt-contrib-copy');
@@ -349,9 +368,13 @@ module.exports = function (grunt) {
   // grunt.loadNpmTasks('grunt-debian-package');
   grunt.loadNpmTasks('innosetup-compiler');
 
+  grunt.loadNpmTasks('grunt-stylelint');
+  grunt.loadNpmTasks('grunt-postcss');
+  grunt.loadNpmTasks('grunt-contrib-sass');
+
   grunt.registerTask('dev', ['watch']);
 
-  grunt.registerTask('default', ['nggettext_compile', 'exec:version', 'sass', 'concat', 'copy:icons']);
+  grunt.registerTask('default', ['nggettext_compile', 'exec:version','stylelint','sass', 'concat', 'postcss', 'copy:icons']);
   grunt.registerTask('cordova', ['default', 'browserify']);
   grunt.registerTask('cordova-prod', ['cordova', 'uglify']);
   // grunt.registerTask('prod', ['default', 'uglify']);
