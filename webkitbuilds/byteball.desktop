@@ -1,13 +1,13 @@
-[Desktop Entry]
+﻿[Desktop Entry]
 Type=Application
 Version=1.0
 Name=Byteball
 Comment=A wallet for decentralized value
-Exec=bash -c 'cd $(dirname %k) && ./Byteball %u'
+Exec=bash -c 'cd $(dirname %k) && ./Dagcoin %u'
 Icon=icon-white-outline.iconset/icon_256x256.png
 Terminal=false
 Categories=Office;Finance;
-MimeType=x-scheme-handler/byteball;
+MimeType=x-scheme-handler/dagcoin-tn;
 X-Ubuntu-Touch=true
 X-Ubuntu-StageHint=SideStage
 

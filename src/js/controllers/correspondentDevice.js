@@ -839,44 +839,51 @@ angular.module('copayApp.controllers').controller('correspondentDeviceController
           console.log('clicked', attrs);
           $scope.sendPayment(attrs.address);
         });
-      },
+      }
     };
-  }).directive('dynamic', $compile => ({
-    restrict: 'A',
-    replace: true,
-    link(scope, ele, attrs) {
-      scope.$watch(attrs.dynamic, (html) => {
-        ele.html(html);
-        $compile(ele.contents())(scope);
-      });
-    },
-  })).directive('scrollBottom', $timeout =>  // based on http://plnkr.co/edit/H6tFjw1590jHT28Uihcx?p=preview
- ({
-   link(scope, element) {
-     scope.$watchCollection('messageEvents', (newCollection) => {
-       if (newCollection) {
-         $timeout(() => {
-           if (scope.autoScrollEnabled) { element[0].scrollTop = element[0].scrollHeight; }
-         }, 100);
-       }
-     });
-   },
- })).directive('bindToHeight', $window => ({
-   restrict: 'A',
-   link(scope, elem, attrs) {
-     const attributes = scope.$eval(attrs.bindToHeight);
-     const targetElem = angular.element(document.querySelector(attributes[1]));
+  }).directive('dynamic', ($compile) => {
+    console.log('dynamic directive');
+    return {
+      restrict: 'A',
+      replace: true,
+      link: (scope, ele, attrs) => {
+        scope.$watch(attrs.dynamic, (html) => {
+          ele.html(html);
+          $compile(ele.contents())(scope);
+        });
+      }
+    }
+  }).directive('scrollBottom', ($timeout) => { // based on http://plnkr.co/edit/H6tFjw1590jHT28Uihcx?p=preview
+    console.log('scrollBottom directive');
+    return {
+      link: (scope, element) => {
+        scope.$watchCollection('messageEvents', (newCollection) => {
+          if (newCollection) {
+            $timeout(() => {
+              if (scope.autoScrollEnabled) { element[0].scrollTop = element[0].scrollHeight; }
+            }, 100);
+          }
+        });
+      }
+    }
+ }).directive('bindToHeight', ($window) => {
+   console.log('bindToHeight directive');
+   return {
+     restrict: 'A',
+     link: (scope, elem, attrs) => {
+       const attributes = scope.$eval(attrs.bindToHeight);
+       const targetElem = angular.element(document.querySelector(attributes[1]));
 
-			// Watch for changes
-     scope.$watch(() => targetElem[0].clientHeight,
-			(newValue, oldValue) => {
-  if (newValue != oldValue && newValue != 0) {
-    elem.css(attributes[0], `${newValue}px`);
-					// elem[0].scrollTop = elem[0].scrollHeight;
-  }
-});
-   },
- })).directive('ngEnter', () => function (scope, element, attrs) {
+       // Watch for changes
+       scope.$watch(() => targetElem[0].clientHeight, (newValue, oldValue) => {
+           if (newValue != oldValue && newValue != 0) {
+             elem.css(attributes[0], `${newValue}px`);
+             // elem[0].scrollTop = elem[0].scrollHeight;
+           }
+         });
+     }
+   }
+ }).directive('ngEnter', () => function (scope, element, attrs) {
    element.bind('keydown', (e) => {
      if (e.which === 13 && !e.shiftKey) {
        scope.$apply(() => {

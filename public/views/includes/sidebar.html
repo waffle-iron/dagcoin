@@ -6,16 +6,26 @@
 		<div ng-include="'views/includes/versionAndWalletType.html'"></div>
 	</header>
 	<ul class="off-canvas-list">
-		<li ng-show="sidebar.wallets[0]"
-			ng-repeat="item in sidebar.wallets track by $index"
-			ng-class="{'selected': item.id == index.walletId}"
-			class="nav-item">
-			<div class="avatar-wallet"
-				 ng-style="{'background-color':item.color}">{{(item.name || item.id) | limitTo: 1}}
-			</div>
-			<div class="name-wallet" ng-class="{'m8t':item.n == 1}">{{item.name || item.id}}</div>
-			<div class="size-12" ng-show="item.n > 1" translate>{{item.m}}-of-{{item.n}}</div>
-		</li>
+	  <li ng-show="sidebar.wallets[0]"
+	      ng-repeat="item in sidebar.wallets track by $index"
+	      ng-class="{'selected': item.id == index.walletId}"
+	      class="nav-item">
+	    <div class="avatar-wallet"
+	         ng-style="{'background-color':item.color}">{{(item.name || item.id) | limitTo: 1}}
+	    </div>
+	    <div class="name-wallet" ng-class="{'m8t':item.n == 1}">{{item.name || item.id}}</div>
+	    <div class="size-12" ng-show="item.n > 1" translate>{{item.m}}-of-{{item.n}}</div>
+	  </li>
+	  <li>
+	    <a ng-click="sidebar.closeMenu(); $root.go('correspondentDevices')" class="oh">
+	      <i class="icon-arrow-right3 size-18 right m10t vm"></i>
+	      <i class="fi-plus size-24 icon vm"></i>
+	      <div class="tu text-bold">
+	        <span class="size-12" translate>Paired devices</span>
+	      </div>
+	      <div translate>Co-signers for multisig</div>
+	    </a>
+	  </li>
 		<li>
 			<a ng-click="sidebar.closeMenu(); $root.go('preferences')" class="oh">
 				<i class="icon-arrow-right3 size-18 right m10t vm"></i>

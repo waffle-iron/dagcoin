@@ -356,40 +356,34 @@ angular.module('copayApp.services').factory('correspondentListService', ($state,
   }
 
   eventBus.on('text', (from_address, body) => {
-    mutex.lock(['handle_message'], (unlock) => {
-      device.readCorrespondent(from_address, (correspondent) => {
-        if (!root.messageEventsByCorrespondent[correspondent.device_address]) loadMoreHistory(correspondent);
-        addIncomingMessageEvent(correspondent.device_address, body);
-        if (correspondent.my_record_pref && correspondent.peer_record_pref) chatStorage.store(from_address, body, 1);
-        unlock();
-      });
+    device.readCorrespondent(from_address, (correspondent) => {
+      if (!root.messageEventsByCorrespondent[correspondent.device_address]) loadMoreHistory(correspondent);
+      addIncomingMessageEvent(correspondent.device_address, body);
+      if (correspondent.my_record_pref && correspondent.peer_record_pref) chatStorage.store(from_address, body, 1);
     });
   });
 
   eventBus.on('chat_recording_pref', (correspondent_address, enabled) => {
-    mutex.lock(['handle_message'], (unlock) => {
-      device.readCorrespondent(correspondent_address, (correspondent) => {
-        const oldState = (correspondent.peer_record_pref && correspondent.my_record_pref);
-        correspondent.peer_record_pref = enabled;
-        const newState = (correspondent.peer_record_pref && correspondent.my_record_pref);
-        device.updateCorrespondentProps(correspondent);
-        if (newState != oldState) {
-          if (!root.messageEventsByCorrespondent[correspondent_address]) root.messageEventsByCorrespondent[correspondent_address] = [];
-          const message = {
-            type: 'system',
-            message: JSON.stringify({ state: newState }),
-            timestamp: Math.floor(Date.now() / 1000),
-            chat_recording_status: true,
-          };
-          root.messageEventsByCorrespondent[correspondent_address].push(parseMessage(message));
-          $rootScope.$digest();
-          chatStorage.store(correspondent_address, JSON.stringify({ state: newState }), 0, 'system');
-        }
-        if (root.currentCorrespondent && root.currentCorrespondent.device_address == correspondent_address) {
-          root.currentCorrespondent.peer_record_pref = enabled ? 1 : 0;
-        }
-        unlock();
-      });
+    device.readCorrespondent(correspondent_address, (correspondent) => {
+      const oldState = (correspondent.peer_record_pref && correspondent.my_record_pref);
+      correspondent.peer_record_pref = enabled;
+      const newState = (correspondent.peer_record_pref && correspondent.my_record_pref);
+      device.updateCorrespondentProps(correspondent);
+      if (newState != oldState) {
+        if (!root.messageEventsByCorrespondent[correspondent_address]) root.messageEventsByCorrespondent[correspondent_address] = [];
+        const message = {
+          type: 'system',
+          message: JSON.stringify({ state: newState }),
+          timestamp: Math.floor(Date.now() / 1000),
+          chat_recording_status: true,
+        };
+        root.messageEventsByCorrespondent[correspondent_address].push(parseMessage(message));
+        $rootScope.$digest();
+        chatStorage.store(correspondent_address, JSON.stringify({ state: newState }), 0, 'system');
+      }
+      if (root.currentCorrespondent && root.currentCorrespondent.device_address == correspondent_address) {
+        root.currentCorrespondent.peer_record_pref = enabled ? 1 : 0;
+      }
     });
   });
 
