@@ -144,17 +144,17 @@
 
     root.set = function (newOpts, cb) {
       let config = defaultConfig;
-      let newOptions;
       storageService.getConfig((err, oldOpts) => {
         let oldOptions;
+        let newOptions = newOpts;
         if (lodash.isString(oldOpts)) {
           oldOptions = JSON.parse(oldOpts);
         }
         if (lodash.isString(config)) {
           config = JSON.parse(config);
         }
-        if (lodash.isString(newOpts)) {
-          newOptions = JSON.parse(newOpts);
+        if (lodash.isString(newOptions)) {
+          newOptions = JSON.parse(newOptions);
         }
         lodash.merge(config, oldOptions, newOptions);
         configCache = config;
