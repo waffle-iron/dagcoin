@@ -76,7 +76,7 @@
 
 
       function saveFile(file, cb) {
-        const backupFilename = `ByteballBackup${Date.now()}.encrypted`;
+        const backupFilename = `Dagcoin${Date.now()}.encrypted`;
         if (!isCordova) {
           const inputFile = document.getElementById('nwExportInputFile');
           inputFile.setAttribute('nwsaveas', backupFilename);
