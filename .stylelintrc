@@ -1,0 +1,35 @@
+plugins:
+- stylelint-csstree-validator
+- stylelint-scss
+rules:
+  color-no-invalid-hex: true
+  font-family-no-duplicate-names: true
+  function-calc-no-unspaced-operator: true
+  string-no-newline: true
+  unit-no-unknown: true
+  shorthand-property-no-redundant-values: true
+  property-no-unknown: true
+  declaration-block-no-duplicate-properties: true
+  declaration-block-no-redundant-longhand-properties: true
+  declaration-block-no-shorthand-property-overrides: true
+  block-no-empty: true
+  selector-pseudo-class-no-unknown: true
+  selector-pseudo-element-no-unknown: true
+  media-feature-name-no-unknown: true
+  comment-no-empty: true
+  no-duplicate-selectors: true
+  no-empty-source: true
+  no-extra-semicolons: true
+  no-invalid-double-slash-comments: true
+  color-named: never
+  value-no-vendor-prefix: true
+  property-no-vendor-prefix: true
+  selector-max-empty-lines: 0
+  selector-max-id: 2
+  color-hex-case: lower
+  color-hex-length: short
+  font-weight-notation: numeric
+  number-leading-zero: always
+  number-no-trailing-zeros: true
+  string-quotes: double
+  length-zero-no-unit: true
