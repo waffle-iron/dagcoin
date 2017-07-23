@@ -1,10 +1,14 @@
 module.exports = function (grunt) {
   function getPlatform() {
     switch (process.platform) {
-      case 'win32': return 'win64'; // change to 'win' for both 32 and 64
-      case 'linux': return 'linux64';
-      case 'darwin': return 'osx64';
-      default: throw Error(`unknown platform ${process.platform}`);
+      case 'win32':
+        return 'win64'; // change to 'win' for both 32 and 64
+      case 'linux':
+        return 'linux64';
+      case 'darwin':
+        return 'osx64';
+      default:
+        throw Error(`unknown platform ${process.platform}`);
     }
   }
 
@@ -25,37 +29,11 @@ module.exports = function (grunt) {
         command: '../byteballbuilds/build-osx.sh osx32',
       },
     },
-    watch: {
-      options: {
-        dateFormat(time) {
-          grunt.log.writeln(`The watch finished in ${time}ms at ${(new Date()).toString()}`);
-          grunt.log.writeln('Waiting for more changes...');
-        },
-      },
-      sass: {
-        files: ['src/css/*.scss', 'src/css/icons.css'],
-        tasks: ['sass', 'concat:css'],
-      },
-      main: {
-        files: [
-          'src/js/init.js',
-          'src/js/app.js',
-          'src/js/directives/*.js',
-          'src/js/filters/*.js',
-          'src/js/routes.js',
-          'src/js/services/*.js',
-          'src/js/models/*.js',
-          'src/js/controllers/*.js',
-        ],
-        tasks: ['concat:js', 'karma:prod'],
-      },
-    },
-
     sass: {
       dist: {
         options: {
           style: 'compressed',
-          sourcemap: 'none'
+          sourcemap: 'none',
         },
         files: {
           'src/css/main.css': 'src/css/main.scss',
@@ -94,14 +72,15 @@ module.exports = function (grunt) {
           'angular-bitcore-wallet-client/index.js',
           'src/js/app.js',
           'src/js/routes.js',
-          'src/js/directives/*.js',
-          'src/js/filters/*.js',
-          'src/js/models/*.js',
-          'src/js/services/*.js',
-          'src/js/controllers/*.js',
+          'src/js/directives/**/*.js',
+          'src/js/filters/**/*.js',
+          'src/js/models/**/*.js',
+          'src/js/services/**/*.js',
+          'src/js/controllers/**/*.js',
           'src/js/version.js',
           'src/js/init.js',
           'src/js/live-reload.js',
+          '!src/js/**/*.spec.js',
         ],
         dest: 'public/dagcoin.js',
       },
@@ -173,20 +152,21 @@ module.exports = function (grunt) {
       osx: {
         expand: true,
         flatten: true,
-        options: { timestamp: true, mode: true },
+        options: {timestamp: true, mode: true},
         src: ['webkitbuilds/build-osx.sh', 'webkitbuilds/Background.png'],
         dest: '../byteballbuilds/',
       },
       linux: {
-        options: { timestamp: true, mode: true },
+        options: {timestamp: true, mode: true},
         files: [
-          { expand: true,
+          {
+            expand: true,
             cwd: './webkitbuilds/',
             src: ['dagcoin.desktop', '../public/img/icons/icon-white-outline.iconset/icon_256x256.png'],
             dest: '../byteballbuilds/DAGCOIN-TN/linux32/',
             flatten: true,
             filter: 'isFile',
-            options: { timestamp: true, mode: true },
+            options: {timestamp: true, mode: true},
           },
           {
             expand: true,
@@ -195,7 +175,7 @@ module.exports = function (grunt) {
             dest: '../byteballbuilds/DAGCOIN-TN/linux64/',
             flatten: true,
             filter: 'isFile',
-            options: { timestamp: true, mode: true },
+            options: {timestamp: true, mode: true},
           },
         ],
       },
@@ -203,10 +183,11 @@ module.exports = function (grunt) {
     karma: {
       unit: {
         configFile: 'test/karma.conf.js',
+        singleRun: true,
       },
       prod: {
         configFile: 'test/karma.conf.js',
-        singleRun: true,
+        singleRun: false,
       },
     },
     coveralls: {
@@ -220,8 +201,8 @@ module.exports = function (grunt) {
     },
     nwjs: {
       options: {
-          // platforms: ['win','osx64','linux'],
-          // platforms: ['osx64'],
+        // platforms: ['win','osx64','linux'],
+        // platforms: ['osx64'],
         platforms: [getPlatform()],
         appName: 'DAGCOIN-TN',
         flavor: 'normal',
@@ -232,7 +213,7 @@ module.exports = function (grunt) {
         winIco: './public/img/icons/dagcoin.ico',
         exeIco: './public/img/icons/dagcoin.ico',
         macPlist: {
-          CFBundleURLTypes: [{ CFBundleURLName: 'Dagcoin action', CFBundleURLSchemes: ['DAGCOIN-TN'] }],
+          CFBundleURLTypes: [{CFBundleURLName: 'Dagcoin action', CFBundleURLSchemes: ['DAGCOIN-TN']}],
           LSHasLocalizedDisplayName: 0,
           /* CFBundleIconFile: 'nw.icns',*/
         },
@@ -302,8 +283,9 @@ module.exports = function (grunt) {
             expand: true,
             cwd: '../byteballbuilds/dagcoin-test/linux64/',
             src: ['**/*'],
-            dest: '/opt/dagcoin-test/' },
-                //{expand: true, cwd: '../byteballbuilds/byteball-test/linux64', src: ['dagcoin.desktop'], dest: '/usr/share/applications/byteball-test.desktop'}
+            dest: '/opt/dagcoin-test/'
+          },
+          //{expand: true, cwd: '../byteballbuilds/byteball-test/linux64', src: ['dagcoin.desktop'], dest: '/usr/share/applications/byteball-test.desktop'}
         ],
         options: {
           maintainer: {
@@ -331,8 +313,59 @@ module.exports = function (grunt) {
         script: 'webkitbuilds/setup-win32.iss',
       },
     },
+    svgmin: {
+      options: {
+        plugins: [
+          {
+            removeViewBox: false,
+          }, {
+            removeUselessStrokeAndFill: true,
+          }, {
+            removeEmptyAttrs: true,
+          },
+        ],
+      },
+      dist: {
+        files: [{
+          expand: true,
+          cwd: 'src/css/svg/',
+          src: ['*.svg'],
+          dest: 'public/css/svg/',
+        }],
+      },
+    },
+    watch: {
+      options: {
+        dateFormat(time) {
+          grunt.log.writeln(`The watch finished in ${time}ms at ${(new Date()).toString()}`);
+          grunt.log.writeln('Waiting for more changes...');
+        },
+      },
+      svg: {
+        files: ['src/css/svg/*.svg'],
+        tasks: ['svgmin'],
+      },
+      sass: {
+        files: ['src/css/*.scss', 'src/css/icons.css'],
+        tasks: ['sass', 'concat:css'],
+      },
+      main: {
+        files: [
+          'src/js/init.js',
+          'src/js/app.js',
+          'src/js/directives/**/*.js',
+          'src/js/filters/**/*.js',
+          'src/js/routes.js',
+          'src/js/services/**/*.js',
+          'src/js/models/**/*.js',
+          'src/js/controllers/**/*.js',
+        ],
+        tasks: ['concat:js', 'karma:prod'],
+      },
+    },
   });
 
+  grunt.loadNpmTasks('grunt-svgmin');
   grunt.loadNpmTasks('grunt-contrib-sass');
   grunt.loadNpmTasks('grunt-babel');
   grunt.loadNpmTasks('grunt-contrib-concat');
