@@ -498,7 +498,7 @@ API.prototype.createAddress = function (isChange, cb) {
  arrSigningDeviceAddresses: arrSigningDeviceAddresses,
  recipient_device_address: recipient_device_address
  }, cb);
- }*/
+ } */
 
 API.prototype.sendMultiPayment = function (opts, cb) {
   const self = this;

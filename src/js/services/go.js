@@ -263,7 +263,7 @@
          console.log('close err: '+err);
          });
          this.close(true);
-         });*/
+         }); */
       } else if (window.cordova) {
         // console.log("go service: setting temp handleOpenURL");
         // window.handleOpenURL = tempHandleUri;
@@ -284,7 +284,7 @@
          console.log('doc backbutton');
          if (root.onBackButton)
          root.onBackButton();
-         });*/
+         }); */
         document.addEventListener('resume', () => {
           console.log('resume');
           $rootScope.$emit('Local/Resume');

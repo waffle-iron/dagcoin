@@ -66,7 +66,7 @@
               $scope.$apply();
               /* $timeout(function() {
                self.create(noWallet);
-               }, 3000);*/
+               }, 3000); */
             }
           });
         }, 100);

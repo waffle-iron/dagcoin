@@ -701,7 +701,7 @@
          var msg = 'Could not add message to imported wallet without shared encrypting key';
          $log.warn(msg);
          return self.setSendError(gettext(msg));
-         }*/
+         } */
 
         const asset = $scope.index.DAGCOIN_ASSET;
         console.log(`asset ${asset}`);
@@ -903,7 +903,7 @@
                $rootScope.$emit('Local/ShowAlert', "Transaction created.\nPlease approve it on the other devices.", 'fi-key', function(){
                go.walletHome();
                });
-               }*/
+               } */
             }
           });
         }, 100);
@@ -1197,7 +1197,7 @@
          $rootScope.$digest();
          console.log('-- amount invalid? '+form.amount.$invalid);
          console.log('-- form invalid? '+form.$invalid);
-         }, 1);*/
+         }, 1); */
       };
 
 

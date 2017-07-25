@@ -1,11 +1,22 @@
 language: node_js
 node_js:
-  - '0.10'
+  - '5.12.0'
+before_script:
+  - "export DISPLAY=:99.0"
+  - "sh -e /etc/init.d/xvfb start"
+  - sleep 3
 before_install:
   - npm install -g bower
   - npm install -g grunt-cli
-  - export DISPLAY=:99.0
-  - sh -e /etc/init.d/xvfb start
+  - npm install -g codecov
 install:
+  - gem install sass
   - bower install
   - npm install
+script:
+  - npm test
+  - codecov --token=f33366c3-862d-4bdf-b956-c9ace7bb9739
+cache:
+  directories:
+    - "node_modules"
+    - "bower_components"

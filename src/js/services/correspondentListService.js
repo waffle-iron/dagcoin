@@ -519,7 +519,7 @@ angular.module('copayApp.services').factory('correspondentListService', ($state,
 	  if (err) return cb('Error deleting correspondentList');
 	  return cb();
 	});
-  };*/
+  }; */
 
   return root;
 });
