@@ -67,10 +67,12 @@
   "devDependencies": {
     "adm-zip": "^0.4.7",
     "angular-mocks": "^1.3.14",
+    "autoprefixer": "^7.1.2",
     "babel-preset-es2015": "^6.24.1",
     "babelify": "^7.3.0",
     "bhttp": "^1.2.1",
     "browserify": "^14.4.0",
+    "cssnano": "^3.10.0",
     "eslint": "^3.19.0",
     "eslint-config-airbnb-base": "^11.2.0",
     "eslint-plugin-import": "^2.5.0",
@@ -89,6 +91,8 @@
     "grunt-karma": "^1.0.0",
     "grunt-karma-coveralls": "^2.5.3",
     "grunt-nw-builder": "3.1.0",
+    "grunt-postcss": "^0.8.0",
+    "grunt-stylelint": "^0.8.0",
     "jasmine-core": "^2.6.4",
     "jshint": "^2.9.4",
     "karma": "^1.7.0",
@@ -102,6 +106,10 @@
     "karma-nodewebkit-launcher": "0.0.13",
     "karma-phantomjs-launcher": "^0.1.4",
     "phantomjs": "^2.1.7",
-    "stringify": "^5.1.0"
+    "pixrem": "^4.0.1",
+    "stringify": "^5.1.0",
+    "stylelint": "^8.0.0",
+    "stylelint-csstree-validator": "^1.1.1",
+    "stylelint-scss": "^1.5.1"
   }
 }

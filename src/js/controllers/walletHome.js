@@ -858,7 +858,7 @@
                 recipientDeviceAddress,
               };
               fc.sendMultiPayment(opts, (sendMultiPaymentError) => {
-                let error;
+                let error = sendMultiPaymentError;
                 // if multisig, it might take very long before the callback is called
                 indexScope.setOngoingProcess(gettext('sending'), false);
                 breadcrumbs.add(`done payment in ${asset}, err=${sendMultiPaymentError}`);

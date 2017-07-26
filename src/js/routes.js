@@ -498,6 +498,7 @@
     if (nodeWebkit.isDefined()) {
       const gui = require('nw.gui');
       const win = gui.Window.get();
+      win.setResizable(false);
       const nativeMenuBar = new gui.Menu({
         type: 'menubar',
       });
