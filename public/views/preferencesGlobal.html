@@ -24,6 +24,11 @@
       </div>
       <div translate>Language</div>
     </li>
+    
+    <li>
+      <switch id="funding-node" name="funding-node" ng-model="fundingNode" ng-change="onFundingNodeChange()" class="green right"></switch>
+      <div translate>Funding Node</div>
+    </li>
   </ul>
 
   <div ng-show="index.usePushNotifications">

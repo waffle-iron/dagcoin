@@ -58,7 +58,7 @@ angular.module('copayApp.controllers').controller('correspondentDeviceController
 
     const removeNewMessagesDelim = function () {
       Object.keys($scope.messageEvents).forEach((i) => {
-        if ($scope.messageEvents[i].new_message_delim) {
+        if ($scope.messageEvents[i] && $scope.messageEvents[i].new_message_delim) {
           $scope.messageEvents.splice(i, 1);
         }
       });
