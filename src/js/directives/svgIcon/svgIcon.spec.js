@@ -41,7 +41,6 @@ describe('svgIcon directive', () => {
   it('Element should contain title', () => {
     $httpBackend.flush();
     const title = element.find('title');
-    console.log(title);
     expect(title).toBeDefined();
   });
 
@@ -49,5 +48,11 @@ describe('svgIcon directive', () => {
     $httpBackend.flush();
     const title = element.find('title');
     expect(title.text()).toEqual(svgName);
+  });
+
+  it('No name should return an empty html', () => {
+    scope.name = false;
+    element = angular.element('<svg-icon></svg-icon>');
+    expect(element.html()).toEqual('');
   });
 });

@@ -20,6 +20,7 @@
         name: '@',
       },
       link: ($scope, element) => {
+        /* istanbul ignore next */
         if (!$scope.name) {
           return false;
         }
@@ -30,8 +31,6 @@
           const templateUrl = $sce.getTrustedResourceUrl(`/public/css/svg/${svgFile}`);
 
           $templateRequest(templateUrl).then((template) => {
-            console.log(template);
-
             $templateCache.put(svgFile, template);
             renderSVG();
           });
@@ -45,8 +44,7 @@
           }
         }
 
-        renderSVG();
-        return true;
+        return renderSVG();
       },
     };
   }
