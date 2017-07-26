@@ -37,7 +37,7 @@ module.exports = function (grunt) {
           grunt.log.writeln('Waiting for more changes...');
         },
       },
-      
+
       main: {
         files: [
           'src/js/init.js',
@@ -54,9 +54,16 @@ module.exports = function (grunt) {
     },
 
     sass: {
-        files: ['src/css/*.scss', 'src/css/icons.css'],
-        tasks: ['stylelint', 'sass', 'concat:css', 'postcss'],
+      dist: {
+        options: {
+          style: 'compressed',
+          sourcemap: 'none',
+        },
+        files: {
+          'src/css/main.css': 'src/css/main.scss',
+        },
       },
+    },
 
     postcss: {
       options: {
@@ -66,15 +73,15 @@ module.exports = function (grunt) {
           require('pixrem')(), // add fallbacks for rem units
           require('autoprefixer')({browsers: 'last 4 versions'}), // add vendor prefixes
           require('cssnano')() // minify the result
-        ]
+        ],
       },
       dist: {
-        src: 'public/css/dagcoin.css'
-      }
+        src: 'public/css/dagcoin.css',
+      },
     },
 
     stylelint: {
-      all: ['src/css/*.scss']
+      all: ['src/css/*.scss'],
     },
 
     concat: {
@@ -423,7 +430,7 @@ module.exports = function (grunt) {
 
   grunt.registerTask('dev', ['watch']);
 
-  grunt.registerTask('default', ['nggettext_compile', 'exec:version','stylelint','sass', 'concat', 'postcss', 'copy:icons']);
+  grunt.registerTask('default', ['nggettext_compile', 'exec:version', 'stylelint', 'sass', 'concat', 'postcss', 'copy:icons']);
   grunt.registerTask('cordova', ['default', 'browserify']);
   grunt.registerTask('cordova-prod', ['cordova', 'uglify']);
   // grunt.registerTask('prod', ['default', 'uglify']);
