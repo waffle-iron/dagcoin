@@ -61,9 +61,11 @@
     "innosetup-compiler": "^5.5.9"
   },
   "scripts": {
-    "pretest": "npm run eslint",
+    "pretest": "npm run eslint && npm run stylelint",
     "test": "./node_modules/.bin/grunt test-coveralls",
-    "eslint": "./node_modules/eslint/bin/eslint.js --cache ./src"
+    "eslint": "./node_modules/eslint/bin/eslint.js --cache ./src",
+    "stylelint": "./node_modules/.bin/stylelint ./src/css/*.scss"
+
   },
   "devDependencies": {
     "adm-zip": "^0.4.7",
