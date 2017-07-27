@@ -16,7 +16,7 @@
           },
           () => {
             $scope.fundingNodeDisabled = true;
-          },
+          }
         );
       };
 

@@ -1,3 +1,4 @@
+/* eslint-disable import/no-dynamic-require */
 (function () {
   'use strict';
 
@@ -41,7 +42,7 @@
                 () => { },
                 (err) => {
                   console.log(err);
-                },
+                }
               );
             }
           });
@@ -176,7 +177,7 @@
               messageInterval = setInterval(() => {
                 sendMessageToDiscoveryService(messages.aliveAndWell).then(
                   () => { },
-                  (err) => { console.log(err); },
+                  (err) => { console.log(err); }
                 );
               }, messageIntervalTimeout);
             });
