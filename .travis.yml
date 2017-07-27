@@ -20,3 +20,5 @@ cache:
   directories:
     - "node_modules"
     - "bower_components"
+notifications:
+    slack: dagcoin:VSwuicePLoHAq40oCqbASH5G
