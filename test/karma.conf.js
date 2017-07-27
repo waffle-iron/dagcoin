@@ -7,7 +7,9 @@ module.exports = (config) => {
       'bower_components/angular/angular.js', // angular
       'bower_components/angular-mocks/angular-mocks.js', // angular mocks
       'src/js/app.js',
-      'test/**/*.test.js'
+      'src/js/directives/svgIcon/svgIcon.directive.js',
+      'src/js/directives/svgIcon/svgIcon.spec.js',
+      'public/views/**/*.html',
     ],
 
     exclude: [
@@ -20,6 +22,12 @@ module.exports = (config) => {
     preprocessors: {
       'src/js/**/*.js': ['babel', 'coverage'],
       'test/**/*.js': ['babel'],
+      'public/views/**/*.html': ['ng-html2js'],
+    },
+
+    ngHtml2JsPreprocessor: {
+      stripPrefix: 'public/',
+      moduleName: 'templates',
     },
     babelPreprocessor: {
       options: {
@@ -34,7 +42,7 @@ module.exports = (config) => {
       },
     },
 
-    reporters: ['progress', 'coverage'],
+    reporters: ['spec', 'coverage'],
     coverageReporter: {
       dir: 'coverage/',
       reporters: [{
