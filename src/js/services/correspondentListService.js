@@ -192,7 +192,7 @@ angular.module('copayApp.services').factory('correspondentListService',
         }
         return `<i>Payment request: ${arrMovements.join(', ')}</i>`;
       }).replace(/\bhttps?:\/\/\S+/g,
-          str => `<a ng-click="openExternalLink('${escapeQuotes(str)}')" class="external-link">${str}</a>`);
+        str => `<a ng-click="openExternalLink('${escapeQuotes(str)}')" class="external-link">${str}</a>`);
     }
 
     function parsePaymentRequestQueryString(queryString) {

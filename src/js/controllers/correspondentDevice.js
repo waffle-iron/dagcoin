@@ -889,7 +889,7 @@ angular.module('copayApp.controllers').controller('correspondentDeviceController
       const modalInstance = $modal.open({
         templateUrl: 'views/modals/customized-amount.html',
         windowClass: animationService.modalAnimated.slideUp,
-        controller: ["$scope", "$modalInstance", ModalInstanceCtrl],
+        controller: ['$scope', '$modalInstance', ModalInstanceCtrl],
         scope: $scope,
       });
 
