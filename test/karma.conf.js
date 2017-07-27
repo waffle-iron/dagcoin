@@ -6,7 +6,6 @@ module.exports = (config) => {
     files: [
       'bower_components/angular/angular.js', // angular
       'bower_components/angular-mocks/angular-mocks.js', // angular mocks
-
       'src/js/app.js',
       'src/js/directives/svgIcon/svgIcon.directive.js',
       'src/js/directives/svgIcon/svgIcon.spec.js',
@@ -30,7 +29,6 @@ module.exports = (config) => {
       stripPrefix: 'public/',
       moduleName: 'templates',
     },
-
     babelPreprocessor: {
       options: {
         presets: ['es2015'], // use the es2015 preset

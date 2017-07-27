@@ -205,7 +205,8 @@
        eventBus.on("transaction_sent", function(){
        self.updateAll();
        self.updateTxHistory();
-       });*/
+       });
+      */
 
       eventBus.on('new_my_transactions', () => {
         breadcrumbs.add('new_my_transactions');
@@ -699,7 +700,7 @@
            self.needsBackup = self.network == 'testnet' ? false : !val;
            self.openWallet();
            });
-           }*/
+           } */
         });
       };
 

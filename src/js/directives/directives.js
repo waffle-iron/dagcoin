@@ -51,7 +51,7 @@
              console.log('-- send all');
              ctrl.$setValidity('validAmount', true);
              return value;
-             }*/
+             } */
             // console.log('-- amount');
             const constants = require('byteballcore/constants.js');
             const asset = attrs.validAmount;

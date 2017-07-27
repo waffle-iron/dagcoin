@@ -76,7 +76,7 @@
 
       return {
 
-        /* ========== SETTINGS RELATED METHODS =============*/
+        /* ========== SETTINGS RELATED METHODS ============= */
 
         disableHtml5Mode() {
           settings.html5Mode = false;
@@ -125,7 +125,7 @@
         },
 
 
-        /* ============ QUERYING RELATED METHODS ============*/
+        /* ============ QUERYING RELATED METHODS ============ */
 
         getAll() {
           // Returns all notifications that are currently stored
@@ -136,7 +136,7 @@
           return queue;
         },
 
-        /* ============== NOTIFICATION METHODS ==============*/
+        /* ============== NOTIFICATION METHODS ============== */
 
         info(title, content, userData) {
           return this.awesomeNotify('info', 'fi-info', title, content, userData);

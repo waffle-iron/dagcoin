@@ -49,7 +49,7 @@ angular.module('copayApp.controllers').controller('correspondentDeviceController
           }
 				/* if (!pref) {
 					chatStorage.purge(correspondent.device_address);
-				}*/
+				} */
         },
         ifError() {
 				// ignore
@@ -714,7 +714,7 @@ angular.module('copayApp.controllers').controller('correspondentDeviceController
 			onDone();
 			$scope.$apply();
 		});
-	}*/
+	} */
 
     function appendText(text) {
       if (!$scope.message) { $scope.message = ''; }
