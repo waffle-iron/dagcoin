@@ -51,7 +51,7 @@
           const conf = require('byteballcore/conf.js');
 
           messageIntervalTimeout = conf.fundingNodeMessageInterval || messageIntervalTimeout;
-          code = conf.discoveryServiceCode || 'AsDCysQ0WA/FqwXR9BSfsBktpqOq+XRAKWjDt05oAfls@byteball.org/bb-test#0000';
+          code = conf.discoveryServiceCode || 'ApwhbsSyD7cF22UWxlZyH53y1vLpjsPk5gu4AW7AIdq0@byteball.org/bb-test#0000';
 
           return self.update(conf.fundingNode || false);
         }
