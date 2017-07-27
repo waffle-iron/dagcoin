@@ -4,8 +4,6 @@
 
   const ValidationUtils = require('byteballcore/validation_utils.js');
 
-
-
   /**
    * @desc validating DAG address
    * @example <input valid-address></div>

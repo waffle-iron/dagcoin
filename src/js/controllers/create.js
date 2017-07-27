@@ -53,7 +53,7 @@
        self.cosigners.push({});
        else
        self.cosigners.length = newVal-1;
-       }, true);*/
+       }, true); */
 
       this.setTotalCosigners = function (tc) {
         const oldLen = self.cosigners.length;
@@ -119,7 +119,7 @@
             /* if (opts.n > 1)
              $rootScope.$emit('Local/ShowAlert', "Please approve wallet creation on other devices", 'fi-key', function(){
              go.walletHome();
-             });*/
+             }); */
           });
         }, 100);
       };

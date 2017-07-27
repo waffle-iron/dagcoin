@@ -567,7 +567,7 @@
       /* root.updateCredentialsFC(function() {
        $log.debug('Wallet encrypted');
        return cb();
-       });*/
+       }); */
     };
 
 
@@ -598,7 +598,7 @@
       /* root.updateCredentialsFC(function() {
        $log.debug('Wallet encryption disabled');
        return cb();
-       });*/
+       }); */
     };
 
     root.lockFC = function () {

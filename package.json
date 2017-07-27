@@ -61,8 +61,10 @@
     "innosetup-compiler": "^5.5.9"
   },
   "scripts": {
+    "pretest": "npm run eslint && npm run stylelint",
     "test": "./node_modules/.bin/grunt test-coveralls",
-    "eslint": "./node_modules/eslint/bin/eslint.js --cache ./"
+    "eslint": "./node_modules/eslint/bin/eslint.js --cache ./src",
+    "stylelint": "./node_modules/.bin/stylelint ./src/css/*.scss"
   },
   "devDependencies": {
     "adm-zip": "^0.4.7",
@@ -93,18 +95,22 @@
     "grunt-nw-builder": "3.1.0",
     "grunt-postcss": "^0.8.0",
     "grunt-stylelint": "^0.8.0",
+    "grunt-svgmin": "^4.0.0",
     "jasmine-core": "^2.6.4",
     "jshint": "^2.9.4",
     "karma": "^1.7.0",
     "karma-babel-preprocessor": "^6.0.1",
     "karma-browserify": "^5.1.1",
+    "karma-chrome-launcher": "^2.2.0",
     "karma-cli": "0.0.4",
     "karma-coverage": "^0.2.7",
     "karma-es5-shim": "0.0.4",
     "karma-es6-shim": "^1.0.0",
     "karma-jasmine": "^0.3.8",
+    "karma-ng-html2js-preprocessor": "^1.0.0",
     "karma-nodewebkit-launcher": "0.0.13",
     "karma-phantomjs-launcher": "^0.1.4",
+    "karma-spec-reporter": "0.0.31",
     "phantomjs": "^2.1.7",
     "pixrem": "^4.0.1",
     "stringify": "^5.1.0",

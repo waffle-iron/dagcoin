@@ -36,7 +36,7 @@
            last10.push(e);
            e = addrs.pop();
            }
-           $scope.addrs = last10;*/
+           $scope.addrs = last10; */
           $scope.addrs = addrs;
           $timeout(() => {
             $scope.$apply();
