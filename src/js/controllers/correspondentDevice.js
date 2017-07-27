@@ -420,11 +420,10 @@ angular.module('copayApp.controllers').controller('correspondentDeviceController
         };
       };
 
-
       const modalInstance = $modal.open({
         templateUrl: 'views/modals/offer-contract.html',
         windowClass: animationService.modalAnimated.slideUp,
-        controller: ModalInstanceCtrl,
+        controller: ['$scope', '$modalInstance', ModalInstanceCtrl],
         scope: $scope,
       });
 
@@ -683,7 +682,7 @@ angular.module('copayApp.controllers').controller('correspondentDeviceController
       const modalInstance = $modal.open({
         templateUrl: 'views/modals/multi-payment.html',
         windowClass: animationService.modalAnimated.slideUp,
-        controller: ModalInstanceCtrl,
+        controller: ['$scope', '$modalInstance', ModalInstanceCtrl],
         scope: $scope,
       });
 
@@ -890,7 +889,7 @@ angular.module('copayApp.controllers').controller('correspondentDeviceController
       const modalInstance = $modal.open({
         templateUrl: 'views/modals/customized-amount.html',
         windowClass: animationService.modalAnimated.slideUp,
-        controller: ModalInstanceCtrl,
+        controller: ["$scope", "$modalInstance", ModalInstanceCtrl],
         scope: $scope,
       });
 
