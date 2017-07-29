@@ -1,5 +1,4 @@
-// todo: temporarily disabled lint rule for unused variables and prefer-rest-params.
-/* eslint-disable no-undef,no-unused-vars,prefer-rest-params */
+/* eslint-disable no-undef */
 const lodash = require('lodash');
 /**
  * @desc
@@ -38,7 +37,7 @@ Logger.prototype.getLevels = function () {
 
 
 lodash.each(levels, (level, levelName) => {
-  Logger.prototype[levelName] = function () {
+  Logger.prototype[levelName] = function (...args) {
     if (level >= levels[this.level]) {
       let caller = '';
       if (Error.stackTraceLimit && this.level === 'debug') {
@@ -58,8 +57,8 @@ lodash.each(levels, (level, levelName) => {
         Error.stackTraceLimit = old;
       }
 
-      let str = `[${levelName}${caller}] ${arguments[0]}`;
-      const extraArgs = [].slice.call(arguments, 1);
+      let str = `[${levelName}${caller}] ${args[0]}`;
+      const extraArgs = [].slice.call(args, 1);
       if (console[levelName]) {
         extraArgs.unshift(str);
         console[levelName](...extraArgs);
@@ -123,6 +122,5 @@ Logger.prototype.setLevel = function (level) {
  */
 
 const logger = new Logger('dagcoin');
-const error = new Error();
 logger.setLevel('info');
 module.exports = logger;

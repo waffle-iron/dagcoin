@@ -1,4 +1,3 @@
-/* eslint-disable radix */
 (function () {
   'use strict';
 
@@ -19,7 +18,7 @@
         $scope.totalCosigners = n;
         self.RCValues = lodash.range(1, n + 1);
         if ($scope.requiredCosigners > n || !$scope.requiredCosigners) {
-          $scope.requiredCosigners = parseInt((n / 2) + 1);
+          $scope.requiredCosigners = parseInt((n / 2) + 1, 10);
         }
       };
 
