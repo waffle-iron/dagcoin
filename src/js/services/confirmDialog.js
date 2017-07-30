@@ -1,7 +1,6 @@
 (function () {
   'use strict';
 
-  /* eslint-disable no-alert */
   angular.module('copayApp.services').factory('confirmDialog', ($log, $timeout, gettextCatalog, isCordova) => {
     const root = {};
 

@@ -1,4 +1,4 @@
-/* eslint-disable default-case,no-undef,import/no-extraneous-dependencies,import/no-unresolved,prefer-rest-params */
+/* eslint-disable import/no-extraneous-dependencies,import/no-unresolved */
 (function () {
   'use strict';
 
@@ -30,12 +30,12 @@
 
         ['debug', 'info', 'warn', 'error', 'log'].forEach((level) => {
           const orig = $delegate[level];
-          $delegate[level] = function () {
+          $delegate[level] = function (...argz) {
             if (level === 'error') {
-              console.log(arguments);
+              console.log(argz);
             }
 
-            let args = [].slice.call(arguments);
+            let args = [].slice.call(argz);
             if (!Array.isArray(args)) args = [args];
             args = args.map((v) => {
               let value = v;
@@ -471,6 +471,8 @@
                   $rootScope.$emit('closeModal');
                 }
                 break;
+              default:
+                // Error handler should be here
             }
             // why should we go home on resume or backbutton?
             /*

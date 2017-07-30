@@ -1,4 +1,4 @@
-/* eslint-disable new-cap, no-shadow */
+/* eslint-disable new-cap, no-shadow, no-unused-vars */
 (function () {
   'use strict';
 
@@ -744,18 +744,20 @@
               $rootScope.tab = tab.link;
               self.tab = tab.link;
             }
-            return tab.open();
+            tab.open();
+            return;
           } else if (tab.new_state) {
             changeTab(tab.link);
             $rootScope.tab = tab.link;
             self.tab = tab.link;
-            return go.path(tab.new_state);
+            go.path(tab.new_state);
+            return;
           }
           return self.setTab(tab.link, reset, setTabTries, switchState);
         }
         console.log(`current tab ${self.tab}, requested to set tab ${tab}, reset=${reset}`);
         if (self.tab === tab && !reset) {
-          return null;
+          return;
         }
         setTabTries += 1;
         if (!document.getElementById(`menu-${tab}`) && setTabTries < 5) {
@@ -771,12 +773,13 @@
         }
 
         if (switchState && !$state.is('walletHome')) {
-          return go.path('walletHome', () => {
+          go.path('walletHome', () => {
             changeTab(tab);
           });
+          return;
         }
 
-        return changeTab(tab);
+        changeTab(tab);
       };
 
 
@@ -1183,11 +1186,12 @@
         setTimeout(() => {
           if (self.assetIndex !== self.oldAssetIndex) {
             // it was a swipe
-            return console.log('== swipe');
+            console.log('== swipe');
+            return;
           }
           console.log('== updateHistoryFromNetwork');
           const lightWallet = require('byteballcore/light_wallet.js');
-          return lightWallet.refreshLightClientHistory();
+          lightWallet.refreshLightClientHistory();
         }, 500);
       }, 5000);
 
@@ -1419,9 +1423,10 @@
         $log.debug('Backup done');
         storageService.setBackupFlag('all', (err) => {
           if (err) {
-            return $log.warn(`setBackupFlag failed: ${JSON.stringify(err)}`);
+            $log.warn(`setBackupFlag failed: ${JSON.stringify(err)}`);
+            return;
           }
-          return $log.debug('Backup done stored');
+          $log.debug('Backup done stored');
         });
       });
 
