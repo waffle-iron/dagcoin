@@ -1852,6 +1852,11 @@ input.ng-invalid-match, input.ng-invalid-match:focus {
   width: 100%;
   outline: none;
   box-shadow: none;
+
+  &.min {
+    padding: 4px 10px;
+    width: 100px;
+  }
 }
 
 .animated {
