@@ -47,7 +47,7 @@
           exchangeFee = conf.exchangeFee || exchangeFee;
           messageIntervalTimeout = conf.fundingNodeMessageInterval || messageIntervalTimeout;
 
-          discoveryService.sendMessage(discoveryService.messages.LIST_TRADERS).then(() => { });
+          discoveryService.sendMessage(discoveryService.messages.listTraders).then(() => { });
           return self.update(conf.fundingNode || false);
         }
 

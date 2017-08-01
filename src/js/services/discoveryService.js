@@ -32,8 +32,17 @@
         return correspondent && correspondent.device_address === deviceAddress;
       }
 
+      function isJsonString(str) {
+        try {
+          JSON.parse(str);
+          return true;
+        } catch (err) {
+          return false;
+        }
+      }
+
       function processMessage(resp) {
-        if (!resp) {
+        if (!resp || !isJsonString(resp)) {
           return;
         }
 
@@ -54,7 +63,7 @@
               return -1;
             });
 
-            fundingNode = respObj.response[respObj.response.length - 1];
+            fundingNode = respObj.messageBody.traders[respObj.messageBody.traders.length - 1];
             pairCode = fundingNode.pairCode;
 
             addPairDevice(pairCode).then(() => {}, (err) => { console.log(err); });
