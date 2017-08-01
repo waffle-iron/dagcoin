@@ -1,6 +1,6 @@
 angular.module('copayApp.services').factory('correspondentListService',
   ($state, $rootScope, $sce, $compile, configService, storageService,
-   profileService, go, lodash, $stickyState, $deepStateRedirect, $timeout) => {
+   profileService, go, lodash, $stickyState, $deepStateRedirect, $timeout, discoveryService) => {
     const eventBus = require('byteballcore/event_bus.js');
     const ValidationUtils = require('byteballcore/validation_utils.js');
     const objectHash = require('byteballcore/object_hash.js');
@@ -462,9 +462,13 @@ angular.module('copayApp.services').factory('correspondentListService',
 
     eventBus.on('text', (fromAddress, body) => {
       device.readCorrespondent(fromAddress, (correspondent) => {
-        if (!root.messageEventsByCorrespondent[correspondent.device_address]) loadMoreHistory(correspondent);
-        addIncomingMessageEvent(correspondent.device_address, body);
-        if (correspondent.my_record_pref && correspondent.peer_record_pref) chatStorage.store(fromAddress, body, 1);
+        if (discoveryService.isDiscoveryServiceAddress(fromAddress)) {
+          discoveryService.processMessage(body);
+        } else {
+          if (!root.messageEventsByCorrespondent[correspondent.device_address]) loadMoreHistory(correspondent);
+          addIncomingMessageEvent(correspondent.device_address, body);
+          if (correspondent.my_record_pref && correspondent.peer_record_pref) chatStorage.store(fromAddress, body, 1);
+        }
       });
     });
 

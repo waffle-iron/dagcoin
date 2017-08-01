@@ -3,38 +3,29 @@
   'use strict';
 
   angular.module('copayApp.services')
-    .factory('fundingNodeService', ($q, $rootScope, discoveryService) => {
-      const self = {};
+      .factory('fundingNodeService', ($q, $rootScope, discoveryService, correspondentListService) => {
+        const self = {};
 
-      let messageIntervalTimeout = 5 * 60 * 1000; // 5min
-      let exchangeFee = 0.001;
-      let fundingNode = false;
+        let messageIntervalTimeout = 5 * 60 * 1000; // 5min
+        let exchangeFee = 0.001;
+        let fundingNode = false;
 
-      let messageInterval = null;
-      let assocBalances = null;
+        let messageInterval = null;
+        let assocBalances = null;
 
-      const messages = {
-        startingTheBusiness: 'STARTING_THE_BUSINESS',
-        aliveAndWell: 'ALIVE_AND_WELL',
-        temporarilyUnavailable: 'TEMPORARILY_UNAVAILABLE',
-        outOfBusiness: 'OUT_OF_BUSINESS',
-        listTraders: 'LIST_TRADERS',
-        updateExchangeFee: 'UPDATE_EXCHANGE_FEE'
-      };
+        self.update = update;
+        self.isActivated = isActivated;
+        self.getExchangeFee = getExchangeFee;
+        self.setExchangeFee = setExchangeFee;
+        self.canEnable = canEnable;
+        self.deactivate = deactivate;
+        self.activate = activate;
+        self.init = init;
 
-      self.update = update;
-      self.isActivated = isActivated;
-      self.getExchangeFee = getExchangeFee;
-      self.setExchangeFee = setExchangeFee;
-      self.canEnable = canEnable;
-      self.deactivate = deactivate;
-      self.activate = activate;
-      self.init = init;
+        $rootScope.$on('Local/BalanceUpdated', (event, ab) => {
+          assocBalances = ab;
 
-      $rootScope.$on('Local/BalanceUpdated', (event, ab) => {
-        assocBalances = ab;
-
-        self.canEnable().then(
+          self.canEnable().then(
           () => {
           },
           () => {
@@ -48,180 +39,194 @@
               );
             }
           });
-      });
+        });
 
-      function init() {
-        const conf = require('byteballcore/conf.js');
+        function init() {
+          const conf = require('byteballcore/conf.js');
 
-        exchangeFee = conf.exchangeFee || exchangeFee;
-        messageIntervalTimeout = conf.fundingNodeMessageInterval || messageIntervalTimeout;
+          exchangeFee = conf.exchangeFee || exchangeFee;
+          messageIntervalTimeout = conf.fundingNodeMessageInterval || messageIntervalTimeout;
 
-        return self.update(conf.fundingNode || false);
-      }
+          discoveryService.sendMessage(discoveryService.messages.LIST_TRADERS).then(() => { });
+          return self.update(conf.fundingNode || false);
+        }
 
-      function requireUncached(module) {
-        delete require.cache[require.resolve(module)];
-        return require(module.toString());
-      }
+        function requireUncached(module) {
+          delete require.cache[require.resolve(module)];
+          return require(module.toString());
+        }
 
-      function updateConfig() {
-        const def = $q.defer();
-        const fs = require('fs');
-        const desktopApp = require('byteballcore/desktop_app.js');
-        const appDataDir = desktopApp.getAppDataDir();
-        const userConfFile = `${appDataDir}/conf.json`;
-        const userConf = requireUncached(userConfFile);
+        function updateConfig() {
+          const def = $q.defer();
+          const fs = require('fs');
+          const desktopApp = require('byteballcore/desktop_app.js');
+          const appDataDir = desktopApp.getAppDataDir();
+          const userConfFile = `${appDataDir}/conf.json`;
+          const userConf = requireUncached(userConfFile);
 
-        userConf.fundingNode = fundingNode;
-        userConf.exchangeFee = exchangeFee;
+          userConf.fundingNode = fundingNode;
+          userConf.exchangeFee = exchangeFee;
 
-        fs.writeFile(userConfFile, JSON.stringify(userConf, null, '\t'), 'utf8', (err) => {
-          if (err) {
-            def.reject(err);
-          } else {
+          fs.writeFile(userConfFile, JSON.stringify(userConf, null, '\t'), 'utf8', (err) => {
+            if (err) {
+              def.reject(err);
+            } else {
+              def.resolve();
+            }
+          });
+
+          return def.promise;
+        }
+
+        function setFundnigNode(val) {
+          const def = $q.defer();
+
+          fundingNode = val;
+
+          updateConfig().then(() => {
             def.resolve();
-          }
-        });
+          }, (err) => {
+            def.reject(err);
+          });
 
-        return def.promise;
-      }
+          return def.promise;
+        }
 
-      function setFundnigNode(val) {
-        const def = $q.defer();
+        function isActivated() {
+          return fundingNode;
+        }
 
-        fundingNode = val;
+        function aliveAndWell() {
+          const def = $q.defer();
 
-        updateConfig().then(() => {
-          def.resolve();
-        }, (err) => {
-          def.reject(err);
-        });
+          correspondentListService.startWaitingForPairing((pairingInfo) => {
+            const code = `${pairingInfo.device_pubkey}@${pairingInfo.hub}#${pairingInfo.pairing_secret}`;
 
-        return def.promise;
-      }
+            discoveryService.sendMessage(discoveryService.messages.aliveAndWell, { pairCode: code }).then(() => {
+              def.resolve();
+            }, def.reject);
+          });
 
-      function isActivated() {
-        return fundingNode;
-      }
+          return def.promise;
+        }
 
-      function activate() {
-        const def = $q.defer();
+        function activate() {
+          const def = $q.defer();
 
-        if (fundingNode) {
-          def.resolve();
-        } else {
-          discoveryService.sendMessage(messages.startingTheBusiness).then(() => {
-            setExchangeFee(exchangeFee).then(() => {
-              discoveryService.sendMessage(messages.aliveAndWell).then(() => {
-                messageInterval = setInterval(() => {
-                  discoveryService.sendMessage(messages.aliveAndWell).then(
-                    () => {
+          if (fundingNode) {
+            def.resolve();
+          } else {
+            discoveryService.sendMessage(discoveryService.messages.startingTheBusiness).then(() => {
+              setExchangeFee(exchangeFee).then(() => {
+                aliveAndWell().then(() => {
+                  messageInterval = setInterval(() => {
+                    aliveAndWell().then(() => {
                     },
                     (err) => {
                       console.log(err);
                     }
                   );
-                }, messageIntervalTimeout);
+                  }, messageIntervalTimeout);
 
-                def.resolve();
+                  def.resolve();
+                }, def.reject);
               }, def.reject);
-            }, def.reject);
-          });
-        }
-
-        return def.promise;
-      }
-
-      function deactivate() {
-        const def = $q.defer();
-
-        if (fundingNode) {
-          if (messageInterval) {
-            clearInterval(messageInterval);
+            });
           }
-
-          discoveryService.sendMessage(messages.outOfBusiness).then(def.resolve, def.reject);
-        } else {
-          def.resolve();
-        }
-
-        return def.promise;
-      }
-
-      function canEnable() {
-        const d = $q.defer();
-
-        function isLatestVersion() {
-          const def = $q.defer();
-
-          // todo funding node is stub
-          def.resolve(true);
 
           return def.promise;
         }
 
-        function hasBytes() {
+        function deactivate() {
           const def = $q.defer();
 
-          if (assocBalances && assocBalances.base && parseInt(assocBalances.base.stable, 10) > 0) {
-            def.resolve(true);
+          if (fundingNode) {
+            if (messageInterval) {
+              clearInterval(messageInterval);
+            }
+
+            discoveryService.sendMessage(discoveryService.messages.outOfBusiness).then(def.resolve, def.reject);
           } else {
-            def.resolve(false);
+            def.resolve();
           }
 
           return def.promise;
         }
 
-        const isLatestVersionPromise = isLatestVersion();
-        const hasBytesPromise = hasBytes();
+        function canEnable() {
+          const d = $q.defer();
 
-        $q.all([isLatestVersionPromise, hasBytesPromise]).then((results) => {
-          const successResults = results.filter(item => item);
-          if (successResults.length !== results.length) {
-            d.reject();
-            return;
+          function isLatestVersion() {
+            const def = $q.defer();
+
+            // todo funding node is stub
+            def.resolve(true);
+
+            return def.promise;
           }
 
-          d.resolve();
-        });
+          function hasBytes() {
+            const def = $q.defer();
 
-        return d.promise;
-      }
+            if (assocBalances && assocBalances.base && parseInt(assocBalances.base.stable, 10) > 0) {
+              def.resolve(true);
+            } else {
+              def.resolve(false);
+            }
 
-      function getExchangeFee() {
-        return exchangeFee;
-      }
+            return def.promise;
+          }
 
-      function setExchangeFee(ef) {
-        const def = $q.defer();
+          const isLatestVersionPromise = isLatestVersion();
+          const hasBytesPromise = hasBytes();
 
-        discoveryService.sendMessage(`${messages.updateExchangeFee}:${ef}`).then(() => {
-          exchangeFee = ef;
+          $q.all([isLatestVersionPromise, hasBytesPromise]).then((results) => {
+            const successResults = results.filter(item => item);
+            if (successResults.length !== results.length) {
+              d.reject();
+              return;
+            }
 
-          updateConfig().then(def.resolve, def.reject);
-        }, def.reject);
+            d.resolve();
+          });
 
-        return def.promise;
-      }
-
-      function update(val) {
-        const def = $q.defer();
-
-        let func;
-
-        if (val) {
-          func = activate;
-        } else {
-          func = deactivate;
+          return d.promise;
         }
 
-        func().then(() => {
-          setFundnigNode(val).then(def.resolve, def.reject);
-        }, def.reject);
+        function getExchangeFee() {
+          return exchangeFee;
+        }
 
-        return def.promise;
-      }
+        function setExchangeFee(ef) {
+          const def = $q.defer();
 
-      return self;
-    });
+          discoveryService.sendMessage(discoveryService.messages.updateExchangeFee, { exchangeFee: ef }).then(() => {
+            exchangeFee = ef;
+
+            updateConfig().then(def.resolve, def.reject);
+          }, def.reject);
+
+          return def.promise;
+        }
+
+        function update(val) {
+          const def = $q.defer();
+
+          let func;
+
+          if (val) {
+            func = activate;
+          } else {
+            func = deactivate;
+          }
+
+          func().then(() => {
+            setFundnigNode(val).then(def.resolve, def.reject);
+          }, def.reject);
+
+          return def.promise;
+        }
+
+        return self;
+      });
 }());

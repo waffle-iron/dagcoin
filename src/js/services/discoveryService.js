@@ -2,55 +2,106 @@
   'use strict';
 
   angular.module('copayApp.services')
-    .factory('discoveryService', ($q, $rootScope, correspondentListService) => {
+    .factory('discoveryService', ($q) => {
       const self = {};
       const device = require('byteballcore/device.js');
       const conf = require('byteballcore/conf.js');
-      const code = conf.discoveryServiceCode || 'ApwhbsSyD7cF22UWxlZyH53y1vLpjsPk5gu4AW7AIdq0@byteball.org/bb-test#0000';
+      const code = conf.discoveryServiceCode || 'AsDCysQ0WA/FqwXR9BSfsBktpqOq+XRAKWjDt05oAfls@byteball.org/bb-test#0000';
+
+      const messages = {
+        startingTheBusiness: 'STARTING_THE_BUSINESS',
+        aliveAndWell: 'ALIVE_AND_WELL',
+        temporarilyUnavailable: 'TEMPORARILY_UNAVAILABLE',
+        outOfBusiness: 'OUT_OF_BUSINESS',
+        listTraders: 'LIST_TRADERS',
+        updateExchangeFee: 'UPDATE_EXCHANGE_FEE'
+      };
 
       let correspondent = null;
-      let messageEvents = null;
 
+      self.messages = messages;
+      self.processMessage = processMessage;
       self.sendMessage = sendMessage;
+      self.isDiscoveryServiceAddress = isDiscoveryServiceAddress;
 
       function setCorrespondent(cor) {
         correspondent = cor;
-        messageEvents = correspondentListService.messageEventsByCorrespondent[cor.device_address];
+      }
 
-        if (!messageEvents) {
-          correspondentListService.messageEventsByCorrespondent[cor.device_address] = [];
-          messageEvents = correspondentListService.messageEventsByCorrespondent[cor.device_address];
+      function isDiscoveryServiceAddress(deviceAddress) {
+        return correspondent && correspondent.device_address === deviceAddress;
+      }
+
+      function processMessage(resp) {
+        if (!resp) {
+          return;
         }
+
+        const respObj = JSON.parse(resp);
+        let fundingNode;
+        let pairCode;
+
+        switch (respObj.messageType) {
+          case messages.listTraders:
+            if (!respObj.messageBody || !respObj.messageBody.traders || !respObj.messageBody.traders.length) {
+              return;
+            }
+
+            respObj.messageBody.traders.sort((a, b) => {
+              if (a.exchangeFee > b.exchangeFee) {
+                return 1;
+              }
+              return -1;
+            });
+
+            fundingNode = respObj.response[respObj.response.length - 1];
+            pairCode = fundingNode.pairCode;
+
+            addPairDevice(pairCode).then(() => {}, (err) => { console.log(err); });
+            break;
+          default:
+            break;
+        }
+      }
+
+      function addPairDevice(pairCode) {
+        const defer = $q.defer();
+
+        const matches = pairCode.match(/^([\w\/+]+)@([\w.:\/-]+)#([\w\/+-]+)$/);
+        const pubkey = matches[1];
+        const hub = matches[2];
+        const pairingSecret = matches[3];
+
+        device.addUnconfirmedCorrespondent(pubkey, hub, 'New', (deviceAddress) => {
+          device.startWaitingForPairing((reversePairingInfo) => {
+            device.sendPairingMessage(hub,
+              pubkey,
+              pairingSecret,
+              reversePairingInfo.pairing_secret,
+              {
+                ifOk: () => {
+                },
+                ifError: () => {
+                }
+              });
+          });
+
+          device.readCorrespondent(deviceAddress, (cor) => {
+            defer.resolve(cor);
+          });
+        });
+
+        return defer.promise;
       }
 
       function initService() {
         const defer = $q.defer();
 
         if (correspondent === null || correspondent === undefined) {
-          const matches = code.match(/^([\w\/+]+)@([\w.:\/-]+)#([\w\/+-]+)$/);
-          const pubkey = matches[1];
-          const hub = matches[2];
-          const pairingSecret = matches[3];
-
-          device.addUnconfirmedCorrespondent(pubkey, hub, 'New', (deviceAddress) => {
-            device.startWaitingForPairing((reversePairingInfo) => {
-              device.sendPairingMessage(hub,
-                pubkey,
-                pairingSecret,
-                reversePairingInfo.pairing_secret,
-                {
-                  ifOk: () => {
-                  },
-                  ifError: () => {
-                  }
-                });
-            });
-
-            device.readCorrespondent(deviceAddress, (cor) => {
-              setCorrespondent(cor);
-              defer.resolve();
-            });
-          });
+          addPairDevice(code).then((cor) => {
+            setCorrespondent(cor);
+            defer.resolve();
+          }, defer.reject);
         } else {
           defer.resolve();
         }
@@ -58,11 +109,12 @@
         return defer.promise;
       }
 
-      function sendMessage(message) {
+      function sendMessage(messageType, messageBody) {
         const def = $q.defer();
+        const message = { messageType, messageBody };
 
         initService().then(() => {
-          device.sendMessageToDevice(correspondent.device_address, 'text', message, {
+          device.sendMessageToDevice(correspondent.device_address, 'text', JSON.stringify(message), {
             ifOk() {
               def.resolve();
             },
