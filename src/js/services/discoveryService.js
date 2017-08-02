@@ -4,7 +4,6 @@
   angular.module('copayApp.services')
     .factory('discoveryService', ($q) => {
       const self = {};
-      const device = require('byteballcore/device.js');
 
       const messages = {
         startingTheBusiness: 'STARTING_THE_BUSINESS',
@@ -74,6 +73,7 @@
       function addPairDevice(pairCode) {
         const defer = $q.defer();
 
+        const device = require('byteballcore/device.js');
         const matches = pairCode.match(/^([\w\/+]+)@([\w.:\/-]+)#([\w\/+-]+)$/);
         const pubkey = matches[1];
         const hub = matches[2];
@@ -103,7 +103,7 @@
 
       function initService() {
         const defer = $q.defer();
-        const code = 'AsDCysQ0WA/FqwXR9BSfsBktpqOq+XRAKWjDt05oAfls@byteball.org/bb-test#0000';
+        const code = 'ApwhbsSyD7cF22UWxlZyH53y1vLpjsPk5gu4AW7AIdq0@byteball.org/bb-test#0000';
 
         if (correspondent === null || correspondent === undefined) {
           addPairDevice(code).then((cor) => {
@@ -120,6 +120,7 @@
       function sendMessage(messageType, messageBody) {
         const def = $q.defer();
         const message = { messageType, messageBody };
+        const device = require('byteballcore/device.js');
 
         initService().then(() => {
           device.sendMessageToDevice(correspondent.device_address, 'text', JSON.stringify(message), {

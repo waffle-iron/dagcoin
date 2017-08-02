@@ -3,7 +3,7 @@
   'use strict';
 
   angular.module('copayApp.services')
-    .factory('fundingNodeService', ($q, $rootScope, discoveryService, correspondentListService) => {
+    .factory('fundingNodeService', ($q, $rootScope, discoveryService) => {
       const self = {};
 
       let messageIntervalTimeout = 5 * 60 * 1000; // 5min
@@ -104,10 +104,11 @@
       function aliveAndWell() {
         const def = $q.defer();
 
-        correspondentListService.startWaitingForPairing((pairingInfo) => {
+        const device = require('byteballcore/device.js');
+        device.startWaitingForPairing((pairingInfo) => {
           const code = `${pairingInfo.device_pubkey}@${pairingInfo.hub}#${pairingInfo.pairing_secret}`;
 
-          discoveryService.sendMessage(discoveryService.messages.aliveAndWell, {pairCode: code}).then(() => {
+          discoveryService.sendMessage(discoveryService.messages.aliveAndWell, { pairCode: code }).then(() => {
             def.resolve();
           }, def.reject);
         });
@@ -204,7 +205,7 @@
       function setExchangeFee(ef) {
         const def = $q.defer();
 
-        discoveryService.sendMessage(discoveryService.messages.updateExchangeFee, {exchangeFee: ef}).then(() => {
+        discoveryService.sendMessage(discoveryService.messages.updateExchangeFee, { exchangeFee: ef }).then(() => {
           exchangeFee = ef;
 
           updateConfig().then(def.resolve, def.reject);
