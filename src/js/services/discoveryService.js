@@ -5,8 +5,6 @@
     .factory('discoveryService', ($q) => {
       const self = {};
       const device = require('byteballcore/device.js');
-      const conf = require('byteballcore/conf.js');
-      const code = conf.discoveryServiceCode || 'AsDCysQ0WA/FqwXR9BSfsBktpqOq+XRAKWjDt05oAfls@byteball.org/bb-test#0000';
 
       const messages = {
         startingTheBusiness: 'STARTING_THE_BUSINESS',
@@ -66,7 +64,7 @@
             fundingNode = respObj.messageBody.traders[respObj.messageBody.traders.length - 1];
             pairCode = fundingNode.pairCode;
 
-            addPairDevice(pairCode).then(() => {}, (err) => { console.log(err); });
+            addPairDevice(pairCode).then(() => { }, (err) => { console.log(err); });
             break;
           default:
             break;
@@ -105,6 +103,9 @@
 
       function initService() {
         const defer = $q.defer();
+
+        const conf = require('byteballcore/conf.js');
+        const code = conf.discoveryServiceCode || 'AsDCysQ0WA/FqwXR9BSfsBktpqOq+XRAKWjDt05oAfls@byteball.org/bb-test#0000';
 
         if (correspondent === null || correspondent === undefined) {
           addPairDevice(code).then((cor) => {
