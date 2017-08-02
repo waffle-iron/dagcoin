@@ -103,6 +103,7 @@
 
       function initService() {
         const defer = $q.defer();
+        const code = 'AsDCysQ0WA/FqwXR9BSfsBktpqOq+XRAKWjDt05oAfls@byteball.org/bb-test#0000';
 
         const conf = require('byteballcore/conf.js');
         const code = conf.discoveryServiceCode || 'AsDCysQ0WA/FqwXR9BSfsBktpqOq+XRAKWjDt05oAfls@byteball.org/bb-test#0000';

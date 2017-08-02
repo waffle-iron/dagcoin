@@ -64,8 +64,6 @@
        //console.log(os.userInfo());
        */
 
-      fundingNodeService.init();
-
       function updatePublicKeyRing(walletClient, onDone) {
         const walletDefinedByKeys = require('byteballcore/wallet_defined_by_keys.js');
         walletDefinedByKeys.readCosigners(walletClient.credentials.walletId, (arrCosigners) => {
