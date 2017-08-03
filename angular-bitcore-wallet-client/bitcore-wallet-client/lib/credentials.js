@@ -218,7 +218,7 @@ Credentials.prototype.getBaseAddressDerivationPath = function () {
       purpose = '48';
       break;
     default:
-      // here should probably be some error-handling
+      // TODO: here should probably be some error-handling
   }
 
   const coin = (this.network === 'livenet' ? '0' : '1');
