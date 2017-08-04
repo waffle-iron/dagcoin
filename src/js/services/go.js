@@ -1,4 +1,4 @@
-/* eslint-disable import/no-extraneous-dependencies,import/no-unresolved,consistent-return,arrow-body-style */
+/* eslint-disable import/no-extraneous-dependencies,import/no-unresolved */
 (function () {
   'use strinct';
 
@@ -295,11 +295,12 @@
 
       return root;
     }).factory('$exceptionHandler', ($log) => {
-      return function myExceptionHandler(exception, cause) {
+      const myExceptionHandler = (exception, cause) => {
         console.log('angular $exceptionHandler');
         $log.error(exception, cause);
         eventBus.emit('uncaught_error', `An e xception occurred: ${exception}; cause: ${cause}`, exception);
       };
+      return myExceptionHandler;
     });
 
   function tempHandleUri(url) {

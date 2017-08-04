@@ -1,4 +1,3 @@
-/* eslint-disable comma-dangle */
 (function () {
   'use strict';
 

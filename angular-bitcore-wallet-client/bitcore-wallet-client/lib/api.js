@@ -1,5 +1,4 @@
 // todo: suppressed new-cap rule, because coode is coming from byteball core, should be fixed later.
-/* eslint-disable func-names,new-cap */
 /** @namespace Client.API */
 
 const ecdsaSig = require('byteballcore/signature.js');

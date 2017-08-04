@@ -1,7 +1,6 @@
 (function () {
   'use strict';
 
-  /* eslint-disable no-undef */
   angular.module('copayApp.services')
   .factory('fileStorageService', (lodash, $log) => {
     const root = {};

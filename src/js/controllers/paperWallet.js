@@ -1,4 +1,3 @@
-/* eslint-disable no-unreachable */
 /*
  This should be rewritten!
  - accept the private key
@@ -67,29 +66,29 @@
 
       self.scanFunds = function () {
         self.error = 'Unimplemented';
-        return;
+        // TODO Implement the scanFunds functionality
 
-        self.scanning = true;
-        self.privateKey = '';
-        self.balanceBytes = 0;
-        self.error = '';
-
-        $timeout(() => {
-          self.processFundScanning((err, privateKey, balance) => {
-            self.scanning = false;
-            if (err) {
-              $log.error(err);
-              self.error = err.message || err.toString();
-            } else {
-              self.privateKey = privateKey;
-              self.balanceBytes = balance;
-              const config = configService.getSync().wallet.settings;
-              self.balance = `${profileService.formatAmount(balance)} ${config.unitName}`;
-            }
-
-            $scope.$apply();
-          });
-        }, 100);
+        // self.scanning = true;
+        // self.privateKey = '';
+        // self.balanceBytes = 0;
+        // self.error = '';
+        //
+        // $timeout(() => {
+        //   self.processFundScanning((err, privateKey, balance) => {
+        //     self.scanning = false;
+        //     if (err) {
+        //       $log.error(err);
+        //       self.error = err.message || err.toString();
+        //     } else {
+        //       self.privateKey = privateKey;
+        //       self.balanceBytes = balance;
+        //       const config = configService.getSync().wallet.settings;
+        //       self.balance = `${profileService.formatAmount(balance)} ${config.unitName}`;
+        //     }
+        //
+        //     $scope.$apply();
+        //   });
+        // }, 100);
       };
 
       self.processWalletSweep = function (cb) {
