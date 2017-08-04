@@ -1,7 +1,4 @@
-// todo:temp disabled some rules
-/* eslint-disable no-unused-vars,new-cap,default-case */
-
-
+/* eslint-disable no-unused-vars, new-cap */
 const crypto = require('crypto');
 const $ = require('preconditions').singleton();
 const lodash = require('lodash');
@@ -220,6 +217,8 @@ Credentials.prototype.getBaseAddressDerivationPath = function () {
     case Constants.DERIVATION_STRATEGIES.BIP48:
       purpose = '48';
       break;
+    default:
+      // TODO: here should probably be some error-handling
   }
 
   const coin = (this.network === 'livenet' ? '0' : '1');

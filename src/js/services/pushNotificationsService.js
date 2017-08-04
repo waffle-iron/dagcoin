@@ -1,7 +1,7 @@
 (function () {
   'use strict';
 
-  /* eslint-disable no-alert,consistent-return,no-shadow */
+  /* eslint-disable no-shadow */
   angular.module('copayApp.services')
   .factory('pushNotificationsService', ($http, $rootScope, $log, isMobile, storageService, configService, lodash, isCordova) => {
     const root = {};
