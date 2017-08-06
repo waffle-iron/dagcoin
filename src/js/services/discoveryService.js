@@ -11,7 +11,7 @@
         temporarilyUnavailable: 'TEMPORARILY_UNAVAILABLE',
         outOfBusiness: 'OUT_OF_BUSINESS',
         listTraders: 'LIST_TRADERS',
-        updateExchangeFee: 'UPDATE_EXCHANGE_FEE'
+        updateSettings: 'UPDATE_SETTINGS'
       };
 
       let correspondent = null;
