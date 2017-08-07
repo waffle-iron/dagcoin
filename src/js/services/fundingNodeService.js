@@ -21,6 +21,7 @@
       self.deactivate = deactivate;
       self.activate = activate;
       self.init = init;
+      self.requireUncached = requireUncached;
 
       $rootScope.$on('Local/ProfileBound', () => {
         self.init();

@@ -31,7 +31,8 @@
       fundingNodeService,
       $modal,
       bwcService,
-      backButton) {
+      backButton,
+      chooseFeeTypeService) {
       const async = require('async');
       const constants = require('byteballcore/constants.js');
       const mutex = require('byteballcore/mutex.js');
@@ -570,7 +571,6 @@
         });
       };
 
-
       self.goHome = function () {
         go.walletHome();
       };
@@ -990,7 +990,6 @@
         });
       };
 
-
       this.csvHistory = function () {
         function saveFile(name, data) {
           const chooser = document.querySelector(name);
@@ -1037,7 +1036,6 @@
 
         const step = 6;
         const unique = {};
-
 
         if (isCordova) {
           $log.info('CSV generation not available in mobile');
