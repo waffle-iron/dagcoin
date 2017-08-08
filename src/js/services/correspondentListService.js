@@ -256,10 +256,10 @@ angular.module('copayApp.services').factory('correspondentListService',
 
     // amount is in smallest units
     function getAmountText(amount, asset) {
-      let walletSettings;
+      const walletSettings = configService.getSync().wallet.settings;
       let newAmount = amount;
+
       if (asset === 'base') {
-        walletSettings = configService.getSync().wallet.settings;
         const unitValue = walletSettings.unitValue;
         const unitName = walletSettings.unitName;
         if (newAmount !== 'all') {
@@ -267,11 +267,15 @@ angular.module('copayApp.services').factory('correspondentListService',
         }
         return `${newAmount} ${unitName}`;
       } else if (asset === constants.BLACKBYTES_ASSET) {
-        walletSettings = configService.getSync().wallet.settings;
         const bbUnitValue = walletSettings.bbUnitValue;
         const bbUnitName = walletSettings.bbUnitName;
         newAmount /= bbUnitValue;
         return `${newAmount} ${bbUnitName}`;
+      } else if (asset === constants.DAGCOIN_ASSET) {
+        const dagUnitValue = walletSettings.dagUnitValue;
+        const dagUnitName = walletSettings.dagUnitName;
+        newAmount /= dagUnitValue;
+        return `${newAmount} ${dagUnitName}`;
       }
       return `${newAmount} of ${asset}`;
     }
@@ -449,9 +453,9 @@ angular.module('copayApp.services').factory('correspondentListService',
       switch (message.type) {
         case 'system':
           message.message = JSON.parse(message.message);
-          message.message = `chat recording ${message.message.state ? '&nbsp;' : ''}
-            <b dropdown-toggle="#recording-drop">${message.message.state ? 'ON' : 'OFF'}</b>
-            <span class="padding"></span>`;
+          message.message = `chat recording ${message.message.state ? '&nbsp;' : ''}` +
+            `<b dropdown-toggle="#recording-drop">${message.message.state ? 'ON' : 'OFF'}</b>` +
+            '<span class="padding"></span>';
           message.chat_recording_status = true;
           break;
         default:
