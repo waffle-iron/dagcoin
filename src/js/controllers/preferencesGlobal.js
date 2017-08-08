@@ -110,28 +110,25 @@
         unwatchFundingNode();
       });
 
-      // if user have bytes default method should be hub
-      // else should be buy bytes = 'bytes'
       chooseFeeTypeService.getFeeDefaultMethod()
         .then((res) => {
           self.typeOfPaymentFee = res;
-          console.log('self.typeOfPaymentFee ', self.typeOfPaymentFee);
         });
+		
       self.enableHubOption = chooseFeeTypeService.getCanBeSwitchedToHub();
-      console.log('self.disableHubOption', self.enableHubOption);
-
       self.changeTypeOfPayment = changeTypeOfPayment;
+	  
       function changeTypeOfPayment(model) {
         self.enableHubOption = chooseFeeTypeService.getCanBeSwitchedToHub();
-        console.log('self.disableHubOption', self.enableHubOption);
+		
         if (self.enableHubOption) {
           chooseFeeTypeService.setUpFeeDefaultMethod(model)
             .then(() => {
-              chooseFeeTypeService.openPendingModal();
+              //chooseFeeTypeService.openPendingModal();
             });
         } else if (model === 'hub' && !self.enableHubOption) {
           self.typeOfPaymentFee = 'bytes';
-          chooseFeeTypeService.openNoDagCoinsModal();
+          chooseFeeTypeService.openNoBytesModal();
         }
       }
     });

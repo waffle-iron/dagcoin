@@ -7,33 +7,29 @@
 
   chooseFeeTypeService.$inject = ['$modal', 'go', 'animationService', 'fundingNodeService', '$rootScope', '$q'];
 
-
   /* @ngInject */
   function chooseFeeTypeService($modal, go, animationService, fundingNodeService, $rootScope, $q) {
     const service = {
       getFeeDefaultMethod,
       getCanBeSwitchedToHub,
       setUpFeeDefaultMethod,
-      openNoDagCoinsModal,
+      openNoBytesModal,
       openPendingModal
     };
-
-    const DAGCOIN_ASSET = 'B9dw3C3gMC+AODL/XqWjFh9jFe31jS08yf2C3zl8XGg=';
 
     let currentBalance = null;
 
     $rootScope.$on('Local/BalanceUpdated', (event, ab) => {
       currentBalance = ab;
-      // get current conf file check for prop feeMethod
+	  
       getFeeDefaultMethod()
         .then((res) => {
-          // set up only we dont have in config yet
-          if (!res && currentBalance[DAGCOIN_ASSET] && currentBalance[DAGCOIN_ASSET].stable === 0) {
+          if (!res) {
+            if (currentBalance && currentBalance.base && currentBalance.base.stable === 0){
+              openNoBytesModal();
+            }
+			  
             setUpFeeDefaultMethod('bytes')
-              .then(() => {
-              });
-          } else if (!res && currentBalance[DAGCOIN_ASSET] && currentBalance[DAGCOIN_ASSET].stable > 0) {
-            setUpFeeDefaultMethod('hub')
               .then(() => {
               });
           }
@@ -44,9 +40,10 @@
 
 
     function getCanBeSwitchedToHub() {
-      return (currentBalance && currentBalance[DAGCOIN_ASSET] && currentBalance[DAGCOIN_ASSET].stable > 0);
+      const constants = require('byteballcore/constants.js');
+	  
+      return (currentBalance && currentBalance[constants.DAGCOIN_ASSET] && currentBalance[constants.DAGCOIN_ASSET].stable > 0);
     }
-
 
     function getFeeDefaultMethod() {
       const deferred = $q.defer();
@@ -63,7 +60,6 @@
       return deferred.promise;
     }
 
-
     function setUpFeeDefaultMethod(way) {
       const deferred = $q.defer();
       const fs = require('fs');
@@ -72,8 +68,8 @@
       const userConfFile = `${appDataDir}/conf.json`;
       const userConf = fundingNodeService.requireUncached(userConfFile);
 
-
       userConf.feeMethod = way;
+	  
       fs.writeFile(userConfFile, JSON.stringify(userConf, null, '\t'), 'utf8', (err) => {
         if (err) {
           deferred.reject(err);
@@ -84,9 +80,7 @@
       return deferred.promise;
     }
 
-
-    // appear modal if user dont have dagcoins
-    function openNoDagCoinsModal() {
+    function openNoBytesModal() {
       $modal.open({
         templateUrl: 'views/modals/no-bytes.html',
         windowClass: animationService.modalAnimated.slideUp,
@@ -106,18 +100,14 @@
       function closeModal() {
         $scope.$close();
       }
-
-
+	  
       $scope.openSite = openSite;
-
 
       function openSite() {
         $scope.data.nw.Shell.openExternal($scope.data.siteUrl);
       }
 
-
       $scope.goChooseFeeType = goChooseFeeType;
-
 
       function goChooseFeeType() {
         closeModal();
@@ -125,17 +115,14 @@
       }
     }
 
-
     function pendingModalController($scope) {
       $scope.pending = true;
       $scope.closeModal = closeModal;
-
 
       function closeModal() {
         $scope.$close();
       }
     }
-
 
     function openPendingModal() {
       $modal.open({
