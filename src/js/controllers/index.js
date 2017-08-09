@@ -41,7 +41,7 @@
       const breadcrumbs = require('byteballcore/breadcrumbs.js');
       const Bitcore = require('bitcore-lib');
       const _ = require('lodash');
-      const EventEmitter = require('events').EventEmitter;
+      // const EventEmitter = require('events').EventEmitter;
       breadcrumbs.add('index.js');
       const self = this;
       const isTestnet = constants.version.match(/t$/);
@@ -170,7 +170,7 @@
         if (catchupBallsAtStart === -1) {
           catchupBallsAtStart = countLeft;
         }
-        const percent = Math.round((catchupBallsAtStart - countLeft) / catchupBallsAtStart * 100);
+        const percent = Math.round(((catchupBallsAtStart - countLeft) / catchupBallsAtStart) * 100);
         self.syncProgress = `${percent}% of new units`;
         $timeout(() => {
           $rootScope.$apply();
@@ -277,6 +277,59 @@
         });
       });
 
+      const acceptMessage = gettextCatalog.getString('Yes');
+      const cancelMessage = gettextCatalog.getString('No');
+      const confirmMessage = gettextCatalog.getString('Confirm');
+
+      const modalRequestApproval = function (question, callbacks) {
+        const ModalInstanceCtrl = function ($scope, $modalInstance, $sce) {
+          $scope.title = $sce.trustAsHtml(question);
+          $scope.yes_icon = 'fi-check';
+          $scope.yes_button_class = 'primary';
+          $scope.cancel_button_class = 'warning';
+          $scope.cancel_label = 'No';
+          $scope.loading = false;
+
+          $scope.ok = function () {
+            $scope.loading = true;
+            $modalInstance.close(acceptMessage);
+          };
+          $scope.cancel = function () {
+            $modalInstance.dismiss(cancelMessage);
+          };
+        };
+
+        const modalInstance = $modal.open({
+          templateUrl: 'views/modals/confirmation.html',
+          windowClass: animationService.modalAnimated.slideUp,
+          controller: ModalInstanceCtrl,
+        });
+
+        modalInstance.result.finally(() => {
+          const m = angular.element(document.getElementsByClassName('reveal-modal'));
+          m.addClass(animationService.modalAnimated.slideOutDown);
+        });
+
+        modalInstance.result.then(callbacks.ifYes, callbacks.ifNo);
+      };
+
+      const requestApproval = function (question, callbacks) {
+        if (isCordova) {
+          navigator.notification.confirm(
+            question,
+            (buttonIndex) => {
+              if (buttonIndex === 1) {
+                callbacks.ifYes();
+              } else {
+                callbacks.ifNo();
+              }
+            },
+            confirmMessage, [acceptMessage, cancelMessage]);
+        } else {
+          modalRequestApproval(question, callbacks);
+        }
+      };
+
       // in arrOtherCosigners, 'other' is relative to the initiator
       eventBus.on('create_new_wallet', (walletId, arrWalletDefinitionTemplate, arrDeviceAddresses, walletName, arrOtherCosigners) => {
         const device = require('byteballcore/device.js');
@@ -334,6 +387,7 @@
       // we won't pop up confirmation dialog for each address,
       // instead we'll use the already obtained approval
       const assocChoicesByUnit = {};
+      const bbWallet = require('byteballcore/wallet.js');
 
       // objAddress is local wallet address, top_address is the address that requested the signature,
       // it may be different from objAddress if it is a shared address
@@ -367,7 +421,6 @@
           console.log('refused signature');
         }
 
-        const bbWallet = require('byteballcore/wallet.js');
         const walletDefinedByKeys = require('byteballcore/wallet_defined_by_keys.js');
         const unit = objUnit.unit;
         const credentials = lodash.find(profileService.profile.credentials, { walletId: objAddress.wallet });
@@ -426,7 +479,12 @@
                 const arrDestinations = [];
                 Object.keys(assocAmountByAssetAndAddress).forEach((asset) => {
                   const formattedAsset = isCordova ? asset : (`<span class='small'>${asset}</span><br/>`);
-                  const currency = (asset !== 'base') ? (asset === constants.DAGCOIN_ASSET ? 'dag' : `of asset ${formattedAsset}`) : 'bytes';
+                  let currency;
+                  if (asset !== 'base') {
+                    currency = asset === constants.DAGCOIN_ASSET ? 'dag' : `of asset ${formattedAsset}`;
+                  } else {
+                    currency = 'bytes';
+                  }
                   Object.keys(assocAmountByAssetAndAddress[asset]).forEach((address) => {
                     arrDestinations.push(`${assocAmountByAssetAndAddress[asset][address]} ${currency} to ${address}`);
                   });
@@ -451,61 +509,6 @@
           });
         });
       });
-
-
-      const acceptMessage = gettextCatalog.getString('Yes');
-      const cancelMessage = gettextCatalog.getString('No');
-      const confirmMessage = gettextCatalog.getString('Confirm');
-
-      const modalRequestApproval = function (question, callbacks) {
-        const ModalInstanceCtrl = function ($scope, $modalInstance, $sce) {
-          $scope.title = $sce.trustAsHtml(question);
-          $scope.yes_icon = 'fi-check';
-          $scope.yes_button_class = 'primary';
-          $scope.cancel_button_class = 'warning';
-          $scope.cancel_label = 'No';
-          $scope.loading = false;
-
-          $scope.ok = function () {
-            $scope.loading = true;
-            $modalInstance.close(acceptMessage);
-          };
-          $scope.cancel = function () {
-            $modalInstance.dismiss(cancelMessage);
-          };
-        };
-
-        const modalInstance = $modal.open({
-          templateUrl: 'views/modals/confirmation.html',
-          windowClass: animationService.modalAnimated.slideUp,
-          controller: ModalInstanceCtrl,
-        });
-
-        modalInstance.result.finally(() => {
-          const m = angular.element(document.getElementsByClassName('reveal-modal'));
-          m.addClass(animationService.modalAnimated.slideOutDown);
-        });
-
-        modalInstance.result.then(callbacks.ifYes, callbacks.ifNo);
-      };
-
-      const requestApproval = function (question, callbacks) {
-        if (isCordova) {
-          navigator.notification.confirm(
-            question,
-            (buttonIndex) => {
-              if (buttonIndex === 1) {
-                callbacks.ifYes();
-              } else {
-                callbacks.ifNo();
-              }
-            },
-            confirmMessage, [acceptMessage, cancelMessage]);
-        } else {
-          modalRequestApproval(question, callbacks);
-        }
-      };
-
 
       self.openSubwalletModal = function () {
         $rootScope.modalOpened = true;
@@ -758,8 +761,8 @@
         if (self.tab === tab && !reset) {
           return;
         }
-
-        if (!document.getElementById(`menu-${tab}`) && ++setTabTries < 5) {
+        setTabTries += 1;
+        if (!document.getElementById(`menu-${tab}`) && setTabTries < 5) {
           console.log('will retry setTab later:', tab, reset, setTabTries, switchState);
           return $timeout(() => {
             self.setTab(tab, reset, setTabTries, switchState);
@@ -882,7 +885,7 @@
 
 
       self.processNewTxs = function (txs) {
-        const config = configService.getSync().wallet.settings;
+        // const config = configService.getSync().wallet.settings;
         const now = Math.floor(Date.now() / 1000);
         const ret = [];
 
@@ -1000,7 +1003,7 @@
             const fs = require('fs');
             fs.writeFile(this.value, data, (err) => {
               if (err) {
-                $log.debug(err);
+                $log.debug(evt, err);
               }
             });
           }, false);
@@ -1038,7 +1041,7 @@
         }
 
         const step = 6;
-        const unique = {};
+        // const unique = {};
 
 
         if (isCordova) {
@@ -1071,6 +1074,7 @@
             let note;
             let dataString;
             data.forEach((it, index) => {
+              console.log('Processing transactions number', index);
               let amount = it.amount;
 
               if (it.action === 'moved') {
@@ -1145,7 +1149,7 @@
 
         if (!fc.isComplete()) return;
 
-        $log.debug('Updating Transaction History');
+        $log.debug('Updating Transaction History for walletId', walletId);
         self.txHistoryError = false;
         self.updatingTxHistory = true;
 
@@ -1184,7 +1188,8 @@
         setTimeout(() => {
           if (self.assetIndex !== self.oldAssetIndex) {
             // it was a swipe
-            return console.log('== swipe');
+            console.log('== swipe');
+            return;
           }
           console.log('== updateHistoryFromNetwork');
           const lightWallet = require('byteballcore/light_wallet.js');
@@ -1199,7 +1204,7 @@
           msg_icon: msgIcon,
           close(err) {
             self.showAlert = null;
-            if (cb) return cb(err);
+            return cb(err) || null;
           },
         };
         $timeout(() => {
@@ -1212,7 +1217,7 @@
         self.showPopup(msg, 'fi-alert', cb);
       };
 
-      self.recreate = function (cb) {
+      self.recreate = function () {
         const fc = profileService.focusedClient;
         self.setOngoingProcess('recreating', true);
         fc.recreateWallet((err) => {
@@ -1274,7 +1279,7 @@
 
       self.startScan = function (walletId) {
         $log.debug(`Scanning wallet ${walletId}`);
-        const c = profileService.walletClients[walletId];
+        // const c = profileService.walletClients[walletId];
         // if (!c.isComplete()) {
         //   return;
         // }
@@ -1321,7 +1326,7 @@
         let count = 1; // self
         self.copayers.forEach((copayer) => {
           if (copayer.signs) {
-            count++;
+            count += 1;
           }
         });
         return count;
@@ -1340,7 +1345,7 @@
 
 
       $rootScope.$on('Local/ClearHistory', (event) => {
-        $log.debug('The wallet transaction history has been deleted');
+        $log.debug('The wallet transaction history has been deleted', event);
         self.txHistory = [];
         self.completeHistory = [];
         self.updateHistory();
@@ -1351,21 +1356,21 @@
       });
 
       // UX event handlers
-      $rootScope.$on('Local/ColorUpdated', (event) => {
+      $rootScope.$on('Local/ColorUpdated', () => {
         self.updateColor();
         $timeout(() => {
           $rootScope.$apply();
         });
       });
 
-      $rootScope.$on('Local/AliasUpdated', (event) => {
+      $rootScope.$on('Local/AliasUpdated', () => {
         self.updateAlias();
         $timeout(() => {
           $rootScope.$apply();
         });
       });
 
-      $rootScope.$on('Local/SpendUnconfirmedUpdated', (event) => {
+      $rootScope.$on('Local/SpendUnconfirmedUpdated', () => {
         self.setSpendUnconfirmed();
         self.updateAll();
       });
@@ -1381,19 +1386,19 @@
         self.setUxLanguage();
       });
 
-      $rootScope.$on('Local/UnitSettingUpdated', (event) => {
+      $rootScope.$on('Local/UnitSettingUpdated', () => {
         breadcrumbs.add('UnitSettingUpdated');
         self.updateAll();
         self.updateTxHistory();
       });
 
-      $rootScope.$on('Local/NeedFreshHistory', (event) => {
+      $rootScope.$on('Local/NeedFreshHistory', () => {
         breadcrumbs.add('NeedFreshHistory');
         self.updateHistory();
       });
 
 
-      $rootScope.$on('Local/WalletCompleted', (event) => {
+      $rootScope.$on('Local/WalletCompleted', () => {
         self.setFocusedWallet();
         go.walletHome();
       });
@@ -1408,19 +1413,20 @@
 //    trailing: true
 //  });
 
-      $rootScope.$on('Local/Resume', (event) => {
+      $rootScope.$on('Local/Resume', () => {
         $log.debug('### Resume event');
         const lightWallet = require('byteballcore/light_wallet.js');
         lightWallet.refreshLightClientHistory();
         // self.debouncedUpdate();
       });
 
-      $rootScope.$on('Local/BackupDone', (event) => {
+      $rootScope.$on('Local/BackupDone', () => {
         self.needsBackup = false;
         $log.debug('Backup done');
         storageService.setBackupFlag('all', (err) => {
           if (err) {
-            return $log.warn(`setBackupFlag failed: ${JSON.stringify(err)}`);
+            $log.warn(`setBackupFlag failed: ${JSON.stringify(err)}`);
+            return;
           }
           $log.debug('Backup done stored');
         });
@@ -1440,6 +1446,7 @@
         storageService.setBackupFlag(walletId, () => {
           $log.debug('Backup done stored');
           addressService.expireAddress(walletId, (err) => {
+            $log.debug('Expire address error', err);
             $timeout(() => {
               self.txHistory = [];
               self.completeHistory = [];
@@ -1488,7 +1495,7 @@
       });
 
 
-      $rootScope.$on('Local/NoWallets', (event) => {
+      $rootScope.$on('Local/NoWallets', () => {
         $timeout(() => {
           self.hasProfile = true;
           self.noFocusedWallet = true;
@@ -1514,11 +1521,13 @@
         window.plugins.touchid.verifyFingerprint(
           gettextCatalog.getString('Scan your fingerprint please'),
           (msg) => {
+            $log.debug('Scan Finished. Ok', msg);
             // OK
             cb();
           },
           (msg) => {
             // ERROR
+            $log.debug('Invalid Touch ID', msg);
             cb(gettext('Invalid Touch ID'));
           });
       });

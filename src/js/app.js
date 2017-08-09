@@ -26,4 +26,3 @@ angular.module('copayApp.services', []);
 angular.module('copayApp.controllers', []);
 angular.module('copayApp.directives', []);
 angular.module('copayApp.addons', []);
-

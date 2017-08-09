@@ -1,4 +1,4 @@
-/* eslint-disable import/no-extraneous-dependencies,import/no-unresolved,radix */
+/* eslint-disable import/no-extraneous-dependencies, import/no-unresolved */
 (function () {
   'use strict';
 
@@ -159,7 +159,7 @@
       function createWallets(arrWalletIndexes, cb) {
         function createWallet(n) {
           let walletIndex = n;
-          const account = parseInt(arrWalletIndexes[walletIndex]);
+          const account = parseInt(arrWalletIndexes[walletIndex], 10);
           const opts = {};
           opts.m = 1;
           opts.n = 1;

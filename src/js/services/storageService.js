@@ -1,7 +1,6 @@
 (function () {
   'use strict';
 
-  /* eslint-disable no-undef,arrow-body-style */
   angular.module('copayApp.services')
   .factory('storageService', (logHeader, fileStorageService, localStorageService, sjcl, $log, lodash, isCordova, isMobile) => {
     const root = {};
@@ -188,7 +187,10 @@
 
     root.getPushInfo = function (cb) {
       storage.get('pushToken', (err, data) => {
-        return err ? cb(err) : cb(null, (data ? JSON.parse(data) : data));
+        if (err) {
+          return cb(err);
+        }
+        return cb(null, (data ? JSON.parse(data) : data));
       });
     };
 

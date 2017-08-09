@@ -1,5 +1,3 @@
-// todo: disabled no-unused-vars for makeSwipeDirective method beause currently we are not using directive. in future it might be removed
-/* eslint-disable no-unused-vars */
 /*
  * This is a modification from https://github.com/angular/angular.js/blob/master/src/ngTouch/swipe.js
  */

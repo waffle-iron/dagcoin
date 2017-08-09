@@ -1,7 +1,6 @@
 (function () {
   'use strict';
 
-  /* eslint-disable no-undef,arrow-body-style */
   angular.module('copayApp.services')
   .factory('fileSystemService', ($log, isCordova) => {
     const root = {};
@@ -58,7 +57,10 @@
         });
       } else {
         fs.readFile(path, (err, data) => {
-          return err ? cb(err) : cb(null, data);
+          if (err) {
+            return cb(err);
+          }
+          return cb(null, data);
         });
       }
     };
@@ -70,7 +72,10 @@
     root.nwWriteFile = function (path, data, cb) {
       if (!isCordova) {
         fs.writeFile((path, data, (err) => {
-          return err ? cb(err) : cb(null);
+          if (err) {
+            return cb(err);
+          }
+          return cb(null);
         }));
       } else {
         cb('use cordovaWriteFile');

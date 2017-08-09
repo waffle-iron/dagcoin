@@ -1,4 +1,3 @@
-/* eslint-disable radix,no-unused-vars,no-alert,no-undef,import/no-dynamic-require */
 (function () {
   'use strict';
 
@@ -33,7 +32,7 @@
         fileSystemService.readdir(backupDirPath, (err, listFilenames) => {
           if (listFilenames) {
             listFilenames.forEach((name) => {
-              const dateNow = parseInt(name.split(' ')[1]);
+              const dateNow = parseInt(name.split(' ')[1], 10);
               self.arrBackupFiles.push({
                 name: name.replace(dateNow, new Date(dateNow).toLocaleString()),
                 originalName: name,
@@ -192,6 +191,7 @@
             }
           }, (err) => {
             showError('Incorrect password or file');
+            console.log('Incorrect password or file', err);
           });
         } else {
           const bufferPassword = Buffer.from(password);
