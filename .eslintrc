@@ -32,4 +32,3 @@ rules:
     - ignoreComments : true
     - ignoreStrings: true
   func-names: 0
-  comma-dangle: 0
