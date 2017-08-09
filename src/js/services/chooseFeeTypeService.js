@@ -21,14 +21,14 @@
 
     $rootScope.$on('Local/BalanceUpdated', (event, ab) => {
       currentBalance = ab;
-	  
+
       getFeeDefaultMethod()
         .then((res) => {
           if (!res) {
-            if (currentBalance && currentBalance.base && currentBalance.base.stable === 0){
+            if (currentBalance && currentBalance.base && currentBalance.base.stable === 0) {
               openNoBytesModal();
             }
-			  
+
             setUpFeeDefaultMethod('bytes')
               .then(() => {
               });
@@ -41,7 +41,7 @@
 
     function getCanBeSwitchedToHub() {
       const constants = require('byteballcore/constants.js');
-	  
+
       return (currentBalance && currentBalance[constants.DAGCOIN_ASSET] && currentBalance[constants.DAGCOIN_ASSET].stable > 0);
     }
 
@@ -69,7 +69,7 @@
       const userConf = fundingNodeService.requireUncached(userConfFile);
 
       userConf.feeMethod = way;
-	  
+
       fs.writeFile(userConfFile, JSON.stringify(userConf, null, '\t'), 'utf8', (err) => {
         if (err) {
           deferred.reject(err);
@@ -100,7 +100,7 @@
       function closeModal() {
         $scope.$close();
       }
-	  
+
       $scope.openSite = openSite;
 
       function openSite() {

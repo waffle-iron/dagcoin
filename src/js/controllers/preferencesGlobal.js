@@ -114,17 +114,16 @@
         .then((res) => {
           self.typeOfPaymentFee = res;
         });
-		
+
       self.enableHubOption = chooseFeeTypeService.getCanBeSwitchedToHub();
       self.changeTypeOfPayment = changeTypeOfPayment;
-	  
+
       function changeTypeOfPayment(model) {
         self.enableHubOption = chooseFeeTypeService.getCanBeSwitchedToHub();
-		
+
         if (self.enableHubOption) {
           chooseFeeTypeService.setUpFeeDefaultMethod(model)
             .then(() => {
-              //chooseFeeTypeService.openPendingModal();
             });
         } else if (model === 'hub' && !self.enableHubOption) {
           self.typeOfPaymentFee = 'bytes';
