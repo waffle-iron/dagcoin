@@ -1,8 +1,6 @@
 # ignored this file temporary. We are not using it yet.
-src/js/services/correspondentListService.js
 src/js/directives/ngSwipe.js
 src/js/controllers/acceptCorrespondentInvitation.js
-src/js/controllers/correspondentDevice.js
 src/js/controllers/correspondentDevices.js
 src/js/controllers/editCorrespondentDevice.js
 src/js/controllers/inviteCorrespondentDevice.js

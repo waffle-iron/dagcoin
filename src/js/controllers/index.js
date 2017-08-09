@@ -1,4 +1,4 @@
-/* eslint-disable new-cap, no-shadow, no-unused-vars */
+/* eslint-disable no-unused-vars,no-mixed-operators,no-use-before-define,new-cap,no-nested-ternary,no-shadow,no-plusplus,consistent-return,import/no-extraneous-dependencies,import/no-unresolved */
 (function () {
   'use strict';
 
@@ -28,6 +28,7 @@
       addressbookService,
       notification,
       animationService,
+      fundingNodeService,
       $modal,
       bwcService,
       backButton) {
@@ -63,6 +64,7 @@
        //console.log(os.userInfo());
        */
 
+      fundingNodeService.init();
 
       function updatePublicKeyRing(walletClient, onDone) {
         const walletDefinedByKeys = require('byteballcore/wallet_defined_by_keys.js');
@@ -1574,5 +1576,37 @@
           $rootScope.$apply();
         });
       });
+
+      let gui;
+      try {
+        gui = require('nw.gui');
+      } catch (e) {
+        // continue regardless of error
+      }
+
+      if (gui) { // nwjs
+        const win = gui.Window.get();
+        win.on('close', function () {
+          fundingNodeService.deactivate()
+            .then(() => {
+              this.close(true);
+            });
+        });
+        win.on('closed', function () {
+          fundingNodeService.deactivate()
+            .then(() => {
+              this.close(true);
+            });
+        });
+      } else if (window.cordova) {
+        document.addEventListener('resume', () => {
+          fundingNodeService.init()
+            .then(() => { });
+        }, false);
+        document.addEventListener('pause', () => {
+          fundingNodeService.deactivate()
+            .then(() => { });
+        }, false);
+      }
     });
 }());

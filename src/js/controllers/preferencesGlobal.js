@@ -2,10 +2,23 @@
   'use strict';
 
   angular.module('copayApp.controllers').controller('preferencesGlobalController',
-    function ($scope, $rootScope, $log, configService, uxLanguage, pushNotificationsService, profileService) {
+    function ($scope, $q, $rootScope, $timeout, $log, configService, uxLanguage, pushNotificationsService, profileService, fundingNodeService) {
       const conf = require('byteballcore/conf.js');
 
       $scope.encrypt = !!profileService.profile.xPrivKeyEncrypted;
+      $scope.fundingNodeDisabled = true;
+      $scope.fundingNode = fundingNodeService.get();
+
+      this.initFundingNode = () => {
+        fundingNodeService.canEnable().then(
+          () => {
+            $scope.fundingNodeDisabled = false;
+          },
+          () => {
+            $scope.fundingNodeDisabled = true;
+          }
+        );
+      };
 
       this.init = function () {
         const config = configService.getSync();
@@ -17,8 +30,9 @@
         this.currentLanguageName = uxLanguage.getCurrentLanguageName();
         this.torEnabled = conf.socksHost && conf.socksPort;
         $scope.pushNotifications = config.pushNotifications.enabled;
-      };
 
+        this.initFundingNode();
+      };
 
       const unwatchPushNotifications = $scope.$watch('pushNotifications', (newVal, oldVal) => {
         if (newVal === oldVal) return;
@@ -71,10 +85,25 @@
         }
       });
 
+      const unwatchFundingNode = $scope.$watch('fundingNode', (newVal, oldVal) => {
+        if (oldVal === null || oldVal === undefined || newVal === oldVal) {
+          return;
+        }
+
+        fundingNodeService.canEnable().then(() => {
+          fundingNodeService.update(newVal).then(() => {
+          });
+        },
+          () => {
+            $scope.fundingNodeDisabled = true;
+            $scope.fundingNode = false;
+          });
+      });
 
       $scope.$on('$destroy', () => {
         unwatchPushNotifications();
         unwatchEncrypt();
+        unwatchFundingNode();
       });
     });
 }());

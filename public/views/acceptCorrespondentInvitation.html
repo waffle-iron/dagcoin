@@ -13,11 +13,6 @@
       <span class="text-back">{{'Back'|translate}}</span>
     </a>
   </section>
-
-  <section class="right-small">
-    <qr-scanner on-scan="onQrCodeScanned(data)" before-scan="beforeQrCodeScan()"></qr-scanner>
-  </section>
-
   <section class="middle tab-bar-section">
     <h1 class="title ellipsis" ng-style="{'color': noColor ? '#4A90E2' : index.backgroundColor}">
       {{'Accept invitation'|translate}}
@@ -42,19 +37,20 @@
   </div>
 
 
-    <div class="columns m20t m20b" >
-        <form name="pairingCodeForm" class="p10" no-validate>
+    <div class="m20b">
+        <form name="pairingCodeForm" class="page-form" no-validate>
 		  <span translate>Enter the pairing code received from the other device, or use your camera (icon at the upper right corner) to scan the QR code displayed on the other device.</span>
           <div class="text-warning size-12 m10b" ng-show="error">{{error|translate}}</div>
-          <input type="text" id="code" name="code" ng-model="code" required>
+
+          <div class="input-wrap m20t">
+            <input type="text" class="m0" id="code" name="code" ng-model="code" required>
+          </div>
           <div class="row">
-            <div>
-              <input type="submit" 
-                     class="button expand round" 
-                     value="{{'Pair'|translate}}"
-                     ng-disabled="!pairingCodeForm.$valid"
-                     ng-style="{'background-color':backgroundColor}" 
-                     ng-click="pair()">
+            <div ng-style="{'text-align':'center'}">
+              <qr-scanner on-scan="onQrCodeScanned(data)" before-scan="beforeQrCodeScan()"></qr-scanner>
+              <a class="btn btn_red-full"
+                 ng-disabled="!pairingCodeForm.$valid"
+                 ng-click="pair()">{{'Pair'|translate}}</a>
             </div>
           </div>
         </form>

@@ -40,7 +40,7 @@
     .send-form{
         position: absolute;
         width: 100%;
-        padding-bottom: 58px;
+        padding-bottom: 18px;
         bottom: 0px;
         border-top: 1px solid #E9E9EC;
         background-color: white;
@@ -49,17 +49,19 @@
         text-align: center;
     }
     .send-form .textinput {
-    	min-height:30px;
-    	width: 75%;
-    	margin: 0 auto;
-    	display: inline;
-    	vertical-align: middle;
-    	margin-top: 8px;
+      min-height:30px;
+      width: 75%;
+      margin: 0 auto;
+      display: inline;
+      vertical-align: middle;
+      margin-top: 8px;
+      resize: none; 
     }
     .send-form .chatbutton {
-    	padding: 6px 8px 4px 8px;
-    	border-radius: 40px;
-    	margin: 8px auto;
+      padding: 6px 8px 4px 8px;
+      border-radius: 40px;
+      margin: 8px auto;
+      background-color: rgb(74, 144, 226);
     }
     .send-form .chatbutton i {
     	vertical-align: baseline;
@@ -299,7 +301,7 @@ Chat bubble CSS credits http://codepen.io/samuelkraft/pen/Farhl
 			  <li><a ng-click="insertMyAddress()" translate>Insert my address</a></li>
 			  <li><a ng-click="requestPayment()" translate>Request payment</a></li>
 			</ul>
-          <textarea rows="1" msd-elastic id="message" name="message" ng-model="message" autofocus required ng-enter="send()" class="textinput" placeholder="Text message to {{correspondent.name}}"></textarea>
+          <textarea rows="3" id="message" name="message" ng-model="message" autofocus required ng-enter="send()" class="textinput" placeholder="Text message to {{correspondent.name}}"></textarea>
           <button type="submit" 
           	class="chatbutton right"
                      ng-disabled="!chatForm.$valid"
