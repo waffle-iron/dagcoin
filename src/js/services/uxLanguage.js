@@ -1,5 +1,3 @@
-/* eslint-disable no-cond-assign */
-// todo: removed rule for if. it is realted to agent.
 (function () {
   'use strict';
 
@@ -64,9 +62,9 @@
     root.detect = function () {
       // Auto-detect browser language
       let userLang;
-      let androidLang;
+      const androidLang = navigator.userAgent.match(/android.*\W(\w\w)-(\w\w)\W/i);
 
-      if (navigator && navigator.userAgent && (androidLang = navigator.userAgent.match(/android.*\W(\w\w)-(\w\w)\W/i))) {
+      if (navigator && navigator.userAgent && androidLang) {
         userLang = androidLang[1];
       } else {
         // works for iOS and Android 4.x

@@ -1,4 +1,4 @@
-/* eslint-disable new-cap,no-undef */
+/* eslint-disable new-cap, no-undef */
 (function () {
   'use strict';
 
@@ -16,6 +16,8 @@
    - send the chain of key changes with the response
 
    */
+  const Bitcore = require('bitcore-lib');
+
   angular.module('copayApp.controllers').controller('authConfirmationController',
     ($scope, $timeout, configService, profileService, go, authService, lodash) => {
       const ecdsaSig = require('byteballcore/signature.js');

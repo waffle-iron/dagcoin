@@ -1,7 +1,6 @@
 (function () {
   'use strict';
 
-  /* eslint-disable no-unused-expressions */
   function selectText(element) {
     const doc = document;
     if (doc.body.createTextRange) { // ms
@@ -191,7 +190,8 @@
     scope.$watch(attrs.showFocus,
       (newValue) => {
         $timeout(() => {
-          newValue && element[0].focus();
+          const isFocused = newValue && element[0].focus();
+          return isFocused;
         });
       }, true);
   })

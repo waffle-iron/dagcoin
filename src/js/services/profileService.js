@@ -1,5 +1,4 @@
-// todo: temporarily disabled no-undef,no-unused-vars.
-/* eslint-disable no-undef,no-unused-vars,func-names */
+/* eslint-disable no-unused-vars */
 (function () {
   'use strict';
 
@@ -180,7 +179,7 @@
         }
         return storageService.getProfile((getProfileError, profile) => {
           if (getProfileError) {
-            $rootScope.$emit('Local/DeviceError', err);
+            $rootScope.$emit('Local/DeviceError', getProfileError);
             return cb(getProfileError);
           }
           if (!profile) {
@@ -357,7 +356,7 @@
 
       storageService.clearBackupFlag(walletId, (clearBackupFlagError) => {
         if (clearBackupFlagError) {
-          log.warn(clearBackupFlagError);
+          $log.warn(clearBackupFlagError);
         }
       });
 
@@ -605,7 +604,7 @@
       const fc = root.focusedClient;
       try {
         fc.lock();
-      } catch (e) {
+      } catch (ex) {
         $log.warn(ex);
       }
     };
@@ -641,7 +640,7 @@
             try {
               fc.lock();
               breadcrumbs.add(`locked ${fc.credentials.walletId}`);
-            } catch (e) {
+            } catch (ex) {
               $log.warn(ex);
             }
           }
@@ -656,12 +655,12 @@
       if (!insistUnlockFCError) {
         return cb();
       }
-      return root.unlockFC(unlockFCError, (err) => {
-        if (!unlockFCError) {
+      return root.unlockFC(insistUnlockFCError, () => {
+        if (!insistUnlockFCError) {
           return cb();
         }
         return $timeout(() => {
-          root.insistUnlockFC(unlockFCError.message, cb);
+          root.insistUnlockFC(insistUnlockFCError.message, cb);
         }, 1000);
       });
     };
@@ -710,4 +709,3 @@
     return root;
   });
 }());
-
