@@ -1,4 +1,4 @@
-/* eslint-disable new-cap, no-shadow, no-unused-vars, import/no-extraneous-dependencies,import/no-unresolved */
+/* eslint-disable no-unused-vars,no-mixed-operators,no-use-before-define,new-cap,no-nested-ternary,no-shadow,no-plusplus,consistent-return,import/no-extraneous-dependencies,import/no-unresolved */
 (function () {
   'use strict';
 
