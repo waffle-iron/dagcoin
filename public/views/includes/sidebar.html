@@ -17,6 +17,16 @@
 	    <div class="size-12" ng-show="item.n > 1" translate>{{item.m}}-of-{{item.n}}</div>
 	  </li>
 	  <li>
+	    <a ng-click="$root.go('create')" class="oh">
+	      <i class="icon-arrow-right3 size-18 right m10t"></i>
+	      <i class="fi-plus size-24 icon"></i>
+	      <div class="tu text-bold">
+	        <span class="size-12" translate>Add wallet</span>
+	      </div>
+	      <div translate>Create a new wallet</div>
+	    </a>
+	  </li>
+	  <li>
 	    <a ng-click="sidebar.closeMenu(); $root.go('correspondentDevices')" class="oh">
 	      <i class="icon-arrow-right3 size-18 right m10t vm"></i>
 	      <i class="fi-plus size-24 icon vm"></i>
