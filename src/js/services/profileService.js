@@ -652,12 +652,12 @@
 
     // continue to request password until the correct password is entered
     root.insistUnlockFC = function (insistUnlockFCError, cb) {
-      return root.unlockFC(insistUnlockFCError, () => {
-        if (!insistUnlockFCError) {
+      root.unlockFC(insistUnlockFCError, (err) => {
+        if (!err) {
           return cb();
         }
         return $timeout(() => {
-          root.insistUnlockFC(insistUnlockFCError.message, cb);
+          root.insistUnlockFC(err.message, cb);
         }, 1000);
       });
     };
