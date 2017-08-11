@@ -22,38 +22,32 @@
       self.activate = activate;
       self.init = init;
 
-      $rootScope.$on('Local/ProfileBound', () => {
+      $rootScope.$on('Local/BalanceUpdatedAndWalletUnlocked', (event, ab) => {
+        assocBalances = ab;
+
         self.init();
       });
 
-      $rootScope.$on('Local/BalanceUpdated', (event, ab) => {
-        assocBalances = ab;
-
-        self.canEnable().then(
-          () => {
-          },
-          () => {
-            if (fundingNode) {
-              self.update(false).then(
-                () => {
-                },
-                (err) => {
-                  console.log(err);
-                }
-              );
-            }
-          });
-      });
-
       function init() {
-        const conf = require('byteballcore/conf.js');
+        const conf = requireUncached('byteballcore/conf.js');
 
         exchangeFee = conf.exchangeFee || exchangeFee;
         messageIntervalTimeout = conf.fundingNodeMessageInterval || messageIntervalTimeout;
+        discoveryService.sendMessage(discoveryService.messages.listTraders).then(() => { });
 
-        discoveryService.sendMessage(discoveryService.messages.listTraders).then(() => {
+        return self.canEnable().then(() => {
+          self.update(conf.fundingNode || false);
+        },
+        () => {
+          if (fundingNode) {
+            self.update(false).then(
+              () => { },
+              (err) => {
+                console.log(err);
+              }
+            );
+          }
         });
-        return self.update(conf.fundingNode || false);
       }
 
       function requireUncached(module) {
