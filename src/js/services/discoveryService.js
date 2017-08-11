@@ -60,7 +60,7 @@
               return -1;
             });
 
-            fundingNode = respObj.messageBody.traders[respObj.messageBody.traders.length - 1];
+            fundingNode = respObj.messageBody.traders[0];
             pairCode = fundingNode.pairCode;
 
             addPairDevice(pairCode).then(() => { }, (err) => { console.log(err); });
