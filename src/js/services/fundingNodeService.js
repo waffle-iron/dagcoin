@@ -6,8 +6,14 @@
     .factory('fundingNodeService', ($q, $rootScope, discoveryService) => {
       const self = {};
 
-      let messageIntervalTimeout = 5 * 60 * 1000; // 5min
-      let exchangeFee = 0.001;
+      const settings = {
+        exchangeFee: 0.001,
+        totalBytes: 100000,
+        bytesPerAddress: 10000,
+        maxEndUserCapacity: 10
+      };
+
+      let messageIntervalTimeout = 5 * 60 * 1000;
       let fundingNode = false;
 
       let messageInterval = null;
@@ -15,12 +21,12 @@
 
       self.update = update;
       self.isActivated = isActivated;
-      self.getExchangeFee = getExchangeFee;
-      self.setExchangeFee = setExchangeFee;
       self.canEnable = canEnable;
       self.deactivate = deactivate;
       self.activate = activate;
       self.init = init;
+      self.getSettings = getSettings;
+      self.setSettings = setSettings;
 
       $rootScope.$on('Local/ProfileBound', () => {
         self.init();
@@ -30,13 +36,11 @@
         assocBalances = ab;
 
         self.canEnable().then(
-          () => {
-          },
+          () => { },
           () => {
             if (fundingNode) {
               self.update(false).then(
-                () => {
-                },
+                () => { },
                 (err) => {
                   console.log(err);
                 }
@@ -48,11 +52,14 @@
       function init() {
         const conf = require('byteballcore/conf.js');
 
-        exchangeFee = conf.exchangeFee || exchangeFee;
+        settings.exchangeFee = conf.exchangeFee || settings.exchangeFee;
+        settings.totalBytes = conf.totalBytes || settings.totalBytes;
+        settings.bytesPerAddress = conf.bytesPerAddress || settings.bytesPerAddress;
+        settings.maxEndUserCapacity = conf.maxEndUserCapacity || settings.maxEndUserCapacity;
+
         messageIntervalTimeout = conf.fundingNodeMessageInterval || messageIntervalTimeout;
 
-        discoveryService.sendMessage(discoveryService.messages.listTraders).then(() => {
-        });
+        discoveryService.sendMessage(discoveryService.messages.listTraders).then(() => { });
         return self.update(conf.fundingNode || false);
       }
 
@@ -70,7 +77,10 @@
         const userConf = requireUncached(userConfFile);
 
         userConf.fundingNode = fundingNode;
-        userConf.exchangeFee = exchangeFee;
+        userConf.exchangeFee = settings.exchangeFee;
+        userConf.totalBytes = settings.totalBytes;
+        userConf.bytesPerAddress = settings.bytesPerAddress;
+        userConf.maxEndUserCapacity = settings.maxEndUserCapacity;
 
         fs.writeFile(userConfFile, JSON.stringify(userConf, null, '\t'), 'utf8', (err) => {
           if (err) {
@@ -123,7 +133,7 @@
           def.resolve();
         } else {
           discoveryService.sendMessage(discoveryService.messages.startingTheBusiness).then(() => {
-            setExchangeFee(exchangeFee).then(() => {
+            setSettings(settings).then(() => {
               aliveAndWell().then(() => {
                 messageInterval = setInterval(() => {
                   aliveAndWell().then(() => { },
@@ -198,22 +208,6 @@
         return d.promise;
       }
 
-      function getExchangeFee() {
-        return exchangeFee;
-      }
-
-      function setExchangeFee(ef) {
-        const def = $q.defer();
-
-        discoveryService.sendMessage(discoveryService.messages.updateExchangeFee, { exchangeFee: ef }).then(() => {
-          exchangeFee = ef;
-
-          updateConfig().then(def.resolve, def.reject);
-        }, def.reject);
-
-        return def.promise;
-      }
-
       function update(val) {
         const def = $q.defer();
 
@@ -227,6 +221,25 @@
 
         func().then(() => {
           setFundnigNode(val).then(def.resolve, def.reject);
+        }, def.reject);
+
+        return def.promise;
+      }
+
+      function getSettings() {
+        return angular.copy(settings);
+      }
+
+      function setSettings(newSettings) {
+        const def = $q.defer();
+
+        discoveryService.sendMessage(discoveryService.messages.updateSettings, { settings: newSettings }).then(() => {
+          settings.exchangeFee = newSettings.exchangeFee;
+          settings.totalBytes = newSettings.totalBytes;
+          settings.bytesPerAddress = newSettings.bytesPerAddress;
+          settings.maxEndUserCapacity = newSettings.maxEndUserCapacity;
+
+          updateConfig().then(def.resolve, def.reject);
         }, def.reject);
 
         return def.promise;
