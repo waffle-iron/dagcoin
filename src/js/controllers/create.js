@@ -130,6 +130,7 @@
         }
         if (self.cosigners.length !== $scope.totalCosigners - 1) {
           setError('invalid number of cosigners');
+          return;
         }
 
         const opts = {
@@ -143,10 +144,12 @@
           opts.cosigners = lodash.uniq(self.cosigners.map(cosigner => cosigner.device_address));
           if (opts.cosigners.length !== $scope.totalCosigners - 1) {
             setError('Please select different co-signers');
+            return;
           }
           for (let i = 0; i < opts.cosigners.length; i += 1) {
             if (!opts.cosigners[i] || opts.cosigners[i].length !== 33) {
               setError('Please fill all co-signers');
+              return;
             }
           }
         }

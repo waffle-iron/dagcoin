@@ -21,12 +21,13 @@
     <div class="p10 line-b" ng-include="'views/includes/copayers.html'"></div>
     <div ng-if="!index.isComplete" class="p10 line-b m20b">
       <p class="size-12 m0">
-      <i class="fi-loop"></i>
-      <span translate>Waiting...</span>
+        <i class="fi-loop"></i>
+        <span translate>Waiting...</span>
       </p>
     </div>
   </div>
-
+  
+  <div class="cancel_wallet columns"><a href="#" ng-click="copayers.deleteWallet()" translate>cancel wallet creation</a></div>
 
 </div>
 
