@@ -652,9 +652,6 @@
 
     // continue to request password until the correct password is entered
     root.insistUnlockFC = function (insistUnlockFCError, cb) {
-      if (!insistUnlockFCError) {
-        return cb();
-      }
       return root.unlockFC(insistUnlockFCError, () => {
         if (!insistUnlockFCError) {
           return cb();
