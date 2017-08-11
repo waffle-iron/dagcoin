@@ -7,6 +7,10 @@
       self.isWindowsPhoneApp = isMobile.Windows() && isCordova;
       self.walletSelection = false;
 
+      $rootScope.$on('Local/WalletListUpdated', () => {
+        self.walletSelection = false;
+        self.setWallets();
+      });
 
       $rootScope.$on('Local/ColorUpdated', () => {
         self.setWallets();
