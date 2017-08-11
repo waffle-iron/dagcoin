@@ -310,6 +310,17 @@
         },
       },
     })
+    .state('preferencesDeleteWallet', {
+      url: '/delete',
+      templateUrl: 'views/preferencesDeleteWallet.html',
+      walletShouldBeComplete: true,
+      needProfile: true,
+      views: {
+        'main@': {
+          templateUrl: 'views/preferencesDeleteWallet.html'
+        },
+      }
+    })
     .state('preferencesColor', {
       url: '/preferencesColor',
       templateUrl: 'views/preferencesColor.html',
