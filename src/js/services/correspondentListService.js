@@ -1,6 +1,6 @@
 angular.module('copayApp.services').factory('correspondentListService',
   ($state, $rootScope, $sce, $compile, configService, storageService,
-   profileService, go, lodash, $stickyState, $deepStateRedirect, $timeout) => {
+   profileService, go, lodash, $stickyState, $deepStateRedirect, $timeout, discoveryService) => {
     const eventBus = require('byteballcore/event_bus.js');
     const ValidationUtils = require('byteballcore/validation_utils.js');
     const objectHash = require('byteballcore/object_hash.js');
@@ -89,10 +89,10 @@ angular.module('copayApp.services').factory('correspondentListService',
         if (!ValidationUtils.isValidAddress(address)) {
           return address;
         }
-        return `<a dropdown-toggle="#pop${address}">${address}</a><ul id="pop${address}" 
-            class="f-dropdown drop-to4p drop-4up" style="left:0px" data-dropdown-content><li>
-            <a ng-click="sendPayment('${address}')">Pay to this address</a></li>
-            <li><a ng-click="offerContract('${address}')">Offer a contract</a></li></ul>`;
+        return `<a dropdown-toggle="#pop${address}">${address}</a><ul id="pop${address}"` +
+            'class="f-dropdown drop-to4p drop-4up" style="left:0px" data-dropdown-content><li>' +
+            `<a ng-click="sendPayment('${address}')">Pay to this address</a></li>` +
+            `<li><a ng-click="offerContract('${address}')">Offer a contract</a></li></ul>`;
       }).replace(paymentRequestRegexp, (str, address, queryString) => {
         if (!ValidationUtils.isValidAddress(address)) {
           return str;
@@ -102,8 +102,8 @@ angular.module('copayApp.services').factory('correspondentListService',
         if (!objPaymentRequest) {
           return str;
         }
-        return `<a ng-click="sendPayment('${address}', ${objPaymentRequest.amount}, '${objPaymentRequest.asset}', 
-        '${objPaymentRequest.device_address}')">${objPaymentRequest.amountStr}</a>`;
+        return `<a ng-click="sendPayment('${address}', ${objPaymentRequest.amount}, '${objPaymentRequest.asset}',` +
+        `'${objPaymentRequest.device_address}')">${objPaymentRequest.amountStr}</a>`;
       }).replace(/\[(.+?)\]\(command:(.+?)\)/g,
         (str, description, command) => `<a ng-click="sendCommand('${escapeQuotes(command)}', 
         '${escapeQuotes(description)}')" class="command">${description}</a>`).replace(/\[(.+?)\]\(payment:(.+?)\)/g,
@@ -462,9 +462,13 @@ angular.module('copayApp.services').factory('correspondentListService',
 
     eventBus.on('text', (fromAddress, body) => {
       device.readCorrespondent(fromAddress, (correspondent) => {
-        if (!root.messageEventsByCorrespondent[correspondent.device_address]) loadMoreHistory(correspondent);
-        addIncomingMessageEvent(correspondent.device_address, body);
-        if (correspondent.my_record_pref && correspondent.peer_record_pref) chatStorage.store(fromAddress, body, 1);
+        if (discoveryService.isDiscoveryServiceAddress(fromAddress)) {
+          discoveryService.processMessage(body);
+        } else {
+          if (!root.messageEventsByCorrespondent[correspondent.device_address]) loadMoreHistory(correspondent);
+          addIncomingMessageEvent(correspondent.device_address, body);
+          if (correspondent.my_record_pref && correspondent.peer_record_pref) chatStorage.store(fromAddress, body, 1);
+        }
       });
     });
 

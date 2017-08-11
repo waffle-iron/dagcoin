@@ -4,20 +4,13 @@
   angular.module('copayApp.controllers').controller('preferencesGlobalController',
     function ($scope, $q, $rootScope, $timeout, $log, configService, uxLanguage, pushNotificationsService, profileService, fundingNodeService) {
       const conf = require('byteballcore/conf.js');
+      const self = this;
 
       $scope.encrypt = !!profileService.profile.xPrivKeyEncrypted;
-      $scope.fundingNodeDisabled = true;
-      $scope.fundingNode = fundingNodeService.get();
 
-      this.initFundingNode = () => {
-        fundingNodeService.canEnable().then(
-          () => {
-            $scope.fundingNodeDisabled = false;
-          },
-          () => {
-            $scope.fundingNodeDisabled = true;
-          }
-        );
+      self.initFundingNode = () => {
+        self.fundingNode = fundingNodeService.isActivated();
+        self.exchangeFee = fundingNodeService.getExchangeFee();
       };
 
       this.init = function () {
@@ -31,7 +24,7 @@
         this.torEnabled = conf.socksHost && conf.socksPort;
         $scope.pushNotifications = config.pushNotifications.enabled;
 
-        this.initFundingNode();
+        self.initFundingNode();
       };
 
       const unwatchPushNotifications = $scope.$watch('pushNotifications', (newVal, oldVal) => {
@@ -85,20 +78,31 @@
         }
       });
 
-      const unwatchFundingNode = $scope.$watch('fundingNode', (newVal, oldVal) => {
+      const unwatchFundingNode = $scope.$watch(() => self.fundingNode, (newVal, oldVal) => {
         if (oldVal === null || oldVal === undefined || newVal === oldVal) {
           return;
         }
 
         fundingNodeService.canEnable().then(() => {
           fundingNodeService.update(newVal).then(() => {
+            self.exchangeFee = fundingNodeService.getExchangeFee();
           });
-        },
-          () => {
-            $scope.fundingNodeDisabled = true;
-            $scope.fundingNode = false;
+        }, () => {
+          self.fundingNode = false;
+        });
+      }, true);
+
+      self.onExchangeFeeBlur = function () {
+        const exchangeFeeVal = parseFloat(self.exchangeFee);
+        if (self.exchangeFee && exchangeFeeVal.toString() === self.exchangeFee.toString() && exchangeFeeVal >= 0) {
+          fundingNodeService.setExchangeFee(self.exchangeFee).then(() => {
+          }, () => {
+            self.exchangeFee = fundingNodeService.getExchangeFee();
           });
-      });
+        } else {
+          self.exchangeFee = fundingNodeService.getExchangeFee();
+        }
+      };
 
       $scope.$on('$destroy', () => {
         unwatchPushNotifications();

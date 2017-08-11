@@ -64,8 +64,6 @@
        //console.log(os.userInfo());
        */
 
-      fundingNodeService.init();
-
       function updatePublicKeyRing(walletClient, onDone) {
         const walletDefinedByKeys = require('byteballcore/wallet_defined_by_keys.js');
         walletDefinedByKeys.readCosigners(walletClient.credentials.walletId, (arrCosigners) => {
@@ -387,7 +385,6 @@
       // we won't pop up confirmation dialog for each address,
       // instead we'll use the already obtained approval
       const assocChoicesByUnit = {};
-      const bbWallet = require('byteballcore/wallet.js');
 
       // objAddress is local wallet address, top_address is the address that requested the signature,
       // it may be different from objAddress if it is a shared address
@@ -412,11 +409,13 @@
           const bufToSign = objectHash.getUnitHashToSign(objUnit);
           const signature = ecdsaSig.sign(bufToSign, privKeyBuf);
           console.log(`sent signature ${signature}`);
+          const bbWallet = require('byteballcore/wallet.js');
           return bbWallet.sendSignature(fromAddress, bufToSign.toString('base64'), signature, signingPath, topAddress);
         }
 
         function refuseSignature() {
           const bufToSign = objectHash.getUnitHashToSign(objUnit);
+          const bbWallet = require('byteballcore/wallet.js');
           bbWallet.sendSignature(fromAddress, bufToSign.toString('base64'), '[refused]', signingPath, topAddress);
           console.log('refused signature');
         }
