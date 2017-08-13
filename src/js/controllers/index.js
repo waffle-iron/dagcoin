@@ -820,7 +820,7 @@
             // Notify external addons or plugins
             $rootScope.$emit('Local/BalanceUpdated', assocBalances);
             if (!self.isPrivKeyEncrypted) {
-              $rootScope.$emit('Local/BalanceUpdatedAndWalletUnlocked');
+              $rootScope.$emit('Local/BalanceUpdatedAndWalletUnlocked', assocBalances);
             }
           });
 

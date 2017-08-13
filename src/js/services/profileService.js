@@ -112,7 +112,7 @@
     function unlockWalletAndInitDevice() {
       // wait till the wallet fully loads
       breadcrumbs.add('unlockWalletAndInitDevice');
-      const removeListener = $rootScope.$on('Local/BalanceUpdated', () => {
+      const removeListener = $rootScope.$on('Local/BalanceUpdated', (event, ab) => {
         removeListener();
         breadcrumbs.add('unlockWalletAndInitDevice BalanceUpdated');
         root.insistUnlockFC(null, () => {
@@ -124,7 +124,7 @@
           const config = configService.getSync();
           root.focusedClient.initDeviceProperties(
             root.focusedClient.credentials.xPrivKey, root.profile.my_device_address, config.hub, config.deviceName);
-          $rootScope.$emit('Local/BalanceUpdatedAndWalletUnlocked');
+          $rootScope.$emit('Local/BalanceUpdatedAndWalletUnlocked', ab);
         });
       });
     }
@@ -652,15 +652,12 @@
 
     // continue to request password until the correct password is entered
     root.insistUnlockFC = function (insistUnlockFCError, cb) {
-      if (!insistUnlockFCError) {
-        return cb();
-      }
-      return root.unlockFC(insistUnlockFCError, () => {
-        if (!insistUnlockFCError) {
+      root.unlockFC(insistUnlockFCError, (err) => {
+        if (!err) {
           return cb();
         }
         return $timeout(() => {
-          root.insistUnlockFC(insistUnlockFCError.message, cb);
+          root.insistUnlockFC(err.message, cb);
         }, 1000);
       });
     };
