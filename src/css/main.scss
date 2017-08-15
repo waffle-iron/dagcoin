@@ -2726,8 +2726,19 @@ input {
   width: 70%;
   text-align: right;
   white-space: normal;
+  word-break: break-all;
 
   .arrow-right {
     float: right;
   }
+}
+
+.wrapable-saidebar-item {
+  white-space: normal;
+  word-break: break-all;
+}
+
+.text-ellipsis {
+  text-overflow: ellipsis;
+  overflow: hidden;
 }
