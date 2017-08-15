@@ -48,15 +48,9 @@
 
         return self.canEnable().then(() => {
           self.update(conf.fundingNode || false);
-        },
-        () => {
+        }, () => {
           if (fundingNode) {
-            self.update(false).then(
-              () => { },
-              (err) => {
-                console.log(err);
-              }
-            );
+            self.update(false).then(() => { }, err => console.log(err));
           }
         });
       }
@@ -73,6 +67,14 @@
         const appDataDir = desktopApp.getAppDataDir();
         const userConfFile = `${appDataDir}/conf.json`;
         const userConf = requireUncached(userConfFile);
+
+        if (userConf.fundingNode === fundingNode &&
+          userConf.exchangeFee === settings.exchangeFee &&
+          userConf.totalBytes === settings.totalBytes &&
+          userConf.bytesPerAddress === settings.bytesPerAddress &&
+          userConf.maxEndUserCapacity === settings.maxEndUserCapacity) {
+          return $q.resolve();
+        }
 
         userConf.fundingNode = fundingNode;
         userConf.exchangeFee = settings.exchangeFee;
@@ -91,79 +93,49 @@
         return def.promise;
       }
 
-      function setFundnigNode(val) {
-        const def = $q.defer();
-
-        fundingNode = val;
-
-        updateConfig().then(() => {
-          def.resolve();
-        }, (err) => {
-          def.reject(err);
-        });
-
-        return def.promise;
-      }
-
       function isActivated() {
         return fundingNode;
       }
 
       function aliveAndWell() {
         const def = $q.defer();
-
         const device = require('byteballcore/device.js');
+
         device.startWaitingForPairing((pairingInfo) => {
           const code = `${pairingInfo.device_pubkey}@${pairingInfo.hub}#${pairingInfo.pairing_secret}`;
 
-          discoveryService.sendMessage(discoveryService.messages.aliveAndWell, { pairCode: code }).then(() => {
-            def.resolve();
-          }, def.reject);
+          discoveryService.sendMessage(discoveryService.messages.aliveAndWell, { pairCode: code }).then(def.resolve, def.reject);
         });
 
         return def.promise;
       }
 
       function activate() {
-        const def = $q.defer();
-
         if (fundingNode) {
-          def.resolve();
-        } else {
-          discoveryService.sendMessage(discoveryService.messages.startingTheBusiness).then(() => {
-            setSettings(settings).then(() => {
-              aliveAndWell().then(() => {
-                messageInterval = setInterval(() => {
-                  aliveAndWell().then(() => { },
-                    (err) => {
-                      console.log(err);
-                    }
-                  );
-                }, messageIntervalTimeout);
-
-                def.resolve();
-              }, def.reject);
-            }, def.reject);
-          });
+          return $q.resolve();
         }
 
-        return def.promise;
+        const sendMessPromise = discoveryService.sendMessage(discoveryService.messages.startingTheBusiness);
+        const setSettingsPromise = sendMessPromise.then(() => setSettings(settings));
+        const aliveAndWellPromise = setSettingsPromise.then(() => aliveAndWell());
+
+        return aliveAndWellPromise.then(() => {
+          messageInterval = setInterval(() => {
+            aliveAndWell().then(() => { }, err => console.log(err));
+          }, messageIntervalTimeout);
+        });
       }
 
       function deactivate() {
-        const def = $q.defer();
-
         if (fundingNode) {
           if (messageInterval) {
             clearInterval(messageInterval);
           }
 
-          discoveryService.sendMessage(discoveryService.messages.outOfBusiness).then(def.resolve, def.reject);
-        } else {
-          def.resolve();
+          return discoveryService.sendMessage(discoveryService.messages.outOfBusiness);
         }
 
-        return def.promise;
+        return $q.resolve();
       }
 
       function canEnable() {
@@ -207,8 +179,6 @@
       }
 
       function update(val) {
-        const def = $q.defer();
-
         let func;
 
         if (val) {
@@ -217,11 +187,11 @@
           func = deactivate;
         }
 
-        func().then(() => {
-          setFundnigNode(val).then(def.resolve, def.reject);
-        }, def.reject);
+        return func().then(() => {
+          fundingNode = val;
 
-        return def.promise;
+          return updateConfig();
+        });
       }
 
       function getSettings() {
@@ -229,18 +199,14 @@
       }
 
       function setSettings(newSettings) {
-        const def = $q.defer();
-
-        discoveryService.sendMessage(discoveryService.messages.updateSettings, { settings: newSettings }).then(() => {
+        return discoveryService.sendMessage(discoveryService.messages.updateSettings, { settings: newSettings }).then(() => {
           settings.exchangeFee = newSettings.exchangeFee;
           settings.totalBytes = newSettings.totalBytes;
           settings.bytesPerAddress = newSettings.bytesPerAddress;
           settings.maxEndUserCapacity = newSettings.maxEndUserCapacity;
 
-          updateConfig().then(def.resolve, def.reject);
-        }, def.reject);
-
-        return def.promise;
+          return updateConfig();
+        });
       }
 
       return self;
