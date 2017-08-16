@@ -328,7 +328,7 @@ a.missing-copayers {
       margin: -2px 0 0 -2px;
 
       &:before, &:after{
-        content: '';
+        content: "";
         display: inline-block;
         height: 4px;
         width: 4px;
@@ -355,7 +355,7 @@ a.missing-copayers {
       position: relative;
 
       &.wallets{
-        background: #FBFBFB;
+        background: #fbfbfb;
         border-bottom: 1px solid #eee;
 
         .avatar-wallet{
@@ -404,7 +404,6 @@ a.missing-copayers {
       &.menu_links{
 
         a{
-          border-left: 2px solid;
           transition: all 500ms cubic-bezier(0.19, 1, 0.22, 1); /* easeOutExpo */
           transition-timing-function: cubic-bezier(0.19, 1, 0.22, 1); /* easeOutExpo */
           border-left: 2px solid transparent;
