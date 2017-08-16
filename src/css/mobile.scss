@@ -283,46 +283,156 @@ a.missing-copayers {
 }
 
 .sidebar {
-  background: #2c3e50;
+  background: #fff;
 
   header {
+    background: #fbfbfb;
+    border-bottom: 1px solid #eee;
+    position: relative;
+    padding: 20px;
+    margin-bottom: 20px;
+    color: #434c56;
     text-align: center;
-    padding: 1.7rem;
-    border-bottom: 1px solid #384b5f;
-    color: #fff;
 
-    h1 {
-      color: #fff;
-      margin: 0;
-      padding: 5px;
+    .icon{
+      height: 30px;
+      width: 90px;
+      margin-bottom: 10px;
     }
 
-    small {
-      color: #fff;
+    span{
+      font-size: 11px;
+    }
+
+    strong{
+      display: block;
+    }
+  }
+
+  .custom_edit_icon{
+    position: relative;
+    width: 30px;
+    height: 30px;
+    cursor: pointer;
+    display: inline-block;
+
+    span{
+      display: inline-block;
+      height: 4px;
+      width: 4px;
+      background: #bdbdbd;
+      border-radius: 100%;
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      margin: -2px 0 0 -2px;
+
+      &:before, &:after{
+        content: "";
+        display: inline-block;
+        height: 4px;
+        width: 4px;
+        background: #bdbdbd;
+        border-radius: 100%;
+        position: absolute;
+        left: 0;
+        top: -8px;
+      }
+
+      &:after{
+        top: 8px;
+      }
     }
   }
 
   ul.off-canvas-list {
-    margin-bottom: 30px;
+    margin: 0 0 30px;
+    list-style-type: none;
+
+    li {
+      line-height: 16px;
+      cursor: pointer;
+      position: relative;
+
+      &.wallets{
+        background: #fbfbfb;
+        border-bottom: 1px solid #eee;
+
+        .avatar-wallet{
+          position: absolute;
+          left: 15px;
+          top: 50%;
+          margin-top: -17px;
+          line-height: 33px;
+        }
+
+        .name-wallet{
+          height: 30px;
+        }
+
+        a{
+          margin-right: 30px;
+          margin-left: 40px;
+        }
+
+        .custom_edit_icon{
+          position: absolute;
+          right: 10px;
+          top: 50%;
+          margin-top: -15px;
+        }
+
+        &:first-child{
+          border-top: 1px solid #eee;
+        }
+
+        &.selected{
+          background: rgba(83, 172, 255, 0.1);
+        }
+      }
+
+      a{
+        color: #434c56;
+        font-size: 15px;
+        padding: 15px 20px;
+        display: block;
+        font-weight: 400;
+        cursor: pointer;
+        border-bottom: 0;
+      }
+
+      &.menu_links{
+
+        a{
+          transition: all 500ms cubic-bezier(0.19, 1, 0.22, 1); /* easeOutExpo */
+          transition-timing-function: cubic-bezier(0.19, 1, 0.22, 1); /* easeOutExpo */
+          border-left: 2px solid transparent;
+
+          &:hover{
+            border-left: 2px solid;
+            padding-left: 25px;
+
+            .icon{
+              margin-right: 20px;
+            }
+          }
+        }
+      }
+    }
+
+    .icon {
+      width: 20px;
+      text-align: center;
+      margin-right: 15px;
+      float: left;
+      display: block;
+      font-size: 20px;
+      position: relative;
+      top: -1px;
+    }
   }
 }
 
-.sidebar .icon {
-  width: 39px;
-  text-align: center;
-  margin-right: 15px;
-  float: left;
-  display: block;
-}
-
-.sidebar li {
-  overflow: hidden;
-  border-bottom: 1px solid #384b5f;
-}
-
-.sidebar li.nav-item.selected {
-  background-color: #122232;
-}
 
 .sidebar .avatar-wallet, .payment-uri .avatar-wallet, .modal-content .avatar-wallet {
   background-color: #2c3e50;
@@ -338,7 +448,7 @@ a.missing-copayers {
   padding: 2px;
 }
 
-.sidebar ul.off-canvas-list li a, .modal-content ul li a {
+.modal-content ul li a {
   font-size: 12px;
   font-weight: 300;
   border-bottom: transparent;
@@ -373,15 +483,6 @@ ul.correspondentList li a.removeCorrespondentList {
   margin-right: 10px;
 }
 
-.sidebar ul.off-canvas-list li a i {
-  vertical-align: middle;
-  opacity: 0.6;
-}
-
-.sidebar .left-off-canvas-menu {
-  background: #e4e8ec;
-  line-height: 24px;
-}
 
 /*
  * Remove all vendors hover / shadow / fade
@@ -402,15 +503,16 @@ ul.off-canvas-list li a:hover {
 
 .move-right .close-menu {
   cursor: pointer;
-  box-shadow: none;
   display: block;
   position: absolute;
-  background: none;
-  top: 0;
-  bottom: 0;
+  background: rgba(0,0,0,0.75);
+  opacity: 0.6;
+  top: -10px;
+  bottom: -10px;
   left: 0;
   right: 0;
   z-index: 1002;
+  box-shadow:inset 0 0 5px 5px rgba(0,0,0,0.5);
 }
 
 /* === */
