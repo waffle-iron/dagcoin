@@ -1,7 +1,7 @@
 <div class="navbar-wrap">
 	<ul>
-		<li ng-repeat="item in index.menu" ng-class="{'active': tab == item.link}">
-			<a ng-click="index.setTab(item, false, 0, true)" id="menu-{{item.link}}">
+		<li ng-repeat="item in index.menu">
+			<a ng-click="index.setTab(item, false, 0, true)" ng-class="{'active': index.tab == item.link}" id="menu-{{item.link}}">
 				<svg class="icon {{item.icon}}">
 					<use xlink:href="{{index.getSvgSrc(item.icon)}}"></use>
 				</svg>
@@ -11,3 +11,5 @@
 	</ul>
 	<menu-toggle ng-show="index.menu.length > 5"></menu-toggle>
 </div>
+
+
