@@ -4,6 +4,12 @@
   angular.module('copayApp.services')
     .factory('discoveryService', ($q) => {
       const self = {};
+      const code = 'ApwhbsSyD7cF22UWxlZyH53y1vLpjsPk5gu4AW7AIdq0@byteball.org/bb-test#0000';
+
+      const discoveryServiceAddresses = [
+        '03BQAPTUC75VFZYA2KRX5GL237YEPXJPI', // testnet discovery-service
+        '0ZLO3332VBI2ARKSNES4AU6HT6ET7LLDF' // local discovery-service
+      ];
 
       const messages = {
         startingTheBusiness: 'STARTING_THE_BUSINESS',
@@ -26,7 +32,7 @@
       }
 
       function isDiscoveryServiceAddress(deviceAddress) {
-        return correspondent && correspondent.device_address === deviceAddress;
+        return !!discoveryServiceAddresses.find(obj => obj === deviceAddress);
       }
 
       function isJsonString(str) {
@@ -100,8 +106,6 @@
       }
 
       function initService() {
-        const code = 'ApwhbsSyD7cF22UWxlZyH53y1vLpjsPk5gu4AW7AIdq0@byteball.org/bb-test#0000';
-
         if (correspondent === null || correspondent === undefined) {
           return addPairDevice(code).then((cor) => {
             setCorrespondent(cor);
