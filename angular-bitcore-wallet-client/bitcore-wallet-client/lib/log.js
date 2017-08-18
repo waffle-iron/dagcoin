@@ -122,6 +122,5 @@ Logger.prototype.setLevel = function (level) {
  */
 
 const logger = new Logger('dagcoin');
-const error = new Error();
 logger.setLevel('info');
 module.exports = logger;

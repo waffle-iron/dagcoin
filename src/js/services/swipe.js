@@ -1,3 +1,5 @@
+(function () {
+  'use strict';
 
   /* eslint-disable no-param-reassign,no-unused-expressions,one-var */
 // todo: we aren't using swipe functionality. this might be removed in futuire.
