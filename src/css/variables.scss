@@ -1,0 +1,72 @@
+$main_color: #e51e25;
+//$main_color: #3296dc;
+
+$nav_bar_height: 50px;
+
+
+@mixin gradientBackground($colorFrom, $colorTo, $directionStart, $directionEnd){
+  background: linear-gradient(to $directionEnd, $colorFrom 0%,$colorTo 100%);
+  filter: progid:DXImageTransform.Microsoft.gradient( startColorstr=$colorFrom, endColorstr=$colorTo,GradientType=0 );
+}
+
+.transition{
+  transition: all 500ms cubic-bezier(0.19, 1, 0.22, 1);
+  transition-timing-function: cubic-bezier(0.19, 1, 0.22, 1);
+}
+
+@font-face {
+  font-family: "Roboto";
+  src: url("../font/Roboto-Thin.ttf") format("truetype");
+  font-weight: 100;
+  font-style: normal;
+}
+@font-face {
+  font-family: "Roboto";
+  src: url("../font/Roboto-ThinItalic.ttf") format("truetype");
+  font-weight: 100;
+  font-style: italic;
+}
+@font-face {
+  font-family: "Roboto";
+  src: url("../font/Roboto-LightItalic.ttf") format("truetype");
+  font-weight: 100;
+  font-style: italic;
+}
+@font-face {
+  font-family: "Roboto";
+  src: url("../font/Roboto-Medium.ttf") format("truetype");
+  font-weight: 600;
+  font-style: normal;
+}
+@font-face {
+  font-family: "Roboto";
+  src: url("../font/Roboto-MediumItalic.ttf") format("truetype");
+  font-weight: 600;
+  font-style: italic;
+}
+@font-face {
+  font-family: "Roboto";
+  src: url("../font/Roboto-Regular.ttf") format("truetype");
+  font-weight: 400;
+  font-style: normal;
+}
+@font-face {
+  font-family: "Roboto";
+  src: url("../font/Roboto-Italic.ttf") format("truetype");
+  font-weight: 400;
+  font-style: italic;
+}
+@font-face {
+  font-family: "Roboto";
+  src: url("../font/Roboto-Bold.ttf") format("truetype");
+  font-weight: 700;
+  font-style: normal;
+}
+@font-face {
+  font-family: "Roboto";
+  src: url("../font/Roboto-BoldItalic.ttf") format("truetype");
+  font-weight: 700;
+  font-style: italic;
+}
+
+$font: Roboto, "Helvetica Neue", Helvetica, Arial, sans-serif;

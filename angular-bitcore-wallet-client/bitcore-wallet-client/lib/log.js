@@ -1,4 +1,5 @@
-const _ = require('lodash');
+/* eslint-disable no-undef */
+const lodash = require('lodash');
 /**
  * @desc
  * A simple logger that wraps the <tt>console.log</tt> methods when available.
@@ -15,6 +16,16 @@ const _ = require('lodash');
  * @param {string} name - a name for the logger. This will show up on every log call
  * @constructor
  */
+
+const levels = {
+  debug: 0,
+  info: 1,
+  log: 2,
+  warn: 3,
+  error: 4,
+  fatal: 5,
+};
+
 const Logger = function (name) {
   this.name = name || 'log';
   this.level = 2;
@@ -25,19 +36,11 @@ Logger.prototype.getLevels = function () {
 };
 
 
-var levels = {
-  debug: 0,
-  info: 1,
-  log: 2,
-  warn: 3,
-  error: 4,
-  fatal: 5,
-};
-
-_.each(levels, (level, levelName) => {
-  Logger.prototype[levelName] = function () {
+lodash.each(levels, (level, levelName) => {
+  Logger.prototype[levelName] = function (...args) {
     if (level >= levels[this.level]) {
-      if (Error.stackTraceLimit && this.level == 'debug') {
+      let caller = '';
+      if (Error.stackTraceLimit && this.level === 'debug') {
         const old = Error.stackTraceLimit;
         Error.stackTraceLimit = 2;
         let stack;
@@ -49,14 +52,13 @@ _.each(levels, (level, levelName) => {
           stack = e.stack;
         }
         const lines = stack.split('\n');
-        var caller = lines[2];
+        caller = lines[2];
         caller = `:${caller.substr(6)}`;
         Error.stackTraceLimit = old;
       }
 
-      var str = `[${levelName}${caller || ''}] ${arguments[0]}`,
-        extraArgs,
-        extraArgs = [].slice.call(arguments, 1);
+      let str = `[${levelName}${caller}] ${args[0]}`;
+      const extraArgs = [].slice.call(args, 1);
       if (console[levelName]) {
         extraArgs.unshift(str);
         console[levelName](...extraArgs);

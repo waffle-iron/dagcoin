@@ -30,7 +30,9 @@ bwcModule.provider('bwcService', () => {
 
     service.getClient = function (walletData) {
       const bwc = new Client({});
-      if (walletData) { bwc.import(walletData); }
+      if (walletData) {
+        bwc.import(walletData);
+      }
       return bwc;
     };
 

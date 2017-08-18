@@ -44,7 +44,7 @@ angular.module('copayApp.controllers').controller('acceptCorrespondentInvitation
 			/* if (err)
 				$scope.error = err;
 			else
-				go.path('correspondentDevices');*/
+				go.path('correspondentDevices'); */
       });
     }
 

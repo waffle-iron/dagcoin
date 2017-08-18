@@ -1,5 +1,23 @@
+// todo: suppressed new-cap rule, because coode is coming from byteball core, should be fixed later.
 /** @namespace Client.API */
 
+const ecdsaSig = require('byteballcore/signature.js');
+const breadcrumbs = require('byteballcore/breadcrumbs.js');
+const constants = require('byteballcore/constants.js');
+
+const isTestnet = constants.version.match(/t$/);
+constants.DAGCOIN_ASSET = isTestnet ? 'B9dw3C3gMC+AODL/XqWjFh9jFe31jS08yf2C3zl8XGg=' : 'j5brqzPhQ0H2VNYi3i59PmlV15p54yAiSzacrQ2KqQQ=';
+const lodash = require('lodash');
+const $ = require('preconditions').singleton();
+const util = require('util');
+const events = require('events');
+const Bitcore = require('bitcore-lib');
+const Common = require('./common');
+
+const Constants = Common.Constants;
+const log = require('./log');
+const Credentials = require('./credentials');
+const Errors = require('./errors/errordefinitions');
 
 if (process.browser) {
   const conf = require('byteballcore/conf.js');
@@ -9,26 +27,6 @@ if (process.browser) {
 }
 
 let walletDefinedByKeys;
-var ecdsaSig = require('byteballcore/signature.js');
-var breadcrumbs = require('byteballcore/breadcrumbs.js');
-var constants = require('byteballcore/constants.js');
-
-const isTestnet = constants.version.match(/t$/);
-constants.DAGCOIN_ASSET = isTestnet ? 'B9dw3C3gMC+AODL/XqWjFh9jFe31jS08yf2C3zl8XGg=' : 'j5brqzPhQ0H2VNYi3i59PmlV15p54yAiSzacrQ2KqQQ=';
-
-const _ = require('lodash');
-const $ = require('preconditions').singleton();
-const util = require('util');
-const events = require('events');
-const Bitcore = require('bitcore-lib');
-
-const Common = require('./common');
-
-const Constants = Common.Constants;
-
-const log = require('./log');
-const Credentials = require('./credentials');
-const Errors = require('./errors/errordefinitions');
 
 
 /**
@@ -38,13 +36,18 @@ const Errors = require('./errors/errordefinitions');
  * @constructor
  */
 function API(opts) {
-  opts = opts || {};
-  this.verbose = !!opts.verbose;
-  this.timeout = opts.timeout || 50000;
+  const options = opts || {};
+  this.verbose = !!options.verbose;
+  this.timeout = options.timeout || 50000;
   walletDefinedByKeys = require('byteballcore/wallet_defined_by_keys.js');
 
-  if (this.verbose) { log.setLevel('debug'); } else		{ log.setLevel('info'); }
+  if (this.verbose) {
+    log.setLevel('debug');
+  } else {
+    log.setLevel('info');
+  }
 }
+
 util.inherits(API, events.EventEmitter);
 
 API.privateKeyEncryptionOpts = {
@@ -68,10 +71,9 @@ API.prototype.initialize = function (opts, cb) {
  */
 API.prototype.seedFromRandom = function (opts) {
   $.checkArgument(arguments.length <= 1, 'DEPRECATED: only 1 argument accepted.');
-  $.checkArgument(_.isUndefined(opts) || _.isObject(opts), 'DEPRECATED: argument should be an options object.');
-
-  opts = opts || {};
-  this.credentials = Credentials.create(opts.network || 'livenet', opts.account || 0);
+  $.checkArgument(lodash.isUndefined(opts) || lodash.isObject(opts), 'DEPRECATED: argument should be an options object.');
+  const options = opts || {};
+  this.credentials = Credentials.create(options.network || 'livenet', options.account || 0);
 };
 
 /**
@@ -85,11 +87,10 @@ API.prototype.seedFromRandom = function (opts) {
  */
 API.prototype.seedFromRandomWithMnemonic = function (opts) {
   $.checkArgument(arguments.length <= 1, 'DEPRECATED: only 1 argument accepted.');
-  $.checkArgument(_.isUndefined(opts) || _.isObject(opts), 'DEPRECATED: argument should be an options object.');
-
-  opts = opts || {};
+  $.checkArgument(lodash.isUndefined(opts) || lodash.isObject(opts), 'DEPRECATED: argument should be an options object.');
+  const options = opts || {};
   console.log(`client: seedFromRandomWithMnemonic ${JSON.stringify(opts)}`);
-  this.credentials = Credentials.createWithMnemonic(opts.network || 'livenet', opts.passphrase, opts.language || 'en', opts.account || 0);
+  this.credentials = Credentials.createWithMnemonic(options.network || 'livenet', options.passphrase, options.language || 'en', options.account || 0);
 };
 
 API.prototype.getMnemonic = function () {
@@ -128,10 +129,9 @@ API.prototype.seedFromExtendedPrivateKey = function (xPrivKey, account) {
  * @param {String} opts.derivationStrategy - default 'BIP44'
  */
 API.prototype.seedFromMnemonic = function (words, opts) {
-  $.checkArgument(_.isUndefined(opts) || _.isObject(opts), 'DEPRECATED: second argument should be an options object.');
-
-  opts = opts || {};
-  this.credentials = Credentials.fromMnemonic(opts.network || 'livenet', words, opts.passphrase, opts.account || 0, opts.derivationStrategy || Constants.DERIVATION_STRATEGIES.BIP44);
+  $.checkArgument(lodash.isUndefined(opts) || lodash.isObject(opts), 'DEPRECATED: second argument should be an options object.');
+  const options = opts || {};
+  this.credentials = Credentials.fromMnemonic(options.network || 'livenet', words, options.passphrase, options.account || 0, options.derivationStrategy || Constants.DERIVATION_STRATEGIES.BIP44);
 };
 
 /**
@@ -145,10 +145,9 @@ API.prototype.seedFromMnemonic = function (words, opts) {
  * @param {String} opts.derivationStrategy - default 'BIP44'
  */
 API.prototype.seedFromExtendedPublicKey = function (xPubKey, source, entropySourceHex, opts) {
-  $.checkArgument(_.isUndefined(opts) || _.isObject(opts));
-
-  opts = opts || {};
-  this.credentials = Credentials.fromExtendedPublicKey(xPubKey, source, entropySourceHex, opts.account || 0, opts.derivationStrategy || Constants.DERIVATION_STRATEGIES.BIP44);
+  $.checkArgument(lodash.isUndefined(opts) || lodash.isObject(opts));
+  const options = opts || {};
+  this.credentials = Credentials.fromExtendedPublicKey(xPubKey, source, entropySourceHex, options.account || 0, options.derivationStrategy || Constants.DERIVATION_STRATEGIES.BIP44);
 };
 
 
@@ -160,20 +159,14 @@ API.prototype.seedFromExtendedPublicKey = function (xPubKey, source, entropySour
  */
 API.prototype.export = function (opts) {
   $.checkState(this.credentials);
-
-  opts = opts || {};
-
-  let output;
-
+  const options = opts || {};
   const c = Credentials.fromObj(this.credentials);
 
-  if (opts.noSign) {
+  if (options.noSign) {
     c.setNoSign();
   }
 
-  output = JSON.stringify(c.toObj());
-
-  return output;
+  return JSON.stringify(c.toObj());
 };
 
 
@@ -185,17 +178,15 @@ API.prototype.export = function (opts) {
  * @param {String} opts.password If the source has the private key encrypted, the password
  * will be needed for derive credentials fields.
  */
-API.prototype.import = function (str, opts) {
-  opts = opts || {};
+API.prototype.import = function (str) {
   try {
-    const credentials = Credentials.fromObj(JSON.parse(str));
-    this.credentials = credentials;
+    this.credentials = Credentials.fromObj(JSON.parse(str));
   } catch (ex) {
     throw Errors.INVALID_BACKUP;
   }
 };
 
-API.prototype._import = function (cb) {
+API.prototype.importWallet = function (cb) {
   $.checkState(this.credentials);
 
 
@@ -219,16 +210,15 @@ API.prototype._import = function (cb) {
  */
 API.prototype.importFromMnemonic = function (words, opts, cb) {
   log.debug('Importing from 12 Words');
-
-  opts = opts || {};
+  const options = opts || {};
   try {
-    this.credentials = Credentials.fromMnemonic(opts.network || 'livenet', words, opts.passphrase, opts.account || 0, opts.derivationStrategy || Constants.DERIVATION_STRATEGIES.BIP44);
+    this.credentials = Credentials.fromMnemonic(options.network || 'livenet', words, options.passphrase, options.account || 0, options.derivationStrategy || Constants.DERIVATION_STRATEGIES.BIP44);
   } catch (e) {
     log.info('Mnemonic error:', e);
     return cb(Errors.INVALID_BACKUP);
   }
 
-  this._import(cb);
+  return this.importWallet(cb);
 };
 
 API.prototype.importFromExtendedPrivateKey = function (xPrivKey, cb) {
@@ -240,7 +230,7 @@ API.prototype.importFromExtendedPrivateKey = function (xPrivKey, cb) {
     return cb(Errors.INVALID_BACKUP);
   }
 
-  this._import(cb);
+  return this.importWallet(cb);
 };
 
 /**
@@ -254,20 +244,20 @@ API.prototype.importFromExtendedPrivateKey = function (xPrivKey, cb) {
  * @param {String} opts.derivationStrategy - default 'BIP44'
  */
 API.prototype.importFromExtendedPublicKey = function (xPubKey, source, entropySourceHex, opts, cb) {
-  $.checkArgument(arguments.length == 5, 'DEPRECATED: should receive 5 arguments');
-  $.checkArgument(_.isUndefined(opts) || _.isObject(opts));
+  $.checkArgument(arguments.length === 5, 'DEPRECATED: should receive 5 arguments');
+  $.checkArgument(lodash.isUndefined(opts) || lodash.isObject(opts));
   $.shouldBeFunction(cb);
 
-  opts = opts || {};
+  const options = opts || {};
   log.debug('Importing from Extended Private Key');
   try {
-    this.credentials = Credentials.fromExtendedPublicKey(xPubKey, source, entropySourceHex, opts.account || 0, opts.derivationStrategy || Constants.DERIVATION_STRATEGIES.BIP44);
+    this.credentials = Credentials.fromExtendedPublicKey(xPubKey, source, entropySourceHex, options.account || 0, options.derivationStrategy || Constants.DERIVATION_STRATEGIES.BIP44);
   } catch (e) {
     log.info('xPriv error:', e);
     return cb(Errors.INVALID_BACKUP);
   }
 
-  this._import(cb);
+  return this.importWallet(cb);
 };
 
 API.prototype.decryptBIP38PrivateKey = function (encryptedPrivateKeyBase58, passphrase, opts, cb) {
@@ -287,7 +277,9 @@ API.prototype.decryptBIP38PrivateKey = function (encryptedPrivateKeyBase58, pass
   const actualChecksum = Bitcore.crypto.Hash.sha256sha256(addrBuff).toString('hex').substring(0, 8);
   const expectedChecksum = Bitcore.encoding.Base58Check.decode(encryptedPrivateKeyBase58).toString('hex').substring(6, 14);
 
-  if (actualChecksum != expectedChecksum) { return cb(new Error('Incorrect passphrase')); }
+  if (actualChecksum !== expectedChecksum) {
+    return cb(new Error('Incorrect passphrase'));
+  }
 
   return cb(null, privateKeyWif);
 };
@@ -302,7 +294,9 @@ API.prototype.decryptBIP38PrivateKey = function (encryptedPrivateKeyBase58, pass
 API.prototype.openWallet = function (cb) {
   $.checkState(this.credentials);
   const self = this;
-  if (self.credentials.isComplete() && self.credentials.hasWalletInfo()) { return cb(null, true); }
+  if (self.credentials.isComplete() && self.credentials.hasWalletInfo()) {
+    return cb(null, true);
+  }
 
   return cb();
 };
@@ -392,7 +386,7 @@ API.prototype.setPrivateKeyEncryption = function (password, opts) {
  * wallet must be unlocked
  *
  */
-API.prototype.disablePrivateKeyEncryption = function (password, opts) {
+API.prototype.disablePrivateKeyEncryption = function () {
   return this.credentials.disablePrivateKeyEncryption();
 };
 
@@ -422,31 +416,37 @@ API.prototype.lock = function () {
  */
 API.prototype.createWallet = function (walletName, m, n, opts, cb) {
   const self = this;
-  if (opts) $.shouldBeObject(opts);
-  opts = opts || {};
+  if (opts) {
+    $.shouldBeObject(opts);
+  }
+  const options = opts || {};
 
-  const network = opts.network || 'livenet';
-  if (!_.includes(['testnet', 'livenet'], network)) { return cb(new Error('Invalid network')); }
+  const network = options.network || 'livenet';
+  if (!lodash.includes(['testnet', 'livenet'], network)) {
+    return cb(new Error('Invalid network'));
+  }
 
   if (!self.credentials) {
     log.info('Generating new keys');
-        // generates xPrivKey and derives xPubKey for the base path m/44'/0'/account'
+    // generates xPrivKey and derives xPubKey for the base path m/44'/0'/account'
     self.seedFromRandom({
       network,
       account: opts.account,
     });
   } else {
     log.info('Using existing keys');
-        // self.credentials.account = account;
+    // self.credentials.account = account;
   }
 
-  walletDefinedByKeys.createWalletByDevices(self.credentials.xPubKey, opts.account || 0, m, opts.cosigners || [], walletName, (wallet) => {
+  return walletDefinedByKeys.createWalletByDevices(self.credentials.xPubKey, options.account || 0, m, options.cosigners || [], walletName, (wallet) => {
     self.credentials.walletId = wallet;
     console.log('wallet created', self.credentials);
-    if (network != self.credentials.network) { return cb(new Error('Existing keys were created for a different network')); }
+    if (network !== self.credentials.network) {
+      return cb(new Error('Existing keys were created for a different network'));
+    }
 
     self.credentials.addWalletInfo(walletName, m, n);
-    cb(null);
+    return cb(null);
   });
 };
 
@@ -474,52 +474,54 @@ API.prototype.recreateWallet = function (cb) {
  * @param {Callback} cb
  * @returns {Callback} cb - Return error or the address
  */
-API.prototype.createAddress = function (is_change, cb) {
+API.prototype.createAddress = function (isChange, cb) {
   $.checkState(this.credentials && this.credentials.isComplete());
   $.shouldBeFunction(cb);
-  $.shouldBeNumber(is_change);
+  $.shouldBeNumber(isChange);
 
-  const coin = (this.credentials.network == 'livenet' ? '0' : '1');
+  const coin = (this.credentials.network === 'livenet' ? '0' : '1');
   const self = this;
-  breadcrumbs.add(`createAddress wallet=${this.credentials.walletId}, is_change=${is_change}`);
-  walletDefinedByKeys.issueOrSelectNextAddress(this.credentials.walletId, is_change, (addressInfo) => {
+  breadcrumbs.add(`createAddress wallet=${this.credentials.walletId}, is_change=${isChange}`);
+  walletDefinedByKeys.issueOrSelectNextAddress(this.credentials.walletId, isChange, (addressInfo) => {
     const path = `m/44'/${coin}'/${self.credentials.account}'/0/${addressInfo.address_index}`;
     cb(null, { address: addressInfo.address, path, createdOn: addressInfo.creation_ts });
   });
 };
 
 /*
-API.prototype.sendPayment = function(asset, to_address, amount, arrSigningDeviceAddresses, recipient_device_address, cb) {
-	this.sendMultiPayment({
-		asset: asset,
-		to_address: to_address,
-		amount: amount,
-		arrSigningDeviceAddresses: arrSigningDeviceAddresses,
-		recipient_device_address: recipient_device_address
-	}, cb);
-}*/
+ API.prototype.sendPayment = function(asset, to_address, amount, arrSigningDeviceAddresses, recipient_device_address, cb) {
+ this.sendMultiPayment({
+ asset: asset,
+ to_address: to_address,
+ amount: amount,
+ arrSigningDeviceAddresses: arrSigningDeviceAddresses,
+ recipient_device_address: recipient_device_address
+ }, cb);
+ } */
 
 API.prototype.sendMultiPayment = function (opts, cb) {
   const self = this;
-  const coin = (this.credentials.network == 'livenet' ? '0' : '1');
+  const coin = (this.credentials.network === 'livenet' ? '0' : '1');
   const Wallet = require('byteballcore/wallet.js');
 
-  opts.signWithLocalPrivateKey = function (wallet_id, account, is_change, address_index, text_to_sign, handleSig) {
-    const path = `m/44'/${coin}'/${account}'/${is_change}/${address_index}`;
+  opts.signWithLocalPrivateKey = function (walletId, account, isChange, addressIndex, textToSign, handleSig) {
+    const path = `m/44'/${coin}'/${account}'/${isChange}/${addressIndex}`;
     const xPrivKey = new Bitcore.HDPrivateKey.fromString(self.credentials.xPrivKey);
     const privateKey = xPrivKey.derive(path).privateKey;
-        // var privKeyBuf = privateKey.toBuffer();
+    // var privKeyBuf = privateKey.toBuffer();
     const privKeyBuf = privateKey.bn.toBuffer({ size: 32 }); // https://github.com/bitpay/bitcore-lib/issues/47
-    handleSig(ecdsaSig.sign(text_to_sign, privKeyBuf));
+    handleSig(ecdsaSig.sign(textToSign, privKeyBuf));
   };
 
   if (opts.shared_address) {
     opts.paying_addresses = [opts.shared_address];
     opts.change_address = opts.shared_address;
-    if (opts.asset && opts.asset !== 'base') { opts.fee_paying_wallet = self.credentials.walletId; }
+    if (opts.asset && opts.asset !== 'base') {
+      opts.fee_paying_wallet = self.credentials.walletId;
+    }
     Wallet.sendMultiPayment(opts, cb);
-  }	else {
-		// create a new change address or select first unused one
+  } else {
+    // create a new change address or select first unused one
     walletDefinedByKeys.issueOrSelectNextChangeAddress(self.credentials.walletId, (objAddr) => {
       opts.change_address = objAddr.address;
       opts.wallet = self.credentials.walletId;
@@ -529,7 +531,7 @@ API.prototype.sendMultiPayment = function (opts, cb) {
 };
 
 API.prototype.getAddresses = function (opts, cb) {
-  const coin = (this.credentials.network == 'livenet' ? '0' : '1');
+  const coin = (this.credentials.network === 'livenet' ? '0' : '1');
   const self = this;
   walletDefinedByKeys.readAddresses(this.credentials.walletId, opts, (arrAddressInfos) => {
     cb(null, arrAddressInfos.map(addressInfo => ({
@@ -546,16 +548,20 @@ API.prototype.getAddresses = function (opts, cb) {
  *
  * @param {Callback} cb
  */
-API.prototype.getBalance = function (shared_address, cb) {
+API.prototype.getBalance = function (sharedAddress, cb) {
   const Wallet = require('byteballcore/wallet.js');
   $.checkState(this.credentials && this.credentials.isComplete());
   const walletId = this.credentials.walletId;
-  Wallet.readBalance(shared_address || walletId, (assocBalances) => {
-    if (!assocBalances[constants.DAGCOIN_ASSET]) { assocBalances[constants.DAGCOIN_ASSET] = { stable: 0, pending: 0 }; }
+  Wallet.readBalance(sharedAddress || walletId, (assocBalances) => {
+    if (!assocBalances[constants.DAGCOIN_ASSET]) {
+      assocBalances[constants.DAGCOIN_ASSET] = { stable: 0, pending: 0 };
+    }
     Wallet.readSharedBalance(walletId, (assocSharedBalances) => {
-      for (const asset in assocSharedBalances) {
-        if (!assocBalances[asset]) { assocBalances[asset] = { stable: 0, pending: 0 }; }
-      }
+      Object.keys(assocSharedBalances).forEach((asset) => {
+        if (!assocBalances[asset]) {
+          assocBalances[asset] = { stable: 0, pending: 0 };
+        }
+      });
       cb(null, assocBalances, assocSharedBalances);
     });
   });
@@ -570,47 +576,53 @@ API.prototype.getListOfBalancesOnAddresses = function (cb) {
   });
 };
 
-API.prototype.getTxHistory = function (asset, shared_address, cb) {
+API.prototype.getTxHistory = function (asset, sharedAddress, cb) {
   const Wallet = require('byteballcore/wallet.js');
   $.checkState(this.credentials && this.credentials.isComplete());
   const opts = { asset };
-  if (shared_address) { opts.address = shared_address; } else		{ opts.wallet = this.credentials.walletId; }
+  if (sharedAddress) {
+    opts.address = sharedAddress;
+  } else {
+    opts.wallet = this.credentials.walletId;
+  }
   Wallet.readTransactionHistory(opts, (arrTransactions) => {
     cb(arrTransactions);
   });
 };
 
-API.prototype.initDeviceProperties = function (xPrivKey, device_address, hub, deviceName) {
+API.prototype.initDeviceProperties = function (xPrivKey, deviceAddress, hub, deviceName) {
   console.log('initDeviceProperties');
   const device = require('byteballcore/device.js');
   const lightWallet = require('byteballcore/light_wallet.js');
-  if (device_address) { device.setDeviceAddress(device_address); }
+  if (deviceAddress) {
+    device.setDeviceAddress(deviceAddress);
+  }
   device.setDeviceName(deviceName);
   device.setDeviceHub(hub);
   lightWallet.setLightVendorHost(hub);
-    // device.setDevicePrivateKey(Bitcore.HDPrivateKey.fromString(xPrivKey).derive("m/1'").privateKey.toBuffer());
+  // device.setDevicePrivateKey(Bitcore.HDPrivateKey.fromString(xPrivKey).derive("m/1'").privateKey.toBuffer());
 
-    // since this is executed at app launch, give in to allow other startup tasks to complete
-    // setTimeout(function(){
+  // since this is executed at app launch, give in to allow other startup tasks to complete
+  // setTimeout(function(){
   try {
-            /*
-            console.log("device priv key will come next");
-            console.log("xPrivKey=", xPrivKey);
-            console.log("bitcore=", Bitcore);
-            console.log("HDPrivateKey=", Bitcore.HDPrivateKey);
-            console.log("xprivkey=", Bitcore.HDPrivateKey.fromString(xPrivKey));
-            console.log("derived=", Bitcore.HDPrivateKey.fromString(xPrivKey).derive("m/1'"));
-            console.log("privkey=", Bitcore.HDPrivateKey.fromString(xPrivKey).derive("m/1'").privateKey);
-            console.log("bn=", Bitcore.HDPrivateKey.fromString(xPrivKey).derive("m/1'").privateKey.bn);
-            console.log("buffer=", Bitcore.HDPrivateKey.fromString(xPrivKey).derive("m/1'").privateKey.bn.toBuffer({size:32}));
-            console.log("device priv key="+Bitcore.HDPrivateKey.fromString(xPrivKey).derive("m/1'").privateKey.bn.toBuffer({size:32}).toString("base64"));
-            */
+    /*
+     console.log("device priv key will come next");
+     console.log("xPrivKey=", xPrivKey);
+     console.log("bitcore=", Bitcore);
+     console.log("HDPrivateKey=", Bitcore.HDPrivateKey);
+     console.log("xprivkey=", Bitcore.HDPrivateKey.fromString(xPrivKey));
+     console.log("derived=", Bitcore.HDPrivateKey.fromString(xPrivKey).derive("m/1'"));
+     console.log("privkey=", Bitcore.HDPrivateKey.fromString(xPrivKey).derive("m/1'").privateKey);
+     console.log("bn=", Bitcore.HDPrivateKey.fromString(xPrivKey).derive("m/1'").privateKey.bn);
+     console.log("buffer=", Bitcore.HDPrivateKey.fromString(xPrivKey).derive("m/1'").privateKey.bn.toBuffer({size:32}));
+     console.log("device priv key="+Bitcore.HDPrivateKey.fromString(xPrivKey).derive("m/1'").privateKey.bn.toBuffer({size:32}).toString("base64"));
+     */
     device.setDevicePrivateKey(Bitcore.HDPrivateKey.fromString(xPrivKey).derive("m/1'").privateKey.bn.toBuffer({ size: 32 }));
   } catch (e) {
     console.log(`error in initDeviceProperties: ${e}`);
     throw e;
   }
-    // }, 1);
+  // }, 1);
 };
 
 

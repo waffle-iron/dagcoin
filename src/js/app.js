@@ -1,5 +1,4 @@
-
-
+/* eslint-disable no-unused-vars */
 const modules = [
   'ui.router',
   'angularMoment',
@@ -19,11 +18,11 @@ const modules = [
   'ct.ui.router.extras',
 ];
 
-const copayApp = window.copayApp = angular.module('copayApp', modules);
+const copayApp = angular.module('copayApp', modules);
+window.copayApp = angular.module('copayApp', modules);
 
 angular.module('copayApp.filters', []);
 angular.module('copayApp.services', []);
 angular.module('copayApp.controllers', []);
 angular.module('copayApp.directives', []);
 angular.module('copayApp.addons', []);
-

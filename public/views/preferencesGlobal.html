@@ -25,6 +25,73 @@
       <div translate>Language</div>
     </li>
   </ul>
+  
+  <h4 translate>Funding Node</h4>
+  <ul class="no-bullet m0 enable_text_select">
+    <li>
+      <switch id="funding-node" name="funding-node" ng-model="prefGlobal.fundingNode" ng-change="prefGlobal.onFundingNodeChange()" class="green right"></switch>
+      <div translate>Active</div>
+    </li>
+  </ul>
+  <h4 ng-if="prefGlobal.fundingNode" translate>Funding Node Settings</h4>
+  <ul ng-if="prefGlobal.fundingNode" class="no-bullet m0 enable_text_select">
+    <li class="input-wrap">
+      <input id="exchange-fee"
+             type="text"
+             name="exchange-fee"
+             min="0.00000001"
+             ng-minlength="0.00000001"
+             ng-maxlength="10000000000"
+             ng-required="true"
+             autocomplete="off"
+             ng-blur="prefGlobal.onFundingNodeSettingBlur()"
+             ng-model="prefGlobal.fundingNodeSettings.exchangeFee"
+             class="right min text-right">
+      <div translate>Exchange fee</div>
+    </li>
+    <li class="input-wrap">
+      <input id="total-bytes"
+             type="text"
+             name="total-bytes"
+             min="1"
+             ng-minlength="1"
+             ng-maxlength="10000000000"
+             ng-required="true"
+             autocomplete="off"
+             ng-blur="prefGlobal.onFundingNodeSettingBlur()"
+             ng-model="prefGlobal.fundingNodeSettings.totalBytes"
+             class="right min text-right">
+      <div translate>Total bytes per month</div>
+    </li>
+    <li class="input-wrap">
+      <input id="bytes-per-address"
+             type="text"
+             name="bytes-per-address"
+             min="1"
+             ng-minlength="1"
+             ng-maxlength="10000000000"
+             ng-required="true"
+             autocomplete="off"
+             ng-blur="prefGlobal.onFundingNodeSettingBlur()"
+             ng-model="prefGlobal.fundingNodeSettings.bytesPerAddress"
+             class="right min text-right">
+      <div translate>Bytes per shared address per month</div>
+    </li>
+    <li class="input-wrap">
+      <input id="end-user-max-capacity"
+             type="text"
+             name="end-user-max-capacity"
+             min="1"
+             ng-minlength="1"
+             ng-maxlength="10000000000"
+             ng-required="true"
+             autocomplete="off"
+             ng-blur="prefGlobal.onFundingNodeSettingBlur()"
+             ng-model="prefGlobal.fundingNodeSettings.maxEndUserCapacity"
+             class="right min text-right">
+      <div translate>End-user max capacity</div>
+    </li>
+  </ul>
 
   <div ng-show="index.usePushNotifications">
     <h4></h4>

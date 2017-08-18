@@ -1,6 +1,8 @@
+(function () {
+  'use strict';
 
-const logs = [];
-angular.module('copayApp.services')
+  const logs = [];
+  angular.module('copayApp.services')
   .factory('historicLog', () => {
     const root = {};
 
@@ -17,3 +19,4 @@ angular.module('copayApp.services')
 
     return root;
   });
+}());

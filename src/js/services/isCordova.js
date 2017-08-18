@@ -1,3 +1,5 @@
+(function () {
+  'use strict';
 
-
-angular.module('copayApp.services').value('isCordova', !!window.cordova);
+  angular.module('copayApp.services').value('isCordova', !!window.cordova);
+}());

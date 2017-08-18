@@ -7,7 +7,8 @@
  * Client API.
  * @alias module:Client.API
  */
-const client = module.exports = require('./api');
+const client = require('./api');
+module.exports = require('./api');
 
 client.Utils = require('./common/utils');
 client.sjcl = require('sjcl');

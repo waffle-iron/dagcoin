@@ -56,7 +56,7 @@ echo "Project directory is $PROJECT"
 if [ ! -d $PROJECT ]; then
 	cd $BUILDDIR
 	echo "${OpenColor}${Green}* Creating project... ${CloseColor}"
-	cordova create ../../byteballbuilds/project-$1 org.byteball.wallet Byteball
+	cordova create ../../byteballbuilds/project-$1 org.dagcoin.wallet Dagcoin
 	checkOK
 
 	cd $PROJECT
@@ -100,7 +100,7 @@ if [ ! -d $PROJECT ]; then
 	cordova plugin add cordova-plugin-statusbar
 	checkOK
 
-	cordova plugin add cordova-plugin-customurlscheme --variable URL_SCHEME=byteball
+	cordova plugin add cordova-plugin-customurlscheme --variable URL_SCHEME=dagcoin
 	checkOK
 
 	cordova plugin add cordova-plugin-inappbrowser

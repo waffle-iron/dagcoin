@@ -1,6 +1,8 @@
+(function () {
+  'use strict';
 
-angular.module('copayApp.services')
-  .factory('storageService', (logHeader, fileStorageService, localStorageService, sjcl, $log, lodash, isCordova) => {
+  angular.module('copayApp.services')
+  .factory('storageService', (logHeader, fileStorageService, localStorageService, sjcl, $log, lodash, isCordova, isMobile) => {
     const root = {};
 
     // File storage is not supported for writting according to
@@ -14,10 +16,11 @@ angular.module('copayApp.services')
     const getUUID = function (cb) {
       // TO SIMULATE MOBILE
       // return cb('hola');
-      if (!window || !window.plugins || !window.plugins.uniqueDeviceID) { return cb(null); }
+      if (!window || !window.plugins || !window.plugins.uniqueDeviceID) {
+        return cb(null);
+      }
 
-      window.plugins.uniqueDeviceID.get(
-        uuid => cb(uuid), cb);
+      return window.plugins.uniqueDeviceID.get(uuid => cb(uuid), cb);
     };
 
     const encryptOnMobile = function (text, cb) {
@@ -36,11 +39,16 @@ angular.module('copayApp.services')
 
     const decryptOnMobile = function (text, cb) {
       let json;
+      let inputText;
       try {
         json = JSON.parse(text);
-      } catch (e) {}
+      } catch (e) {
+        $log.warn(e);
+      }
 
-      if (!json) return cb('Could not access storage');
+      if (!json) {
+        return cb('Could not access storage');
+      }
 
       if (!json.iter || !json.ct) {
         $log.debug('Profile is not encrypted');
@@ -48,20 +56,22 @@ angular.module('copayApp.services')
       }
 
       $log.debug('Profile is encrypted');
-      getUUID((uuid) => {
+      return getUUID((uuid) => {
         $log.debug(`Device UUID:${uuid}`);
-        if (!uuid) { return cb('Could not decrypt storage: could not get device ID'); }
+        if (!uuid) {
+          return cb('Could not decrypt storage: could not get device ID');
+        }
 
         try {
-          text = sjcl.decrypt(uuid, text);
+          inputText = sjcl.decrypt(uuid, text);
 
           $log.info('Migrating to unencrypted profile');
-          return storage.set('profile', text, err => cb(err, text));
+          return storage.set('profile', inputText, err => cb(err, inputText));
         } catch (e) {
           $log.warn('Decrypt error: ', e);
           return cb('Could not decrypt storage: device ID mismatch');
         }
-        return cb(null, text);
+        // return cb(null, text);
       });
     };
 
@@ -85,19 +95,23 @@ angular.module('copayApp.services')
     root.getProfile = function (cb) {
       storage.get('profile', (err, str) => {
         // console.log("prof="+str+", err="+err);
-        if (err || !str) { return cb(err); }
+        if (err || !str) {
+          return cb(err);
+        }
 
-        decryptOnMobile(str, (err, str) => {
-          if (err) return cb(err);
-          var p,
-            err;
+        return decryptOnMobile(str, (decryptOnMobileError, profileStr) => {
+          if (decryptOnMobileError) {
+            return cb(decryptOnMobileError);
+          }
+          let p;
+          let profileError;
           try {
-            p = Profile.fromString(str);
+            p = Profile.fromString(profileStr);
           } catch (e) {
             $log.debug('Could not read profile:', e);
-            err = new Error(`Could not read profile:${e}`);
+            profileError = new Error(`Could not read profile:${e}`);
           }
-          return cb(err, p);
+          return cb(profileError, p);
         });
       });
     };
@@ -173,8 +187,11 @@ angular.module('copayApp.services')
 
     root.getPushInfo = function (cb) {
       storage.get('pushToken', (err, data) => {
-      	err ? cb(err) : cb(null, (data ? JSON.parse(data) : data));
-	  });
+        if (err) {
+          return cb(err);
+        }
+        return cb(null, (data ? JSON.parse(data) : data));
+      });
     };
 
     root.removePushInfo = function (cb) {
@@ -183,3 +200,4 @@ angular.module('copayApp.services')
 
     return root;
   });
+}());

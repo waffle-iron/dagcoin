@@ -6,13 +6,20 @@ globals:
   angular: true
   nw: true
   cordova: true
+  Profile: true
+  LocalFileSystem: true
+  FastClick: true
 extends:
   - airbnb-base
 rules:
   no-console: 0
   no-useless-escape: 0
   global-require: 0
+  no-alert: 0
+  import/no-dynamic-require: 0
   strict: 0
+  comma-dangle: 0
+  consistent-return: 0
   no-use-before-define:
     - error
     - functions: false
@@ -23,3 +30,5 @@ rules:
     - error
     - 200
     - ignoreComments : true
+    - ignoreStrings: true
+  func-names: 0

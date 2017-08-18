@@ -14,10 +14,10 @@
       <div translate>Wallet Information</div>
     </li>
 
-    <li ng-show="index.network == 'livenet'" class="text-capitalize" ng-click="$root.go('paperWallet')">
-      <i class="icon-arrow-right3 size-24 right text-gray"></i>  
-      <div translate>Sweep paper wallet</div>
-    </li>
+    <!--<li ng-show="index.network == 'livenet'" class="text-capitalize" ng-click="$root.go('paperWallet')">-->
+      <!--<i class="icon-arrow-right3 size-24 right text-gray"></i>  -->
+      <!--<div translate>Sweep paper wallet</div>-->
+    <!--</li>-->
  
     <!-- was not adapted from copay
     <li  ng-click="$root.go('export')">
@@ -26,10 +26,10 @@
     </li>
     -->
  
-    <!--<li ng-click="$root.go('delete')">-->
-      <!--<i class="icon-arrow-right3 size-24 right text-gray"></i>  -->
-      <!--<div translate>Delete Wallet</div>-->
-    <!--</li>-->
+    <li ng-click="$root.go('preferencesDeleteWallet')">
+      <i class="icon-arrow-right3 size-24 right text-gray"></i>
+      <div translate>Delete Wallet</div>
+    </li>
   </ul>
 </div>
 <div class="extra-margin-bottom"></div>
