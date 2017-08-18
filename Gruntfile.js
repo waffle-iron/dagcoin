@@ -243,7 +243,7 @@ module.exports = function (grunt) {
     compress: {
       linux32: {
         options: {
-          archive: '../byteballbuilds/dagcoin-linux32.zip',
+          archive: '../byteballbuilds/Dagcoin-linux32.zip',
         },
         expand: true,
         cwd: '../byteballbuilds/DAGCOIN/linux32/',
@@ -252,7 +252,7 @@ module.exports = function (grunt) {
       },
       linux64: {
         options: {
-          archive: '../byteballbuilds/dagcoin-linux64.zip',
+          archive: '../byteballbuilds/Dagcoin-linux64.zip',
         },
         expand: true,
         cwd: '../byteballbuilds/DAGCOIN/linux64/',
