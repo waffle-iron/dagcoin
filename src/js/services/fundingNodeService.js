@@ -57,7 +57,9 @@
       }
 
       function requireUncached(module) {
-        delete require.cache[require.resolve(module)];
+        if (typeof require.resolve === 'function') {
+          delete require.cache[require.resolve(module)];
+        }
         return require(module.toString());
       }
 
