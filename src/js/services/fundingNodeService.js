@@ -18,6 +18,7 @@
 
       let messageInterval = null;
       let assocBalances = null;
+      let updatingConfing = false;
 
       self.update = update;
       self.isActivated = isActivated;
@@ -61,6 +62,10 @@
       }
 
       function updateConfig() {
+        if (updatingConfing) {
+          return $q.resolve();
+        }
+
         const def = $q.defer();
         const fs = require('fs');
         const desktopApp = require('byteballcore/desktop_app.js');
@@ -82,7 +87,11 @@
         userConf.bytesPerAddress = settings.bytesPerAddress;
         userConf.maxEndUserCapacity = settings.maxEndUserCapacity;
 
+        updatingConfing = true;
+
         fs.writeFile(userConfFile, JSON.stringify(userConf, null, '\t'), 'utf8', (err) => {
+          updatingConfing = false;
+
           if (err) {
             def.reject(err);
           } else {
