@@ -1,4 +1,4 @@
-/* eslint-disable import/no-extraneous-dependencies, import/no-unresolved */
+/* eslint-disable no-useless-concat */
 (function () {
   'use strict';
 
@@ -12,7 +12,7 @@
       try {
         ecdsa = isCordova ? null : require('secp256k1');
       } catch (e) {
-        ecdsa = require('byteballcore/node_modules/secp256k1');
+        ecdsa = require('byteballcore/node_modules/secp256k1' + '');
       }
       const Mnemonic = require('bitcore-mnemonic');
       const Bitcore = require('bitcore-lib');

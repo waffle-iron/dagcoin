@@ -39,7 +39,7 @@ if [ $(echo " $_BACKGROUND_IMAGE_DPI_H != 72.0 " | bc) -eq 1 -o $(echo " $_BACKG
 fi
 
 echo "Signing the app ..."
-codesign --sign="Developer ID Application: Matrix Platform LLC" --verbose=3 --deep "${PATH_NAME}${APP_NAME}.app"
+codesign --sign="Developer ID Application: Dagcoin OU" --verbose=3 --deep "${PATH_NAME}${APP_NAME}.app"
 
 # clear out any old data
 echo "Clearing ..."

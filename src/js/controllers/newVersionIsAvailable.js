@@ -7,7 +7,7 @@
     $scope.openDownloadLink = function () {
       let link = '';
       if (navigator && navigator.app) {
-        link = 'https://play.google.com/store/apps/details?id=org.dagcoin.wallet';
+        link = 'https://play.google.com/store/apps/details?id=org.dagcoin';
         if (newVersion.version.match('t$')) {
           link += '.testnet';
         }
