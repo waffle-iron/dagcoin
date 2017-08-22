@@ -1,4 +1,4 @@
-/* eslint-disable no-useless-concat */
+/* eslint-disable no-useless-concat,import/no-extraneous-dependencies */
 (function () {
   'use strict';
 
