@@ -36,7 +36,7 @@
       });
 
       function init() {
-        const conf = requireUncached('byteballcore/conf.js');
+        const conf = getConfig();
 
         settings.exchangeFee = conf.exchangeFee || settings.exchangeFee;
         settings.totalBytes = conf.totalBytes || settings.totalBytes;
@@ -56,6 +56,21 @@
         });
       }
 
+      function getUserConfFilePath() {
+        const desktopApp = require('byteballcore/desktop_app.js');
+        const appDataDir = desktopApp.getAppDataDir();
+        return `${appDataDir}/conf.json`;
+      }
+
+      function getConfig() {
+        try {
+          const userConfFile = getUserConfFilePath();
+          return requireUncached(userConfFile);
+        } catch (e) {
+          return {}; // empty config
+        }
+      }
+
       function requireUncached(module) {
         if (typeof require.resolve === 'function') {
           delete require.cache[require.resolve(module)];
@@ -70,10 +85,8 @@
 
         const def = $q.defer();
         const fs = require('fs');
-        const desktopApp = require('byteballcore/desktop_app.js');
-        const appDataDir = desktopApp.getAppDataDir();
-        const userConfFile = `${appDataDir}/conf.json`;
-        const userConf = requireUncached(userConfFile);
+        const userConfFile = getUserConfFilePath();
+        const userConf = getConfig();
 
         if (userConf.fundingNode === fundingNode &&
           userConf.exchangeFee === settings.exchangeFee &&
