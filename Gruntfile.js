@@ -30,29 +30,6 @@ module.exports = function (grunt) {
       },
     },
 
-    watch: {
-      options: {
-        dateFormat(time) {
-          grunt.log.writeln(`The watch finished in ${time}ms at ${(new Date()).toString()}`);
-          grunt.log.writeln('Waiting for more changes...');
-        },
-      },
-
-      main: {
-        files: [
-          'src/js/init.js',
-          'src/js/app.js',
-          'src/js/directives/**/*.js',
-          'src/js/filters/**/*.js',
-          'src/js/routes.js',
-          'src/js/services/**/*.js',
-          'src/js/models/**/*.js',
-          'src/js/controllers/**/*.js',
-        ],
-        tasks: ['concat:js', 'karma:prod'],
-      },
-    },
-
     sass: {
       dist: {
         options: {
@@ -403,7 +380,7 @@ module.exports = function (grunt) {
           'src/js/models/**/*.js',
           'src/js/controllers/**/*.js',
         ],
-        tasks: ['concat:js', 'karma:prod'],
+        tasks: ['concat:js'/*, 'karma:prod'*/],
       },
     },
   });
