@@ -48,7 +48,7 @@ module.exports = function (grunt) {
 
         processors: [
           require('pixrem')(), // add fallbacks for rem units
-          require('autoprefixer')({browsers: 'last 4 versions'}), // add vendor prefixes
+          require('autoprefixer')({ browsers: 'last 4 versions' }), // add vendor prefixes
           require('cssnano')() // minify the result
         ],
       },
@@ -409,7 +409,8 @@ module.exports = function (grunt) {
 
   grunt.registerTask('default', ['nggettext_compile', 'exec:version', 'stylelint', 'sass', 'concat', 'postcss', 'copy:icons']);
   grunt.registerTask('cordova', ['default', 'browserify']);
-  grunt.registerTask('cordova-prod', ['cordova', 'uglify']);
+  // todo: uglify doesn't work
+  grunt.registerTask('cordova-prod', ['cordova'/*, 'uglify' */]);
   // grunt.registerTask('prod', ['default', 'uglify']);
   grunt.registerTask('translate', ['nggettext_extract']);
   grunt.registerTask('test', ['karma:prod']);

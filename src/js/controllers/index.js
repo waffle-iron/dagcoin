@@ -1510,9 +1510,9 @@
       });
 
       $rootScope.$on('Local/NewFocusedWallet', () => {
-        console.log('on Local/NewFocusedWallet');
         self.setFocusedWallet();
-        // self.updateTxHistory();
+        self.updatingTxHistory = true;
+        self.updateTxHistory();
         go.walletHome();
       });
 
