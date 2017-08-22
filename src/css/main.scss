@@ -1841,7 +1841,7 @@ input.ng-invalid-match, input.ng-invalid-match:focus {
 .input-wrap > input[type="email"],
 .input-wrap > input[type="password"] {
   border: 2px solid #eee;
-  border-radius: 40px;
+  border-radius: 5px;
   padding: 14px 22px;
   height: auto;
   font-family: "Montserrat", sans-serif;
@@ -2108,48 +2108,70 @@ button {
 
 .btn {
   display: inline-block;
-  border-radius: 40px;
-  font-weight: 400;
-  padding: 14px 10px;
+  border-radius: 5px;
+  font-weight: 600;
+  padding: 15px;
   max-width: 300px;
   width: 100%;
   border: 2px solid transparent;
   background-color: transparent;
-  font-family: "Montserrat", sans-serif;
   color: inherit;
   transition: color ease 0.3s;
   font-size: 16px;
   letter-spacing: 0.3px;
-}
+  overflow: hidden;
+  position: relative;
 
-.btn + .btn {
-  margin-top: 13px;
-}
+  & + .btn {
+    margin-top: 13px;
+  }
 
-.btn_red {
-  border-color: #d52026;
-  background: #fff;
-  color: #d52026;
-}
+  &.btn_red {
+    border-color: $main_color;
+    background: #fff;
+    color: $main_color;
 
-.btn_red:focus,
-.btn_red:active {
-  color: #d52026;
-}
+    &:hover {
+      color: $main_color;
+    }
+  }
 
-.btn_red-full {
-  color: #fff;
-  background: #d52026;
-}
+  &.btn_red-full {
+    color: #fff;
+    @include gradientBackground($main_color, darken($main_color, 10), left, right);
+    text-shadow: 1px 1px 0 darken($main_color, 10);
+    border: 2px solid;
 
-.btn_red-full:hover {
-  color: #fff;
-  background: #d52026;
-}
+    &:hover {
+      color: #fff;
+      @include gradientBackground(darken($main_color, 2), darken($main_color, 12), left, right);
+    }
+  }
 
-.btn_red-full:focus,
-.btn_red-full:active {
-  color: #fff;
+  &:after, &:before{
+    @extend .transition;
+    content: "";
+    position: absolute;
+    top: 0;
+    width: 40px;
+    height: 100%;
+    opacity: 0.15;
+    right: -100px;
+    @include gradientBackground(#fff, darken(#fff, 10), left, right);
+    transform: skewX(30deg);
+  }
+
+  &:before{
+    margin-left: 30px;
+  }
+
+  &:hover {
+    outline: none;
+
+    &:after, &:before{
+      right: 110%;
+    }
+  }
 }
 
 a.btn {
@@ -2371,29 +2393,45 @@ canvas {
   right: 0;
   width: 100%;
   background: #fff;
-  border: 1px solid #eee;
+  border-top: 1px solid #f8f8f8;
   z-index: 2;
-  height: 53px;
-  padding: 0 21px;
+  padding: 0 10px;
+  height: 50px;
 
   ul {
+    width: 100%;
+    height: 100%;
     padding-left: 0;
     display: block;
     margin-left: auto;
     margin-right: auto;
     text-align: center;
+    overflow: hidden;
+    list-style-type: none;
 
     li {
-      display: inline-block;
+      float: left;
+      height: 100%;
       vertical-align: middle;
       text-align: center;
+      width: 25%;
+      margin-right: 0;
 
       a {
-        text-decoration: none;
         display: block;
+        margin: 0;
+        height: 100%;
+        border-top: 2px solid transparent;
+        color: #cecece;
+        position: relative;
         font-size: 10px;
-        color: #777;
-        padding: 10px;
+        padding-top: 5px;
+
+        &:not(.active){
+          &:hover{
+            color: darken(#cecece, 15);
+          }
+        }
 
         span {
           display: block;
@@ -2403,27 +2441,16 @@ canvas {
 
       .icon {
         display: inline-block;
-        color: #777;
         font-size: 20px;
       }
 
-      &.active{
-        a {
-          color: #d52026;
-        }
-
-        .icon {
-          color: #d52026;
+      &.active {
+        a{
+          border-top: 2px solid $main_color;
+          color: $main_color;
         }
       }
 
-      &:not(:last-child) {
-        margin-right: 20px;
-
-        @media (max-width: 375px) {
-          margin-right: 5px;
-        }
-      }
     }
   }
 }
@@ -2490,6 +2517,7 @@ canvas {
 .transactions__table{
   margin-top: 20px;
   overflow-x: hidden;
+  overflow-y: scroll;
 
   table {
     width: 100%;
