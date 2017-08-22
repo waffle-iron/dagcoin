@@ -52,7 +52,7 @@
           unitCode: 'oneByte',
           dagUnitName: 'DAG',
           dagUnitValue: 1000000,
-          dagUnitDecimals: 0,
+          dagUnitDecimals: 6,
           dagUnitCode: 'one',
           alternativeName: 'US Dollar',
           alternativeIsoCode: 'USD',

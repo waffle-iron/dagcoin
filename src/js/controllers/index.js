@@ -478,15 +478,20 @@
               () => {
                 const arrDestinations = [];
                 Object.keys(assocAmountByAssetAndAddress).forEach((asset) => {
+                  const walletSettings = configService.getSync().wallet.settings;
                   const formattedAsset = isCordova ? asset : (`<span class='small'>${asset}</span><br/>`);
                   let currency;
-                  if (asset !== 'base') {
-                    currency = asset === constants.DAGCOIN_ASSET ? 'dag' : `of asset ${formattedAsset}`;
-                  } else {
-                    currency = 'bytes';
-                  }
+                  let value;
+
                   Object.keys(assocAmountByAssetAndAddress[asset]).forEach((address) => {
-                    arrDestinations.push(`${assocAmountByAssetAndAddress[asset][address]} ${currency} to ${address}`);
+                    if (asset !== 'base') {
+                      currency = asset === constants.DAGCOIN_ASSET ? 'dag' : `of asset ${formattedAsset}`;
+                      value = assocAmountByAssetAndAddress[asset][address] / walletSettings.dagUnitValue;
+                    } else {
+                      currency = 'bytes';
+                      value = assocAmountByAssetAndAddress[asset][address] / walletSettings.unitValue;
+                    }
+                    arrDestinations.push(`${value} ${currency} to ${address}`);
                   });
                 });
                 const dest = (arrDestinations.length > 0) ? arrDestinations.join(', ') : 'to myself';
@@ -820,7 +825,7 @@
             // Notify external addons or plugins
             $rootScope.$emit('Local/BalanceUpdated', assocBalances);
             if (!self.isPrivKeyEncrypted) {
-              $rootScope.$emit('Local/BalanceUpdatedAndWalletUnlocked');
+              $rootScope.$emit('Local/BalanceUpdatedAndWalletUnlocked', assocBalances);
             }
           });
 
@@ -1503,9 +1508,9 @@
       });
 
       $rootScope.$on('Local/NewFocusedWallet', () => {
-        console.log('on Local/NewFocusedWallet');
         self.setFocusedWallet();
-        // self.updateTxHistory();
+        self.updatingTxHistory = true;
+        self.updateTxHistory();
         go.walletHome();
       });
 
