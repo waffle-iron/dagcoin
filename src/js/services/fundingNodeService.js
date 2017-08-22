@@ -28,6 +28,7 @@
       self.init = init;
       self.getSettings = getSettings;
       self.setSettings = setSettings;
+      self.requireUncached = requireUncached;
 
       $rootScope.$on('Local/BalanceUpdatedAndWalletUnlocked', (event, ab) => {
         assocBalances = ab;
