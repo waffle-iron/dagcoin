@@ -13,8 +13,7 @@
       getFeeDefaultMethod,
       getCanBeSwitchedToHub,
       setUpFeeDefaultMethod,
-      openNoBytesModal,
-      openPendingModal
+      openNotPossibleToExchangeModal
     };
 
     let currentBalance = null;
@@ -25,23 +24,26 @@
       getFeeDefaultMethod()
         .then((res) => {
           if (!res) {
-            if (currentBalance && currentBalance.base && currentBalance.base.stable === 0) {
-              openNoBytesModal();
+            const constants = require('byteballcore/constants.js');
+            var hasDags = (currentBalance && currentBalance[constants.DAGCOIN_ASSET] && currentBalance[constants.DAGCOIN_ASSET].stable > 0);
+            var hasBytes = (currentBalance && currentBalance.base && currentBalance.base.stable > 0)
+            
+            if (hasBytes){
+              setUpFeeDefaultMethod('bytes').then(() => {});
             }
-
-            setUpFeeDefaultMethod('bytes')
-              .then(() => {
-              });
+            
+            if (hasDags && !hasBytes) {
+              openNotPossibleToExchangeModal();
+            }
           }
         });
     });
 
     return service;
 
-
     function getCanBeSwitchedToHub() {
       const constants = require('byteballcore/constants.js');
-
+      
       return (currentBalance && currentBalance[constants.DAGCOIN_ASSET] && currentBalance[constants.DAGCOIN_ASSET].stable > 0);
     }
 
@@ -49,7 +51,7 @@
       const deferred = $q.defer();
       const desktopApp = require('byteballcore/desktop_app.js');
       const appDataDir = desktopApp.getAppDataDir();
-      const userConfFile = `${appDataDir}/conf.json`;
+      const userConfFile = appDataDir + '/conf.json';
       const userConf = fundingNodeService.requireUncached(userConfFile);
 
       if (userConf && userConf.feeMethod) {
@@ -57,6 +59,7 @@
       } else {
         deferred.resolve(false);
       }
+      
       return deferred.promise;
     }
 
@@ -80,7 +83,7 @@
       return deferred.promise;
     }
 
-    function openNoBytesModal() {
+    function openNotPossibleToExchangeModal() {
       $modal.open({
         templateUrl: 'views/modals/no-bytes.html',
         windowClass: animationService.modalAnimated.slideUp,
@@ -91,11 +94,10 @@
 
     function noDagcoinsModalController($scope) {
       $scope.data = {};
-      $scope.data.siteUrl = 'https://www.dagcoin.org/';
+      $scope.data.siteUrl = 'https://dagcoin.org/public/Dagcoin_whitepaper.pdf';
       $scope.data.nw = window.nw;
 
       $scope.closeModal = closeModal;
-
 
       function closeModal() {
         $scope.$close();
@@ -113,23 +115,6 @@
         closeModal();
         go.preferencesGlobal();
       }
-    }
-
-    function pendingModalController($scope) {
-      $scope.pending = true;
-      $scope.closeModal = closeModal;
-
-      function closeModal() {
-        $scope.$close();
-      }
-    }
-
-    function openPendingModal() {
-      $modal.open({
-        templateUrl: 'views/modals/pending-modal.html',
-        windowClass: animationService.modalAnimated.slideUp,
-        controller: pendingModalController
-      });
     }
   }
 }());

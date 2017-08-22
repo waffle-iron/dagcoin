@@ -124,24 +124,21 @@
       });
 
       chooseFeeTypeService.getFeeDefaultMethod()
-        .then((res) => {
-          self.typeOfPaymentFee = res;
-        });
+      .then((res) => {
+        self.typeOfPaymentFee = res;
+      });
 
       self.enableHubOption = chooseFeeTypeService.getCanBeSwitchedToHub();
       self.changeTypeOfPayment = changeTypeOfPayment;
 
       function changeTypeOfPayment(model) {
-        self.enableHubOption = chooseFeeTypeService.getCanBeSwitchedToHub();
-
-        if (self.enableHubOption) {
-          chooseFeeTypeService.setUpFeeDefaultMethod(model)
-            .then(() => {
-            });
-        } else if (model === 'hub' && !self.enableHubOption) {
+        if (model === 'hub' && !self.enableHubOption) {
           self.typeOfPaymentFee = 'bytes';
-          chooseFeeTypeService.openNoBytesModal();
+        } else{
+          self.typeOfPaymentFee = model;
         }
+        
+        chooseFeeTypeService.setUpFeeDefaultMethod(self.typeOfPaymentFee).then(() => {});
       }
     });
 }());
