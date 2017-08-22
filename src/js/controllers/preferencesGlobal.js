@@ -134,10 +134,10 @@
       function changeTypeOfPayment(model) {
         if (model === 'hub' && !self.enableHubOption) {
           self.typeOfPaymentFee = 'bytes';
-        } else{
+        } else {
           self.typeOfPaymentFee = model;
         }
-        
+
         chooseFeeTypeService.setUpFeeDefaultMethod(self.typeOfPaymentFee).then(() => {});
       }
     });

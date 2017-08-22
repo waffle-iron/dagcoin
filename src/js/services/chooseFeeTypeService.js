@@ -25,13 +25,13 @@
         .then((res) => {
           if (!res) {
             const constants = require('byteballcore/constants.js');
-            var hasDags = (currentBalance && currentBalance[constants.DAGCOIN_ASSET] && currentBalance[constants.DAGCOIN_ASSET].stable > 0);
-            var hasBytes = (currentBalance && currentBalance.base && currentBalance.base.stable > 0)
-            
-            if (hasBytes){
+            const hasDags = (currentBalance && currentBalance[constants.DAGCOIN_ASSET] && currentBalance[constants.DAGCOIN_ASSET].stable > 0);
+            const hasBytes = (currentBalance && currentBalance.base && currentBalance.base.stable > 0);
+
+            if (hasBytes) {
               setUpFeeDefaultMethod('bytes').then(() => {});
             }
-            
+
             if (hasDags && !hasBytes) {
               openNotPossibleToExchangeModal();
             }
@@ -43,7 +43,7 @@
 
     function getCanBeSwitchedToHub() {
       const constants = require('byteballcore/constants.js');
-      
+
       return (currentBalance && currentBalance[constants.DAGCOIN_ASSET] && currentBalance[constants.DAGCOIN_ASSET].stable > 0);
     }
 
@@ -51,7 +51,7 @@
       const deferred = $q.defer();
       const desktopApp = require('byteballcore/desktop_app.js');
       const appDataDir = desktopApp.getAppDataDir();
-      const userConfFile = appDataDir + '/conf.json';
+      const userConfFile = `${appDataDir}/conf.json`;
       const userConf = fundingNodeService.requireUncached(userConfFile);
 
       if (userConf && userConf.feeMethod) {
@@ -59,7 +59,7 @@
       } else {
         deferred.resolve(false);
       }
-      
+
       return deferred.promise;
     }
 
