@@ -33,7 +33,7 @@
           self.step = 'device_name';
           return;
         }
-        const fs = require('fs');
+
         const appDataDir = fileSystemService.getDatabaseDirPath();
         const userConfFile = `${appDataDir}/conf.json`;
         fileSystemService.writeFile(userConfFile, JSON.stringify({ bLight }, null, '\t'), 'utf8', (err) => {
