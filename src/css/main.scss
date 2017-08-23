@@ -2769,3 +2769,32 @@ input {
   text-overflow: ellipsis;
   overflow: hidden;
 }
+.radios{
+  li{
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    input{
+      margin: 0;
+      width: 5%;
+    }
+    input:hover{
+      cursor: pointer;
+    }
+  }
+}
+.no-bytes-modal-msg{
+  text-align: center;
+}
+.btns-wrapper{
+  display: flex;
+  justify-content: space-around;
+}
+.btns-wrapper button{
+  padding: 0.5rem 0.6rem 0.531rem;
+  font-size: 0.8rem;
+  border-radius: 15px;
+}
+.btns-wrapper button:hover{
+  background-color: #008cba;
+}

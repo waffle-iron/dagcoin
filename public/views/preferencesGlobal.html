@@ -93,6 +93,19 @@
     </li>
   </ul>
 
+
+    <h4 translate>Choose how to pay fee</h4>
+    <ul class="no-bullet m0 radios">
+        <li>
+            <span>Use own bytes</span>
+            <input type="radio" ng-model="prefGlobal.typeOfPaymentFee" value="bytes" ng-change="prefGlobal.changeTypeOfPayment(prefGlobal.typeOfPaymentFee)">
+        </li>
+        <li>
+            <span>Subscribe to a funding hub</span>
+            <input type="radio" ng-model="prefGlobal.typeOfPaymentFee" value="hub" ng-change="prefGlobal.changeTypeOfPayment(prefGlobal.typeOfPaymentFee)">
+        </li>
+    </ul>
+
   <div ng-show="index.usePushNotifications">
     <h4></h4>
     <ul class="no-bullet m0">

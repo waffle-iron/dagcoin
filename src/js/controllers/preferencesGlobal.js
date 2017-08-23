@@ -2,7 +2,7 @@
   'use strict';
 
   angular.module('copayApp.controllers').controller('preferencesGlobalController',
-    function ($scope, $q, $rootScope, $timeout, $log, configService, uxLanguage, pushNotificationsService, profileService, fundingNodeService) {
+    function ($scope, $q, $rootScope, $timeout, $log, configService, uxLanguage, pushNotificationsService, profileService, fundingNodeService, $modal, animationService, chooseFeeTypeService) {
       const conf = require('byteballcore/conf.js');
       const self = this;
       self.fundingNodeSettings = {};
@@ -122,5 +122,23 @@
         unwatchEncrypt();
         unwatchFundingNode();
       });
+
+      chooseFeeTypeService.getFeeDefaultMethod()
+      .then((res) => {
+        self.typeOfPaymentFee = res;
+      });
+
+      self.enableHubOption = chooseFeeTypeService.getCanBeSwitchedToHub();
+      self.changeTypeOfPayment = changeTypeOfPayment;
+
+      function changeTypeOfPayment(model) {
+        if (model === 'hub' && !self.enableHubOption) {
+          self.typeOfPaymentFee = 'bytes';
+        } else {
+          self.typeOfPaymentFee = model;
+        }
+
+        chooseFeeTypeService.setUpFeeDefaultMethod(self.typeOfPaymentFee).then(() => {});
+      }
     });
 }());
