@@ -69,14 +69,26 @@
       return cb(null, path.replace(/\\/g, '/'));
     };
 
-    root.nwWriteFile = function (path, data, cb) {
+    root.writeFile = function (path, data, encoding, cb) {
       if (!isCordova) {
-        fs.writeFile((path, data, (err) => {
+        root.nwWriteFile(path, data, encoding, cb);
+      } else {
+        const pathParts = path.split('\\').join('/').split('/');
+        const fileName = pathParts.pop();
+        const folder = `${pathParts.join('/')}/`;
+
+        root.cordovaWriteFile(folder, null, fileName, data, cb);
+      }
+    };
+
+    root.nwWriteFile = function (path, data, encoding, cb) {
+      if (!isCordova) {
+        fs.writeFile(path, data, encoding, (err) => {
           if (err) {
             return cb(err);
           }
           return cb(null);
-        }));
+        });
       } else {
         cb('use cordovaWriteFile');
       }

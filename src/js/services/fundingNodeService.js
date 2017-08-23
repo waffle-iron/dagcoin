@@ -3,7 +3,7 @@
   'use strict';
 
   angular.module('copayApp.services')
-    .factory('fundingNodeService', ($q, $rootScope, discoveryService) => {
+    .factory('fundingNodeService', ($q, $rootScope, discoveryService, fileSystemService) => {
       const self = {};
 
       const settings = {
@@ -57,8 +57,7 @@
       }
 
       function getUserConfFilePath() {
-        const desktopApp = require('byteballcore/desktop_app.js');
-        const appDataDir = desktopApp.getAppDataDir();
+        const appDataDir = fileSystemService.getDatabaseDirPath();
         return `${appDataDir}/conf.json`;
       }
 
@@ -84,7 +83,6 @@
         }
 
         const def = $q.defer();
-        const fs = require('fs');
         const userConfFile = getUserConfFilePath();
         const userConf = getConfig();
 
@@ -104,7 +102,7 @@
 
         updatingConfing = true;
 
-        fs.writeFile(userConfFile, JSON.stringify(userConf, null, '\t'), 'utf8', (err) => {
+        fileSystemService.writeFile(userConfFile, JSON.stringify(userConf, null, '\t'), 'utf8', (err) => {
           updatingConfing = false;
 
           if (err) {
