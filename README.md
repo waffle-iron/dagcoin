@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/dagcoin/dagcoin.svg?branch=master)](https://travis-ci.org/dagcoin/dagcoin)
+
 Dagcoin as cryptocurrency is built on a new technology called DAG chain, offering scalable, low cost and secure payments. Dagcoin uses byteball network as an underlying platform. Our mission is to provide alternative currency for everyday using, focusing on Asian market to help unbanked people manage their funds better. By doing that, Dagcoin will be the most widely used open source cryptocurrency in the world.
 
 ## Main Features
