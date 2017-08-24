@@ -28,7 +28,7 @@
       self.init = init;
       self.getSettings = getSettings;
       self.setSettings = setSettings;
-      self.requireUncached = requireUncached;
+      self.getUserConfig = getUserConfig;
 
       $rootScope.$on('Local/BalanceUpdatedAndWalletUnlocked', (event, ab) => {
         assocBalances = ab;
@@ -37,7 +37,7 @@
       });
 
       function init() {
-        const conf = getConfig();
+        const conf = getUserConfig();
 
         settings.exchangeFee = conf.exchangeFee || settings.exchangeFee;
         settings.totalBytes = conf.totalBytes || settings.totalBytes;
@@ -57,14 +57,9 @@
         });
       }
 
-      function getUserConfFilePath() {
-        const appDataDir = fileSystemService.getDatabaseDirPath();
-        return `${appDataDir}/conf.json`;
-      }
-
-      function getConfig() {
+      function getUserConfig() {
         try {
-          const userConfFile = getUserConfFilePath();
+          const userConfFile = fileSystemService.getUserConfFilePath();
           return requireUncached(userConfFile);
         } catch (e) {
           return {}; // empty config
@@ -84,8 +79,8 @@
         }
 
         const def = $q.defer();
-        const userConfFile = getUserConfFilePath();
-        const userConf = getConfig();
+        const userConfFile = fileSystemService.getUserConfFilePath();
+        const userConf = getUserConfig();
 
         if (userConf.fundingNode === fundingNode &&
           userConf.exchangeFee === settings.exchangeFee &&

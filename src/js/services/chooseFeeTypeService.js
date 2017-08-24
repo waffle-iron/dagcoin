@@ -5,10 +5,10 @@
     .module('copayApp.services')
     .factory('chooseFeeTypeService', chooseFeeTypeService);
 
-  chooseFeeTypeService.$inject = ['$modal', 'go', 'animationService', 'fundingNodeService', '$rootScope', '$q'];
+  chooseFeeTypeService.$inject = ['$modal', 'go', 'animationService', 'fundingNodeService', '$rootScope', '$q', 'fileSystemService'];
 
   /* @ngInject */
-  function chooseFeeTypeService($modal, go, animationService, fundingNodeService, $rootScope, $q) {
+  function chooseFeeTypeService($modal, go, animationService, fundingNodeService, $rootScope, $q, fileSystemService) {
     const service = {
       getFeeDefaultMethod,
       getCanBeSwitchedToHub,
@@ -18,7 +18,7 @@
 
     let currentBalance = null;
 
-    $rootScope.$on('Local/BalanceUpdated', (event, ab) => {
+    $rootScope.$on('Local/BalanceUpdatedAndWalletUnlocked', (event, ab) => {
       currentBalance = ab;
 
       getFeeDefaultMethod()
@@ -49,10 +49,7 @@
 
     function getFeeDefaultMethod() {
       const deferred = $q.defer();
-      const desktopApp = require('byteballcore/desktop_app.js');
-      const appDataDir = desktopApp.getAppDataDir();
-      const userConfFile = `${appDataDir}/conf.json`;
-      const userConf = fundingNodeService.requireUncached(userConfFile);
+      const userConf = fundingNodeService.getUserConfig();
 
       if (userConf && userConf.feeMethod) {
         deferred.resolve(userConf.feeMethod);
@@ -65,15 +62,12 @@
 
     function setUpFeeDefaultMethod(way) {
       const deferred = $q.defer();
-      const fs = require('fs');
-      const desktopApp = require('byteballcore/desktop_app.js');
-      const appDataDir = desktopApp.getAppDataDir();
-      const userConfFile = `${appDataDir}/conf.json`;
-      const userConf = fundingNodeService.requireUncached(userConfFile);
+      const userConfFile = fileSystemService.getUserConfFilePath();
+      const userConf = fundingNodeService.getUserConfig();
 
       userConf.feeMethod = way;
 
-      fs.writeFile(userConfFile, JSON.stringify(userConf, null, '\t'), 'utf8', (err) => {
+      fileSystemService.writeFile(userConfFile, JSON.stringify(userConf, null, '\t'), 'utf8', (err) => {
         if (err) {
           deferred.reject(err);
         } else {
