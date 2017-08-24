@@ -94,6 +94,11 @@
       }
     };
 
+    root.getUserConfFilePath = function () {
+      const appDataDir = root.getDatabaseDirPath();
+      return `${appDataDir}/conf.json`;
+    };
+
     // example: fileSystemService.cordovaWriteFile(cordova.file.externalRootDirectory, 'testFolder', 'testFile.txt', 'testText :)', function(err) {
     root.cordovaWriteFile = function (cordovaFile, path, fileName, data, cb) {
       if (isCordova) {
