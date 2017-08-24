@@ -22,9 +22,14 @@ module.exports = function (grunt) {
         nwjsFlavor: 'sdk',
         nwjsCFBundleURLName: 'Dagcoin-TN action',
         nwjsCFBundleURLScheme: 'DAGCOIN-TN',
-        // innosetup task
-        innosetupWin64Script: 'webkitbuilds/setup-win64-testnet.iss',
-        innosetupWin32Script: 'webkitbuilds/setup-win32-testnet.iss'
+
+        // inno setup
+        innosetupTemplateMyAppName: 'Dagcoin-TN',
+        innosetupTemplateMyAppPackageName: 'Dagcoin-TN',
+        innosetupTemplateMyAppVersion: '1.2.1t',
+        innosetupTemplateMyAppExeName: 'Dagcoin-TN.exe',
+        innosetupTemplateMyAppFolderName: 'dagcoin-tn'
+
       },
       live: {
         // nwjs task
@@ -32,11 +37,32 @@ module.exports = function (grunt) {
         nwjsFlavor: 'normal',
         nwjsCFBundleURLName: 'Dagcoin action',
         nwjsCFBundleURLScheme: 'DAGCOIN',
-        // innosetup task
-        innosetupWin64Script: 'webkitbuilds/setup-win64.iss',
-        innosetupWin32Script: 'webkitbuilds/setup-win32.iss'
+
+        // inno setup
+        innosetupTemplateMyAppName: 'Dagcoin',
+        innosetupTemplateMyAppPackageName: 'Dagcoin',
+        innosetupTemplateMyAppVersion: '1.2.1',
+        innosetupTemplateMyAppExeName: 'Dagcoin.exe',
+        innosetupTemplateMyAppFolderName: 'dagcoin'
       },
       functions: {},
+    },
+    template: {
+      'process-html-template': {
+        options: {
+          data: {
+            myAppName: '<%= process.env.innosetupTemplateMyAppName %>',
+            myAppPackageName: '<%= process.env.innosetupTemplateMyAppPackageName %>',
+            myAppVersion: '<%= process.env.innosetupTemplateMyAppVersion %>',
+            myAppExeName: '<%= process.env.innosetupTemplateMyAppExeName %>',
+            myAppFolderName: '<%= process.env.innosetupTemplateMyAppFolderName %>',
+          }
+        },
+        files: {
+          'webkitbuilds/setup-win64.iss': ['webkitbuilds/setup-win64.iss.tpl'],
+          'webkitbuilds/setup-win32.iss': ['webkitbuilds/setup-win32.iss.tpl']
+        }
+      }
     },
     pkg: grunt.file.readJSON('package.json'),
     exec: {
@@ -350,14 +376,14 @@ module.exports = function (grunt) {
           gui: false,
           verbose: false,
         },
-        script: '<%= process.env.innosetupWin64Script %>',
+        script: 'webkitbuilds/setup-win64.iss',
       },
       win32: {
         options: {
           gui: false,
           verbose: false,
         },
-        script: '<%= process.env.innosetupWin32Script %>',
+        script: 'webkitbuilds/setup-win32.iss',
       },
     },
     svgmin: {
@@ -412,6 +438,7 @@ module.exports = function (grunt) {
     },
   });
 
+  grunt.loadNpmTasks('grunt-template');
   grunt.loadNpmTasks('grunt-env');
   grunt.loadNpmTasks('grunt-svgmin');
   grunt.loadNpmTasks('grunt-babel');
@@ -450,6 +477,8 @@ module.exports = function (grunt) {
   grunt.registerTask('linux64', ['copy:linux', 'compress:linux64']);
   grunt.registerTask('linux32', ['copy:linux', 'compress:linux32']);
   grunt.registerTask('deb', ['debian_package:linux64']);
-  grunt.registerTask('inno64', ['innosetup_compiler:win64']);
-  grunt.registerTask('inno32', ['innosetup_compiler:win32']);
+  grunt.registerTask('inno64:testnet', ['env:testnet', 'template', 'innosetup_compiler:win64']);
+  grunt.registerTask('inno64:live', ['env:live', 'template', 'innosetup_compiler:win64']);
+  grunt.registerTask('inno32:testnet', ['env:testnet', 'template', 'innosetup_compiler:win32']);
+  grunt.registerTask('inno32:live', ['env:live', 'template', 'innosetup_compiler:win32']);
 };
