@@ -14,6 +14,30 @@ module.exports = function (grunt) {
 
   // Project Configuration
   grunt.initConfig({
+    env: {
+      options: {},
+      testnet: {
+        // nwjs task
+        nwjsAppName: 'Dagcoin-TN',
+        nwjsFlavor: 'sdk',
+        nwjsCFBundleURLName: 'Dagcoin-TN action',
+        nwjsCFBundleURLScheme: 'DAGCOIN-TN',
+        // innosetup task
+        innosetupWin64Script: 'webkitbuilds/setup-win64-testnet.iss',
+        innosetupWin32Script: 'webkitbuilds/setup-win32-testnet.iss'
+      },
+      live: {
+        // nwjs task
+        nwjsAppName: 'Dagcoin',
+        nwjsFlavor: 'normal',
+        nwjsCFBundleURLName: 'Dagcoin action',
+        nwjsCFBundleURLScheme: 'DAGCOIN',
+        // innosetup task
+        innosetupWin64Script: 'webkitbuilds/setup-win64.iss',
+        innosetupWin32Script: 'webkitbuilds/setup-win32.iss'
+      },
+      functions: {},
+    },
     pkg: grunt.file.readJSON('package.json'),
     exec: {
       version: {
@@ -224,8 +248,8 @@ module.exports = function (grunt) {
         // platforms: ['win','osx64','linux'],
         // platforms: ['osx64'],
         platforms: [getPlatform()],
-        appName: 'DAGCOIN-TN',
-        flavor: 'normal',
+        appName: '<%= process.env.nwjsAppName %>',
+        flavor: '<%= process.env.nwjsFlavor %>',
         buildDir: '../byteballbuilds',
         version: '0.14.7',
         zip: false,
@@ -233,7 +257,10 @@ module.exports = function (grunt) {
         winIco: './public/img/icons/dagcoin.ico',
         exeIco: './public/img/icons/dagcoin.ico',
         macPlist: {
-          CFBundleURLTypes: [{CFBundleURLName: 'Dagcoin action', CFBundleURLSchemes: ['DAGCOIN-TN']}],
+          CFBundleURLTypes: [{
+            CFBundleURLName: '<%= process.env.nwjsCFBundleURLName %>',
+            CFBundleURLSchemes: ['<%= process.env.nwjsCFBundleURLSchemes %>']
+          }],
           LSHasLocalizedDisplayName: 0,
           /* CFBundleIconFile: 'nw.icns',*/
         },
@@ -323,14 +350,14 @@ module.exports = function (grunt) {
           gui: false,
           verbose: false,
         },
-        script: 'webkitbuilds/setup-win64.iss',
+        script: '<%= process.env.innosetupWin64Script %>',
       },
       win32: {
         options: {
           gui: false,
           verbose: false,
         },
-        script: 'webkitbuilds/setup-win32.iss',
+        script: '<%= process.env.innosetupWin32Script %>',
       },
     },
     svgmin: {
@@ -380,11 +407,12 @@ module.exports = function (grunt) {
           'src/js/models/**/*.js',
           'src/js/controllers/**/*.js',
         ],
-        tasks: ['concat:js'/*, 'karma:prod'*/],
+        tasks: ['concat:js'/* , 'karma:prod' */],
       },
     },
   });
 
+  grunt.loadNpmTasks('grunt-env');
   grunt.loadNpmTasks('grunt-svgmin');
   grunt.loadNpmTasks('grunt-babel');
   grunt.loadNpmTasks('grunt-contrib-concat');
@@ -410,13 +438,14 @@ module.exports = function (grunt) {
   grunt.registerTask('default', ['nggettext_compile', 'exec:version', 'stylelint', 'sass', 'concat', 'postcss', 'copy:icons']);
   grunt.registerTask('cordova', ['default', 'browserify']);
   // todo: uglify doesn't work
-  grunt.registerTask('cordova-prod', ['cordova'/*, 'uglify'*/]);
+  grunt.registerTask('cordova-prod', ['cordova'/* , 'uglify' */]);
   // grunt.registerTask('prod', ['default', 'uglify']);
   grunt.registerTask('translate', ['nggettext_extract']);
   grunt.registerTask('test', ['karma:prod']);
   grunt.registerTask('test-coveralls', ['karma:unit', 'coveralls']);
   // grunt.registerTask('desktop', ['prod', 'nwjs', 'copy:linux', 'compress:linux32', 'compress:linux64', 'copy:osx', 'exec:osx32', 'exec:osx64']);
-  grunt.registerTask('desktop', ['default', 'nwjs']);
+  grunt.registerTask('desktop:testnet', ['env:testnet', 'default', 'nwjs']);
+  grunt.registerTask('desktop:live', ['env:live', 'default', 'nwjs']);
   grunt.registerTask('dmg', ['copy:osx', 'exec:osx64']);
   grunt.registerTask('linux64', ['copy:linux', 'compress:linux64']);
   grunt.registerTask('linux32', ['copy:linux', 'compress:linux32']);
