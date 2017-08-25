@@ -14,6 +14,7 @@ module.exports = function (grunt) {
 
   // Project Configuration
   grunt.initConfig({
+    pkg: grunt.file.readJSON('package.json'),
     env: {
       options: {},
       testnet: {
@@ -26,7 +27,7 @@ module.exports = function (grunt) {
         // inno setup
         innosetupTemplateMyAppName: 'Dagcoin-TN',
         innosetupTemplateMyAppPackageName: 'Dagcoin-TN',
-        innosetupTemplateMyAppVersion: '1.2.1t',
+        innosetupTemplateMyAppVersion: '<%= pkg.version %>',
         innosetupTemplateMyAppExeName: 'Dagcoin-TN.exe',
         innosetupTemplateMyAppFolderName: 'dagcoin-tn'
 
@@ -41,7 +42,7 @@ module.exports = function (grunt) {
         // inno setup
         innosetupTemplateMyAppName: 'Dagcoin',
         innosetupTemplateMyAppPackageName: 'Dagcoin',
-        innosetupTemplateMyAppVersion: '1.2.1',
+        innosetupTemplateMyAppVersion: '<%= pkg.version %>',
         innosetupTemplateMyAppExeName: 'Dagcoin.exe',
         innosetupTemplateMyAppFolderName: 'dagcoin'
       },
@@ -64,7 +65,7 @@ module.exports = function (grunt) {
         }
       }
     },
-    pkg: grunt.file.readJSON('package.json'),
+
     exec: {
       version: {
         command: 'node ./util/version.js',
@@ -73,10 +74,10 @@ module.exports = function (grunt) {
         command: 'rm -Rf bower_components node_modules',
       },
       osx64: {
-        command: '../byteballbuilds/build-osx.sh osx64',
+        command: '../byteballbuilds/build-osx.sh osx64 <%= pkg.name %>',
       },
       osx32: {
-        command: '../byteballbuilds/build-osx.sh osx32',
+        command: '../byteballbuilds/build-osx.sh osx32 <%= pkg.name %>',
       },
     },
 
@@ -98,7 +99,7 @@ module.exports = function (grunt) {
 
         processors: [
           require('pixrem')(), // add fallbacks for rem units
-          require('autoprefixer')({browsers: 'last 4 versions'}), // add vendor prefixes
+          require('autoprefixer')({ browsers: 'last 4 versions' }), // add vendor prefixes
           require('cssnano')() // minify the result
         ],
       },
@@ -222,12 +223,12 @@ module.exports = function (grunt) {
       osx: {
         expand: true,
         flatten: true,
-        options: {timestamp: true, mode: true},
+        options: { timestamp: true, mode: true },
         src: ['webkitbuilds/build-osx.sh', 'webkitbuilds/Background.png'],
         dest: '../byteballbuilds/',
       },
       linux: {
-        options: {timestamp: true, mode: true},
+        options: { timestamp: true, mode: true },
         files: [
           {
             expand: true,
@@ -236,7 +237,7 @@ module.exports = function (grunt) {
             dest: '../byteballbuilds/DAGCOIN-TN/linux32/',
             flatten: true,
             filter: 'isFile',
-            options: {timestamp: true, mode: true},
+            options: { timestamp: true, mode: true },
           },
           {
             expand: true,
@@ -245,7 +246,7 @@ module.exports = function (grunt) {
             dest: '../byteballbuilds/DAGCOIN-TN/linux64/',
             flatten: true,
             filter: 'isFile',
-            options: {timestamp: true, mode: true},
+            options: { timestamp: true, mode: true },
           },
         ],
       },

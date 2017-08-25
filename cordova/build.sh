@@ -56,7 +56,7 @@ echo "Project directory is $PROJECT"
 if [ ! -d $PROJECT ]; then
 	cd $BUILDDIR
 	echo "${OpenColor}${Green}* Creating project... ${CloseColor}"
-	cordova create ../../byteballbuilds/project-$1-tn org.dagcoin.wallet Dagcoin
+	cordova create ../../byteballbuilds/project-$1-tn org.dagcoin Dagcoin
 	checkOK
 
 	cd $PROJECT
@@ -100,7 +100,7 @@ if [ ! -d $PROJECT ]; then
 	cordova plugin add cordova-plugin-statusbar
 	checkOK
 
-	cordova plugin add cordova-plugin-customurlscheme --variable URL_SCHEME=dagcoin-tn
+	cordova plugin add cordova-plugin-customurlscheme --variable URL_SCHEME=$2
 	checkOK
 
 	cordova plugin add cordova-plugin-inappbrowser
@@ -156,7 +156,7 @@ if [ ! -d $PROJECT ]; then
 
 	phonegap local plugin add https://github.com/phonegap-build/PushPlugin.git
 	checkOK
-	
+
 	cordova plugin add https://github.com/xJeneKx/MFileChooser.git
 	checkOK
 
@@ -195,7 +195,7 @@ checkOK
 
 if [ $CURRENT_OS == "ANDROID" ]; then
 	echo "Android project!!!"
-	
+
 	cat $BUILDDIR/android/android.css >> $PROJECT/www/css/byteball.css
 
 	mkdir -p $PROJECT/platforms/android/res/xml/
@@ -203,7 +203,7 @@ if [ $CURRENT_OS == "ANDROID" ]; then
 
 #  cp android/AndroidManifest.xml $PROJECT/platforms/android/AndroidManifest.xml
 #  checkOK
-	
+
 	cp android/build-extras.gradle $PROJECT/platforms/android/build-extras.gradle
 	checkOK
 

@@ -27,8 +27,10 @@ npm install
 
 Sqlite3Path='./node_modules/sqlite3/lib/binding'
 
-echo "${Green}* Installing sass...${CloseColor}"
-gem install sass
+if ! gem list sass -i; then
+  echo "${Green}* Installing sass...${CloseColor}"
+  gem install sass
+fi
 
 if [ -d "${Sqlite3Path}/node-webkit-v0.14.7-darwin-x64" ]; then
   grunt
