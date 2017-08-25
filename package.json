@@ -28,7 +28,7 @@
     "java": false,
     "plugin": false
   },
-  "chromium-args": "--proxy-server=http://127.1.2.7",
+  "chromium-args": "--proxy-server=http://127.1.2.7 --disable-password-generation",
   "homepage": "https://github.com/dagcoin/dagcoin",
   "license": "MIT",
   "repository": {
