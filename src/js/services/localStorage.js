@@ -14,6 +14,10 @@
       return cb(null, ls.getItem(k));
     };
 
+    root.getSync = function (k) {
+      return ls.getItem(k);
+    };
+
     /**
      * Same as setItem, but fails if an item already exists
      */
@@ -30,6 +34,14 @@
     root.set = function (k, v, cb) {
       ls.setItem(k, v);
       return cb();
+    };
+
+    root.setSync = function (k, v) {
+      ls.setItem(k, v);
+    };
+
+    root.removeSync = function (k) {
+      ls.removeItem(k);
     };
 
     root.remove = function (k, cb) {

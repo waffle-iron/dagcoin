@@ -93,6 +93,15 @@
     </li>
   </ul>
 
+  <h4 ng-if="prefGlobal.canChangeWalletType"  translate>Change Wallet type</h4>
+  <ul class="no-bullet m0 radios" ng-if="prefGlobal.canChangeWalletType">
+    <li ng-if="!prefGlobal.isLight" ng-click="prefGlobal.changeWalletType()">
+      <span>Light-Wallet</span>
+    </li>
+    <li ng-if="prefGlobal.isLight" ng-click="prefGlobal.changeWalletType()">
+      <span>Full-Wallet</span>
+    </li>
+  </ul>
 
     <h4 translate>Choose how to pay fee</h4>
     <ul class="no-bullet m0 radios">

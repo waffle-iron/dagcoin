@@ -32,7 +32,8 @@
       $modal,
       bwcService,
       backButton,
-      chooseFeeTypeService) {
+      chooseFeeTypeService,
+      changeWalletTypeTypeService) {
       const async = require('async');
       const constants = require('byteballcore/constants.js');
       const mutex = require('byteballcore/mutex.js');
