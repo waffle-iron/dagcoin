@@ -2407,7 +2407,7 @@ canvas {
     width: 100%;
     height: 100%;
     padding-left: 0;
-    display: block;
+    display: flex;
     margin-left: auto;
     margin-right: auto;
     text-align: center;
@@ -2415,11 +2415,10 @@ canvas {
     list-style-type: none;
 
     li {
-      float: left;
+      flex: 1;
       height: 100%;
       vertical-align: middle;
       text-align: center;
-      width: 25%;
       margin-right: 0;
 
       a {
@@ -2522,7 +2521,7 @@ canvas {
 .transactions__table{
   margin-top: 20px;
   overflow-x: hidden;
-  overflow-y: scroll;
+  //overflow-y: scroll;
 
   table {
     width: 100%;
