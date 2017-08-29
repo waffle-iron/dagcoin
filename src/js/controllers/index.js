@@ -605,11 +605,11 @@
         title: gettext('Send'),
         icon: 'icon-send',
         link: 'send',
-      }, {
+      }/* , {
         title: gettext('History'),
         icon: 'icon-history',
         link: 'history',
-      }];
+      } */];
 
       self.getSvgSrc = function (id) {
         return `img/svg/symbol-defs.svg#${id}`;
