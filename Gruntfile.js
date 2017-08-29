@@ -260,35 +260,10 @@ module.exports = function (grunt) {
         dest: 'dagcoin-linux64/',
       },
     },
-    babel: {
-      options: {
-        sourceMap: false,
-        presets: ['es2015'],
-      },
-      src: {
-        files: [
-          {
-            expand: true,
-            cwd: 'src/js/',
-            src: ['**/*.js'],
-            dest: 'build/src',
-          },
-        ],
-      },
-      test: {
-        files: [
-          {
-            expand: true,
-            cwd: 'test/',
-            src: ['**/*.js', '!karma.conf.js'],
-            dest: 'build/test',
-          },
-        ],
-      },
-    },
     browserify: {
       dist: {
         options: {
+          transform: [['babelify', { presets: ['es2015'] }]],
           exclude: ['sqlite3', 'nw.gui', 'mysql', 'ws', 'regedit'],
         },
         src: 'public/dagcoin.js',
@@ -410,7 +385,7 @@ module.exports = function (grunt) {
   grunt.registerTask('default', ['nggettext_compile', 'exec:version', 'stylelint', 'sass', 'concat', 'postcss', 'copy:icons']);
   grunt.registerTask('cordova', ['default', 'browserify']);
   // todo: uglify doesn't work
-  grunt.registerTask('cordova-prod', ['cordova'/*, 'uglify' */]);
+  grunt.registerTask('cordova-prod', ['cordova', 'uglify']);
   // grunt.registerTask('prod', ['default', 'uglify']);
   grunt.registerTask('translate', ['nggettext_extract']);
   grunt.registerTask('test', ['karma:prod']);
