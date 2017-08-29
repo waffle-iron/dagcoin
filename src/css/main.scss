@@ -282,7 +282,11 @@ ul.button-group {
 }
 
 a {
-  color: #3498db;
+  color: $main_color;
+
+  &:hover{
+    color: darken($main_color, 10);
+  }
 
   &.close-notification {
     position: absolute;
@@ -2121,56 +2125,57 @@ button {
   letter-spacing: 0.3px;
   overflow: hidden;
   position: relative;
+  outline: none;
 
-  & + .btn {
-    margin-top: 13px;
-  }
-
-  &.btn_red {
-    border-color: $main_color;
-    background: #fff;
-    color: $main_color;
-
-    &:hover {
+  &:not([disabled]){
+    &.btn_red {
+      border-color: $main_color;
+      background: #fff;
       color: $main_color;
+
+      &:hover {
+        color: $main_color;
+      }
     }
-  }
 
-  &.btn_red-full {
-    color: #fff;
-    @include gradientBackground($main_color, darken($main_color, 10), left, right);
-    text-shadow: 1px 1px 0 darken($main_color, 10);
-    border: 2px solid;
-
-    &:hover {
+    &.btn_red-full {
       color: #fff;
-      @include gradientBackground(darken($main_color, 2), darken($main_color, 12), left, right);
+      @include gradientBackground($main_color, darken($main_color, 10), left, right);
+      text-shadow: 1px 1px 0 darken($main_color, 10);
+      border: 2px solid;
+
+      &:hover {
+        color: #fff;
+        @include gradientBackground(darken($main_color, 2), darken($main_color, 12), left, right);
+      }
     }
-  }
-
-  &:after, &:before{
-    @extend .transition;
-    content: "";
-    position: absolute;
-    top: 0;
-    width: 40px;
-    height: 100%;
-    opacity: 0.15;
-    right: -100px;
-    @include gradientBackground(#fff, darken(#fff, 10), left, right);
-    transform: skewX(30deg);
-  }
-
-  &:before{
-    margin-left: 30px;
-  }
-
-  &:hover {
-    outline: none;
 
     &:after, &:before{
-      right: 110%;
+      @extend .transition;
+      content: "";
+      position: absolute;
+      top: 0;
+      width: 40px;
+      height: 100%;
+      opacity: 0.15;
+      right: -100px;
+      @include gradientBackground(#fff, darken(#fff, 10), left, right);
+      transform: skewX(30deg);
     }
+
+    &:before{
+      margin-left: 30px;
+    }
+
+    &:hover {
+      &:after, &:before{
+        right: 110%;
+      }
+    }
+  }
+
+  &[disabled]{
+    cursor: not-allowed;
   }
 }
 
@@ -2595,6 +2600,11 @@ canvas {
   z-index: 2;
   text-align: center;
   padding-bottom: 70px;
+}
+
+.send.tab-in .p-wrap{
+  max-height: 485px;
+  overflow-y: auto;
 }
 
 .p-wrap_android {
