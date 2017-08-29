@@ -43,9 +43,8 @@
 					</div>
 				</div>
 				<div class="page-action">
-					<input ng-disabled="import.imported || import.password == '' || !file" type="submit"
-						   class="button expand btn_red-full round"
-						   value="{{'Import'|translate}}">
+					<button ng-disabled="import.imported || import.password == '' || !file" type="submit"
+						   class="btn btn_red-full">{{'Import'|translate}}</button>
 				</div>
 			</form>
 		</div>
