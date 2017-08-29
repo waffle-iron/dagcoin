@@ -16,6 +16,7 @@
 
       this.init = function () {
         const config = configService.getSync();
+        this.type = (conf.bLight ? 'light wallet' : 'full wallet');
         this.unitName = config.wallet.settings.unitName;
         this.dagUnitName = config.wallet.settings.dagUnitName;
         this.deviceName = config.deviceName;
