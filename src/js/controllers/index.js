@@ -10,6 +10,7 @@
       $log,
       $filter,
       $timeout,
+      $interval,
       lodash,
       go,
       profileService,
@@ -32,7 +33,8 @@
       $modal,
       bwcService,
       backButton,
-      chooseFeeTypeService) {
+      chooseFeeTypeService,
+      autoRefreshClientService) {
       const async = require('async');
       const constants = require('byteballcore/constants.js');
       const mutex = require('byteballcore/mutex.js');
@@ -217,6 +219,12 @@
 
       eventBus.on('my_transactions_became_stable', () => {
         breadcrumbs.add('my_transactions_became_stable');
+        self.updateAll();
+        self.updateTxHistory();
+      });
+
+      eventBus.on('mci_became_stable', () => {
+        breadcrumbs.add('mci_became_stable');
         self.updateAll();
         self.updateTxHistory();
       });
@@ -830,7 +838,6 @@
           });
 
           self.otherWallets = lodash.filter(profileService.getWallets(self.network), w => (w.id !== self.walletId || self.shared_address));
-
 
           // $rootScope.$apply();
 
@@ -1578,6 +1585,10 @@
           $rootScope.$apply();
         });
       });
+
+      if (autoRefreshClientService) {
+        autoRefreshClientService.initHistoryAutoRefresh();
+      }
 
       let gui;
       try {
