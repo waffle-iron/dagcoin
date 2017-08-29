@@ -1,185 +1,219 @@
-
-<div 
-  class="topbar-container" 
-  ng-include="'views/includes/topbar.html'"
-  ng-init="closeToHome = true">
+<div
+        class="topbar-container"
+        ng-include="'views/includes/topbar.html'"
+        ng-init="closeToHome = true">
 </div>
 
 
 <div class="content preferences" ng-controller="preferencesGlobalController as prefGlobal" ng-init="prefGlobal.init()">
-  <h4></h4>
-  <ul class="no-bullet m0 ">
-    <li  ng-click="$root.go('preferencesDeviceName')">
-      <div class="right text-gray wrappable-menu-item">
-        {{prefGlobal.deviceName}}
-        <i class="icon-arrow-right3 size-24 arrow-right"></i>
-      </div>
-      <div translate>Device name</div>
-    </li>
+    <h4></h4>
+    <ul class="no-bullet m0 ">
+        <li ng-click="$root.go('preferencesDeviceName')">
+            <div class="right text-gray wrappable-menu-item">
+                {{prefGlobal.deviceName}}
+                <i class="icon-arrow-right3 size-24 arrow-right"></i>
+            </div>
+            <div translate>Device name</div>
+        </li>
 
-    <li><!--ng-click="$root.go('preferencesLanguage')"-->
-      <div class="right text-gray">
-        {{prefGlobal.currentLanguageName|translate}}
-        <i class="icon-arrow-right3 size-24"></i>
-      </div>
-      <div translate>Language</div>
-    </li>
-  </ul>
-  
-  <h4 translate>Funding Node</h4>
-  <ul class="no-bullet m0 enable_text_select">
-    <li>
-      <switch id="funding-node" name="funding-node" ng-model="prefGlobal.fundingNode" ng-change="prefGlobal.onFundingNodeChange()" class="green right"></switch>
-      <div translate>Active</div>
-    </li>
-  </ul>
-  <h4 ng-if="prefGlobal.fundingNode" translate>Funding Node Settings</h4>
-  <ul ng-if="prefGlobal.fundingNode" class="no-bullet m0 enable_text_select">
-    <li class="input-wrap">
-      <input id="exchange-fee"
-             type="text"
-             name="exchange-fee"
-             min="0.00000001"
-             ng-minlength="0.00000001"
-             ng-maxlength="10000000000"
-             ng-required="true"
-             autocomplete="off"
-             ng-blur="prefGlobal.onFundingNodeSettingBlur()"
-             ng-model="prefGlobal.fundingNodeSettings.exchangeFee"
-             class="right min text-right">
-      <div translate>Exchange fee</div>
-    </li>
-    <li class="input-wrap">
-      <input id="total-bytes"
-             type="text"
-             name="total-bytes"
-             min="1"
-             ng-minlength="1"
-             ng-maxlength="10000000000"
-             ng-required="true"
-             autocomplete="off"
-             ng-blur="prefGlobal.onFundingNodeSettingBlur()"
-             ng-model="prefGlobal.fundingNodeSettings.totalBytes"
-             class="right min text-right">
-      <div translate>Total bytes per month</div>
-    </li>
-    <li class="input-wrap">
-      <input id="bytes-per-address"
-             type="text"
-             name="bytes-per-address"
-             min="1"
-             ng-minlength="1"
-             ng-maxlength="10000000000"
-             ng-required="true"
-             autocomplete="off"
-             ng-blur="prefGlobal.onFundingNodeSettingBlur()"
-             ng-model="prefGlobal.fundingNodeSettings.bytesPerAddress"
-             class="right min text-right">
-      <div translate>Bytes per shared address per month</div>
-    </li>
-    <li class="input-wrap">
-      <input id="end-user-max-capacity"
-             type="text"
-             name="end-user-max-capacity"
-             min="1"
-             ng-minlength="1"
-             ng-maxlength="10000000000"
-             ng-required="true"
-             autocomplete="off"
-             ng-blur="prefGlobal.onFundingNodeSettingBlur()"
-             ng-model="prefGlobal.fundingNodeSettings.maxEndUserCapacity"
-             class="right min text-right">
-      <div translate>End-user max capacity</div>
-    </li>
-  </ul>
+        <li><!--ng-click="$root.go('preferencesLanguage')"-->
+            <div class="right text-gray">
+                {{prefGlobal.currentLanguageName|translate}}
+                <i class="icon-arrow-right3 size-24"></i>
+            </div>
+            <div translate>Language</div>
+        </li>
+    </ul>
+
+    <h4 translate>Funding Node</h4>
+    <ul class="no-bullet m0 enable_text_select">
+        <li>
+            <switch id="funding-node" name="funding-node" ng-model="prefGlobal.fundingNode"
+                    ng-change="prefGlobal.onFundingNodeChange()" class="green right"></switch>
+            <div translate>Active</div>
+        </li>
+    </ul>
+    <h4 ng-if="prefGlobal.fundingNode" translate>Funding Node Settings</h4>
+    <ul ng-if="prefGlobal.fundingNode" class="no-bullet m0 enable_text_select">
+        <li class="input-wrap">
+            <input id="exchange-fee"
+                   type="text"
+                   name="exchange-fee"
+                   min="0.00000001"
+                   ng-minlength="0.00000001"
+                   ng-maxlength="10000000000"
+                   ng-required="true"
+                   autocomplete="off"
+                   ng-blur="prefGlobal.onFundingNodeSettingBlur()"
+                   ng-model="prefGlobal.fundingNodeSettings.exchangeFee"
+                   class="right min text-right">
+            <div translate>Exchange fee</div>
+        </li>
+        <li class="input-wrap">
+            <input id="total-bytes"
+                   type="text"
+                   name="total-bytes"
+                   min="1"
+                   ng-minlength="1"
+                   ng-maxlength="10000000000"
+                   ng-required="true"
+                   autocomplete="off"
+                   ng-blur="prefGlobal.onFundingNodeSettingBlur()"
+                   ng-model="prefGlobal.fundingNodeSettings.totalBytes"
+                   class="right min text-right">
+            <div translate>Total bytes per month</div>
+        </li>
+        <li class="input-wrap">
+            <input id="bytes-per-address"
+                   type="text"
+                   name="bytes-per-address"
+                   min="1"
+                   ng-minlength="1"
+                   ng-maxlength="10000000000"
+                   ng-required="true"
+                   autocomplete="off"
+                   ng-blur="prefGlobal.onFundingNodeSettingBlur()"
+                   ng-model="prefGlobal.fundingNodeSettings.bytesPerAddress"
+                   class="right min text-right">
+            <div translate>Bytes per shared address per month</div>
+        </li>
+        <li class="input-wrap">
+            <input id="end-user-max-capacity"
+                   type="text"
+                   name="end-user-max-capacity"
+                   min="1"
+                   ng-minlength="1"
+                   ng-maxlength="10000000000"
+                   ng-required="true"
+                   autocomplete="off"
+                   ng-blur="prefGlobal.onFundingNodeSettingBlur()"
+                   ng-model="prefGlobal.fundingNodeSettings.maxEndUserCapacity"
+                   class="right min text-right">
+            <div translate>End-user max capacity</div>
+        </li>
+    </ul>
 
 
     <h4 translate>Choose how to pay fee</h4>
     <ul class="no-bullet m0 radios">
         <li>
             <span>Use own bytes</span>
-            <input type="radio" ng-model="prefGlobal.typeOfPaymentFee" value="bytes" ng-change="prefGlobal.changeTypeOfPayment(prefGlobal.typeOfPaymentFee)">
+            <input type="radio" ng-model="prefGlobal.typeOfPaymentFee" value="bytes"
+                   ng-change="prefGlobal.changeTypeOfPayment(prefGlobal.typeOfPaymentFee)">
         </li>
         <li>
             <span>Subscribe to a funding hub</span>
-            <input type="radio" ng-model="prefGlobal.typeOfPaymentFee" value="hub" ng-change="prefGlobal.changeTypeOfPayment(prefGlobal.typeOfPaymentFee)">
+            <input type="radio" ng-model="prefGlobal.typeOfPaymentFee" value="hub"
+                   ng-change="prefGlobal.changeTypeOfPayment(prefGlobal.typeOfPaymentFee)">
         </li>
     </ul>
 
-  <div ng-show="index.usePushNotifications">
-    <h4></h4>
-    <ul class="no-bullet m0">
-      <li>
-        <switch id="push-notifications" name="pushNotifications" ng-model="pushNotifications" class="green right"></switch>
-        <div translate>Enable push notifications</div>
-      </li>
+    <div ng-show="index.usePushNotifications">
+        <h4></h4>
+        <ul class="no-bullet m0">
+            <li>
+                <switch id="push-notifications" name="pushNotifications" ng-model="pushNotifications"
+                        class="green right"></switch>
+                <div translate>Enable push notifications</div>
+            </li>
+        </ul>
+    </div>
+
+    <h4 translate>Device address</h4>
+    <ul class="no-bullet m0 enable_text_select">
+        <li>
+            <div>{{prefGlobal.myDeviceAddress}}</div>
+        </li>
     </ul>
-  </div>
-    
-  <h4 translate>Device address</h4>
-  <ul class="no-bullet m0 enable_text_select">
-    <li>
-      <div>{{prefGlobal.myDeviceAddress}}</div>
-    </li>
-  </ul>
-    
+
     <h4 translate>Spending Restrictions</h4>
     <ul class="no-bullet m0">
-      <li>
-        <switch id="network-name" name="encrypt" ng-model="encrypt" class="green right"></switch>
-        <div translate>Request Password</div>
-      </li>
+        <li>
+            <switch id="network-name" name="encrypt" ng-model="encrypt" class="green right"></switch>
+            <div translate>Request Password</div>
+        </li>
     </ul>
-    
-  <h4></h4>
-	
-  <ul class="no-bullet m0">
-    <li ng-click="$root.go('backup')"  ng-hide="index.isPrivKeyExternal">
-      <div class="right text-gray">
+
+    <h4></h4>
+
+
+    <div ng-if="prefGlobal.type === 'light wallet'">
+
+        <ul class="no-bullet m0">
+            <li ng-click="$root.go('backup')" ng-hide="index.isPrivKeyExternal">
+                <div class="right text-gray">
         <span class="text-warning" ng-show="index.needsBackup">
           <i class="fi-alert"></i><span translate>Still not done</span>
         </span>
-        <i class="icon-arrow-right3 size-24 text-gray"></i>
-      </div>
-      <div translate>Backup wallet seed</div>
-    </li>
-  </ul>
+                    <i class="icon-arrow-right3 size-24 text-gray"></i>
+                </div>
+                <div translate>Backup</div>
+            </li>
+        </ul>
 
-  <ul class="no-bullet m0">
-    <li ng-click="$root.go('recoveryFromSeed')"  ng-hide="index.isPrivKeyExternal">
-      <div class="right text-gray">
-        <i class="icon-arrow-right3 size-24 text-gray"></i>
-      </div>
-      <div translate>Recovery from seed</div>
-    </li>
-  </ul>
-	
-  <ul class="no-bullet m0">
-    <li ng-click="$root.go('export')"  ng-hide="index.isPrivKeyExternal">
-      <div class="right text-gray">
-        <i class="icon-arrow-right3 size-24 text-gray"></i>
-      </div>
-      <div translate>Full backup</div>
-    </li>
-  </ul>
-	
-  <ul class="no-bullet m0">
-    <li ng-click="$root.go('import')"  ng-hide="index.isPrivKeyExternal">
-      <div class="right text-gray">
-        <i class="icon-arrow-right3 size-24 text-gray"></i>
-      </div>
-      <div translate>Restore from full backup</div>
-    </li>
-  </ul>
-    
-  <h4></h4>
-  <ul class="no-bullet m0">
-    <li ng-click="$root.go('about')">
-      <i class="icon-arrow-right3 size-24 right text-gray"></i>  
-      <div translate>About Dagcoin</div>
-    </li>
-  </ul>
-  <h4></h4>
+        <ul class="no-bullet m0">
+            <li ng-click="$root.go('recoveryFromSeed')" ng-hide="index.isPrivKeyExternal">
+                <div class="right text-gray">
+                    <i class="icon-arrow-right3 size-24 text-gray"></i>
+                </div>
+                <div translate>Restore</div>
+            </li>
+        </ul>
+
+    </div>
+
+    <div ng-if="prefGlobal.type === 'full wallet'">
+
+        <ul class="no-bullet m0">
+            <li ng-click="$root.go('backup')" ng-hide="index.isPrivKeyExternal">
+                <div class="right text-gray">
+        <span class="text-warning" ng-show="index.needsBackup">
+          <i class="fi-alert"></i><span translate>Still not done</span>
+        </span>
+                    <i class="icon-arrow-right3 size-24 text-gray"></i>
+                </div>
+                <div translate>Backup wallet seed</div>
+            </li>
+        </ul>
+
+        <ul class="no-bullet m0">
+            <li ng-click="$root.go('recoveryFromSeed')" ng-hide="index.isPrivKeyExternal">
+                <div class="right text-gray">
+                    <i class="icon-arrow-right3 size-24 text-gray"></i>
+                </div>
+                <div translate>Recovery from seed</div>
+            </li>
+        </ul>
+
+        <ul class="no-bullet m0">
+            <li ng-click="$root.go('export')" ng-hide="index.isPrivKeyExternal">
+                <div class="right text-gray">
+                    <i class="icon-arrow-right3 size-24 text-gray"></i>
+                </div>
+                <div translate>Full backup</div>
+            </li>
+        </ul>
+
+        <ul class="no-bullet m0">
+            <li ng-click="$root.go('import')" ng-hide="index.isPrivKeyExternal">
+                <div class="right text-gray">
+                    <i class="icon-arrow-right3 size-24 text-gray"></i>
+                </div>
+                <div translate>Restore from full backup</div>
+            </li>
+        </ul>
+    </div>
+
+
+
+    <h4></h4>
+    <ul class="no-bullet m0">
+        <li ng-click="$root.go('about')">
+            <i class="icon-arrow-right3 size-24 right text-gray"></i>
+            <div translate>About Dagcoin</div>
+        </li>
+    </ul>
+    <h4></h4>
 
 </div>
 <div class="extra-margin-bottom"></div>
