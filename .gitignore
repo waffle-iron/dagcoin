@@ -9,6 +9,7 @@ src/js/version.js
 # dev css
 src/css/main.css
 src/css/main.css.map
+src/js/**/*.css
 
 # cordova
 cordova/project/*
