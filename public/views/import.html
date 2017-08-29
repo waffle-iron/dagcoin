@@ -39,13 +39,12 @@
 						<span class="name" translate>Password</span>
 					</div>
 					<div class="input-wrap">
-						<input type="password" placeholder="Password" ng-model="import.password">
+						<input type="password" placeholder="Password" ng-model="import.password" autocomplete="new-password">
 					</div>
 				</div>
 				<div class="page-action">
-					<input ng-disabled="import.imported || import.password == '' || !file" type="submit"
-						   class="button expand btn_red-full round"
-						   value="{{'Import'|translate}}">
+					<button ng-disabled="import.imported || import.password == '' || !file" type="submit"
+						   class="btn btn_red-full">{{'Import'|translate}}</button>
 				</div>
 			</form>
 		</div>
