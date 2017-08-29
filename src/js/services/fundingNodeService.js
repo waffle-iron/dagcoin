@@ -3,7 +3,7 @@
   'use strict';
 
   angular.module('copayApp.services')
-    .factory('fundingNodeService', ($q, $rootScope, discoveryService) => {
+    .factory('fundingNodeService', ($q, $rootScope, discoveryService, fileSystemService) => {
       const self = {};
 
       const settings = {
@@ -28,6 +28,7 @@
       self.init = init;
       self.getSettings = getSettings;
       self.setSettings = setSettings;
+      self.getUserConfig = getUserConfig;
 
       $rootScope.$on('Local/BalanceUpdatedAndWalletUnlocked', (event, ab) => {
         assocBalances = ab;
@@ -36,7 +37,7 @@
       });
 
       function init() {
-        const conf = getConfig();
+        const conf = getUserConfig();
 
         settings.exchangeFee = conf.exchangeFee || settings.exchangeFee;
         settings.totalBytes = conf.totalBytes || settings.totalBytes;
@@ -56,15 +57,9 @@
         });
       }
 
-      function getUserConfFilePath() {
-        const desktopApp = require('byteballcore/desktop_app.js');
-        const appDataDir = desktopApp.getAppDataDir();
-        return `${appDataDir}/conf.json`;
-      }
-
-      function getConfig() {
+      function getUserConfig() {
         try {
-          const userConfFile = getUserConfFilePath();
+          const userConfFile = fileSystemService.getUserConfFilePath();
           return requireUncached(userConfFile);
         } catch (e) {
           return {}; // empty config
@@ -84,9 +79,8 @@
         }
 
         const def = $q.defer();
-        const fs = require('fs');
-        const userConfFile = getUserConfFilePath();
-        const userConf = getConfig();
+        const userConfFile = fileSystemService.getUserConfFilePath();
+        const userConf = getUserConfig();
 
         if (userConf.fundingNode === fundingNode &&
           userConf.exchangeFee === settings.exchangeFee &&
@@ -104,7 +98,7 @@
 
         updatingConfing = true;
 
-        fs.writeFile(userConfFile, JSON.stringify(userConf, null, '\t'), 'utf8', (err) => {
+        fileSystemService.writeFile(userConfFile, JSON.stringify(userConf, null, '\t'), 'utf8', (err) => {
           updatingConfing = false;
 
           if (err) {
