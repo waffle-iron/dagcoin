@@ -2602,6 +2602,11 @@ canvas {
   padding-bottom: 70px;
 }
 
+.send.tab-in .p-wrap{
+  max-height: 485px;
+  overflow-y: auto;
+}
+
 .p-wrap_android {
   padding-top: 80px;
   padding-bottom: 20px;
