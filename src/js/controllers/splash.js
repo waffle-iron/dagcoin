@@ -2,7 +2,7 @@
   'use strict';
 
   angular.module('copayApp.controllers').controller('splashController',
-    function ($scope, $timeout, $log, configService, profileService, storageService, go, isCordova) {
+    function ($scope, $timeout, $log, configService, profileService, storageService, fileSystemService, go, isCordova, changeWalletTypeTypeService) {
       const self = this;
 
       function saveDeviceName() {
@@ -33,11 +33,10 @@
           self.step = 'device_name';
           return;
         }
-        const fs = require('fs');
-        const desktopApp = require('byteballcore/desktop_app.js');
-        const appDataDir = desktopApp.getAppDataDir();
+
+        const appDataDir = fileSystemService.getDatabaseDirPath();
         const userConfFile = `${appDataDir}/conf.json`;
-        fs.writeFile(userConfFile, JSON.stringify({ bLight }, null, '\t'), 'utf8', (err) => {
+        fileSystemService.writeFile(userConfFile, JSON.stringify({ bLight }, null, '\t'), 'utf8', (err) => {
           if (err) {
             throw Error(`failed to write conf.json: ${err}`);
           }
@@ -78,6 +77,16 @@
 
           if (profileService.profile) {
             go.walletHome();
+          }
+
+          if (changeWalletTypeTypeService.isInProgress()) {
+            const newWalletSettings = changeWalletTypeTypeService.getNewWalletSettings();
+
+            self.deviceName = newWalletSettings.deviceName;
+            self.step = '';
+            self.create();
+
+            changeWalletTypeTypeService.finish();
           }
         });
       };

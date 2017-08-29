@@ -2,10 +2,13 @@
   'use strict';
 
   angular.module('copayApp.controllers').controller('preferencesGlobalController',
-    function ($scope, $q, $rootScope, $timeout, $log, configService, uxLanguage, pushNotificationsService, profileService, fundingNodeService) {
+    function ($scope, $q, $rootScope, $timeout, $log, configService, uxLanguage, pushNotificationsService, profileService,
+      fundingNodeService, $modal, animationService, chooseFeeTypeService, changeWalletTypeTypeService) {
       const conf = require('byteballcore/conf.js');
       const self = this;
       self.fundingNodeSettings = {};
+      self.isLight = conf.bLight;
+      self.canChangeWalletType = changeWalletTypeTypeService.canChange();
 
       $scope.encrypt = !!profileService.profile.xPrivKeyEncrypted;
 
@@ -16,6 +19,7 @@
 
       this.init = function () {
         const config = configService.getSync();
+        this.type = (conf.bLight ? 'light wallet' : 'full wallet');
         this.unitName = config.wallet.settings.unitName;
         this.dagUnitName = config.wallet.settings.dagUnitName;
         this.deviceName = config.deviceName;
@@ -122,5 +126,27 @@
         unwatchEncrypt();
         unwatchFundingNode();
       });
+
+      chooseFeeTypeService.getFeeDefaultMethod()
+      .then((res) => {
+        self.typeOfPaymentFee = res;
+      });
+
+      self.enableHubOption = chooseFeeTypeService.getCanBeSwitchedToHub();
+      self.changeTypeOfPayment = changeTypeOfPayment;
+
+      self.changeWalletType = function () {
+        changeWalletTypeTypeService.change();
+      };
+
+      function changeTypeOfPayment(model) {
+        if (model === 'hub' && !self.enableHubOption) {
+          self.typeOfPaymentFee = 'bytes';
+        } else {
+          self.typeOfPaymentFee = model;
+        }
+
+        chooseFeeTypeService.setUpFeeDefaultMethod(self.typeOfPaymentFee).then(() => {});
+      }
     });
 }());
