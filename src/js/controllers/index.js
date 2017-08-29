@@ -10,6 +10,7 @@
       $log,
       $filter,
       $timeout,
+      $interval,
       lodash,
       go,
       profileService,
@@ -32,7 +33,9 @@
       $modal,
       bwcService,
       backButton,
-      chooseFeeTypeService) {
+      chooseFeeTypeService,
+      changeWalletTypeTypeService,
+      autoRefreshClientService) {
       const async = require('async');
       const constants = require('byteballcore/constants.js');
       const mutex = require('byteballcore/mutex.js');
@@ -217,6 +220,12 @@
 
       eventBus.on('my_transactions_became_stable', () => {
         breadcrumbs.add('my_transactions_became_stable');
+        self.updateAll();
+        self.updateTxHistory();
+      });
+
+      eventBus.on('mci_became_stable', () => {
+        breadcrumbs.add('mci_became_stable');
         self.updateAll();
         self.updateTxHistory();
       });
@@ -596,11 +605,11 @@
         title: gettext('Send'),
         icon: 'icon-send',
         link: 'send',
-      }, {
+      }/* , {
         title: gettext('History'),
         icon: 'icon-history',
         link: 'history',
-      }];
+      } */];
 
       self.getSvgSrc = function (id) {
         return `img/svg/symbol-defs.svg#${id}`;
@@ -830,7 +839,6 @@
           });
 
           self.otherWallets = lodash.filter(profileService.getWallets(self.network), w => (w.id !== self.walletId || self.shared_address));
-
 
           // $rootScope.$apply();
 
@@ -1578,6 +1586,10 @@
           $rootScope.$apply();
         });
       });
+
+      if (autoRefreshClientService) {
+        autoRefreshClientService.initHistoryAutoRefresh();
+      }
 
       let gui;
       try {
