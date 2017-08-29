@@ -228,7 +228,7 @@ angular.module('copayApp.services').factory('correspondentListService',
     }
 
     function text2html(text) {
-      return text.replace(/\r/g, '').replace(/\n/g, '<br>').replace(/\t/g, ' &nbsp; &nbsp; ');
+      return text.replace(/\r/g, '').replace(/\n/g, '<br />').replace(/\t/g, ' &nbsp; &nbsp; ');
     }
 
     function escapeHtml(text) {
@@ -308,9 +308,9 @@ angular.module('copayApp.services').factory('correspondentListService',
           case 'and':
             return args.map(parseAndIndent).join(`<span class="size-18">${op}</span>`);
           case 'r of set':
-            return `at least ${args.required} of the following is true:<br>${args.set.map(parseAndIndent).join(',')}`;
+            return `at least ${args.required} of the following is true:<br />${args.set.map(parseAndIndent).join(',')}`;
           case 'weighted and':
-            return `the total weight of the true conditions below is at least ${args.required}:<br>${args.set.map(arg => `${arg.weight}: ${parseAndIndent(arg.value)}`).join(',')}`;
+            return `the total weight of the true conditions below is at least ${args.required}:<br />${args.set.map(arg => `${arg.weight}: ${parseAndIndent(arg.value)}`).join(',')}`;
           case 'in data feed':
             arrAddresses = args[0];
             feedName = args[1];
@@ -469,6 +469,16 @@ angular.module('copayApp.services').factory('correspondentListService',
         if (discoveryService.isDiscoveryServiceAddress(fromAddress)) {
           discoveryService.processMessage(body);
         } else {
+          try {
+            const jsonBody = JSON.parse(body);
+
+            if (jsonBody.title && jsonBody.title === 'funding_address_pair') {
+              discoveryService.setFundingAddressPair(jsonBody.byteOrigin, jsonBody.dagcoinDestination);
+              return;
+            }
+          } catch (e) {
+            console.log(e);
+          }
           if (!root.messageEventsByCorrespondent[correspondent.device_address]) loadMoreHistory(correspondent);
           addIncomingMessageEvent(correspondent.device_address, body);
           if (correspondent.my_record_pref && correspondent.peer_record_pref) chatStorage.store(fromAddress, body, 1);
