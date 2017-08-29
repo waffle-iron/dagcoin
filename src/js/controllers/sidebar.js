@@ -57,7 +57,7 @@
           n: c.n,
           name: config.aliasFor[c.walletId] || c.walletName,
           id: c.walletId,
-          color: config.colorFor[c.walletId] || '#4A90E2',
+          color: config.colorFor[c.walletId] || '#d51f26',
         }));
         self.wallets = lodash.sortBy(ret, 'name');
       };
