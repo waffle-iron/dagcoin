@@ -23,8 +23,8 @@
 
     function hasBalance() {
       const constants = require('byteballcore/constants.js');
-      const hasDags = (assocBalances && assocBalances[constants.DAGCOIN_ASSET] && assocBalances[constants.DAGCOIN_ASSET].stable > 0);
-      const hasBytes = (assocBalances && assocBalances.base && assocBalances.base.stable > 0);
+      const hasDags = (assocBalances && assocBalances[constants.DAGCOIN_ASSET] && assocBalances[constants.DAGCOIN_ASSET].total > 0);
+      const hasBytes = (assocBalances && assocBalances.base && assocBalances.base.total > 0);
       return hasDags || hasBytes;
     }
 
