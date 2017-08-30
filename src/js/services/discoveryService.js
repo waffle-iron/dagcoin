@@ -64,6 +64,20 @@
         return checkOrPairDevice(code);
       }
 
+      function fundingPairListener(fromAddress, body, callback) {
+        device.readCorrespondent(fromAddress, () => {
+          try {
+            const jsonBody = JSON.parse(body);
+
+            if (jsonBody.title && jsonBody.title === 'funding_address_pair') {
+              return callback(jsonBody);
+            }
+          } catch (e) {
+            console.log(e);
+          }
+        });
+      }
+
       function processMessage(resp) {
         if (!resp || !isJsonString(resp)) {
           return;
@@ -94,24 +108,26 @@
               return readMyShareableAddress()
                 .then(address => askForFundingAddress(correspondent.device_address, address))
                 .then(() => {
-                  eventBus.on('text', (fromAddress, body) => {
-                    device.readCorrespondent(fromAddress, () => {
-                      try {
-                        const jsonBody = JSON.parse(body);
+                  const promise = new Promise((resolve, reject) => {
+                    // Timed rejection: can't wait more than 30 seconds
+                    const err = `No funding pair received from ${correspondent.device_address} on time (30s timeout)`;
+                    const timeoutId = setTimeout(reject(err), 30000);
 
-                        if (jsonBody.title && jsonBody.title === 'funding_address_pair') {
-                          setFundingAddressPair(jsonBody.byteOrigin, jsonBody.dagcoinDestination);
-                          return;
-                        }
-                      } catch (e) {
-                        console.log(e);
-                      }
+                    eventBus.on('text', (fromAddress, body) => {
+                      clearTimeout(timeoutId);
+                      fundingPairListener(fromAddress, body, resolve);
                     });
+                  }).then((jsonBody) => {
+                    setFundingAddressPair(jsonBody.byteOrigin, jsonBody.dagcoinDestination);
+                  }).then(() => {
+                    eventBus.removeListener('text', fundingPairListener);
+                  }).catch(() => {
+                    eventBus.removeListener('text', fundingPairListener);
                   });
+
+                  return promise;
                 });
             }, err => console.log(err));
-            // addPairDevice(pairCode).then(() => {
-            // }, err => console.log(err));
             break;
           default:
             break;
@@ -120,7 +136,7 @@
 
       function lookupDeviceByPublicKey(pubkey) {
         const promise = new Promise((resolve) => {
-          db.query('SELECT device_address FROM correspondent_devices WHERE pubkey = ?', [pubkey], (rows) => {
+          db.query('SELECT device_address FROM correspondent_devices WHERE pubkey = ? AND is_confirmed = 1', [pubkey], (rows) => {
             if (rows.length === 0) {
               console.log(`DEVICE WITH PUBKEY ${pubkey} NOT YET PAIRED`);
               resolve(null);
@@ -219,7 +235,7 @@
 
         if (userConfig.byteOrigin && userConfig.dagcoinDestination) {
           console.log('No need to ask for funding addresses');
-          return Promise.resolve(true);
+          return Promise.resolve(false);
         }
 
         const messageTitle = 'ask_for_funding_address';
@@ -255,103 +271,7 @@
         });
       }
 
-      /* function addPairDevice(pairCode) {
-        const defer = $q.defer();
-
-        const matches = pairCode.match(/^([\w\/+]+)@([\w.:\/-]+)#([\w\/+-]+)$/);
-        const pubkey = matches[1];
-        const hub = matches[2];
-        const pairingSecret = matches[3];
-
-        device.addUnconfirmedCorrespondent(pubkey, hub, 'New', (deviceAddress) => {
-          device.startWaitingForPairing((reversePairingInfo) => {
-            device.sendPairingMessage(hub,
-              pubkey,
-              pairingSecret,
-              reversePairingInfo.pairing_secret,
-              {
-                ifOk: () => {
-                  const promise = new Promise((resolve, reject) => {
-                    const walletGeneral = require('byteballcore/wallet_general.js');
-                    walletGeneral.readMyAddresses((arrMyAddresses) => {
-                      if (arrMyAddresses.length === 0) {
-                        reject('No addresses available');
-                      } else {
-                        resolve(arrMyAddresses[0]);
-                      }
-                    });
-                  }).then((address) => {
-                    if (isWaitingForFundingAddress()) {
-                      return Promise.reject('Already requesting a funding address');
-                    }
-
-                    console.log('REQUESTING A FUNDING ADDRESS');
-
-                    setIsWaitingForFundingAddress(true);
-
-                    const userConfig = getUserConfig();
-
-                    if (userConfig.byteOrigin && userConfig.dagcoinDestination) {
-                      console.log('No need to ask for funding addresses');
-                      return;
-                    }
-
-                    const messageTitle = 'ask_for_funding_address';
-                    console.log(`Sending ${messageTitle} to ${device.getMyDeviceAddress()}:${address}`);
-                    device.sendMessageToDevice(
-                      deviceAddress,
-                      'text',
-                      JSON.stringify({
-                        title: messageTitle,
-                        deviceAddress: device.getMyDeviceAddress(),
-                        address
-                      })
-                    );
-                  });
-
-                  return promise;
-                },
-                ifError: () => {
-                }
-              });
-          });
-
-          device.readCorrespondent(deviceAddress, (cor) => {
-            defer.resolve(cor);
-          });
-        });
-
-        return defer.promise;
-      } */
-
-      /* function initService() {
-         if (correspondent === null || correspondent === undefined) {
-          return addPairDevice(code).then((cor) => {
-            setCorrespondent(cor);
-          });
-        }
-
-        return $q.resolve();
-        return makeSureDiscoveryServiceIsConnected();
-      } */
-
       function sendMessage(messageType, messageBody) {
-        /* const def = $q.defer();
-        const message = {messageType, messageBody};
-
-        initService().then(() => {
-          device.sendMessageToDevice(correspondent.device_address, 'text', JSON.stringify(message), {
-            ifOk() {
-              def.resolve();
-            },
-            ifError(error) {
-              def.reject(error);
-            }
-          });
-        }, def.reject);
-
-        return def.promise; */
-
         return makeSureDiscoveryServiceIsConnected().then((correspondent) => {
           const promise = new Promise((resolve, reject) => {
             const message = { messageType, messageBody };
@@ -409,7 +329,11 @@
         userConfig.byteOrigin = byteOrigin;
         userConfig.dagcoinDestination = dagcoinDestination;
 
-        updateConfig(userConfig);
+        return updateConfig(userConfig);
+      }
+
+      function createNewSharedAddresListener(template, signers, callback) {
+
       }
 
       function listenToCreateNewSharedAddress(deviceAddress) {
