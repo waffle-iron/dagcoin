@@ -97,7 +97,7 @@
         userConf.maxEndUserCapacity = settings.maxEndUserCapacity;
 
         updatingConfing = true;
-
+        console.log(JSON.stringify(userConf));
         fileSystemService.writeFile(userConfFile, JSON.stringify(userConf, null, '\t'), 'utf8', (err) => {
           updatingConfing = false;
 
