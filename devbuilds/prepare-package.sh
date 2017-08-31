@@ -15,11 +15,11 @@ fi
 
 echo "${Green}* Node version OK${CloseColor}"
 
-grunt desktop
-
-echo "Moving existing node_modules to temp ..."
-
-mv "./node_modules" "./node_modules-temp"
+grunt desktop:$1
+if [ -d "./node_modules" ]; then
+  echo "Moving existing node_modules to temp ..."
+  mv "./node_modules" "./node_modules-temp"
+fi
 
 echo "Installing production dependencies..."
 
@@ -40,9 +40,10 @@ cp -r "./node_modules" "${PackagePath}"
 
 rm -rf "./node_modules"
 
-echo "Moving temp node_modules back ..."
-
-mv "./node_modules-temp" "./node_modules"
+if [ -d "./node_modules-temp" ]; then
+  echo "Moving temp node_modules back ..."
+  mv "./node_modules-temp" "./node_modules"
+fi
 
 grunt
 

@@ -102,3 +102,7 @@ public/languages
 
 # eslint
 .eslintcache
+
+#webkitbuilds
+webkitbuilds/setup-win32.iss
+webkitbuilds/setup-win64.iss

@@ -1,5 +1,5 @@
 {
-  "name": "dagcoin-tn",
+  "name": "Dagcoin-tn",
   "description": "A wallet for decentralized value",
   "author": "Dagcoin",
   "version": "1.2.1t",
@@ -96,6 +96,8 @@
     "grunt-postcss": "^0.8.0",
     "grunt-stylelint": "^0.8.0",
     "grunt-svgmin": "^4.0.0",
+    "grunt-env": "^0.4.4",
+    "grunt-template": "^1.0.0",
     "jasmine-core": "^2.6.4",
     "jshint": "^2.9.4",
     "karma": "^1.7.0",
