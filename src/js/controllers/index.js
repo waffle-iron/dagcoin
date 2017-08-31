@@ -34,7 +34,6 @@
       bwcService,
       backButton,
       chooseFeeTypeService,
-      changeWalletTypeTypeService,
       autoRefreshClientService) {
       const async = require('async');
       const constants = require('byteballcore/constants.js');
