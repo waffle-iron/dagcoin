@@ -1,3 +1,4 @@
+/* eslint-disable import/no-unresolved */
 (function () {
   'use strict';
 
@@ -5,28 +6,13 @@
     .module('copayApp.services')
     .factory('changeWalletTypeTypeService', changeWalletTypeTypeService);
 
-  changeWalletTypeTypeService.$inject = ['$rootScope', 'fileSystemService', 'localStorageService', 'isCordova'];
+  changeWalletTypeTypeService.$inject = ['$rootScope', 'fileSystemService', 'isCordova'];
 
-  function changeWalletTypeTypeService($rootScope, fileSystemService, localStorageService, isCordova) {
+  function changeWalletTypeTypeService($rootScope, fileSystemService, isCordova) {
     const service = {};
-    let assocBalances = null;
 
     service.change = change;
     service.canChange = canChange;
-    service.isInProgress = isInProgress;
-    service.getNewWalletSettings = getNewWalletSettings;
-    service.finish = finish;
-
-    $rootScope.$on('Local/BalanceUpdatedAndWalletUnlocked', (event, ab) => {
-      assocBalances = ab;
-    });
-
-    function hasBalance() {
-      const constants = require('byteballcore/constants.js');
-      const hasDags = (assocBalances && assocBalances[constants.DAGCOIN_ASSET] && assocBalances[constants.DAGCOIN_ASSET].total > 0);
-      const hasBytes = (assocBalances && assocBalances.base && assocBalances.base.total > 0);
-      return hasDags || hasBytes;
-    }
 
     function getUserConfig() {
       try {
@@ -37,18 +23,26 @@
       }
     }
 
-    function requireUncached(module) {
+    function clearRequireCache(module) {
       if (typeof require.resolve === 'function') {
         delete require.cache[require.resolve(module)];
       }
+    }
+
+    function requireUncached(module) {
+      clearRequireCache(module);
       return require(module.toString());
     }
 
     function canChange() {
-      return !isCordova && !hasBalance();
+      return !isCordova;
     }
 
     function change() {
+      if (!canChange()) {
+        return;
+      }
+
       // load config
       const userConf = getUserConfig();
       const userConfFile = fileSystemService.getUserConfFilePath();
@@ -59,55 +53,113 @@
         if (err) {
           console.log(err);
         } else {
-          // clear local-storage
-          const oldWallet = { config: null, profile: null, type: userConf.bLight ? 'light' : 'full' };
-          oldWallet.config = JSON.parse(localStorageService.getSync('config'));
-          oldWallet.profile = JSON.parse(localStorageService.getSync('profile'));
-          localStorageService.setSync('old-wallet', JSON.stringify(oldWallet));
-
-          localStorageService.removeSync('config');
-          localStorageService.removeSync('profile');
-
-          localStorageService.setSync('change-wallet-type', JSON.stringify({ bLight: userConf.bLight, deviceName: oldWallet.config.deviceName }));
-
-          // reload application
-          return $rootScope.$emit('Local/ShowAlert', 'Wallet type successfully changed, please restart the application.', 'fi-check', () => {
-            if (navigator && navigator.app) {
-              navigator.app.exitApp();
-            } else if (process.exit) {
-              process.exit();
-            }
+          const loadedData = [];
+          loadData(loadedData, 0, () => {
+            // transfer data
+            createDatabaseAndTransferData(loadedData, () => {
+              // reload application
+              $rootScope.$emit('Local/ShowAlert', 'Wallet type successfully changed, please restart the application.', 'fi-check', () => {
+                if (navigator && navigator.app) {
+                  navigator.app.exitApp();
+                } else if (process.exit) {
+                  process.exit();
+                }
+              });
+            });
           });
         }
       });
     }
 
-    function getNewWalletSettings() {
-      if (isInProgress()) {
-        const changeWalletType = localStorageService.getSync('change-wallet-type');
-        const changeWalletTypeParams = JSON.parse(changeWalletType);
-        return changeWalletTypeParams;
-      }
+    function loadTable(tableName, cb) {
+      const db = requireUncached('byteballcore/db.js');
+      const query = `select * from ${tableName}`;
 
-      return null;
+      db.query(query, (rows) => {
+        cb({ tableName, rows });
+      });
     }
 
-    // change wallet type in progress
-    function isInProgress() {
-      if (!isCordova) {
-        const changeWalletType = localStorageService.getSync('change-wallet-type');
+    function loadData(result, tableIndex, cb) {
+      const tables = ['correspondent_devices', 'wallets', 'shared_addresses',
+        'wallet_signing_paths', 'shared_address_signing_paths', 'my_addresses'];
 
-        if (changeWalletType) {
-          return true;
+      if (tableIndex >= tables.length) {
+        cb();
+        return;
+      }
+
+      loadTable(tables[tableIndex], (r) => {
+        result.push(r);
+        loadData(result, tableIndex + 1, cb);
+      });
+    }
+
+    function saveTable(table, cb) {
+      const db = requireUncached('byteballcore/db.js');
+
+      if (table.rows.length === 0) {
+        cb();
+        return;
+      }
+
+      const keys = Object.keys(table.rows[0]);
+      const columns = [];
+      const values = [];
+
+      for (let i = 0; i < keys.length; i += 1) {
+        columns.push(keys[i]);
+      }
+
+      let query = '';
+
+      for (let i = 0; i < table.rows.length; i += 1) {
+        const v = [];
+        for (let j = 0; j < keys.length; j += 1) {
+          v.push(`'${table.rows[i][keys[j]]}'`);
         }
+
+        values.push(`(${v})`);
       }
 
-      return false;
+      query += `insert or replace into ${table.tableName} (${columns.join(',')}) values ${values.join(',')};\r\n`;
+
+      db.query(query, [], () => {
+        cb();
+      });
     }
 
-    // finish change type
-    function finish() {
-      localStorageService.removeSync('change-wallet-type');
+    // transfer data from old to new database
+    function saveData(data, index, cb) {
+      if (index >= data.length) {
+        cb();
+        return;
+      }
+
+      saveTable(data[index], () => {
+        saveData(data, index + 1, cb);
+      });
+    }
+
+    function createDatabaseAndTransferData(data, cb) {
+      const oldDb = require('byteballcore/db.js');
+
+      oldDb.close(() => {
+        clearRequireCache('byteballcore/conf.js');
+        clearRequireCache('byteballcore/sqlite_pool.js');
+        clearRequireCache('byteballcore/mysql_pool.js');
+        const db = requireUncached('byteballcore/db.js');
+
+        // init database
+        const interval = setInterval(() => {
+          db.query('SELECT name FROM sqlite_master WHERE type=\'table\'', (result) => {
+            if (result.length > 50) {
+              clearInterval(interval);
+              saveData(data, 0, cb);
+            }
+          });
+        }, 300);
+      });
     }
 
     return service;

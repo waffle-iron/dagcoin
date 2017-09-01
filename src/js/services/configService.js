@@ -163,6 +163,22 @@
       });
     };
 
+    root.setWithoutMergingOld = function (newOpts, cb) {
+      let config = defaultConfig;
+      let newOptions = newOpts;
+
+      if (lodash.isString(config)) {
+        config = JSON.parse(config);
+      }
+      if (lodash.isString(newOptions)) {
+        newOptions = JSON.parse(newOptions);
+      }
+      lodash.merge(config, newOptions);
+      configCache = config;
+
+      storageService.storeConfig(JSON.stringify(config), cb);
+    };
+
     root.reset = function (cb) {
       configCache = lodash.clone(defaultConfig);
       storageService.removeConfig(cb);

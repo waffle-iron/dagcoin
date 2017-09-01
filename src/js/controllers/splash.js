@@ -2,7 +2,7 @@
   'use strict';
 
   angular.module('copayApp.controllers').controller('splashController',
-    function ($scope, $timeout, $log, configService, profileService, storageService, fileSystemService, go, isCordova, changeWalletTypeTypeService) {
+    function ($scope, $timeout, $log, configService, profileService, storageService, fileSystemService, go, isCordova) {
       const self = this;
 
       function saveDeviceName() {
@@ -86,16 +86,6 @@
 
           if (profileService.profile) {
             go.walletHome();
-          }
-
-          if (changeWalletTypeTypeService.isInProgress()) {
-            const newWalletSettings = changeWalletTypeTypeService.getNewWalletSettings();
-
-            self.deviceName = newWalletSettings.deviceName;
-            self.step = '';
-            self.create();
-
-            changeWalletTypeTypeService.finish();
           }
         });
       };
