@@ -24,8 +24,17 @@
         self.deviceName = config.deviceName;
       });
 
-      this.step = isCordova ? 'device_name' : 'wallet_type';
+      this.step = isCordova ? 'device_name' : 'registration_type';
+      this.registration_type = 'default';
       this.wallet_type = 'light';
+
+      this.setRegistrationType = function () {
+        if (this.registration_type === 'default') {
+          this.setWalletType();
+        } else {
+          this.step = 'wallet_type';
+        }
+      };
 
       this.setWalletType = function () {
         const bLight = (self.wallet_type === 'light');

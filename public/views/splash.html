@@ -14,6 +14,47 @@
 	ng-controller="splashController as splash">
 	<div class="introduction-svg" ng-include="'views/includes/background.html'"></div>
 	<div ng-if="!index.hasProfile">
+    <div ng-if="splash.step === 'registration_type'">
+      <div class="row text-left" style="margin-top: 40px">
+        <div class="start-button large-10 medium-10 small-10 medium-centered small-centered large-centered columns">
+
+          <label><span class="text-brand size-14" translate>Please choose registration type</span></label>
+          <div class="m20t">
+            <label class="text-gray size-14" style="vertical-align: middle" for="default_type" translate>
+              <div class="input-wrap-radio">
+                <input type="radio" name="registration_type" value="default" ng-model="splash.registration_type" id="default_type">
+                <i class="radio-box"></i>
+              </div>
+              <span>
+                Default (recommended)
+              </span>
+            </label>
+            <p class="text-gray size-14 m0" translate>
+              Setup light-wallet type by default.
+            </p>
+          </div>
+
+          <div class="m20t">
+            <label class="text-gray size-14" style="vertical-align: middle" for="custom_type" translate>
+              <div class="input-wrap-radio">
+                <input type="radio" name="registration_type" value="custom" ng-model="splash.registration_type" id="custom_type">
+                <i class="radio-box"></i>
+              </div>
+              <span>
+                Custom
+              </span>
+            </label>
+            <p class="text-gray size-14 m0" translate>
+              Allow to choose wallet type.
+            </p>
+          </div>
+
+          <button ng-click="splash.setRegistrationType()" class="btn btn_red-full m20t" translate>
+            CONTINUE
+          </button>
+        </div>
+      </div>
+    </div>
 		<div ng-if="splash.step === 'wallet_type'">
 			<div class="row text-left" style="margin-top: 40px">
 				<div class="start-button large-10 medium-10 small-10 medium-centered small-centered large-centered columns">
