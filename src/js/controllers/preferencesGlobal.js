@@ -15,6 +15,10 @@
       self.initFundingNode = () => {
         self.fundingNode = fundingNodeService.isActivated();
         self.fundingNodeSettings = fundingNodeService.getSettings();
+
+        fundingNodeService.canEnable().then(() => {
+          self.canEnableFundingNode = true;
+        });
       };
 
       this.init = function () {
