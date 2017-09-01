@@ -25,16 +25,16 @@
     </li>-->
   </ul>
 
-  <h4 translate>Funding Node</h4>
-  <ul class="no-bullet m0 enable_text_select">
+  <h4 translate ng-show="prefGlobal.canEnableFundingNode">Funding Node</h4>
+  <ul class="no-bullet m0 enable_text_select" ng-show="prefGlobal.canEnableFundingNode">
     <li>
       <switch id="funding-node" name="funding-node" ng-model="prefGlobal.fundingNode"
               ng-change="prefGlobal.onFundingNodeChange()" class="green right"></switch>
       <div translate>Active</div>
     </li>
   </ul>
-  <h4 ng-if="prefGlobal.fundingNode" translate>Funding Node Settings</h4>
-  <ul ng-if="prefGlobal.fundingNode" class="no-bullet m0 enable_text_select">
+  <h4 ng-show="prefGlobal.fundingNode" translate>Funding Node Settings</h4>
+  <ul ng-show="prefGlobal.fundingNode" class="no-bullet m0 enable_text_select">
     <li class="input-wrap">
       <input id="exchange-fee"
              type="text"
