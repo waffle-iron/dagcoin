@@ -1213,7 +1213,7 @@
           msg_icon: msgIcon,
           close(err) {
             self.showAlert = null;
-            return cb(err) || null;
+            if (cb) return cb(err);
           },
         };
         $timeout(() => {
