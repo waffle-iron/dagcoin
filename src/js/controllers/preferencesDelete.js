@@ -3,14 +3,20 @@
   'use strict';
 
   angular.module('copayApp.controllers').controller('preferencesDeleteWalletController',
-    function ($scope, $rootScope, $filter, $timeout, $modal, $log, storageService, notification, profileService, isCordova, go, gettext, gettextCatalog, animationService) {
+    function ($scope, $rootScope, $filter, $timeout, $modal, $log, storageService, notification, profileService, isCordova, go, gettext, gettextCatalog, animationService, sharedService) {
       this.isCordova = isCordova;
       this.error = null;
 
-      const deleteMessage = gettextCatalog.getString('Are you sure you want to delete this wallet?');
+      let deleteMessage = gettextCatalog.getString('Are you sure you want to delete this wallet?');
+      const balanceMessage = gettextCatalog.getString('This Wallet has positive balance.');
+      const hasBalance = sharedService.hasBalance(sharedService.balanceStatuses.total);
       const acceptMessage = gettextCatalog.getString('Accept');
       const cancelMessage = gettextCatalog.getString('Cancel');
       const confirmMessage = gettextCatalog.getString('Confirm');
+
+      if (hasBalance) {
+        deleteMessage = `<b>${balanceMessage}</b><br/>${deleteMessage}`;
+      }
 
       const deleteWallet = function () {
         const fc = profileService.focusedClient;
