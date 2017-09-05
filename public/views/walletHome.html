@@ -248,10 +248,10 @@
               </div>
             </div>
 		  <div class="page-action">
-			  <a ng-if="!index.shared_address" href="#" class="btn btn_red" ng-click="home.setAddress(true)"
+			  <!--<a ng-if="!index.shared_address" href="#" class="btn btn_red" ng-click="home.setAddress(true)"
 				 ng-disabled="home.blockUx || index.isOffline ||home.generatingAddress" translate>
 				  Generate new address
-			  </a>
+			  </a>-->
 			  <a ng-show="index.isCordova" href="#" ng-click="home.shareAddress(home.addr[index.walletId])"
 				 class="btn btn_red-full">Share wallet link</a>
 			  <div ng-show="index.isCordova" class="page-action__info">
