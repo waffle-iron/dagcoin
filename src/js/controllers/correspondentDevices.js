@@ -61,17 +61,12 @@ angular.module('copayApp.controllers').controller('correspondentDevicesControlle
 
         wallet.readDeviceAddressesUsedInSigningPaths((arrNotRemovableDeviceAddresses) => {
 				// add a new property indicating whether the device can be removed or not
-
           const length = ab.length;
           for (let i = 0; i < length; i++) {
- 				 	corrDev = ab[i];
-
-				 	corrDevAddr = corrDev.device_address;
-
-				 	const ix = arrNotRemovableDeviceAddresses.indexOf(corrDevAddr);
-
-					// device is removable when not in list
-				 	corrDev.removable = (ix == -1);
+            const corrDev = ab[i];
+            const ix = arrNotRemovableDeviceAddresses.indexOf(corrDev.device_address);
+            // device is removable when not in list
+            corrDev.removable = (ix === -1);
           }
         });
 
