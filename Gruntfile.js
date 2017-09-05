@@ -15,6 +15,57 @@ module.exports = function (grunt) {
   // Project Configuration
   grunt.initConfig({
     pkg: grunt.file.readJSON('package.json'),
+    env: {
+      options: {},
+      testnet: {
+        // nwjs task
+        nwjsAppName: 'Dagcoin-TN',
+        nwjsFlavor: 'sdk',
+        nwjsCFBundleURLName: 'Dagcoin-TN action',
+        nwjsCFBundleURLScheme: 'DAGCOIN-TN',
+
+        // inno setup
+        innosetupTemplateMyAppName: 'Dagcoin-TN',
+        innosetupTemplateMyAppPackageName: 'Dagcoin-TN',
+        innosetupTemplateMyAppVersion: '<%= pkg.version %>',
+        innosetupTemplateMyAppExeName: 'Dagcoin-TN.exe',
+        innosetupTemplateMyAppFolderName: 'dagcoin-tn'
+
+      },
+      live: {
+        // nwjs task
+        nwjsAppName: 'Dagcoin',
+        nwjsFlavor: 'normal',
+        nwjsCFBundleURLName: 'Dagcoin action',
+        nwjsCFBundleURLScheme: 'DAGCOIN',
+
+        // inno setup
+        innosetupTemplateMyAppName: 'Dagcoin',
+        innosetupTemplateMyAppPackageName: 'Dagcoin',
+        innosetupTemplateMyAppVersion: '<%= pkg.version %>',
+        innosetupTemplateMyAppExeName: 'Dagcoin.exe',
+        innosetupTemplateMyAppFolderName: 'dagcoin'
+      },
+      functions: {},
+    },
+    template: {
+      'process-html-template': {
+        options: {
+          data: {
+            myAppName: '<%= process.env.innosetupTemplateMyAppName %>',
+            myAppPackageName: '<%= process.env.innosetupTemplateMyAppPackageName %>',
+            myAppVersion: '<%= process.env.innosetupTemplateMyAppVersion %>',
+            myAppExeName: '<%= process.env.innosetupTemplateMyAppExeName %>',
+            myAppFolderName: '<%= process.env.innosetupTemplateMyAppFolderName %>',
+          }
+        },
+        files: {
+          'webkitbuilds/setup-win64.iss': ['webkitbuilds/setup-win64.iss.tpl'],
+          'webkitbuilds/setup-win32.iss': ['webkitbuilds/setup-win32.iss.tpl']
+        }
+      }
+    },
+
     exec: {
       version: {
         command: 'node ./util/version.js',
@@ -23,10 +74,10 @@ module.exports = function (grunt) {
         command: 'rm -Rf bower_components node_modules',
       },
       osx64: {
-        command: '../byteballbuilds/build-osx.sh osx64',
+        command: '../byteballbuilds/build-osx.sh osx64 <%= pkg.name %>',
       },
       osx32: {
-        command: '../byteballbuilds/build-osx.sh osx32',
+        command: '../byteballbuilds/build-osx.sh osx32 <%= pkg.name %>',
       },
     },
 
@@ -224,8 +275,8 @@ module.exports = function (grunt) {
         // platforms: ['win','osx64','linux'],
         // platforms: ['osx64'],
         platforms: [getPlatform()],
-        appName: 'DAGCOIN-TN',
-        flavor: 'normal',
+        appName: '<%= process.env.nwjsAppName %>',
+        flavor: '<%= process.env.nwjsFlavor %>',
         buildDir: '../byteballbuilds',
         version: '0.14.7',
         zip: false,
@@ -233,7 +284,10 @@ module.exports = function (grunt) {
         winIco: './public/img/icons/dagcoin.ico',
         exeIco: './public/img/icons/dagcoin.ico',
         macPlist: {
-          CFBundleURLTypes: [{ CFBundleURLName: 'Dagcoin action', CFBundleURLSchemes: ['DAGCOIN-TN'] }],
+          CFBundleURLTypes: [{
+            CFBundleURLName: '<%= process.env.nwjsCFBundleURLName %>',
+            CFBundleURLSchemes: ['<%= process.env.nwjsCFBundleURLSchemes %>']
+          }],
           LSHasLocalizedDisplayName: 0,
           /* CFBundleIconFile: 'nw.icns',*/
         },
@@ -360,6 +414,8 @@ module.exports = function (grunt) {
     },
   });
 
+  grunt.loadNpmTasks('grunt-template');
+  grunt.loadNpmTasks('grunt-env');
   grunt.loadNpmTasks('grunt-svgmin');
   grunt.loadNpmTasks('grunt-babel');
   grunt.loadNpmTasks('grunt-contrib-concat');
@@ -384,18 +440,20 @@ module.exports = function (grunt) {
 
   grunt.registerTask('default', ['nggettext_compile', 'exec:version', 'stylelint', 'sass', 'concat', 'postcss', 'copy:icons']);
   grunt.registerTask('cordova', ['default', 'browserify']);
-  // todo: uglify doesn't work
   grunt.registerTask('cordova-prod', ['cordova', 'uglify']);
   // grunt.registerTask('prod', ['default', 'uglify']);
   grunt.registerTask('translate', ['nggettext_extract']);
   grunt.registerTask('test', ['karma:prod']);
   grunt.registerTask('test-coveralls', ['karma:unit', 'coveralls']);
   // grunt.registerTask('desktop', ['prod', 'nwjs', 'copy:linux', 'compress:linux32', 'compress:linux64', 'copy:osx', 'exec:osx32', 'exec:osx64']);
-  grunt.registerTask('desktop', ['default', 'nwjs']);
+  grunt.registerTask('desktop:testnet', ['env:testnet', 'default', 'nwjs']);
+  grunt.registerTask('desktop:live', ['env:live', 'default', 'nwjs']);
   grunt.registerTask('dmg', ['copy:osx', 'exec:osx64']);
   grunt.registerTask('linux64', ['copy:linux', 'compress:linux64']);
   grunt.registerTask('linux32', ['copy:linux', 'compress:linux32']);
   grunt.registerTask('deb', ['debian_package:linux64']);
-  grunt.registerTask('inno64', ['innosetup_compiler:win64']);
-  grunt.registerTask('inno32', ['innosetup_compiler:win32']);
+  grunt.registerTask('inno64:testnet', ['env:testnet', 'template', 'innosetup_compiler:win64']);
+  grunt.registerTask('inno64:live', ['env:live', 'template', 'innosetup_compiler:win64']);
+  grunt.registerTask('inno32:testnet', ['env:testnet', 'template', 'innosetup_compiler:win32']);
+  grunt.registerTask('inno32:live', ['env:live', 'template', 'innosetup_compiler:win32']);
 };

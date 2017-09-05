@@ -4,7 +4,11 @@ prepare-dev:
 	sh devbuilds/prepare-dev.sh
 
 prepare-package:
-	sh devbuilds/prepare-package.sh
+	sh devbuilds/prepare-package.sh live
+
+prepare-package-tn:
+	sh devbuilds/prepare-package.sh testnet
+
 
 cordova-base:
 	grunt dist-mobile
@@ -40,7 +44,7 @@ ios-debug:
 	open ../byteballbuilds/project-IOS /platforms/ios/Byteball.xcodeproj
 
 android-prod:
-	cordova/build.sh ANDROID --clear
+	cordova/build.sh ANDROID dagcoin --clear
 #	cp ./etc/beep.ogg ./cordova/project/plugins/phonegap-plugin-barcodescanner/src/android/LibraryProject/res/raw/beep.ogg
 	cd ../byteballbuilds/project-ANDROID  && cordova build --release android
 #   keytool -genkey -v -keystore <keystore_name>.keystore -alias <keystore alias> -keyalg RSA -keysize 2048 -validity 10000
@@ -48,42 +52,42 @@ android-prod:
 	$(ANDROID_HOME)/build-tools/25.0.3/zipalign -v 4 ../byteballbuilds/project-ANDROID/platforms/android/build/outputs/apk/android-release-signed.apk ../byteballbuilds/project-ANDROID/platforms/android/build/outputs/apk/android-release-signed-aligned.apk
 
 android-debug:
-	cordova/build.sh ANDROID --dbgjs --clear
+	cordova/build.sh ANDROID dagcoin --dbgjs --clear
 #	cp ./etc/beep.ogg ./cordova/project/plugins/phonegap-plugin-barcodescanner/src/android/LibraryProject/res/raw/beep.ogg
 	cd ../byteballbuilds/project-ANDROID  && cordova run android --device
 
 android-debug-tn:
-	cordova/build.sh ANDROID --dbgjs --clear
+	cordova/build.sh ANDROID dagcoin-tn --dbgjs --clear
 #	cp ./etc/beep.ogg ./cordova/project/plugins/phonegap-plugin-barcodescanner/src/android/LibraryProject/res/raw/beep.ogg
-	cd ../byteballbuilds/project-ANDROID-tn  && cordova run android --device
+#	cd ../byteballbuilds/project-ANDROID-tn  && cordova run android --device
 
 android-debug-emulator:
-	cordova/build.sh ANDROID --dbgjs --clear
+	cordova/build.sh ANDROID dagcoin --dbgjs --clear
 #	cp ./etc/beep.ogg ./cordova/project/plugins/phonegap-plugin-barcodescanner/src/android/LibraryProject/res/raw/beep.ogg
 	cd ../byteballbuilds/project-ANDROID  && cordova emulate android
 
 android-debug-emulator-tn:
-	cordova/build.sh ANDROID --dbgjs --clear
+	cordova/build.sh ANDROID dagcoin-tn --dbgjs --clear
 #	cp ./etc/beep.ogg ./cordova/project/plugins/phonegap-plugin-barcodescanner/src/android/LibraryProject/res/raw/beep.ogg
 	cd ../byteballbuilds/project-ANDROID-tn  && cordova emulate android
 
 android-debug-fast:
-	cordova/build.sh ANDROID --dbgjs
+	cordova/build.sh ANDROID dagcoin --dbgjs
 #	cp ./etc/beep.ogg ./cordova/project/plugins/phonegap-plugin-barcodescanner/src/android/LibraryProject/res/raw/beep.ogg
 	cd ../byteballbuilds/project-ANDROID && cordova run android --device
 #	cd ../byteballbuilds/project-ANDROID && cordova build android
 
 android-debug-fast-tn:
-	cordova/build.sh ANDROID --dbgjs
+	cordova/build.sh ANDROID dagcoin-tn --dbgjs
 #	cp ./etc/beep.ogg ./cordova/project/plugins/phonegap-plugin-barcodescanner/src/android/LibraryProject/res/raw/beep.ogg
 	cd ../byteballbuilds/project-ANDROID-tn && cordova run android --device
 
 android-debug-fast-emulator:
-	cordova/build.sh ANDROID --dbgjs
+	cordova/build.sh ANDROID dagcoin --dbgjs
 #	cp ./etc/beep.ogg ./cordova/project/plugins/phonegap-plugin-barcodescanner/src/android/LibraryProject/res/raw/beep.ogg
 	cd ../byteballbuilds/project-ANDROID && cordova emulate android
 
 android-debug-fast-emulator-tn:
-	cordova/build.sh ANDROID --dbgjs
+	cordova/build.sh ANDROID dagcoin-tn --dbgjs
 #	cp ./etc/beep.ogg ./cordova/project/plugins/phonegap-plugin-barcodescanner/src/android/LibraryProject/res/raw/beep.ogg
 	cd ../byteballbuilds/project-ANDROID-tn && cordova emulate android

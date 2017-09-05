@@ -3,7 +3,7 @@
   'use strict';
 
   angular.module('copayApp.services')
-    .factory('fundingNodeService', ($q, $rootScope, discoveryService, fileSystemService) => {
+    .factory('fundingNodeService', ($q, $rootScope, discoveryService, fileSystemService, configService) => {
       const self = {};
 
       const settings = {
@@ -59,18 +59,11 @@
 
       function getUserConfig() {
         try {
-          const userConfFile = fileSystemService.getUserConfFilePath();
-          return requireUncached(userConfFile);
+          const config = configService.getSync();
+          return config;
         } catch (e) {
           return {}; // empty config
         }
-      }
-
-      function requireUncached(module) {
-        if (typeof require.resolve === 'function') {
-          delete require.cache[require.resolve(module)];
-        }
-        return require(module.toString());
       }
 
       function updateConfig() {
@@ -78,8 +71,7 @@
           return $q.resolve();
         }
 
-        const def = $q.defer();
-        const userConfFile = fileSystemService.getUserConfFilePath();
+        const deferred = $q.defer();
         const userConf = getUserConfig();
 
         if (userConf.fundingNode === fundingNode &&
@@ -98,17 +90,16 @@
 
         updatingConfing = true;
 
-        fileSystemService.writeFile(userConfFile, JSON.stringify(userConf, null, '\t'), 'utf8', (err) => {
-          updatingConfing = false;
-
+        configService.setWithoutMergingOld(userConf, (err) => {
           if (err) {
-            def.reject(err);
+            deferred.reject(err);
           } else {
-            def.resolve();
+            deferred.resolve();
+            updatingConfing = false;
           }
         });
 
-        return def.promise;
+        return deferred.promise;
       }
 
       function isActivated() {
@@ -223,7 +214,7 @@
           settings.bytesPerAddress = newSettings.bytesPerAddress;
           settings.maxEndUserCapacity = newSettings.maxEndUserCapacity;
 
-          return updateConfig();
+          updateConfig();
         });
       }
 
