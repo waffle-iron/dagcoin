@@ -35,6 +35,7 @@
       backButton,
       faucetService,
       chooseFeeTypeService,
+      sharedService,
       autoRefreshClientService) {
       const async = require('async');
       const constants = require('byteballcore/constants.js');
