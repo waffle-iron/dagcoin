@@ -33,6 +33,7 @@
       $modal,
       bwcService,
       backButton,
+      faucetService,
       chooseFeeTypeService,
       sharedService,
       autoRefreshClientService) {

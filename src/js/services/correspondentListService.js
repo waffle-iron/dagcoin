@@ -1,6 +1,6 @@
 angular.module('copayApp.services').factory('correspondentListService',
   ($state, $rootScope, $sce, $compile, configService, storageService,
-   profileService, go, lodash, $stickyState, $deepStateRedirect, $timeout, discoveryService) => {
+   profileService, go, lodash, $stickyState, $deepStateRedirect, $timeout, discoveryService, faucetService) => {
     const eventBus = require('byteballcore/event_bus.js');
     const ValidationUtils = require('byteballcore/validation_utils.js');
     const objectHash = require('byteballcore/object_hash.js');
@@ -49,7 +49,7 @@ angular.module('copayApp.services').factory('correspondentListService',
         root.messageEventsByCorrespondent[peerAddress] = [];
       }
       // root.messageEventsByCorrespondent[peer_address].push({bIncoming: true, message: $sce.trustAsHtml(body)});
-      if (bIncoming) {
+      if (bIncoming && !faucetService.isFaucetAddress(peerAddress)) {
         if (peerAddress in $rootScope.newMessagesCount) {
           $rootScope.newMessagesCount[peerAddress] += 1;
         } else {
@@ -72,7 +72,7 @@ angular.module('copayApp.services').factory('correspondentListService',
       };
       checkAndInsertDate(root.messageEventsByCorrespondent[peerAddress], msgObj);
       root.messageEventsByCorrespondent[peerAddress].push(msgObj);
-      if ($state.is('walletHome') && $rootScope.tab === 'walletHome') {
+      if ($state.is('walletHome') && $rootScope.tab === 'walletHome' && !faucetService.isFaucetAddress(peerAddress)) {
         setCurrentCorrespondent(peerAddress, () => {
           $stickyState.reset('correspondentDevices.correspondentDevice');
           go.path('correspondentDevices.correspondentDevice');
