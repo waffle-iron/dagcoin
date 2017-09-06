@@ -20,8 +20,15 @@ if ! type grunt > /dev/null; then
   echo "${Red}* npm install -g grunt-cli${CloseColor}"
   exit
 fi
+if ! type penv > /dev/null; then
+  echo "${Red}* ERROR. Please install penv${CloseColor}"
+  echo "${Red}* npm install -g penv${CloseColor}"
+  exit
+fi
 echo "${Green}* Installing bower dependencies...${CloseColor}"
 bower install
+echo "${Green}* Preparing ${1} dependencies...${CloseColor}"
+penv $1
 echo "${Green}* Installing npm dependencies...${CloseColor}"
 npm install
 
@@ -29,13 +36,22 @@ Sqlite3Path='./node_modules/sqlite3/lib/binding'
 
 if ! gem list sass -i; then
   echo "${Green}* Installing sass...${CloseColor}"
-  gem install sass
+  sudo gem install sass
 fi
 
-if [ -d "${Sqlite3Path}/node-webkit-v0.14.7-darwin-x64" ]; then
-  grunt
-  exit
+if [ "$(uname)" == "Darwin" ]; then
+  if [ -d "${Sqlite3Path}/node-webkit-v0.14.7-darwin-x64" ]; then
+    grunt
+    exit
+  fi
+  mkdir "${Sqlite3Path}/node-webkit-v0.14.7-darwin-x64"
+  cp "${Sqlite3Path}/node-v47-darwin-x64/node_sqlite3.node" "${Sqlite3Path}/node-webkit-v0.14.7-darwin-x64"
+elif [ "$(expr substr $(uname -s) 1 5)" == "Linux" ]; then
+  if [ -d "${Sqlite3Path}/node-webkit-v0.14.7-linux-x64" ]; then
+    grunt
+    exit
+  fi
+  mkdir "${Sqlite3Path}/node-webkit-v0.14.7-linux-x64"
+  cp "${Sqlite3Path}/node-v47-linux-x64/node_sqlite3.node" "${Sqlite3Path}/node-webkit-v0.14.7-linux-x64"
 fi
-mkdir "${Sqlite3Path}/node-webkit-v0.14.7-darwin-x64"
-cp "${Sqlite3Path}/node-v47-darwin-x64/node_sqlite3.node" "${Sqlite3Path}/node-webkit-v0.14.7-darwin-x64"
 grunt

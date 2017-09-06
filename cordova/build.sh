@@ -14,7 +14,7 @@ checkOK() {
 
 # Configs
 BUILDDIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
-PROJECT="$BUILDDIR/../../byteballbuilds/project-$1-tn"
+PROJECT="$BUILDDIR/../../byteballbuilds/project-$1"
 
 CURRENT_OS=$1
 
@@ -56,7 +56,7 @@ echo "Project directory is $PROJECT"
 if [ ! -d $PROJECT ]; then
 	cd $BUILDDIR
 	echo "${OpenColor}${Green}* Creating project... ${CloseColor}"
-	cordova create ../../byteballbuilds/project-$1-tn org.dagcoin Dagcoin
+	cordova create ../../byteballbuilds/project-$1 org.dagcoin Dagcoin
 	checkOK
 
 	cd $PROJECT
@@ -166,7 +166,7 @@ if $DBGJS
 then
 	echo "${OpenColor}${Green}* Generating byteball bundle (debug js)...${CloseColor}"
 	cd $BUILDDIR/..
-	grunt cordova-prod
+	grunt cordova
 	checkOK
 else
 	echo "${OpenColor}${Green}* Generating byteball bundle...${CloseColor}"

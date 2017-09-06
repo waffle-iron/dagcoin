@@ -6,7 +6,14 @@ CloseColor='\033[0m'
 
 NodeVersion="v5.12.0"
 Sqlite3Path='./node_modules/sqlite3/lib/binding'
-PackagePath='../byteballbuilds/DAGCOIN/osx64/DAGCOIN.app/Contents/Resources/app.nw/'
+
+if [ "$(uname)" == "Darwin" ]; then
+ PackagePath='../byteballbuilds/DAGCOIN/osx64/DAGCOIN.app/Contents/Resources/app.nw/'
+ Action=linux64
+elif [ "$(expr substr $(uname -s) 1 5)" == "Linux" ]; then
+ PackagePath='../byteballbuilds/DAGCOIN/linux64/'
+ Action=dmg
+fi
 
 if ! node -v | grep -q ${NodeVersion}; then
  echo "${Red}* ERROR. Please use Node v5.12.0...${CloseColor}"
@@ -47,4 +54,4 @@ fi
 
 grunt
 
-grunt dmg
+grunt ${Action}

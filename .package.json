@@ -1,8 +1,8 @@
 {
-  "name": "dagcoin-tn",
+  "name": "dagcoin",
   "description": "A wallet for decentralized value",
   "author": "Dagcoin",
-  "version": "1.2.1t",
+  "version": "1.2.2",
   "keywords": [
     "wallet",
     "dagcoin",
@@ -47,7 +47,7 @@
     "bip38": "^1.4.0",
     "bitcore-lib": "^0.13.14",
     "bitcore-mnemonic": "~1.0.0",
-    "byteballcore": "git+https://github.com/byteball/byteballcore.git#testnet",
+    "byteballcore": "git+https://github.com/byteball/byteballcore.git",
     "chokidar": "^1.7.0",
     "jszip": "^3.1.3",
     "lodash": "^4.6.1",

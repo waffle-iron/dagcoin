@@ -20,16 +20,27 @@ If you are building for testnet, switch to testnet branch:
 git checkout testnet
 ```
 
-Install [bower](http://bower.io/) and [grunt](http://gruntjs.com/getting-started) if you haven't already:
+Install [bower](http://bower.io/), [grunt](http://gruntjs.com/getting-started) and [penv](https://www.npmjs.com/package/penv) if you haven't already:
 
 ```sh
 npm install -g bower
 npm install -g grunt-cli
+npm install -g penv
 ```
 
-Build Dagcoin:
+### Build Dagcoin:
 
+If you are using macOS or Linux run:
 ```sh
+make prepare-dev-tn
+```
+Then run Dagcoin desktop client:
+```sh
+/path/to/your/nwjs/nwjs .
+```
+Otherwise run:
+```sh
+penv testnet(if you are building testnet) or penv base(if you are building livenet)
 bower install
 npm install
 grunt
@@ -51,7 +62,7 @@ Then run Dagcoin desktop client:
 - Install Android SDK
 - Run `make android-debug`
 
-### macOS
+### macOS and Linux
 
 - run `make prepare-package`
 
@@ -60,13 +71,6 @@ Then run Dagcoin desktop client:
 - `grunt desktop`
 - copy `node_modules` into the app bundle ../byteballbuilds/Byteball/win64, except those that are important only for development (karma, grunt, jasmine)
 - `grunt inno64`
-
-### Linux
-
-- `grunt desktop`
-- copy `node_modules` into the app bundle ../byteballbuilds/Byteball/linux64, except those that are important only for development (karma, grunt, jasmine)
-- `grunt linux64`
-
 
 ## About Dagcoin
 
