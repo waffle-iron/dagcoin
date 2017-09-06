@@ -1,16 +1,28 @@
 VERSION=`cut -d '"' -f2 $BUILDDIR/../version.js`
 
+UNAME := $(shell uname)
+
+ifeq ($(UNAME), Linux)
+  # do something Linux-y
+  SHELLCMD := bash
+endif
+
+ifeq ($(UNAME), Darwin)
+  # do something MAC
+  SHELLCMD := sh
+endif
+
 prepare-dev:
-	sh devbuilds/prepare-dev.sh base
+	$(SHELLCMD) devbuilds/prepare-dev.sh base
 
 prepare-dev-tn:
-	sh devbuilds/prepare-dev.sh testnet
+	$(SHELLCMD) devbuilds/prepare-dev.sh testnet
 
 prepare-package:
-	sh devbuilds/prepare-package.sh live
+	$(SHELLCMD) devbuilds/prepare-package.sh live
 
 prepare-package-tn:
-	sh devbuilds/prepare-package.sh testnet
+	$(SHELLCMD) devbuilds/prepare-package.sh testnet
 
 cordova-base:
 	grunt dist-mobile
