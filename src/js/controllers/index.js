@@ -170,6 +170,7 @@
         self.syncProgress = '0% of new units';
       });
       eventBus.on('catchup_balls_left', (countLeft) => {
+        self.setOngoingProcess('Syncing', true);
         if (catchupBallsAtStart === -1) {
           catchupBallsAtStart = countLeft;
         }
