@@ -496,12 +496,13 @@ angular.module('copayApp.services').factory('correspondentListService',
         try {
           message = JSON.parse(body);
         } catch (err) {
-          console.log(`NEW MESSAGE FROM ${fromAddress}`);
+          console.log(`NEW MESSAGE FROM ${fromAddress}: ${body} NOT A JSON MESSAGE: ${err}`);
         }
 
         if (message !== null) {
           if (message.protocol === 'dagcoin') {
-            eventBus.emit(`dagcoin.${message.title}`, message);
+            console.log(`DAGCOIN MESSAGE RECEIVED FROM ${fromAddress}`);
+            eventBus.emit(`dagcoin.${message.title}`, message, fromAddress);
             return Promise.resolve(true);
           }
 
