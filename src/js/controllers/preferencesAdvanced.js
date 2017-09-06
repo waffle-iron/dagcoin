@@ -22,6 +22,6 @@
             $rootScope.$emit('Local/ShowAlert', 'New Address successfully generated.', 'fi-check', () => { });
           }
         });
-      }
+      };
     });
 }());
