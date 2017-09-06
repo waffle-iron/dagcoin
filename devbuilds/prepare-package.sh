@@ -7,12 +7,10 @@ CloseColor='\033[0m'
 NodeVersion="v5.12.0"
 Sqlite3Path='./node_modules/sqlite3/lib/binding'
 
-if [ "$(uname)" == "Darwin" ]
-then
+if [ "$(uname)" == "Darwin" ]; then
  PackagePath='../byteballbuilds/DAGCOIN/osx64/DAGCOIN.app/Contents/Resources/app.nw/'
  Action=linux64
-elif [ "$(expr substr $(uname -s) 1 5)" == "Linux" ]
-then
+elif [ "$(expr substr $(uname -s) 1 5)" == "Linux" ]; then
  PackagePath='../byteballbuilds/DAGCOIN/linux64/'
  Action=dmg
 fi

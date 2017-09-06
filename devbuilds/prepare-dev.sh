@@ -39,16 +39,14 @@ if ! gem list sass -i; then
   sudo gem install sass
 fi
 
-if [ "$(uname)" == "Darwin" ]
-then
+if [ "$(uname)" == "Darwin" ]; then
   if [ -d "${Sqlite3Path}/node-webkit-v0.14.7-darwin-x64" ]; then
     grunt
     exit
   fi
   mkdir "${Sqlite3Path}/node-webkit-v0.14.7-darwin-x64"
   cp "${Sqlite3Path}/node-v47-darwin-x64/node_sqlite3.node" "${Sqlite3Path}/node-webkit-v0.14.7-darwin-x64"
-elif [ "$(expr substr $(uname -s) 1 5)" == "Linux" ]
-then
+elif [ "$(expr substr $(uname -s) 1 5)" == "Linux" ]; then
   if [ -d "${Sqlite3Path}/node-webkit-v0.14.7-linux-x64" ]; then
     grunt
     exit
