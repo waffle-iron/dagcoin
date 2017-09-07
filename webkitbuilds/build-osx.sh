@@ -10,8 +10,8 @@ if [ -d "$dir" ]; then
 fi
 
 # set up your app name, architecture, and background image file name
-APP_NAME="DAGCOIN-TN"
 ARCH="$1"
+APP_NAME="$2"
 DMG_BACKGROUND_IMG="Background.png"
 
 PATH_NAME="${APP_NAME}/$1/"
@@ -30,11 +30,11 @@ _BACKGROUND_IMAGE_DPI_W=`sips -g dpiWidth ${DMG_BACKGROUND_IMG} | grep -Eo '[0-9
 if [ $(echo " $_BACKGROUND_IMAGE_DPI_H != 72.0 " | bc) -eq 1 -o $(echo " $_BACKGROUND_IMAGE_DPI_W != 72.0 " | bc) -eq 1 ]; then
    echo "WARNING: The background image's DPI is not 72.  This will result in distorted backgrounds on Mac OS X 10.7+."
    echo "         I will convert it to 72 DPI for you."
-   
+
    _DMG_BACKGROUND_TMP="${DMG_BACKGROUND_IMG%.*}"_dpifix."${DMG_BACKGROUND_IMG##*.}"
 
    sips -s dpiWidth 72 -s dpiHeight 72 ${DMG_BACKGROUND_IMG} --out ${_DMG_BACKGROUND_TMP}
-   
+
    DMG_BACKGROUND_IMG="${_DMG_BACKGROUND_TMP}"
 fi
 

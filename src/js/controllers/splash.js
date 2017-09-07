@@ -2,7 +2,7 @@
   'use strict';
 
   angular.module('copayApp.controllers').controller('splashController',
-    function ($scope, $timeout, $log, configService, profileService, storageService, fileSystemService, go, isCordova, changeWalletTypeTypeService) {
+    function ($scope, $timeout, $log, configService, profileService, storageService, fileSystemService, go, isCordova) {
       const self = this;
 
       function saveDeviceName() {
@@ -24,8 +24,17 @@
         self.deviceName = config.deviceName;
       });
 
-      this.step = isCordova ? 'device_name' : 'wallet_type';
+      this.step = isCordova ? 'device_name' : 'registration_type';
+      this.registration_type = 'default';
       this.wallet_type = 'light';
+
+      this.setRegistrationType = function () {
+        if (this.registration_type === 'default') {
+          this.setWalletType();
+        } else {
+          this.step = 'wallet_type';
+        }
+      };
 
       this.setWalletType = function () {
         const bLight = (self.wallet_type === 'light');
@@ -77,16 +86,6 @@
 
           if (profileService.profile) {
             go.walletHome();
-          }
-
-          if (changeWalletTypeTypeService.isInProgress()) {
-            const newWalletSettings = changeWalletTypeTypeService.getNewWalletSettings();
-
-            self.deviceName = newWalletSettings.deviceName;
-            self.step = '';
-            self.create();
-
-            changeWalletTypeTypeService.finish();
           }
         });
       };

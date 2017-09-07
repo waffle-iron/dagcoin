@@ -6,7 +6,14 @@ CloseColor='\033[0m'
 
 NodeVersion="v5.12.0"
 Sqlite3Path='./node_modules/sqlite3/lib/binding'
-PackagePath='../byteballbuilds/DAGCOIN/osx64/DAGCOIN.app/Contents/Resources/app.nw/'
+
+if [ "$(uname)" == "Darwin" ]; then
+ PackagePath='../byteballbuilds/DAGCOIN/osx64/DAGCOIN.app/Contents/Resources/app.nw/'
+ Action=linux64
+elif [ "$(expr substr $(uname -s) 1 5)" == "Linux" ]; then
+ PackagePath='../byteballbuilds/DAGCOIN/linux64/'
+ Action=dmg
+fi
 
 if ! node -v | grep -q ${NodeVersion}; then
  echo "${Red}* ERROR. Please use Node v5.12.0...${CloseColor}"
@@ -15,11 +22,11 @@ fi
 
 echo "${Green}* Node version OK${CloseColor}"
 
-grunt desktop
-
-echo "Moving existing node_modules to temp ..."
-
-mv "./node_modules" "./node_modules-temp"
+grunt desktop:$1
+if [ -d "./node_modules" ]; then
+  echo "Moving existing node_modules to temp ..."
+  mv "./node_modules" "./node_modules-temp"
+fi
 
 echo "Installing production dependencies..."
 
@@ -40,10 +47,11 @@ cp -r "./node_modules" "${PackagePath}"
 
 rm -rf "./node_modules"
 
-echo "Moving temp node_modules back ..."
-
-mv "./node_modules-temp" "./node_modules"
+if [ -d "./node_modules-temp" ]; then
+  echo "Moving temp node_modules back ..."
+  mv "./node_modules-temp" "./node_modules"
+fi
 
 grunt
 
-grunt dmg
+grunt ${Action}

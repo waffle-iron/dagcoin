@@ -33,8 +33,9 @@
       $modal,
       bwcService,
       backButton,
+      faucetService,
       chooseFeeTypeService,
-      changeWalletTypeTypeService,
+      sharedService,
       autoRefreshClientService) {
       const async = require('async');
       const constants = require('byteballcore/constants.js');
@@ -1214,7 +1215,7 @@
           msg_icon: msgIcon,
           close(err) {
             self.showAlert = null;
-            return cb(err) || null;
+            if (cb) return cb(err);
           },
         };
         $timeout(() => {
