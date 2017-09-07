@@ -228,7 +228,7 @@ angular.module('copayApp.services').factory('correspondentListService',
     }
 
     function text2html(text) {
-      return text.replace(/\r/g, '').replace(/\n/g, '<br>').replace(/\t/g, ' &nbsp; &nbsp; ');
+      return text.replace(/\r/g, '').replace(/\n/g, '<br />').replace(/\t/g, ' &nbsp; &nbsp; ');
     }
 
     function escapeHtml(text) {
@@ -308,9 +308,9 @@ angular.module('copayApp.services').factory('correspondentListService',
           case 'and':
             return args.map(parseAndIndent).join(`<span class="size-18">${op}</span>`);
           case 'r of set':
-            return `at least ${args.required} of the following is true:<br>${args.set.map(parseAndIndent).join(',')}`;
+            return `at least ${args.required} of the following is true:<br />${args.set.map(parseAndIndent).join(',')}`;
           case 'weighted and':
-            return `the total weight of the true conditions below is at least ${args.required}:<br>${args.set.map(arg => `${arg.weight}: ${parseAndIndent(arg.value)}`).join(',')}`;
+            return `the total weight of the true conditions below is at least ${args.required}:<br />${args.set.map(arg => `${arg.weight}: ${parseAndIndent(arg.value)}`).join(',')}`;
           case 'in data feed':
             arrAddresses = args[0];
             feedName = args[1];
@@ -464,16 +464,82 @@ angular.module('copayApp.services').factory('correspondentListService',
       return message;
     }
 
-    eventBus.on('text', (fromAddress, body) => {
-      device.readCorrespondent(fromAddress, (correspondent) => {
-        if (discoveryService.isDiscoveryServiceAddress(fromAddress)) {
-          discoveryService.processMessage(body);
-        } else {
-          if (!root.messageEventsByCorrespondent[correspondent.device_address]) loadMoreHistory(correspondent);
-          addIncomingMessageEvent(correspondent.device_address, body);
-          if (correspondent.my_record_pref && correspondent.peer_record_pref) chatStorage.store(fromAddress, body, 1);
+    function sendMessageToCorrespondentChat(correspondent, fromAddress, body) {
+      const promise = new Promise(() => {
+        if (!root.messageEventsByCorrespondent[correspondent.device_address]) {
+          loadMoreHistory(correspondent);
+        }
+
+        addIncomingMessageEvent(correspondent.device_address, body);
+
+        if (correspondent.my_record_pref && correspondent.peer_record_pref) {
+          chatStorage.store(fromAddress, body, 1);
         }
       });
+
+      return promise;
+    }
+
+    /**
+     * Process a message considering the possibility it is a Dagcoin message.
+     * It tries to parse it, if it succeeds and if a protocol property is present (and set to dagcoin) then it
+     * emits the appropriate event.
+     * @param correspondent The message sender record in the local database
+     * @param fromAddress The message sender address
+     * @param body The message body as pure text
+     * @returns {Promise}
+     */
+    function processAsDagcoinMessage(correspondent, fromAddress, body) {
+      const promise = new Promise(() => {
+        let message = null;
+
+        try {
+          message = JSON.parse(body);
+        } catch (err) {
+          console.log(`NEW MESSAGE FROM ${fromAddress}: ${body} NOT A JSON MESSAGE: ${err}`);
+        }
+
+        if (message !== null) {
+          if (message.protocol === 'dagcoin') {
+            console.log(`DAGCOIN MESSAGE RECEIVED FROM ${fromAddress}`);
+            eventBus.emit(`dagcoin.${message.title}`, message, fromAddress);
+            return Promise.resolve(true);
+          }
+
+          console.log(`JSON MESSAGE RECEIVED FROM ${fromAddress} WITH UNEXPECTED PROTOCOL: ${message.protocol}`);
+        }
+
+        return sendMessageToCorrespondentChat(correspondent, fromAddress, body);
+      });
+
+      return promise;
+    }
+
+    function readCorrespondentAndForwardMessage(fromAddress, body) {
+      const promise = new Promise((resolve) => {
+        device.readCorrespondent(fromAddress, correspondent => resolve(correspondent));
+      }).then((correspondent) => {
+        if (correspondent == null) {
+          return Promise.reject(`CORRESPONDENT WITH ADDRESS ${fromAddress} NOT FOUND`);
+        }
+
+        return processAsDagcoinMessage(correspondent, fromAddress, body);
+      });
+
+      return promise;
+    }
+
+    eventBus.on('text', (fromAddress, body) => {
+      const promise = new Promise(() => {
+        if (discoveryService.isDiscoveryServiceAddress(fromAddress)) {
+          console.log(`DISCOVERY MESSAGE FROM ${fromAddress}`);
+          discoveryService.processMessage(body);
+        } else {
+          return readCorrespondentAndForwardMessage(fromAddress, body);
+        }
+      });
+
+      return promise;
     });
 
     eventBus.on('chat_recording_pref', (correspondentAddress, enabled) => {
