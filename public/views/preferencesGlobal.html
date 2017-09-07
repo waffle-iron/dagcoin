@@ -145,72 +145,45 @@
 
   <h4></h4>
 
-  <div ng-if="prefGlobal.type === 'light wallet'">
-
-    <ul class="no-bullet m0">
-      <li ng-click="$root.go('backup')" ng-hide="index.isPrivKeyExternal">
-        <div class="right text-gray">
+  <ul class="no-bullet m0">
+    <li ng-click="$root.go('backup')" ng-hide="index.isPrivKeyExternal">
+      <div class="right text-gray">
         <span class="text-warning" ng-show="index.needsBackup">
           <i class="fi-alert"></i><span translate>Still not done</span>
         </span>
-          <i class="icon-arrow-right3 size-24 text-gray"></i>
-        </div>
-        <div translate>Backup</div>
-      </li>
-    </ul>
+        <i class="icon-arrow-right3 size-24 text-gray"></i>
+      </div>
+      <div translate>Backup wallet seed</div>
+    </li>
+  </ul>
 
-    <ul class="no-bullet m0">
-      <li ng-click="$root.go('recoveryFromSeed')" ng-hide="index.isPrivKeyExternal">
-        <div class="right text-gray">
-          <i class="icon-arrow-right3 size-24 text-gray"></i>
-        </div>
-        <div translate>Restore</div>
-      </li>
-    </ul>
+  <ul class="no-bullet m0">
+    <li ng-click="$root.go('recoveryFromSeed')" ng-hide="index.isPrivKeyExternal">
+      <div class="right text-gray">
+        <i class="icon-arrow-right3 size-24 text-gray"></i>
+      </div>
+      <div translate>Recovery from seed</div>
+    </li>
+  </ul>
 
-  </div>
+  <ul class="no-bullet m0">
+    <li ng-click="$root.go('export')" ng-hide="index.isPrivKeyExternal">
+      <div class="right text-gray">
+        <i class="icon-arrow-right3 size-24 text-gray"></i>
+      </div>
+      <div translate>Full backup</div>
+    </li>
+  </ul>
 
-  <div ng-if="prefGlobal.type === 'full wallet'">
+  <ul class="no-bullet m0">
+    <li ng-click="$root.go('import')" ng-hide="index.isPrivKeyExternal">
+      <div class="right text-gray">
+        <i class="icon-arrow-right3 size-24 text-gray"></i>
+      </div>
+      <div translate>Restore from full backup</div>
+    </li>
+  </ul>
 
-    <ul class="no-bullet m0">
-      <li ng-click="$root.go('backup')" ng-hide="index.isPrivKeyExternal">
-        <div class="right text-gray">
-        <span class="text-warning" ng-show="index.needsBackup">
-          <i class="fi-alert"></i><span translate>Still not done</span>
-        </span>
-          <i class="icon-arrow-right3 size-24 text-gray"></i>
-        </div>
-        <div translate>Backup wallet seed</div>
-      </li>
-    </ul>
-
-    <ul class="no-bullet m0">
-      <li ng-click="$root.go('recoveryFromSeed')" ng-hide="index.isPrivKeyExternal">
-        <div class="right text-gray">
-          <i class="icon-arrow-right3 size-24 text-gray"></i>
-        </div>
-        <div translate>Recovery from seed</div>
-      </li>
-    </ul>
-
-    <ul class="no-bullet m0">
-      <li ng-click="$root.go('export')" ng-hide="index.isPrivKeyExternal">
-        <div class="right text-gray">
-          <i class="icon-arrow-right3 size-24 text-gray"></i>
-        </div>
-        <div translate>Full backup</div>
-      </li>
-    </ul>
-
-    <ul class="no-bullet m0">
-      <li ng-click="$root.go('import')" ng-hide="index.isPrivKeyExternal">
-        <div class="right text-gray">
-          <i class="icon-arrow-right3 size-24 text-gray"></i>
-        </div>
-        <div translate>Restore from full backup</div>
-      </li>
-    </ul>
-  </div>
 
   <h4></h4>
   <ul class="no-bullet m0">
