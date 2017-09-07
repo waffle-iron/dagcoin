@@ -75,13 +75,15 @@
           }
 
           const promise = new Promise((resolve) => {
-            const listener = eventBus.on('dagcoin.connected', (message, fromAddress) => {
+            const listener = function (message, fromAddress) {
               if (fromAddress === discoveryServiceDeviceAddress) {
                 console.log(`THE DISCOVERY SERVICE (${discoveryServiceDeviceAddress}) IS ALIVE`);
                 eventBus.removeListener('dagcoin.connected', listener);
-                resolve(true);
+                resolve(correspondent);
               }
-            });
+            };
+
+            eventBus.on('dagcoin.connected', listener);
           });
 
           const keepAlive = {
@@ -125,7 +127,7 @@
 
       function processMessage(resp) {
         if (!resp || !isJsonString(resp)) {
-          return;
+          return Promise.resolve(false);
         }
 
         const respObj = JSON.parse(resp);
@@ -135,7 +137,8 @@
         switch (respObj.messageType) {
           case messages.listTraders:
             if (!respObj.messageBody || !respObj.messageBody.traders || !respObj.messageBody.traders.length) {
-              return;
+              console.log('NO TRADERS AVAILABLE');
+              return Promise.resolve(true);
             }
 
             respObj.messageBody.traders.sort((a, b) => {
@@ -148,7 +151,8 @@
             fundingNode = respObj.messageBody.traders[0];
             pairCode = fundingNode.pairCode;
 
-            checkOrPairDevice(pairCode).then((correspondent) => {
+            return checkOrPairDevice(pairCode)
+            .then((correspondent) => {
               console.log(`CORRESPONDENT: ${JSON.stringify(correspondent)}`);
               return readMyAddress()
                 .then(address => askForFundingAddress(correspondent.device_address, address))
@@ -172,10 +176,10 @@
 
                   return promise;
                 });
-            }, err => console.log(err));
-            break;
+            }, err => console.log(err))
+            .then(() => Promise.resolve(true));
           default:
-            break;
+            return Promise.resolve(false);
         }
       }
 
@@ -323,7 +327,13 @@
         return makeSureDiscoveryServiceIsConnected().then(
           (correspondent) => {
             const promise = new Promise((resolve, reject) => {
-              const message = { messageType, messageBody };
+              const message = {
+                protocol: 'dagcoin',
+                title: 'funds-exchange-message',
+                messageType,
+                messageBody
+              };
+
               device.sendMessageToDevice(correspondent.device_address, 'text', JSON.stringify(message), {
                 ifOk() {
                   resolve();

@@ -530,16 +530,22 @@ angular.module('copayApp.services').factory('correspondentListService',
     }
 
     eventBus.on('text', (fromAddress, body) => {
-      const promise = new Promise(() => {
-        if (discoveryService.isDiscoveryServiceAddress(fromAddress)) {
-          console.log(`DISCOVERY MESSAGE FROM ${fromAddress}`);
-          discoveryService.processMessage(body);
-        } else {
-          return readCorrespondentAndForwardMessage(fromAddress, body);
-        }
-      });
+      if (discoveryService.isDiscoveryServiceAddress(fromAddress)) {
+        console.log(`DISCOVERY MESSAGE FROM ${fromAddress}`);
 
-      return promise;
+        discoveryService.processMessage(body).then((isRelatedToFunding) => {
+          if (isRelatedToFunding) {
+            console.log('IT WAS RELATED TO FUNDING');
+            return;
+          }
+
+          console.log('IT WAS NOT RELATED TO FUNDING');
+          // It wasn't a request related to funding.
+          readCorrespondentAndForwardMessage(fromAddress, body);
+        });
+      } else {
+        return readCorrespondentAndForwardMessage(fromAddress, body);
+      }
     });
 
     eventBus.on('chat_recording_pref', (correspondentAddress, enabled) => {
