@@ -35,6 +35,7 @@
       backButton,
       faucetService,
       chooseFeeTypeService,
+      changeWalletTypeService,
       sharedService,
       autoRefreshClientService) {
       const async = require('async');
@@ -148,8 +149,9 @@
           return;
         }
         console.log('stack', errorObject.stack);
+        const handled = changeWalletTypeService.tryHandleError(errorObject);
         sendBugReport(errorMessage, errorObject);
-        if (errorObject && errorObject.bIgnore) {
+        if (errorObject && (errorObject.bIgnore || handled)) {
           return;
         }
         self.showErrorPopup(errorMessage, () => {

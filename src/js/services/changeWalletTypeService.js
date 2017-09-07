@@ -4,15 +4,16 @@
 
   angular
     .module('copayApp.services')
-    .factory('changeWalletTypeTypeService', changeWalletTypeTypeService);
+    .factory('changeWalletTypeService', changeWalletTypeService);
 
-  changeWalletTypeTypeService.$inject = ['$rootScope', 'fileSystemService', 'isCordova'];
+  changeWalletTypeService.$inject = ['$rootScope', 'fileSystemService', 'isCordova'];
 
-  function changeWalletTypeTypeService($rootScope, fileSystemService, isCordova) {
+  function changeWalletTypeService($rootScope, fileSystemService, isCordova) {
     const service = {};
 
     service.change = change;
     service.canChange = canChange;
+    service.tryHandleError = tryHandleError;
 
     function getUserConfig() {
       try {
@@ -38,7 +39,7 @@
       return !isCordova;
     }
 
-    function change() {
+    function change(msg) {
       if (!canChange()) {
         return;
       }
@@ -58,7 +59,8 @@
             // transfer data
             createDatabaseAndTransferData(loadedData, () => {
               // reload application
-              $rootScope.$emit('Local/ShowAlert', 'Wallet type successfully changed, please restart the application.', 'fi-check', () => {
+              const message = msg || 'Wallet type successfully changed, please restart the application.';
+              $rootScope.$emit('Local/ShowAlert', message, 'fi-check', () => {
                 if (navigator && navigator.app) {
                   navigator.app.exitApp();
                 } else if (process.exit) {
@@ -160,6 +162,22 @@
           });
         }, 300);
       });
+    }
+
+    function tryHandleError(excObj) {
+      if (!excObj || excObj.bIgnore) {
+        return false;
+      }
+
+      if (excObj.message && excObj.message.toLowerCase().indexOf('wallet not found:') > -1) {
+        // try to change wallet type
+        if (canChange()) {
+          change('Application successfully updated, please restart the application.');
+          return true;
+        }
+      }
+
+      return false;
     }
 
     return service;
