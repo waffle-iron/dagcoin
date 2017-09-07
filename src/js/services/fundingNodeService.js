@@ -36,6 +36,31 @@
         self.init();
       });
 
+      // TODO: refine this logic to keep in account funding limits, resource availability and all parameters
+      const eventBus = require('byteballcore/event_bus.js');
+      eventBus.on('dagcoin.is-funding-available', (message, fromAddress) => {
+        const reply = {
+          protocol: 'dagcoin',
+          title: 'funding-available',
+          status: true
+        };
+
+        const device = require('byteballcore/device.js');
+        device.sendMessageToDevice(fromAddress, 'text', JSON.stringify(reply));
+      });
+
+      // One device can send such message to check whether another device can exchange messages
+      // TODO: move to correspondentListService as soon as this feature is available
+      eventBus.on('dagcoin.is-connected', (message, fromAddress) => {
+        const reply = {
+          protocol: 'dagcoin',
+          title: 'connected'
+        };
+
+        const device = require('byteballcore/device.js');
+        device.sendMessageToDevice(fromAddress, 'text', JSON.stringify(reply));
+      });
+
       function init() {
         const conf = getUserConfig();
 

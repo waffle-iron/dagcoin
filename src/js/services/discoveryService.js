@@ -2,7 +2,7 @@
   'use strict';
 
   angular.module('copayApp.services')
-    .factory('discoveryService', ($q, fileSystemService) => {
+    .factory('discoveryService', ($q, fileSystemService, promiseService) => {
       const eventBus = require('byteballcore/event_bus.js');
       const device = require('byteballcore/device.js');
       const objectHash = require('byteballcore/object_hash.js');
@@ -25,7 +25,7 @@
         updateSettings: 'UPDATE_SETTINGS'
       };
 
-      // let correspondent = null;
+      let discoveryServiceAvailabilityCheckingPromise = null;
       let waitingForFundingAddress = false;
 
       self.messages = messages;
@@ -60,8 +60,53 @@
         }
       }
 
+      /**
+       * Ensures the discovery service is connected and responsive.
+       */
       function makeSureDiscoveryServiceIsConnected() {
-        return checkOrPairDevice(code);
+        console.log('METHOD makeSureDiscoveryServiceIsConnected CALLED');
+
+        return checkOrPairDevice(code).then((correspondent) => {
+          const discoveryServiceDeviceAddress = correspondent.device_address;
+
+          if (discoveryServiceAvailabilityCheckingPromise !== null) {
+            console.log('ALREADY WAITING FOR THE DISCOVERY SERVICE TO REPLY');
+            return discoveryServiceAvailabilityCheckingPromise;
+          }
+
+          const promise = new Promise((resolve) => {
+            const listener = eventBus.on('dagcoin.connected', (message, fromAddress) => {
+              if (fromAddress === discoveryServiceDeviceAddress) {
+                console.log(`THE DISCOVERY SERVICE (${discoveryServiceDeviceAddress}) IS ALIVE`);
+                eventBus.removeListener('dagcoin.connected', listener);
+                resolve(true);
+              }
+            });
+          });
+
+          const keepAlive = {
+            protocol: 'dagcoin',
+            title: 'is-connected'
+          };
+
+          device.sendMessageToDevice(discoveryServiceDeviceAddress, 'text', JSON.stringify(keepAlive));
+
+          const attempts = 12;
+
+          const timeoutMessage = `THE DISCOVERY SERVICE ${discoveryServiceDeviceAddress} DID NOT REPLY AFTER 10 SECONDS`;
+          const finalTimeoutMessage = `THE DISCOVERY SERVICE DID NOT REPLY AFTER ${attempts} ATTEMPS`;
+
+          const timeoutMessages = { timeoutMessage, finalTimeoutMessage };
+
+          discoveryServiceAvailabilityCheckingPromise = promiseService.repeatedTimedPromise(promise, 10000, attempts, timeoutMessages);
+
+          // After ten minutes will be needed to make sure the discovery service is connected
+          setTimeout(() => {
+            discoveryServiceAvailabilityCheckingPromise = null;
+          }, 10 * 60 * 1000);
+
+          return discoveryServiceAvailabilityCheckingPromise;
+        });
       }
 
       function fundingPairListener(fromAddress, body, callback) {
@@ -105,7 +150,7 @@
 
             checkOrPairDevice(pairCode).then((correspondent) => {
               console.log(`CORRESPONDENT: ${JSON.stringify(correspondent)}`);
-              return readMyShareableAddress()
+              return readMyAddress()
                 .then(address => askForFundingAddress(correspondent.device_address, address))
                 .then(() => {
                   const promise = new Promise((resolve, reject) => {
@@ -207,7 +252,8 @@
         return promise;
       }
 
-      function readMyShareableAddress() {
+      // TODO: should have some dagcoins on it
+      function readMyAddress() {
         const promise = new Promise((resolve, reject) => {
           const walletGeneral = require('byteballcore/wallet_general.js');
           walletGeneral.readMyAddresses((arrMyAddresses) => {
@@ -235,10 +281,11 @@
 
         if (userConfig.byteOrigin && userConfig.dagcoinDestination) {
           console.log('No need to ask for funding addresses');
+          setIsWaitingForFundingAddress(false);
           return Promise.resolve(false);
         }
 
-        const messageTitle = 'ask_for_funding_address';
+        const messageTitle = 'funding-address-request';
         console.log(`Sending ${messageTitle} to ${device.getMyDeviceAddress()}:${address}`);
 
         const promise = listenToCreateNewSharedAddress(deviceAddress);
@@ -247,6 +294,7 @@
           deviceAddress,
           'text',
           JSON.stringify({
+            protocol: 'dagcoin',
             title: messageTitle,
             deviceAddress: device.getMyDeviceAddress(),
             address
@@ -272,22 +320,26 @@
       }
 
       function sendMessage(messageType, messageBody) {
-        return makeSureDiscoveryServiceIsConnected().then((correspondent) => {
-          const promise = new Promise((resolve, reject) => {
-            const message = { messageType, messageBody };
-
-            device.sendMessageToDevice(correspondent.device_address, 'text', JSON.stringify(message), {
-              ifOk() {
-                resolve();
-              },
-              ifError(error) {
-                reject(error);
-              }
+        return makeSureDiscoveryServiceIsConnected().then(
+          (correspondent) => {
+            const promise = new Promise((resolve, reject) => {
+              const message = { messageType, messageBody };
+              device.sendMessageToDevice(correspondent.device_address, 'text', JSON.stringify(message), {
+                ifOk() {
+                  resolve();
+                },
+                ifError(error) {
+                  reject(error);
+                }
+              });
             });
-          });
 
-          return promise;
-        });
+            return promise;
+          },
+          (error) => {
+            console.log(`COULD NOT DELIVER ${messageType} TO DISCOVERY SERVICE: ${error}`);
+          }
+        );
       }
 
       function requireUncached(module) {
