@@ -33,7 +33,7 @@
             }
 
             if (hasDags && !hasBytes) {
-              openNotPossibleToExchangeModal();
+              // openNotPossibleToExchangeModal();
             }
           }
         });
