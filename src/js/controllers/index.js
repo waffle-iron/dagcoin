@@ -36,7 +36,8 @@
       faucetService,
       chooseFeeTypeService,
       sharedService,
-      autoRefreshClientService) {
+      autoRefreshClientService,
+      connectionService) {
       const async = require('async');
       const constants = require('byteballcore/constants.js');
       const mutex = require('byteballcore/mutex.js');
@@ -68,6 +69,11 @@
        console.log("hostname="+os.hostname());
        //console.log(os.userInfo());
        */
+
+      connectionService.init();
+      $rootScope.$on('connection:state-changed', (ev, isOnline) => {
+        self.isOffline = !isOnline;
+      });
 
       function updatePublicKeyRing(walletClient, onDone) {
         const walletDefinedByKeys = require('byteballcore/wallet_defined_by_keys.js');
