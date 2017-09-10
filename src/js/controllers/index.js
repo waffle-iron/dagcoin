@@ -60,7 +60,8 @@
       self.updatingTxHistory = true;
       self.bSwipeSuspended = false;
       self.$state = $state;
-      self.usePushNotifications = isCordova && !isMobile.Windows() && isMobile.Android();
+      // self.usePushNotifications = isCordova && !isMobile.Windows() && isMobile.Android();
+      self.usePushNotifications = false;
       /*
        console.log("process", process.env);
        var os = require('os');
