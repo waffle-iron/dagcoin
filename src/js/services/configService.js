@@ -29,7 +29,7 @@
         totalCosigners: 6,
       },
 
-      hub: (constants.alt === '2' && isTestnet) ? 'byteball.org/bb-test' : 'byteball.org/bb',
+      hub: (constants.alt === '2' && isTestnet) ? 'testnetexplorer.dagcoin.org/wss/' : 'byteball.org/bb',
 
       // requires bluetooth permission on android
       // deviceName: /*isCordova ? cordova.plugins.deviceName.name : */require('os').hostname(),

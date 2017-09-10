@@ -2,15 +2,17 @@
   'use strict';
 
   const eventBus = require('byteballcore/event_bus.js');
+  const network = require('byteballcore/network');
+  const device = require('byteballcore/device');
 
   angular.module('copayApp.services')
   .factory('newVersion', ($modal, $timeout, $rootScope) => {
     const root = {};
     root.shown = false;
     root.timerNextShow = false;
+    root.askForVersion = askForVersion;
 
-
-    eventBus.on('new_version_dagcoin', (ws, data) => {
+    eventBus.on('new_version', (ws, data) => {
       root.version = data.version;
       if (!root.shown) {
         const modalInstance = $modal.open({
@@ -30,6 +32,10 @@
       root.timerNextShow = $timeout(() => {
         root.shown = false;
       }, 1000 * 60 * 60 * 24);
+    }
+
+    function askForVersion() {
+      device.loginToHub();
     }
 
     return root;

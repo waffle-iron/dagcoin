@@ -40,7 +40,8 @@ no-nested-ternary,no-shadow,no-plusplus,consistent-return,import/no-extraneous-d
       changeWalletTypeService,
       sharedService,
       autoRefreshClientService,
-      connectionService) {
+      connectionService,
+      newVersion) {
       const async = require('async');
       const constants = require('byteballcore/constants.js');
       const mutex = require('byteballcore/mutex.js');
@@ -1583,6 +1584,8 @@ no-nested-ternary,no-shadow,no-plusplus,consistent-return,import/no-extraneous-d
       if (autoRefreshClientService) {
         autoRefreshClientService.initHistoryAutoRefresh();
       }
+
+      newVersion.askForVersion();
 
       let gui;
       try {
