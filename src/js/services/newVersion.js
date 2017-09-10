@@ -2,7 +2,6 @@
   'use strict';
 
   const eventBus = require('byteballcore/event_bus.js');
-  const network = require('byteballcore/network');
   const device = require('byteballcore/device');
 
   angular.module('copayApp.services')
