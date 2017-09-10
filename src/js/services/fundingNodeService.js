@@ -19,6 +19,7 @@
       let messageInterval = null;
       let assocBalances = null;
       let updatingConfing = false;
+      let paused = false;
 
       self.update = update;
       self.isActivated = isActivated;
@@ -29,6 +30,8 @@
       self.getSettings = getSettings;
       self.setSettings = setSettings;
       self.getUserConfig = getUserConfig;
+      self.pause = pause;
+      self.unpause = unpause;
 
       $rootScope.$on('Local/BalanceUpdatedAndWalletUnlocked', (event, ab) => {
         assocBalances = ab;
@@ -36,7 +39,20 @@
         self.init();
       });
 
+      function pause() {
+        paused = true;
+      }
+
+      function unpause() {
+        paused = false;
+        self.init();
+      }
+
       function init() {
+        if (paused) {
+          return;
+        }
+
         const conf = getUserConfig();
 
         settings.exchangeFee = conf.exchangeFee || settings.exchangeFee;

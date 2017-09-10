@@ -176,6 +176,7 @@
       eventBus.on('catching_up_started', () => {
         self.setOngoingProcess('Syncing', true);
         self.syncProgress = '0% of new units';
+        fundingNodeService.pause();
       });
       eventBus.on('catchup_balls_left', (countLeft) => {
         self.setOngoingProcess('Syncing', true);
@@ -192,6 +193,7 @@
         catchupBallsAtStart = -1;
         self.setOngoingProcess('Syncing', false);
         self.syncProgress = '';
+        fundingNodeService.unpause();
       });
       eventBus.on('refresh_light_started', () => {
         console.log('refresh_light_started');
