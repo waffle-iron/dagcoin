@@ -25,6 +25,7 @@
       animationService,
       addressbookService,
       correspondentListService,
+      discoveryService,
       isMobile) {
       const constants = require('byteballcore/constants.js');
       const eventBus = require('byteballcore/event_bus.js');
@@ -846,6 +847,7 @@
                 arrSigningDeviceAddresses = indexScope.copayers.map(copayer => copayer.device_address);
               }
               breadcrumbs.add(`sending payment in ${asset}`);
+
               profileService.bKeepUnlocked = true;
               const opts = {
                 shared_address: indexScope.shared_address,
@@ -857,6 +859,15 @@
                 arrSigningDeviceAddresses,
                 recipientDeviceAddress,
               };
+
+              /* const userConfig = discoveryService.getUserConfig();
+
+              if (userConfig.byteOrigin) {
+                opts.shared_address = [userConfig.byteOrigin];
+              } */
+
+              console.log(`PAYMENT OPTIONS BEFORE: ${JSON.stringify(opts)}`);
+
               fc.sendMultiPayment(opts, (sendMultiPaymentError) => {
                 let error = sendMultiPaymentError;
                 // if multisig, it might take very long before the callback is called
