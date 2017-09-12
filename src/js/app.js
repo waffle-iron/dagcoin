@@ -31,7 +31,8 @@ angular.module('copayApp.addons', []);
 const fs = require('fs');
 
 const appData = JSON.parse(fs.readFileSync('package.json', 'utf8'));
-const isProduction = appData.env.NODE_ENV !== 'testnet';
+// Assumes that in generated production package.json doesn't have env object
+const isProduction = !Object.prototype.hasOwnProperty.call(appData, 'env');
 
 Raven
   .config('https://2b16cb28f5864d1db14e1db9cc2407ef@sentry.io/215634', {
