@@ -101,28 +101,6 @@
         });
       }
 
-      function sendBugReport(errorMessage, errorObject) {
-        const conf = require('byteballcore/conf.js');
-        const network = require('byteballcore/network.js');
-        const bugSinkUrl = conf.WS_PROTOCOL + (conf.bug_sink_url || configService.getSync().hub);
-        network.findOutboundPeerOrConnect(bugSinkUrl, (err, ws) => {
-          if (err) {
-            return;
-          }
-          breadcrumbs.add('bugreport');
-          let description = errorObject.stack || JSON.stringify(errorObject, null, '\t');
-          if (errorObject.bIgnore) {
-            description += '\n(ignored)';
-          }
-          description += `\n\nBreadcrumbs:\n${breadcrumbs.get().join('\n')}\n\n`;
-          description += `UA: ${navigator.userAgent}\n`;
-          description += `Program: ${conf.program} ${conf.program_version}\n`;
-          network.sendJustsaying(ws, 'bugreport', { message: errorMessage, exception: description });
-        });
-      }
-
-      self.sendBugReport = sendBugReport;
-
       if (isCordova && constants.version === '1.0') {
         const db = require('byteballcore/db.js');
         db.query('SELECT 1 FROM units WHERE version!=? LIMIT 1', [constants.version], (rows) => {
@@ -141,7 +119,6 @@
       eventBus.on('nonfatal_error', (errorMessage, errorObject) => {
         console.log('nonfatal error stack', errorObject.stack);
         errorObject.bIgnore = true;
-        sendBugReport(errorMessage, errorObject);
       });
 
       eventBus.on('uncaught_error', (errorMessage, errorObject) => {
@@ -155,9 +132,8 @@
           // TOR error after wakeup from sleep
           return;
         }
-        console.log('stack', errorObject.stack);
+
         const handled = changeWalletTypeService.tryHandleError(errorObject);
-        sendBugReport(errorMessage, errorObject);
         if (errorObject && (errorObject.bIgnore || handled)) {
           return;
         }
