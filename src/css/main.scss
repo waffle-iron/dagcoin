@@ -2662,6 +2662,11 @@ input {
   width: 100%;
   outline: none;
   box-shadow: none;
+
+  &[type="checkbox"] {
+    width: auto;
+    margin: 0;
+  }
 }
 
 .form-group {
