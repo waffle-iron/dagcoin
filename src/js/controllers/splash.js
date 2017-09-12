@@ -5,7 +5,7 @@
     function ($scope, $timeout, $log, configService, profileService, storageService, fileSystemService, go, isCordova) {
       const self = this;
 
-      function saveDeviceName() {
+      this.saveDeviceName = function () {
         console.log(`saveDeviceName: ${self.deviceName}`);
         const device = require('byteballcore/device.js');
         device.setDeviceName(self.deviceName);
@@ -14,8 +14,9 @@
           if (err) {
             self.$emit('Local/DeviceError', err);
           }
+          self.bDeviceNameSet = true;
         });
-      }
+      };
 
       configService.get((err, config) => {
         if (err) {
@@ -63,7 +64,6 @@
           return console.log('already creating profile');
         }
         self.creatingProfile = true;
-        saveDeviceName();
 
         return $timeout(() => {
           profileService.create({ noWallet }, (err) => {
