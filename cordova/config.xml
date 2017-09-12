@@ -17,7 +17,7 @@
     <preference name="DisallowOverscroll" value="true"/>
     <preference name="HideKeyboardFormAccessoryBar" value="true"/>
     <preference name="SplashScreen" value="copayscreen" />
-    <preference name="ShowSplashScreenSpinner" value="false" /> 
+    <preference name="ShowSplashScreenSpinner" value="true" />
     <preference name="AutoHideSplashScreen" value="false" />
     <preference name="FadeSplashScreen" value="true" />  
     <preference name="FadeSplashScreenDuration" value="1000" />
