@@ -1,4 +1,5 @@
-/* eslint-disable no-unused-vars,no-mixed-operators,no-use-before-define,new-cap,no-nested-ternary,no-shadow,no-plusplus,consistent-return,import/no-extraneous-dependencies,import/no-unresolved */
+/* eslint-disable no-unused-vars,no-mixed-operators,no-use-before-define,new-cap,
+no-nested-ternary,no-shadow,no-plusplus,consistent-return,import/no-extraneous-dependencies,import/no-unresolved, no-undef */
 (function () {
   'use strict';
 
@@ -118,10 +119,12 @@
 
       eventBus.on('nonfatal_error', (errorMessage, errorObject) => {
         console.log('nonfatal error stack', errorObject.stack);
+        Raven.captureException(`nonfatal error stack ${errorMessage}`);
         errorObject.bIgnore = true;
       });
 
       eventBus.on('uncaught_error', (errorMessage, errorObject) => {
+        Raven.captureException(errorMessage);
         if (errorMessage.indexOf('ECONNREFUSED') >= 0 || errorMessage.indexOf('host is unreachable') >= 0) {
           $rootScope.$emit('Local/ShowAlert', 'Error connecting to TOR', 'fi-alert', () => {
             go.path('preferencesTor');

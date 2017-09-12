@@ -295,11 +295,12 @@
 
       return root;
     }).factory('$exceptionHandler', ($log) => {
-      return (exception, cause) => {
+      const exHandler = (exception, cause) => {
         console.log('angular $exceptionHandler');
         $log.error(exception, cause);
         eventBus.emit('uncaught_error', `An e xception occurred: ${exception}; cause: ${cause}`, exception);
       };
+      return exHandler;
     });
 
   function tempHandleUri(url) {
@@ -314,7 +315,13 @@
     window.handleOpenURL = tempHandleUri;
   }
 
+  window.onerror = function (msg, url, line, col, error) {
+    console.log(`Javascript error: ${msg}`, error);
+    eventBus.emit('uncaught_error', `Javascript error: ${msg}`, error);
+  };
+
   process.on('uncaughtException', (e) => {
+    console.log('uncaughtException');
     eventBus.emit('uncaught_error', `Uncaught exception: ${e}`, e);
   });
 }());
