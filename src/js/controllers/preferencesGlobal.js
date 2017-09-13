@@ -140,7 +140,41 @@
       self.changeTypeOfPayment = changeTypeOfPayment;
 
       self.changeWalletType = function () {
-        changeWalletTypeService.change();
+        if (self.isLight) {
+          const ModalInstanceCtrl = function ($scopeModal, $modalInstance, $sce) {
+            $scopeModal.title =  $sce.trustAsHtml(`
+            The wallet will contain the most current state of the entire Dagcoin database. 
+            This option is better for privacy but will take several gigabytes of storage and the initial sync will take several days. 
+            CPU load will be high during sync.`);
+
+            $scopeModal.yes_label = 'Change it';
+            $scopeModal.ok = function () {
+              $modalInstance.close(true);
+            };
+            $scopeModal.cancel = function () {
+              $modalInstance.dismiss('cancel');
+            };
+          };
+
+          const modalInstance = $modal.open({
+            templateUrl: 'views/modals/confirmation.html',
+            windowClass: animationService.modalAnimated.slideUp,
+            controller: ['$scope', '$modalInstance', '$sce', ModalInstanceCtrl],
+          });
+
+          modalInstance.result.finally(() => {
+            const m = angular.element(document.getElementsByClassName('reveal-modal'));
+            m.addClass(animationService.modalAnimated.slideOutDown);
+          });
+
+          modalInstance.result.then((ok) => {
+            if (ok) {
+              changeWalletTypeService.change();
+            }
+          });
+        } else {
+          changeWalletTypeService.change();
+        }
       };
 
       function changeTypeOfPayment(model) {
