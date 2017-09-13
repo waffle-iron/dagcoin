@@ -8,7 +8,7 @@
       const self = this;
       self.fundingNodeSettings = {};
       self.isLight = conf.bLight;
-      self.canChangeWalletType = changeWalletTypeTypeService.canChange();
+      self.canChangeWalletType = changeWalletTypeService.canChange();
 
       $scope.encrypt = !!profileService.profile.xPrivKeyEncrypted;
 
@@ -140,7 +140,7 @@
       self.changeTypeOfPayment = changeTypeOfPayment;
 
       self.changeWalletType = function () {
-        changeWalletTypeTypeService.change();
+        changeWalletTypeService.change();
       };
 
       function changeTypeOfPayment(model) {

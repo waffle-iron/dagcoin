@@ -6,6 +6,8 @@ module.exports = (config) => {
     files: [
       'bower_components/angular/angular.js', // angular
       'bower_components/angular-mocks/angular-mocks.js', // angular mocks
+      'bower_components/raven-js/dist/raven.js',
+      'bower_components/raven-js/dist/plugins/angular.js',
       'src/js/app.js',
       'src/js/directives/svgIcon/svgIcon.directive.js',
       'src/js/directives/svgIcon/svgIcon.spec.js',

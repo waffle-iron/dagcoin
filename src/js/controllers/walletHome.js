@@ -59,7 +59,6 @@
       this.isTestnet = constants.version.match(/t$/);
       this.testnetName = (constants.alt === '2') ? '[NEW TESTNET]' : '[TESTNET]';
       $scope.index.tab = 'walletHome'; // for some reason, current tab state is tracked in index and survives re-instatiations of walletHome.js
-
       const disablePaymentRequestListener = $rootScope.$on('paymentRequest', (event, address, amount, asset, recipientDeviceAddress) => {
         console.log(`paymentRequest event ${address}, ${amount}`);
         $rootScope.$emit('Local/SetTab', 'send');

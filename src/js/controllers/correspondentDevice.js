@@ -1,6 +1,6 @@
 angular.module('copayApp.controllers').controller('correspondentDeviceController',
   ($scope, $rootScope, $timeout, $sce, $modal, configService, profileService, animationService, isCordova, go,
-    correspondentListService, addressService, lodash, $deepStateRedirect, $state, backButton) => {
+    correspondentListService, addressService, lodash, $deepStateRedirect, $state, backButton, connectionService) => {
     const chatStorage = require('byteballcore/chat_storage.js');
     const constants = require('byteballcore/constants.js');
     console.log('correspondentDeviceController');
@@ -105,7 +105,10 @@ angular.module('copayApp.controllers').controller('correspondentDeviceController
         },
         ifError(error) {
           setOngoingProcess();
-          setError(error);
+          const isHandled = connectionService.tryHandleError(error);
+          if (!isHandled) {
+            setError(error);
+          }
         },
       });
     };

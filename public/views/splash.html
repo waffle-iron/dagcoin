@@ -65,7 +65,6 @@
         <div class="start-button large-10 medium-10 small-10 medium-centered small-centered large-centered columns">
 
           <label><span class="text-brand size-14" translate>Please choose the type of this wallet</span></label>
-          <p class="text-gray size-14 m0" translate>This choice cannot be changed later</p>
 
           <div class="m20t">
             <label class="text-gray size-14" style="vertical-align: middle" for="wallet_type_full" translate>
@@ -78,8 +77,9 @@
 							</span>
             </label>
             <p class="text-gray size-14 m0" translate>
-              The wallet will contain the most current state of the entire Dagcoin database. This option is better for
-              privacy but will consume more resources and the initial sync will take several hours.
+              The wallet will contain the most current state of the entire Byteball database.  This option is better
+              for privacy but will take  several gigabytes of storage and the initial sync will take several days.
+              CPU load will be high during sync.
             </p>
           </div>
 
@@ -95,9 +95,9 @@
 							</span>
             </label>
             <p class="text-gray size-14 m0" translate>
-              The wallet will contain minimum information relevant to you. The wallet vendor will be able to know some
-              of your balances and will be able to see which transactions are yours, but you can start using the wallet
-              immediately.
+              The wallet will contain minimum information relevant to you.  The wallet vendor will be able to know
+              some of your balances and will be able to see which transactions are yours, but you can start using the
+              wallet immediately and the wallet is fully functional.
             </p>
           </div>
 
@@ -139,15 +139,24 @@
       <div class="row" ng-show="!splash.creatingProfile">
         <div class="start-button large-8 medium-8 small-8 medium-centered small-centered large-centered columns">
 
-          <label><span class="text-gray" translate>Please name this device</span></label>
-          <div class="input-wrap m20t">
-            <input type="text" id="deviceName" type="text" name="deviceName" ng-model="splash.deviceName"
-                   class="text-gray text-center">
+          <div ng-show="!splash.bDeviceNameSet">
+            <label><span class="text-gray" translate>Please name this device</span></label>
+            <div class="input-wrap m20t">
+              <input type="text" id="deviceName" type="text" name="deviceName" ng-model="splash.deviceName" class="text-gray text-center">
+            </div>
+
+            <button ng-click="splash.saveDeviceName()" class="btn btn_red-full m20t" ng-disabled="!splash.deviceName" translate>
+              CONTINUE
+            </button>
           </div>
 
-          <button ng-click="splash.create()" class="btn btn_red-full m20t" ng-disabled="!splash.deviceName" translate>
-            GET STARTED
-          </button>
+          <div ng-show="splash.bDeviceNameSet">
+            <p class="text-gray size-14 m0 text-gray m20b" translate>Your wallet will be created on this device, keep it safe.  See your backup options in the Settings menu.</p>
+            <p class="text-gray size-14 m0 text-gray m20b" translate>Also in the Settings menu, you will find security options such as setting a password.</p>
+            <button ng-click="splash.create()" class="btn btn_red-full" translate>
+              GET STARTED
+            </button>
+          </div>
           <!--
           <p class="text-gray m5b size-12" translate>Already have a wallet?</p>
           <button  ng-click="splash.create(true)" class="button round outline dark-gray tiny" ng-disabled="!splash.deviceName" translate>Import backup </button>

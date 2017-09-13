@@ -72,7 +72,7 @@
     }
     #recording-drop {
     	max-width: 200px;
-    	left: 140px;
+    	left: 140px !important;
     	padding: 15px;
     }
     .message-log{
@@ -292,19 +292,20 @@ Chat bubble CSS credits http://codepen.io/samuelkraft/pen/Farhl
       </div>
         
         <form name="chatForm" class="send-form columns" no-validate ng-mousemove="newMsgCounterEnabled ?'': newMessagesCount[correspondent.device_address] = 0">
-          <div class="text-warning size-12 m10b" ng-show="error">{{error|translate}}</div>
+          <div class="text-warning size-12 m10b" ng-show="error && !index.isOffline">{{error|translate}}</div>
+          <div class="text-warning size-12 m10b" ng-show="index.isOffline">{{'Application in Offline mode'|translate}}</div>
            <button
           	class="chatbutton left"
-                     dropdown-toggle="#drop" data-options="align:top"><i class="size-18 icon-dots-three-horizontal"></i></button>
+                     dropdown-toggle="#drop" ng-disabled="index.isOffline" data-options="align:top"><i class="size-18 icon-dots-three-horizontal"></i></button>
 
             <ul id="drop" class="f-dropdown drop-top" data-dropdown-content >
 			  <li><a ng-click="insertMyAddress()" translate>Insert my address</a></li>
 			  <li><a ng-click="requestPayment()" translate>Request payment</a></li>
 			</ul>
-          <textarea rows="3" id="message" name="message" ng-model="message" autofocus required ng-enter="send()" class="textinput" placeholder="Text message to {{correspondent.name}}"></textarea>
+          <textarea rows="3" id="message" ng-disabled="index.isOffline" name="message" ng-model="message" autofocus required ng-enter="send()" class="textinput" placeholder="Text message to {{correspondent.name}}"></textarea>
           <button type="submit" 
           	class="chatbutton right"
-                     ng-disabled="!chatForm.$valid"
+                     ng-disabled="!chatForm.$valid || index.isOffline"
                      ng-style="{'background-color':profileService.focusedClient.backgroundColor}" 
                      ng-click="send()"><i class="size-18 icon-paperplane"></i></button>
           <!--<div class="row">

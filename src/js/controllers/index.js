@@ -1,4 +1,5 @@
-/* eslint-disable no-unused-vars,no-mixed-operators,no-use-before-define,new-cap,no-nested-ternary,no-shadow,no-plusplus,consistent-return,import/no-extraneous-dependencies,import/no-unresolved */
+/* eslint-disable no-unused-vars,no-mixed-operators,no-use-before-define,new-cap,
+no-nested-ternary,no-shadow,no-plusplus,consistent-return,import/no-extraneous-dependencies,import/no-unresolved, no-undef */
 (function () {
   'use strict';
 
@@ -36,8 +37,10 @@
       backButton,
       faucetService,
       chooseFeeTypeService,
+      changeWalletTypeService,
       sharedService,
-      autoRefreshClientService) {
+      autoRefreshClientService,
+      connectionService) {
       const async = require('async');
       const constants = require('byteballcore/constants.js');
       const mutex = require('byteballcore/mutex.js');
@@ -59,7 +62,8 @@
       self.updatingTxHistory = true;
       self.bSwipeSuspended = false;
       self.$state = $state;
-      self.usePushNotifications = isCordova && !isMobile.Windows() && isMobile.Android();
+      // self.usePushNotifications = isCordova && !isMobile.Windows() && isMobile.Android();
+      self.usePushNotifications = false;
       /*
        console.log("process", process.env);
        var os = require('os');
@@ -69,6 +73,11 @@
        console.log("hostname="+os.hostname());
        //console.log(os.userInfo());
        */
+
+      connectionService.init();
+      $rootScope.$on('connection:state-changed', (ev, isOnline) => {
+        self.isOffline = !isOnline;
+      });
 
       function updatePublicKeyRing(walletClient, onDone) {
         const walletDefinedByKeys = require('byteballcore/wallet_defined_by_keys.js');
@@ -94,28 +103,6 @@
         });
       }
 
-      function sendBugReport(errorMessage, errorObject) {
-        const conf = require('byteballcore/conf.js');
-        const network = require('byteballcore/network.js');
-        const bugSinkUrl = conf.WS_PROTOCOL + (conf.bug_sink_url || configService.getSync().hub);
-        network.findOutboundPeerOrConnect(bugSinkUrl, (err, ws) => {
-          if (err) {
-            return;
-          }
-          breadcrumbs.add('bugreport');
-          let description = errorObject.stack || JSON.stringify(errorObject, null, '\t');
-          if (errorObject.bIgnore) {
-            description += '\n(ignored)';
-          }
-          description += `\n\nBreadcrumbs:\n${breadcrumbs.get().join('\n')}\n\n`;
-          description += `UA: ${navigator.userAgent}\n`;
-          description += `Program: ${conf.program} ${conf.program_version}\n`;
-          network.sendJustsaying(ws, 'bugreport', { message: errorMessage, exception: description });
-        });
-      }
-
-      self.sendBugReport = sendBugReport;
-
       if (isCordova && constants.version === '1.0') {
         const db = require('byteballcore/db.js');
         db.query('SELECT 1 FROM units WHERE version!=? LIMIT 1', [constants.version], (rows) => {
@@ -133,11 +120,12 @@
 
       eventBus.on('nonfatal_error', (errorMessage, errorObject) => {
         console.log('nonfatal error stack', errorObject.stack);
+        Raven.captureException(`nonfatal error stack ${errorMessage}`);
         errorObject.bIgnore = true;
-        sendBugReport(errorMessage, errorObject);
       });
 
       eventBus.on('uncaught_error', (errorMessage, errorObject) => {
+        Raven.captureException(errorMessage);
         if (errorMessage.indexOf('ECONNREFUSED') >= 0 || errorMessage.indexOf('host is unreachable') >= 0) {
           $rootScope.$emit('Local/ShowAlert', 'Error connecting to TOR', 'fi-alert', () => {
             go.path('preferencesTor');
@@ -148,9 +136,9 @@
           // TOR error after wakeup from sleep
           return;
         }
-        console.log('stack', errorObject.stack);
-        sendBugReport(errorMessage, errorObject);
-        if (errorObject && errorObject.bIgnore) {
+
+        const handled = changeWalletTypeService.tryHandleError(errorObject);
+        if (errorObject && (errorObject.bIgnore || handled)) {
           return;
         }
         self.showErrorPopup(errorMessage, () => {
@@ -169,6 +157,7 @@
       eventBus.on('catching_up_started', () => {
         self.setOngoingProcess('Syncing', true);
         self.syncProgress = '0% of new units';
+        fundingNodeService.pause();
       });
       eventBus.on('catchup_balls_left', (countLeft) => {
         self.setOngoingProcess('Syncing', true);
@@ -185,6 +174,7 @@
         catchupBallsAtStart = -1;
         self.setOngoingProcess('Syncing', false);
         self.syncProgress = '';
+        fundingNodeService.unpause();
       });
       eventBus.on('refresh_light_started', () => {
         console.log('refresh_light_started');
