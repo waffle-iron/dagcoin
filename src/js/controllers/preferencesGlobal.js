@@ -3,7 +3,7 @@
 
   angular.module('copayApp.controllers').controller('preferencesGlobalController',
     function ($scope, $q, $rootScope, $timeout, $log, configService, uxLanguage, pushNotificationsService, profileService,
-      fundingExchangeProviderService, $modal, animationService, chooseFeeTypeService, changeWalletTypeTypeService) {
+      fundingExchangeProviderService, $modal, animationService, chooseFeeTypeService, changeWalletTypeService) {
       const conf = require('byteballcore/conf.js');
       const self = this;
       self.fundingNodeSettings = {};
