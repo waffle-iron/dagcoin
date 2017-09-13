@@ -29,7 +29,7 @@ describe('svgIcon directive', () => {
 
   it('Element must contain a class', () => {
     $httpBackend.flush();
-    expect(element.hasClass(`icon-${svgName}`)).toBe(true);
+    expect(element.hasClass(`svg-icon-${svgName}`)).toBe(true);
   });
 
   it('Element should contain svg', () => {

@@ -1,6 +1,8 @@
 $main_color: #d51f26;
 //$main_color: #3296dc;
 
+$red: #e51e25;
+
 $nav_bar_height: 50px;
 
 
@@ -10,8 +12,18 @@ $nav_bar_height: 50px;
 }
 
 .transition{
-  transition: all 500ms cubic-bezier(0.19, 1, 0.22, 1);
-  transition-timing-function: cubic-bezier(0.19, 1, 0.22, 1);
+  transition: all 500ms cubic-bezier(0.19, 1, 0.22, 1) !important;
+  transition-timing-function: cubic-bezier(0.19, 1, 0.22, 1) !important;
+}
+
+section{
+  position: absolute !important;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  opacity: 1 !important;
+  background-color: #fafafa;
 }
 
 @font-face {

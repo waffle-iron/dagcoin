@@ -1,0 +1,84 @@
+@import "../../../css/variables";
+
+.intro_content {
+  top: 0;
+  background: #f9f9f9;
+
+  .intro_content_body {
+    max-width: 350px;
+    width: 100%;
+    margin: 30px auto;
+  }
+
+  .icons_states_swiper_info {
+    width: 300px;
+    margin: 0 auto;
+
+    .svg-icon-Dagcoin_logo{
+      svg{
+        height: 20px;
+        width: 105px;
+        position: relative;
+        top: -3px;
+        margin-right: 5px;
+      }
+    }
+  }
+
+  .icons_states_swiper {
+    text-align: center;
+    margin-bottom: 40px;
+
+    h3 {
+      font-weight: 400;
+      font-size: 1.6em;
+      color: #333;
+      margin: 0;
+      padding: 0;
+    }
+
+    p {
+      color: #888;
+      line-height: 1.3;
+      margin: 10px 0;
+      font-size: 1em;
+    }
+
+    .state_icon {
+      margin-bottom: 20px;
+    }
+
+    .swiper-slide {
+      padding: 40px 0;
+    }
+
+    .swiper-pagination-bullet {
+      @extend .transition;
+      border-radius: 4px;
+
+      &.swiper-pagination-bullet-active {
+        width: 16px;
+        background: $main_color;
+      }
+    }
+  }
+
+  .swiper-slide{
+    .state_icon {
+      svg-icon {
+        @extend .transition;
+        transform: translate3d(0, -40px, 0);
+        opacity: 0;
+      }
+    }
+  }
+
+  .swiper-slide-active {
+    .state_icon {
+      svg-icon {
+        transform: translate3d(0, 0, 0);
+        opacity: 1;
+      }
+    }
+  }
+}

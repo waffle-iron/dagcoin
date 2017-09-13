@@ -16,7 +16,11 @@ const modules = [
   'copayApp.directives',
   'copayApp.addons',
   'ct.ui.router.extras',
-  'ngRaven'
+  'ngRaven',
+  'ngDialog',
+  'ngAnimate',
+  'swipe',
+  'ksSwiper'
 ];
 
 const copayApp = angular.module('copayApp', modules);

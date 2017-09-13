@@ -1,10 +1,4 @@
-
-<div 
-  class="topbar-container" 
-  ng-include="'views/includes/topbar.html'"
-  ng-init="titleSection='Preferences'; closeToHome = true">
-</div>
-
+<dag-nav-bar title="Wallet Preferences" go-back invert></dag-nav-bar>
 
 <div class="content preferences" ng-controller="preferencesController as preferences" ng-init="preferences.init()">
 
