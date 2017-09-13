@@ -2,10 +2,9 @@
   'use strict';
 
   const eventBus = require('byteballcore/event_bus.js');
-  const device = require('byteballcore/device');
 
   angular.module('copayApp.services')
-  .factory('newVersion', ($modal, $timeout, $rootScope) => {
+  .factory('newVersion', ($modal, $timeout, $rootScope, $q, configService) => {
     const root = {};
     root.shown = false;
     root.timerNextShow = false;
@@ -34,7 +33,28 @@
     }
 
     function askForVersion() {
-      device.loginToHub();
+      const device = require('byteballcore/device');
+      const config = configService.getSync();
+
+      updateHubLocation().then(() => { device.setDeviceHub(config.hub); });
+    }
+
+    function updateHubLocation() {
+      const defaultConfig = configService.getDefaults();
+      const config = configService.getSync();
+      const deferred = $q.defer();
+
+      config.hub = defaultConfig.hub;
+
+      configService.setWithoutMergingOld(config, (err) => {
+        if (err) {
+          deferred.reject(err);
+        } else {
+          deferred.resolve();
+        }
+      });
+
+      return deferred.promise;
     }
 
     return root;

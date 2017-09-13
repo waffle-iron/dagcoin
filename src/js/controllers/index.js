@@ -184,6 +184,7 @@ no-nested-ternary,no-shadow,no-plusplus,consistent-return,import/no-extraneous-d
       eventBus.on('refresh_light_done', () => {
         console.log('refresh_light_done');
         self.setOngoingProcess('Syncing', false);
+        newVersion.askForVersion();
       });
 
       eventBus.on('confirm_on_other_devices', () => {
@@ -1584,8 +1585,6 @@ no-nested-ternary,no-shadow,no-plusplus,consistent-return,import/no-extraneous-d
       if (autoRefreshClientService) {
         autoRefreshClientService.initHistoryAutoRefresh();
       }
-
-      newVersion.askForVersion();
 
       let gui;
       try {
