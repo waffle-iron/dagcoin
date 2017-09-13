@@ -142,7 +142,7 @@
       self.changeWalletType = function () {
         if (self.isLight) {
           const ModalInstanceCtrl = function ($scopeModal, $modalInstance, $sce) {
-            $scopeModal.title =  $sce.trustAsHtml(`
+            $scopeModal.title = $sce.trustAsHtml(`
             The wallet will contain the most current state of the entire Dagcoin database. 
             This option is better for privacy but will take several gigabytes of storage and the initial sync will take several days. 
             CPU load will be high during sync.`);
