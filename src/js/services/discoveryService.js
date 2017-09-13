@@ -9,12 +9,17 @@
       const db = require('byteballcore/db.js');
 
       const self = {};
-      const code = 'ApwhbsSyD7cF22UWxlZyH53y1vLpjsPk5gu4AW7AIdq0@byteball.org/bb-test#0000';
 
-      const discoveryServiceAddresses = [
-        '03BQAPTUC75VFZYA2KRX5GL237YEPXJPI', // testnet discovery-service
-        '0ZLO3332VBI2ARKSNES4AU6HT6ET7LLDF' // local discovery-service
-      ];
+      // Testnet
+      // const code = 'ApwhbsSyD7cF22UWxlZyH53y1vLpjsPk5gu4AW7AIdq0@byteball.org/bb-test#0000';
+
+      // Yary's public testnet server
+      const code = 'AhHZrVJAABB2fVTbO2CNZjvXjUi0QwaazL1uy5OMbn5O@byteball.org/bb-test#0000';
+
+      // Local to Yary's machine
+      // const code = 'A8EImXA5RtFDBstX3u1CzcVmcKm8jmBBYlMm93FAHQ0z@byteball.org/bb-test#0000';
+
+      const discoveryServiceAddresses = [];
 
       const messages = {
         startingTheBusiness: 'STARTING_THE_BUSINESS',
@@ -64,10 +69,13 @@
        * Ensures the discovery service is connected and responsive.
        */
       function makeSureDiscoveryServiceIsConnected() {
-        console.log('METHOD makeSureDiscoveryServiceIsConnected CALLED');
-
-        return checkOrPairDevice(code).then((correspondent) => {
+        return checkOrPairDevice(code)
+        .then((correspondent) => {
           const discoveryServiceDeviceAddress = correspondent.device_address;
+
+          if (!discoveryServiceAddresses.includes(discoveryServiceDeviceAddress)) {
+            discoveryServiceAddresses.push(discoveryServiceDeviceAddress);
+          }
 
           if (discoveryServiceAvailabilityCheckingPromise !== null) {
             console.log('ALREADY WAITING FOR THE DISCOVERY SERVICE TO REPLY');
@@ -204,6 +212,7 @@
         const promise = new Promise((resolve) => {
           device.addUnconfirmedCorrespondent(pubkey, hub, 'New', (deviceAddress) => {
             console.log(`PAIRING WITH ${deviceAddress} ... ADD UNCONFIRMED CORRESPONDENT`);
+            discoveryServiceAddresses.push(deviceAddress);
             resolve(deviceAddress);
           });
         }).then((deviceAddress) => {
@@ -329,7 +338,7 @@
             const promise = new Promise((resolve, reject) => {
               const message = {
                 protocol: 'dagcoin',
-                title: 'funds-exchange-message',
+                title: `request.${messageType}`,
                 messageType,
                 messageBody
               };
@@ -392,10 +401,6 @@
         userConfig.dagcoinDestination = dagcoinDestination;
 
         return updateConfig(userConfig);
-      }
-
-      function createNewSharedAddresListener(template, signers, callback) {
-
       }
 
       function listenToCreateNewSharedAddress(deviceAddress) {

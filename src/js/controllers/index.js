@@ -29,7 +29,8 @@
       addressbookService,
       notification,
       animationService,
-      fundingNodeService,
+      fundingExchangeProviderService,
+      fundingExchangeClientService,
       $modal,
       bwcService,
       backButton,
@@ -1603,24 +1604,24 @@
       if (gui) { // nwjs
         const win = gui.Window.get();
         win.on('close', function () {
-          fundingNodeService.deactivate()
+          fundingExchangeProviderService.deactivate()
             .then(() => {
               this.close(true);
             });
         });
         win.on('closed', function () {
-          fundingNodeService.deactivate()
+          fundingExchangeProviderService.deactivate()
             .then(() => {
               this.close(true);
             });
         });
       } else if (window.cordova) {
         document.addEventListener('resume', () => {
-          fundingNodeService.init()
+          fundingExchangeProviderService.init()
             .then(() => { });
         }, false);
         document.addEventListener('pause', () => {
-          fundingNodeService.deactivate()
+          fundingExchangeProviderService.deactivate()
             .then(() => { });
         }, false);
       }

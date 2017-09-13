@@ -3,7 +3,7 @@
   'use strict';
 
   angular.module('copayApp.services')
-    .factory('fundingNodeService', ($q, $rootScope, discoveryService, fileSystemService, configService) => {
+    .factory('fundingExchangeProviderService', ($q, $rootScope, discoveryService, fileSystemService, configService) => {
       const self = {};
 
       const settings = {
@@ -71,7 +71,7 @@
 
         messageIntervalTimeout = conf.fundingNodeMessageInterval || messageIntervalTimeout;
 
-        discoveryService.sendMessage(discoveryService.messages.listTraders).then(() => { });
+        // discoveryService.sendMessage(discoveryService.messages.listTraders).then(() => { });
 
         return self.canEnable().then(() => {
           self.update(conf.fundingNode || false);
