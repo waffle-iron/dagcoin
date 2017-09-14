@@ -1,8 +1,4 @@
-<div 
-  class="topbar-container" 
-  ng-include="'views/includes/topbar.html'"
-  ng-init="titleSection='About Dagcoin'; goBackToState = 'preferencesGlobal'">
-</div>
+<dag-nav-bar title="About Dagcoin" go-back invert></dag-nav-bar>
 
 <div class="content preferences" ng-controller="preferencesAbout as about">
     <h4  translate>Release Information</h4>
