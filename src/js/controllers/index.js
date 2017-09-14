@@ -598,11 +598,11 @@ no-nested-ternary,no-shadow,no-plusplus,consistent-return,import/no-extraneous-d
         title: gettext('Send'),
         icon: 'icon-send',
         link: 'send',
-      }/* , {
+      }, {
         title: gettext('History'),
         icon: 'icon-history',
         link: 'history',
-      } */];
+      }];
 
       self.getSvgSrc = function (id) {
         return `img/svg/symbol-defs.svg#${id}`;
