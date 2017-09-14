@@ -3,12 +3,15 @@
 
   angular.module('copayApp.controllers').controller('preferencesGlobalController',
     function ($scope, $q, $rootScope, $timeout, $log, configService, uxLanguage, pushNotificationsService, profileService,
-      fundingExchangeProviderService, $modal, animationService, chooseFeeTypeService, changeWalletTypeService) {
+      fundingExchangeProviderService, $modal, animationService, chooseFeeTypeService, changeWalletTypeService, sharedService) {
       const conf = require('byteballcore/conf.js');
       const self = this;
       self.fundingNodeSettings = {};
       self.isLight = conf.bLight;
       self.canChangeWalletType = changeWalletTypeService.canChange();
+      self.hasBalance = sharedService.hasBalance('stable');
+      self.hasBytes = sharedService.hasBytes('stable');
+      self.hasDags = sharedService.hasDags('stable');
 
       $scope.encrypt = !!profileService.profile.xPrivKeyEncrypted;
 
@@ -136,7 +139,6 @@
         self.typeOfPaymentFee = res;
       });
 
-      self.enableHubOption = chooseFeeTypeService.getCanBeSwitchedToHub();
       self.changeTypeOfPayment = changeTypeOfPayment;
 
       self.changeWalletType = function () {
@@ -144,7 +146,7 @@
       };
 
       function changeTypeOfPayment(model) {
-        if (model === 'hub' && !self.enableHubOption) {
+        if (model === 'hub' && !self.hasDags) {
           self.typeOfPaymentFee = 'bytes';
         } else {
           self.typeOfPaymentFee = model;
