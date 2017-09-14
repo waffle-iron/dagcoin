@@ -142,7 +142,7 @@
 						<div class="transactions__table ">
 							<table>
 								<tbody>
-								<tr ng-repeat="btx in index.txHistory" class="row ">
+								<tr ng-repeat="btx in index.txHistory | limitTo: 3" class="row ">
 									<td><span class="details-price"
 											  ng-class="btx.action == 'received'? 'success':'danger'">{{btx.amountStr}}</span>
 										<div class="details-wrap"><span class="details-info">My Account</span>
