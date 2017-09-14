@@ -1,14 +1,13 @@
-<dag-nav-bar title="Settings" invert></dag-nav-bar>
+<dag-nav-bar title="Global preferences" go-back invert></dag-nav-bar>
+
 
 <div class="content preferences" ng-controller="preferencesGlobalController as prefGlobal" ng-init="prefGlobal.init()">
-  <h4></h4>
-  <ul class="no-bullet m0 ">
-    <li ng-click="$root.go('preferencesDeviceName')">
-      <div class="right text-gray wrappable-menu-item">
-        {{prefGlobal.deviceName}}
-        <i class="icon-arrow-right3 size-24 arrow-right"></i>
-      </div>
+  <h4 translate>GENERAL</h4>
+  <ul>
+    <li dag-right-icon="chevron-thin-right" ui-sref="preferencesDeviceName">
       <div translate>Device name</div>
+      {{prefGlobal.deviceName}}
+      <i class="icon-arrow-right3 size-24 arrow-right"></i>
     </li>
 
     <!--<li ng-click="$root.go('preferencesLanguage')">
@@ -124,63 +123,50 @@
   <!--</div>-->
 
   <h4 translate>Device address</h4>
-  <ul class="no-bullet m0 enable_text_select">
-    <li>
+  <ul>
+    <li dag-right-icon="chevron-thin-right">
       <div>{{prefGlobal.myDeviceAddress}}</div>
     </li>
   </ul>
 
   <h4 translate>Spending Restrictions</h4>
-  <ul class="no-bullet m0">
-    <li>
-      <switch id="network-name" name="encrypt" ng-model="encrypt" class="green right"></switch>
+  <ul>
+    <li dag-right-icon="chevron-thin-right">
       <div translate>Request Password</div>
+      <switch id="network-name" name="encrypt" ng-model="encrypt" class="green right"></switch>
     </li>
   </ul>
 
-  <h4></h4>
+  <h4>BACKUP</h4>
 
-  <ul class="no-bullet m0">
-    <li ng-click="$root.go('backup')" ng-hide="index.isPrivKeyExternal">
+  <ul>
+    <li ui-sref="backup" ng-hide="index.isPrivKeyExternal">
+      <i class="icon-arrow-right3 size-24 text-gray"></i>
+      <div translate>Backup wallet seed</div>
       <div class="right text-gray">
         <span class="text-warning" ng-show="index.needsBackup">
           <i class="fi-alert"></i><span translate>Still not done</span>
         </span>
-        <i class="icon-arrow-right3 size-24 text-gray"></i>
       </div>
-      <div translate>Backup wallet seed</div>
     </li>
-  </ul>
 
-  <ul class="no-bullet m0">
-    <li ng-click="$root.go('recoveryFromSeed')" ng-hide="index.isPrivKeyExternal">
-      <div class="right text-gray">
-        <i class="icon-arrow-right3 size-24 text-gray"></i>
-      </div>
+    <li ui-sref="recoveryFromSeed" ng-hide="index.isPrivKeyExternal">
+      <i class="icon-arrow-right3 size-24 text-gray"></i>
       <div translate>Recovery from seed</div>
     </li>
-  </ul>
 
-  <ul class="no-bullet m0">
-    <li ng-click="$root.go('export')" ng-hide="index.isPrivKeyExternal">
-      <div class="right text-gray">
-        <i class="icon-arrow-right3 size-24 text-gray"></i>
-      </div>
+    <li ui-sref="export" ng-hide="index.isPrivKeyExternal">
+      <i class="icon-arrow-right3 size-24 text-gray"></i>
       <div translate>Full backup</div>
     </li>
-  </ul>
-
-  <ul class="no-bullet m0">
-    <li ng-click="$root.go('import')" ng-hide="index.isPrivKeyExternal">
-      <div class="right text-gray">
-        <i class="icon-arrow-right3 size-24 text-gray"></i>
-      </div>
+    <li ui-sref="import" ng-hide="index.isPrivKeyExternal">
+      <i class="icon-arrow-right3 size-24 text-gray"></i>
       <div translate>Restore from full backup</div>
     </li>
   </ul>
 
 
-  <h4></h4>
+  <h4>ABOUT</h4>
   <ul class="no-bullet m0">
     <li ng-click="$root.go('about')">
       <i class="icon-arrow-right3 size-24 right text-gray"></i>
