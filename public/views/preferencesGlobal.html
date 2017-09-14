@@ -97,14 +97,14 @@
     </li>
   </ul>
 
-  <h4 translate>Choose how to pay fee</h4>
-  <ul class="no-bullet m0 radios">
-    <li>
+  <h4 ng-if="prefGlobal.hasBalance" translate>Choose how to pay fee</h4>
+  <ul ng-if="prefGlobal.hasBalance" class="no-bullet m0 radios">
+    <li ng-if="prefGlobal.hasBytes">
       <span>Use own bytes</span>
       <input type="radio" ng-model="prefGlobal.typeOfPaymentFee" value="bytes"
              ng-change="prefGlobal.changeTypeOfPayment(prefGlobal.typeOfPaymentFee)">
     </li>
-    <li>
+    <li ng-if="prefGlobal.hasDags">
       <span>Subscribe to a funding hub</span>
       <input type="radio" ng-model="prefGlobal.typeOfPaymentFee" value="hub"
              ng-change="prefGlobal.changeTypeOfPayment(prefGlobal.typeOfPaymentFee)">
