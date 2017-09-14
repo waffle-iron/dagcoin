@@ -5,13 +5,12 @@
     .module('copayApp.services')
     .factory('chooseFeeTypeService', chooseFeeTypeService);
 
-  chooseFeeTypeService.$inject = ['$modal', 'go', 'animationService', 'fundingNodeService', '$rootScope', '$q', 'fileSystemService', 'configService'];
+  chooseFeeTypeService.$inject = ['$modal', 'go', 'animationService', 'fundingExchangeProviderService', '$rootScope', '$q', 'fileSystemService', 'configService'];
 
   /* @ngInject */
-  function chooseFeeTypeService($modal, go, animationService, fundingNodeService, $rootScope, $q, fileSystemService, configService) {
+  function chooseFeeTypeService($modal, go, animationService, fundingExchangeProviderService, $rootScope, $q, fileSystemService, configService) {
     const service = {
       getFeeDefaultMethod,
-      getCanBeSwitchedToHub,
       setUpFeeDefaultMethod,
       openNotPossibleToExchangeModal
     };
@@ -40,12 +39,6 @@
     });
 
     return service;
-
-    function getCanBeSwitchedToHub() {
-      const constants = require('byteballcore/constants.js');
-
-      return (currentBalance && currentBalance[constants.DAGCOIN_ASSET] && currentBalance[constants.DAGCOIN_ASSET].stable > 0);
-    }
 
     function getFeeDefaultMethod() {
       const deferred = $q.defer();

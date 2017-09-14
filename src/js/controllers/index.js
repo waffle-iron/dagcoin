@@ -30,7 +30,8 @@ no-nested-ternary,no-shadow,no-plusplus,consistent-return,import/no-extraneous-d
       addressbookService,
       notification,
       animationService,
-      fundingNodeService,
+      fundingExchangeProviderService,
+      fundingExchangeClientService,
       $modal,
       bwcService,
       backButton,
@@ -156,7 +157,7 @@ no-nested-ternary,no-shadow,no-plusplus,consistent-return,import/no-extraneous-d
       eventBus.on('catching_up_started', () => {
         self.setOngoingProcess('Syncing', true);
         self.syncProgress = '0% of new units';
-        fundingNodeService.pause();
+        fundingExchangeProviderService.pause();
       });
       eventBus.on('catchup_balls_left', (countLeft) => {
         self.setOngoingProcess('Syncing', true);
@@ -173,7 +174,7 @@ no-nested-ternary,no-shadow,no-plusplus,consistent-return,import/no-extraneous-d
         catchupBallsAtStart = -1;
         self.setOngoingProcess('Syncing', false);
         self.syncProgress = '';
-        fundingNodeService.unpause();
+        fundingExchangeProviderService.unpause();
       });
       eventBus.on('refresh_light_started', () => {
         console.log('refresh_light_started');
@@ -597,11 +598,11 @@ no-nested-ternary,no-shadow,no-plusplus,consistent-return,import/no-extraneous-d
         title: gettext('Send'),
         icon: 'icon-send',
         link: 'send',
-      }/* , {
+      }, {
         title: gettext('History'),
         icon: 'icon-history',
         link: 'history',
-      } */];
+      }];
 
       self.getSvgSrc = function (id) {
         return `img/svg/symbol-defs.svg#${id}`;
@@ -917,9 +918,9 @@ no-nested-ternary,no-shadow,no-plusplus,consistent-return,import/no-extraneous-d
       self.updateColor = function () {
         const config = configService.getSync();
         config.colorFor = config.colorFor || {};
-        self.backgroundColor = config.colorFor[self.walletId] || '#4A90E2';
+        self.backgroundColor = '#d51f26'; // config.colorFor[self.walletId] || '#4A90E2';
         const fc = profileService.focusedClient;
-        fc.backgroundColor = self.backgroundColor;
+        fc.backgroundColor = '#d51f26'; // self.backgroundColor;
       };
 
       self.setBalance = function (assocBalances, assocSharedBalances) {
@@ -1593,24 +1594,24 @@ no-nested-ternary,no-shadow,no-plusplus,consistent-return,import/no-extraneous-d
       if (gui) { // nwjs
         const win = gui.Window.get();
         win.on('close', function () {
-          fundingNodeService.deactivate()
+          fundingExchangeProviderService.deactivate()
             .then(() => {
               this.close(true);
             });
         });
         win.on('closed', function () {
-          fundingNodeService.deactivate()
+          fundingExchangeProviderService.deactivate()
             .then(() => {
               this.close(true);
             });
         });
       } else if (window.cordova) {
         document.addEventListener('resume', () => {
-          fundingNodeService.init()
+          fundingExchangeProviderService.init()
             .then(() => { });
         }, false);
         document.addEventListener('pause', () => {
-          fundingNodeService.deactivate()
+          fundingExchangeProviderService.deactivate()
             .then(() => { });
         }, false);
       }
