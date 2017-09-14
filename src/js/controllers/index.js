@@ -157,7 +157,7 @@ no-nested-ternary,no-shadow,no-plusplus,consistent-return,import/no-extraneous-d
       eventBus.on('catching_up_started', () => {
         self.setOngoingProcess('Syncing', true);
         self.syncProgress = '0% of new units';
-        fundingNodeService.pause();
+        fundingExchangeProviderService.pause();
       });
       eventBus.on('catchup_balls_left', (countLeft) => {
         self.setOngoingProcess('Syncing', true);
@@ -174,7 +174,7 @@ no-nested-ternary,no-shadow,no-plusplus,consistent-return,import/no-extraneous-d
         catchupBallsAtStart = -1;
         self.setOngoingProcess('Syncing', false);
         self.syncProgress = '';
-        fundingNodeService.unpause();
+        fundingExchangeProviderService.unpause();
       });
       eventBus.on('refresh_light_started', () => {
         console.log('refresh_light_started');
