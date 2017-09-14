@@ -2772,3 +2772,9 @@ input {
 .btns-wrapper button:hover {
   background-color: #008cba;
 }
+
+section{
+  &.right-small {
+    left: initial;
+  }
+}
