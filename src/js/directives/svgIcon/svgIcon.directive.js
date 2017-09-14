@@ -1,5 +1,3 @@
-/* global angular */
-
 (() => {
   'use strict';
 
@@ -18,14 +16,15 @@
       restrict: 'E',
       scope: {
         name: '@',
+        title: '@'
       },
       link: ($scope, element) => {
         /* istanbul ignore next */
-        if (!$scope.name) {
+        if (!$scope.name && !$scope.title) {
           return false;
         }
 
-        const svgFile = `${$scope.name}.svg`;
+        const svgFile = `${$scope.name || $scope.title}.svg`;
 
         function loadTemplate() {
           const templateUrl = $sce.getTrustedResourceUrl(`/public/css/svg/${svgFile}`);
@@ -38,7 +37,7 @@
 
         function renderSVG() {
           if ($templateCache.get(svgFile)) {
-            element.html($templateCache.get(svgFile)).addClass(`icon-${$scope.name}`);
+            element.html($templateCache.get(svgFile)).addClass(`svg-icon-${$scope.name || $scope.title}`);
           } else {
             loadTemplate();
           }

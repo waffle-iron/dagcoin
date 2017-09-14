@@ -1,0 +1,40 @@
+<div class="intro_content content" ng-controller="IntroController">
+
+    <div class="intro_content_body">
+        <div class="icons_states_swiper">
+            <ks-swiper-container pagination-is-active="true"
+                                 swiper="swiper"
+                                 on-ready="onReadySwiper(swiper)"
+                                 override-parameters="{'slidesPerView': 1, 'spaceBetween': 0, 'centeredSlides': true}">
+                <ks-swiper-slide class="swiper-slide">
+                    <dag-state-icon icon="safe"></dag-state-icon>
+                    <div class="icons_states_swiper_info">
+                        <h3><svg-icon title="Dagcoin_logo"></svg-icon> is secure.</h3>
+                        <p>This app stores your <strong>dagcoin</strong>s<br/> with cutting-edge security.</p>
+                    </div>
+                </ks-swiper-slide>
+                <ks-swiper-slide class="swiper-slide">
+                    <dag-state-icon icon="transfer"></dag-state-icon>
+                    <div class="icons_states_swiper_info">
+                        <h3><svg-icon title="Dagcoin_logo"></svg-icon> is darn fast.</h3>
+                        <p>Up to <strong>300x faster</strong><br/> than most alternative solutions!</p>
+                    </div>
+                </ks-swiper-slide>
+                <ks-swiper-slide class="swiper-slide">
+                    <dag-state-icon icon="business"></dag-state-icon>
+                    <div class="icons_states_swiper_info">
+                        <h3><svg-icon title="Dagcoin_logo"></svg-icon> is right for you.</h3>
+                        <p>We listen to our <strong>community</strong><br/> to deliver the best product on the market!</p>
+                    </div>
+                </ks-swiper-slide>
+            </ks-swiper-container>
+        </div>
+
+        <div class="intro_content_trigger">
+            <button ui-sref="disclaimer" class="btn" ng-class="{'btn_red-full': isLastSlide()}">GET STARTED</button>
+        </div>
+    </div>
+
+
+
+</div>

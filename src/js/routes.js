@@ -93,9 +93,16 @@
               templateUrl: 'views/splash.html',
             },
           },
-        });
-
-      $stateProvider
+        })
+        .state('intro', {
+          url: '/intro',
+          needProfile: false,
+          views: {
+            main: {
+              templateUrl: 'controllers/intro/intro.template.html'
+            },
+          },
+        })
         .state('translators', {
           url: '/translators',
           walletShouldBeComplete: true,
@@ -124,6 +131,30 @@
           views: {
             main: {
               templateUrl: 'views/walletHome.html',
+            },
+          },
+        })
+        .state('send', {
+          url: '/send',
+          walletShouldBeComplete: true,
+          needProfile: true,
+          deepStateRedirect: true,
+          sticky: true,
+          views: {
+            main: {
+              templateUrl: 'views/send.html',
+            },
+          },
+        })
+        .state('receive', {
+          url: '/receive',
+          walletShouldBeComplete: true,
+          needProfile: true,
+          deepStateRedirect: true,
+          sticky: true,
+          views: {
+            main: {
+              templateUrl: 'views/receive.html',
             },
           },
         })
@@ -496,7 +527,7 @@
           needProfile: false,
         });
     })
-    .run(($rootScope, $state, $stateParams, $log, uriHandler, isCordova, profileService, $timeout, nodeWebkit, uxLanguage, animationService) => {
+    .run(($rootScope, $state, $stateParams, $log, uriHandler, isCordova, profileService, $timeout, nodeWebkit, uxLanguage, animationService, backButton, go) => {
       $rootScope.$state = $state;
       $rootScope.$stateParams = $stateParams;
 
@@ -525,6 +556,10 @@
       }
 
       $rootScope.$on('$stateChangeStart', (event, toState, toParams, fromState) => {
+        $rootScope.params = toParams;
+
+        backButton.menuOpened = false;
+        go.swipe();
         if (!profileService.profile && toState.needProfile) {
           // Give us time to open / create the profile
           event.preventDefault();
@@ -534,10 +569,10 @@
             if (err) {
               if (err.message && err.message.match('NOPROFILE')) {
                 $log.debug('No profile... redirecting');
-                $state.transitionTo('splash');
+                $state.go('splash');
               } else if (err.message && err.message.match('NONAGREEDDISCLAIMER')) {
                 $log.debug('Display disclaimer... redirecting');
-                $state.transitionTo('disclaimer');
+                $state.go('intro');
               } else {
                 throw new Error(err); // TODO
               }

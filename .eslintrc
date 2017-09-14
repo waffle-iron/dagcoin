@@ -4,8 +4,10 @@ env:
   jasmine: true
 globals:
   angular: true
+  require: true
   nw: true
   cordova: true
+  TweenMax: true
   Profile: true
   LocalFileSystem: true
   FastClick: true
@@ -18,7 +20,7 @@ rules:
   no-alert: 0
   import/no-dynamic-require: 0
   strict: 0
-  comma-dangle: 0
+  indent: 0
   consistent-return: 0
   no-use-before-define:
     - error
@@ -32,3 +34,9 @@ rules:
     - ignoreComments : true
     - ignoreStrings: true
   func-names: 0
+  comma-dangle:
+    - error
+    - never
+  arrow-body-style:
+    - error
+    - always

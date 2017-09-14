@@ -1,23 +1,24 @@
-<div
-	class="topbar-container"
-	ng-include="'views/includes/topbar.html'"
-	ng-init="titleSection='Recovery'; goBackToState = 'preferencesGlobal'">
-</div>
-
+<dag-nav-bar title="Recovery" go-back invert></dag-nav-bar>
 <style>
+	.preferences{
+		background: #fff;
+		top: 0;
+	}
+
 	.preferences ul.warnings{
-		margin-left: 0px;
+		margin: 20px 0;
 		background-color: transparent;
+		text-align: center;
 	}
+
 	.preferences ul.warnings li{
-		cursor: auto !important;
-		overflow: auto;
-		white-space: normal;
+		border-bottom: none;
+		padding: 0;
 	}
+
 </style>
 
 <div class="content preferences" ng-controller="recoveryFromSeed as recFromSeed">
-	<h4></h4>
 
 	<div class="onGoingProcess" ng-show="recFromSeed.scanning">
 		<div class="onGoingProcess-content" ng-style="{'background-color':index.backgroundColor}">
@@ -46,19 +47,19 @@
 		</div>
 	</div>
 	<div ng-show="!recFromSeed.bLight">
+
+		<dag-state-icon icon="warning-1"></dag-state-icon>
+
+		<ul class="warnings color_red">
+			<li translate>This will permanently delete all your existing wallets!</li>
+			<li translate>Only single-sig wallets can be recovered.</li>
+		</ul>
+
 		<form name="settingsDeviceNameForm" class="columns" ng-submit="recFromSeed.recoveryForm()">
 			<label><span translate>Your Wallet Seed:</span></label>
 			<textarea id="inputMnemonic" ng-model="recFromSeed.inputMnemonic"></textarea>
-			<input ng-show="!recFromSeed.scanning" type="submit" class="button expand black round"
-				   value="{{'Recover'|translate}}" ng-style="{'background-color':index.backgroundColor}">
+			<button ng-show="!recFromSeed.scanning" type="submit" class="btn btn_red-full">{{'Recover'|translate}}</button>
 		</form>
-		<div class="text-alert size-12 columns">
-			<span translate>WARNINGS:</span>
-			<ul class="warnings">
-				<li translate>This will permanently delete all your existing wallets!</li>
-				<li translate>Only single-sig wallets can be recovered.</li>
-			</ul>
-		</div>
 	</div>
 
 </div>

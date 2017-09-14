@@ -1,8 +1,4 @@
-<div
-	class="topbar-container topbar-transparent"
-	ng-include="'views/includes/topbar.html'"
-	ng-init="titleSection='Backup'; goBackToState = 'preferencesGlobal'">
-</div>
+<dag-nav-bar title="Backup" go-back invert></dag-nav-bar>
 
 <div class="introduction-svg" ng-include="'views/includes/background.html'"></div>
 
@@ -77,7 +73,7 @@
               Once you have written your wallet seed down, it is recommended to delete it from this device.
             </span>
 				</div>
-				<button class="button outline m10t round dark-gray tiny" ng-click="wordsC.delete()">
+				<button class="btn btn_red-full round tiny" ng-click="wordsC.delete()" style="width: auto !important;">
 					<i class="fi-trash"></i>
 					<span translate>
               DELETE WORDS
