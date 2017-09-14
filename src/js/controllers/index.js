@@ -918,9 +918,9 @@ no-nested-ternary,no-shadow,no-plusplus,consistent-return,import/no-extraneous-d
       self.updateColor = function () {
         const config = configService.getSync();
         config.colorFor = config.colorFor || {};
-        self.backgroundColor = config.colorFor[self.walletId] || '#4A90E2';
+        self.backgroundColor = '#d51f26'; // config.colorFor[self.walletId] || '#4A90E2';
         const fc = profileService.focusedClient;
-        fc.backgroundColor = self.backgroundColor;
+        fc.backgroundColor = '#d51f26'; // self.backgroundColor;
       };
 
       self.setBalance = function (assocBalances, assocSharedBalances) {
