@@ -296,7 +296,8 @@ Chat bubble CSS credits http://codepen.io/samuelkraft/pen/Farhl
           <div class="text-warning size-12 m10b" ng-show="index.isOffline">{{'Application in Offline mode'|translate}}</div>
            <button
           	class="chatbutton left"
-                     dropdown-toggle="#drop" ng-disabled="index.isOffline" data-options="align:top"><i class="size-18 icon-dots-three-horizontal"></i></button>
+            ng-style="{'background-color':profileService.focusedClient.backgroundColor}"
+            dropdown-toggle="#drop" ng-disabled="index.isOffline" data-options="align:top"><i class="size-18 icon-dots-three-horizontal"></i></button>
 
             <ul id="drop" class="f-dropdown drop-top" data-dropdown-content >
 			  <li><a ng-click="insertMyAddress()" translate>Insert my address</a></li>
