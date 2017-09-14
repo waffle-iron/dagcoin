@@ -89,17 +89,17 @@ module.exports = function (grunt) {
 
     exec: {
       version: {
-        command: 'node ./util/version.js',
+        command: 'node ./util/version.js'
       },
       clear: {
-        command: 'rm -Rf bower_components node_modules',
+        command: 'rm -Rf bower_components node_modules'
       },
       osx64: {
-        command: '../byteballbuilds/build-osx.sh osx64 <%= pkg.name %>',
+        command: '../byteballbuilds/build-osx.sh osx64 <%= pkg.name %>'
       },
       osx32: {
-        command: '../byteballbuilds/build-osx.sh osx32 <%= pkg.name %>',
-      },
+        command: '../byteballbuilds/build-osx.sh osx32 <%= pkg.name %>'
+      }
     },
 
     sass: {
@@ -182,7 +182,7 @@ module.exports = function (grunt) {
           'bower_components/swiper/dist/js/swiper.min.js',
           'bower_components/angular-swiper/dist/angular-swiper.js'
         ],
-        dest: 'public/angular.js',
+        dest: 'public/angular.js'
       },
       js: {
         src: [
@@ -231,14 +231,14 @@ module.exports = function (grunt) {
     },
     uglify: {
       options: {
-        mangle: false,
+        mangle: false
       },
       prod: {
         files: {
           'public/dagcoin.js': ['public/dagcoin.js'],
-          'public/angular.js': ['public/angular.js'],
-        },
-      },
+          'public/angular.js': ['public/angular.js']
+        }
+      }
     },
     nggettext_extract: {
       pot: {
@@ -249,16 +249,16 @@ module.exports = function (grunt) {
             'public/views/**/*.html',
             'src/js/routes.js',
             'src/js/services/*.js',
-            'src/js/controllers/*.js',
-          ],
-        },
-      },
+            'src/js/controllers/*.js'
+          ]
+        }
+      }
     },
     nggettext_compile: {
       all: {
         options: {
           format: 'json',
-          module: 'copayApp',
+          module: 'copayApp'
         },
         files: [
           {
@@ -267,24 +267,24 @@ module.exports = function (grunt) {
             cwd: 'i18n/po',
             dest: 'public/languages',
             src: ['*.po'],
-            ext: '.json',
-          },
-        ],
-      },
+            ext: '.json'
+          }
+        ]
+      }
     },
     copy: {
       icons: {
         expand: true,
         flatten: true,
         src: 'bower_components/foundation-icon-fonts/foundation-icons.*',
-        dest: 'public/icons/',
+        dest: 'public/icons/'
       },
       osx: {
         expand: true,
         flatten: true,
         options: { timestamp: true, mode: true },
         src: ['webkitbuilds/build-osx.sh', 'webkitbuilds/Background.png'],
-        dest: '../byteballbuilds/',
+        dest: '../byteballbuilds/'
       },
       linux: {
         options: { timestamp: true, mode: true },
@@ -296,7 +296,7 @@ module.exports = function (grunt) {
             dest: '../byteballbuilds/DAGCOIN-TN/linux32/',
             flatten: true,
             filter: 'isFile',
-            options: { timestamp: true, mode: true },
+            options: { timestamp: true, mode: true }
           },
           {
             expand: true,
@@ -305,19 +305,19 @@ module.exports = function (grunt) {
             dest: '../byteballbuilds/DAGCOIN-TN/linux64/',
             flatten: true,
             filter: 'isFile',
-            options: { timestamp: true, mode: true },
-          },
-        ],
-      },
+            options: { timestamp: true, mode: true }
+          }
+        ]
+      }
     },
     karma: {
       unit: {
         configFile: 'test/karma.conf.js',
-        singleRun: true,
+        singleRun: true
       },
       prod: {
         configFile: 'test/karma.conf.js',
-        singleRun: false,
+        singleRun: false
       },
     },
     coveralls: {
@@ -326,8 +326,8 @@ module.exports = function (grunt) {
         coverageDir: 'coverage/report-lcov',
         dryRun: true,
         force: true,
-        recursive: false,
-      },
+        recursive: false
+      }
     },
     nwjs: {
       options: {
@@ -347,40 +347,40 @@ module.exports = function (grunt) {
             CFBundleURLName: '<%= process.env.nwjsCFBundleURLName %>',
             CFBundleURLSchemes: ['<%= process.env.nwjsCFBundleURLSchemes %>']
           }],
-          LSHasLocalizedDisplayName: 0,
+          LSHasLocalizedDisplayName: 0
           /* CFBundleIconFile: 'nw.icns',*/
-        },
+        }
       },
-      src: ['./package.json', './public/**/*', './angular-bitcore-wallet-client/**/*'],
+      src: ['./package.json', './public/**/*', './angular-bitcore-wallet-client/**/*']
     },
     compress: {
       linux32: {
         options: {
-          archive: '../byteballbuilds/dagcoin-linux32.zip',
+          archive: '../byteballbuilds/dagcoin-linux32.zip'
         },
         expand: true,
         cwd: '../byteballbuilds/DAGCOIN-TN/linux32/',
         src: ['**/*'],
-        dest: 'dagcoin-linux32/',
+        dest: 'dagcoin-linux32/'
       },
       linux64: {
         options: {
-          archive: '../byteballbuilds/dagcoin-linux64.zip',
+          archive: '../byteballbuilds/dagcoin-linux64.zip'
         },
         expand: true,
         cwd: '../byteballbuilds/DAGCOIN-TN/linux64/',
         src: ['**/*'],
-        dest: 'dagcoin-linux64/',
+        dest: 'dagcoin-linux64/'
       },
     },
     browserify: {
       dist: {
         options: {
           transform: [['babelify', { presets: ['es2015'] }]],
-          exclude: ['sqlite3', 'nw.gui', 'mysql', 'ws', 'regedit'],
+          exclude: ['sqlite3', 'nw.gui', 'mysql', 'ws', 'regedit']
         },
         src: 'public/dagcoin.js',
-        dest: 'public/dagcoin.js',
+        dest: 'public/dagcoin.js'
       },
     },
     // .deb proved to be very slow to produce and install: lintian spends a lot of time verifying a .bin file
@@ -398,10 +398,10 @@ module.exports = function (grunt) {
         options: {
           maintainer: {
             name: 'Dagcoin',
-            email: 'byteball@byteball.org',
+            email: 'byteball@byteball.org'
           },
           long_description: 'A wallet for decentralized value',
-          target_architecture: 'amd64',
+          target_architecture: 'amd64'
         },
       },
     },
@@ -409,27 +409,27 @@ module.exports = function (grunt) {
       win64: {
         options: {
           gui: false,
-          verbose: false,
+          verbose: false
         },
-        script: 'webkitbuilds/setup-win64.iss',
+        script: 'webkitbuilds/setup-win64.iss'
       },
       win32: {
         options: {
           gui: false,
-          verbose: false,
+          verbose: false
         },
-        script: 'webkitbuilds/setup-win32.iss',
+        script: 'webkitbuilds/setup-win32.iss'
       },
     },
     svgmin: {
       options: {
         plugins: [
           {
-            removeViewBox: false,
+            removeViewBox: false
           }, {
-            removeUselessStrokeAndFill: true,
+            removeUselessStrokeAndFill: true
           }, {
-            removeEmptyAttrs: true,
+            removeEmptyAttrs: true
           },
         ],
       },
@@ -438,16 +438,16 @@ module.exports = function (grunt) {
           expand: true,
           cwd: 'src/css/svg/',
           src: ['*.svg'],
-          dest: 'public/css/svg/',
-        }],
-      },
+          dest: 'public/css/svg/'
+        }]
+      }
     },
     watch: {
       options: {
         dateFormat(time) {
           grunt.log.writeln(`The watch finished in ${time}ms at ${(new Date()).toString()}`);
           grunt.log.writeln('Waiting for more changes...');
-        },
+        }
       },
       svg: {
         files: ['src/css/svg/*.svg'],
@@ -474,11 +474,11 @@ module.exports = function (grunt) {
           'src/js/routes.js',
           'src/js/services/**/*.js',
           'src/js/models/**/*.js',
-          'src/js/controllers/**/*.js',
+          'src/js/controllers/**/*.js'
         ],
-        tasks: ['concat:js'/* , 'karma:prod' */],
-      },
-    },
+        tasks: ['concat:js'/* , 'karma:prod' */]
+      }
+    }
   });
 
   grunt.loadNpmTasks('grunt-template');
