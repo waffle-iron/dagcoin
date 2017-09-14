@@ -1,10 +1,4 @@
-<div 
-  class="topbar-container" 
-  ng-include="'views/includes/topbar.html'"
-  ng-init="titleSection='Add device'; goBackToState = 'correspondentDevices'; resetState = 'correspondentDevices'; noColor = true; index.tab = 'chat'">
-</div>
-
-
+<dag-nav-bar title="Add Device" go-back invert ng-init="index.tab = 'chat'"></dag-nav-bar>
 
 <div class="content">
 <ul class="no-bullet manage size-12">

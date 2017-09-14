@@ -1,8 +1,4 @@
-<div
-        class="topbar-container"
-        ng-include="'views/includes/topbar.html'"
-        ng-init="titleSection='Create new wallet';  closeToHome = true; noColor = true">
-</div>
+<dag-nav-bar title="Create New Wallet" invert></dag-nav-bar>
 
 <div class="content p20v" ng-controller="createController as create" ng-init="create.setTotalCosigners(1)">
 

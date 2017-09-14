@@ -1,10 +1,6 @@
 <div ng-controller="correspondentDevicesController">
 
-<div class="topbar-container"
-  ng-include="'views/includes/topbar.html'"
-  ng-init="showCamera = true"
-  ng-show="state.is('correspondentDevices')">
-</div>
+  <dag-nav-bar title="Paired Devices" invert ng-show="state.is('correspondentDevices')"></dag-nav-bar>
 
 	<div ui-view="dialog"></div>
     <div class="m20b tab-view tab-in" ng-show="state.is('correspondentDevices')" id="chat">
