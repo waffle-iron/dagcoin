@@ -3,7 +3,7 @@
 
   angular.module('copayApp.controllers').controller('preferencesGlobalController',
     function ($scope, $q, $rootScope, $timeout, $log, configService, uxLanguage, pushNotificationsService, profileService,
-      fundingNodeService, $modal, animationService, chooseFeeTypeService, changeWalletTypeService) {
+      fundingExchangeProviderService, $modal, animationService, chooseFeeTypeService, changeWalletTypeService) {
       const conf = require('byteballcore/conf.js');
       const self = this;
       self.fundingNodeSettings = {};
@@ -13,10 +13,10 @@
       $scope.encrypt = !!profileService.profile.xPrivKeyEncrypted;
 
       self.initFundingNode = () => {
-        self.fundingNode = fundingNodeService.isActivated();
-        self.fundingNodeSettings = fundingNodeService.getSettings();
+        self.fundingNode = fundingExchangeProviderService.isActivated();
+        self.fundingNodeSettings = fundingExchangeProviderService.getSettings();
 
-        fundingNodeService.canEnable().then(() => {
+        fundingExchangeProviderService.canEnable().then(() => {
           self.canEnableFundingNode = true;
         });
       };
@@ -92,9 +92,9 @@
           return;
         }
 
-        fundingNodeService.canEnable().then(() => {
-          fundingNodeService.update(newVal).then(() => {
-            self.fundingNodeSettings = fundingNodeService.getSettings();
+        fundingExchangeProviderService.canEnable().then(() => {
+          fundingExchangeProviderService.update(newVal).then(() => {
+            self.fundingNodeSettings = fundingExchangeProviderService.getSettings();
           });
         }, () => {
           self.fundingNode = false;
@@ -110,7 +110,7 @@
       }
 
       self.onFundingNodeSettingBlur = function () {
-        const oldSettings = fundingNodeService.getSettings();
+        const oldSettings = fundingExchangeProviderService.getSettings();
         const newSettings = {
           exchangeFee: getCorrectValue(oldSettings.exchangeFee, self.fundingNodeSettings.exchangeFee, true),
           totalBytes: getCorrectValue(oldSettings.totalBytes, self.fundingNodeSettings.totalBytes, false),
@@ -118,10 +118,10 @@
           maxEndUserCapacity: getCorrectValue(oldSettings.maxEndUserCapacity, self.fundingNodeSettings.maxEndUserCapacity, false)
         };
 
-        fundingNodeService.setSettings(newSettings).then(() => {
-          self.fundingNodeSettings = fundingNodeService.getSettings();
+        fundingExchangeProviderService.setSettings(newSettings).then(() => {
+          self.fundingNodeSettings = fundingExchangeProviderService.getSettings();
         }, () => {
-          self.fundingNodeSettings = fundingNodeService.getSettings();
+          self.fundingNodeSettings = fundingExchangeProviderService.getSettings();
         });
       };
 
