@@ -11,7 +11,9 @@
             </div>
             <div class="m10t" style="font-size: 14px; color: #444; width: 300px; text-align: center; margin: 30px auto;">
 				<span translate>Scan the above QR code using the other device, or send this pairing code to the other device:</span>
-                <div class="secret m10t m20b enable_text_select" style="padding: 5px 10px;border-radius: 5px;background: #f7f7f7; border: 1px dashed #ddd;">{{code}}</div>
+                <div ng-click="copyCode()" class="secret m10t m20b enable_text_select" style="padding: 5px 10px;border-radius: 5px;background: #f7f7f7; border: 1px dashed #ddd; position: relative;">{{code}}
+                    <div ng-class="{'visible': tooltipCopiedShown}" class="tooltip radius tip-top"><svg-icon name="done"></svg-icon>Copied!</div>
+                </div>
             </div>
         </div>
 

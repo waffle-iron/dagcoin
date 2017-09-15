@@ -1795,34 +1795,32 @@ input.ng-invalid-match, input.ng-invalid-match:focus {
   word-wrap: break-word;
 }
 
-#receive{
-  .tooltip{
-    @extend .transition;
-    display: block !important;
-    left: 50%;
-    width: 100px;
-    margin-left: -50px;
-    top: 50%;
-    margin-top: -32px;
-    opacity: 0;
+.tooltip{
+  @extend .transition;
+  display: block !important;
+  left: 50%;
+  width: 100px;
+  margin-left: -50px;
+  top: 50%;
+  margin-top: -32px;
+  opacity: 0;
 
-    svg-icon{
-      margin-right: 5px;
+  svg-icon{
+    margin-right: 5px;
 
-      svg{
-        width: 20px;
-        height: 20px;
-      }
-    }
-
-    &.visible{
-      opacity: 1;
+    svg{
+      width: 20px;
+      height: 20px;
     }
   }
 
-  .qr_code{
-    position: relative;
+  &.visible{
+    opacity: 1;
   }
+}
+
+.qr_code{
+  position: relative;
 }
 
 .arrow-down:after {

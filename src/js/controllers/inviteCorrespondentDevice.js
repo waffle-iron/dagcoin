@@ -30,6 +30,12 @@
           window.cordova.plugins.clipboard.copy($scope.code);
           window.plugins.toast.showShortCenter(gettextCatalog.getString('Copied to clipboard'));
         }
+
+        $scope.tooltipCopiedShown = true;
+
+        $timeout(() => {
+          $scope.tooltipCopiedShown = false;
+        }, 1000);
       };
 
       $scope.onTextClick = function ($event) {
