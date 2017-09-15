@@ -20,6 +20,7 @@
         stateTitle: '@',
         title: '@',
         triggerIcon: '@',
+        triggerText: '@',
         triggerState: '@'
       },
       link: ($scope, element, attr) => {

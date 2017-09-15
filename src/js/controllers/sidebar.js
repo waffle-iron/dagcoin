@@ -27,10 +27,12 @@
       self.switchWallet = function (selectedWalletId, currentWalletId) {
         backButton.menuOpened = false;
         if (selectedWalletId === currentWalletId) {
+          $state.go('walletHome');
           return;
         }
         self.walletSelection = false;
         profileService.setAndStoreFocus(selectedWalletId, () => {
+          $state.go('walletHome');
         });
       };
 

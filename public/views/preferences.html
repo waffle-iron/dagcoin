@@ -6,8 +6,8 @@
   <ul ng-show="!index.noFocusedWallet">
     <li dag-right-icon="chevron-thin-right" ui-sref="preferencesAlias">
       <div translate>Wallet Alias</div>
-      <div class="value">{{index.alias||index.walletName}}
-        <i class="icon-arrow-right3 size-24 right text-gray"></i></div>
+      <div class="value">{{index.alias||index.walletName}}</div>
+      <i class="icon-arrow-right3 size-24 arrow-right"></i>
     </li>
     <li ng-show="index.isPrivKeyExternal">
       <div class="right text-gray">
@@ -17,8 +17,8 @@
       <div translate>Hardware wallet</div>
     </li>
     <li dag-right-icon="chevron-thin-right" ui-sref="preferencesAdvanced">
-      <i class="icon-arrow-right3 size-24 right text-gray"></i>
       <div translate>Advanced</div>
+      <i class="icon-arrow-right3 size-24 arrow-right"></i>
     </li>
   </ul>
   <div ng-show="!index.noFocusedWallet && index.canSign && preferences.touchidAvailable">

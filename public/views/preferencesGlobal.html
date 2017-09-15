@@ -1,4 +1,4 @@
-<dag-nav-bar title="Global preferences" go-back invert></dag-nav-bar>
+<dag-nav-bar title="Global preferences" invert></dag-nav-bar>
 
 
 <div class="content preferences" ng-controller="preferencesGlobalController as prefGlobal" ng-init="prefGlobal.init()">
@@ -6,8 +6,14 @@
   <ul>
     <li dag-right-icon="chevron-thin-right" ui-sref="preferencesDeviceName">
       <div translate>Device name</div>
-      {{prefGlobal.deviceName}}
-      <i class="icon-arrow-right3 size-24 right text-gray"></i>
+      <div class="value">{{prefGlobal.deviceName}}</div>
+      <i class="icon-arrow-right3 size-24 arrow-right"></i>
+    </li>
+
+    <li dag-right-icon="chevron-thin-right" ng-click="prefGlobal.changeWalletType()">
+      <div translate>Change Wallet type</div>
+      <div class="value">{{!prefGlobal.isLight ? 'Full-Wallet' : 'Light-Wallet'}}</div>
+      <i class="icon-arrow-right3 size-24 arrow-right"></i>
     </li>
 
     <!--<li ng-click="$root.go('preferencesLanguage')">
@@ -87,15 +93,7 @@
     </li>
   </ul>
 
-  <h4 ng-if="prefGlobal.canChangeWalletType" translate>Change Wallet type</h4>
-  <ul class="no-bullet m0 radios" ng-if="prefGlobal.canChangeWalletType">
-    <li ng-if="!prefGlobal.isLight" ng-click="prefGlobal.changeWalletType()">
-      <span>Light-Wallet</span>
-    </li>
-    <li ng-if="prefGlobal.isLight" ng-click="prefGlobal.changeWalletType()">
-      <span>Full-Wallet</span>
-    </li>
-  </ul>
+
 
   <h4 ng-if="prefGlobal.hasBalance" translate>Choose how to pay fee</h4>
   <ul ng-if="prefGlobal.hasBalance" class="no-bullet m0 radios">
@@ -141,7 +139,7 @@
 
   <ul>
     <li ui-sref="backup" ng-hide="index.isPrivKeyExternal">
-      <i class="icon-arrow-right3 size-24 right text-gray"></i>
+      <i class="icon-arrow-right3 size-24 arrow-right"></i>
       <div translate>Backup wallet seed</div>
       <div class="right text-gray">
         <span class="text-warning" ng-show="index.needsBackup">
@@ -151,16 +149,16 @@
     </li>
 
     <li ui-sref="recoveryFromSeed" ng-hide="index.isPrivKeyExternal">
-      <i class="icon-arrow-right3 size-24 right text-gray"></i>
+      <i class="icon-arrow-right3 size-24 arrow-right"></i>
       <div translate>Recovery from seed</div>
     </li>
 
     <li ui-sref="export" ng-hide="index.isPrivKeyExternal">
-      <i class="icon-arrow-right3 size-24 right text-gray"></i>
+      <i class="icon-arrow-right3 size-24 arrow-right"></i>
       <div translate>Full backup</div>
     </li>
     <li ui-sref="import" ng-hide="index.isPrivKeyExternal">
-      <i class="icon-arrow-right3 size-24 right text-gray"></i>
+      <i class="icon-arrow-right3 size-24 arrow-right"></i>
       <div translate>Restore from full backup</div>
     </li>
   </ul>
@@ -169,7 +167,7 @@
   <h4>ABOUT</h4>
   <ul class="no-bullet m0">
     <li ng-click="$root.go('about')">
-      <i class="icon-arrow-right3 size-24 right text-gray"></i>
+      <i class="icon-arrow-right3 size-24 arrow-right"></i>
       <div translate>About Dagcoin</div>
     </li>
   </ul>

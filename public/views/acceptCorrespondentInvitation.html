@@ -4,24 +4,44 @@
   ng-init="titleSection='Accept invitation'; goBackToState = 'addCorrespondentDevice'; showCamera = true">
 </div-->
 
-<div id="accept" ng-controller="acceptCorrespondentInvitationController">
+<style>
+  #qr-scanner{
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 50px;
+    height: 100%;
+    background: #eee;
+    -webkit-border-top-right-radius: 5px;
+    -webkit-border-bottom-right-radius: 5px;
+    -moz-border-radius-topright: 5px;
+    -moz-border-radius-bottomright: 5px;
+    border-top-right-radius: 5px;
+    border-bottom-right-radius: 5px;
+  }
 
-<nav class="tab-bar">
-  <section class="left-small">
-    <a
-      ng-click="$root.go('correspondentDevices.addCorrespondentDevice')"><i class="icon-arrow-left3 icon-back"></i>
-      <span class="text-back">{{'Back'|translate}}</span>
-    </a>
-  </section>
-  <section class="middle tab-bar-section">
-    <h1 class="title ellipsis" ng-style="{'color': noColor ? '#4A90E2' : index.backgroundColor}">
-      {{'Accept invitation'|translate}}
-    </h1>
-  </section>
-</nav>
+  #qr-scanner svg-icon{
+    position: relative;
+    top: 0;
+    width: 100%;
+    height: 100%;
+  }
 
+  #qr-scanner svg{
+    width: 26px;
+    height: 26px;
+    fill: #666;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    margin-left: -13px;
+    margin-top: -14px;
+  }
+</style>
 
+<div ng-controller="acceptCorrespondentInvitationController">
 
+  <dag-nav-bar title="{{'Accept invitation'|translate}}" go-back invert></dag-nav-bar>
     
   <div class="onGoingProcess" ng-show="onGoingProcess">
     <div class="onGoingProcess-content" ng-style="{'background-color':backgroundColor}">
@@ -39,20 +59,16 @@
 
     <div class="m20b">
         <form name="pairingCodeForm" class="page-form" no-validate>
-		  <span translate>Enter the pairing code received from the other device, or use your camera (icon at the upper right corner) to scan the QR code displayed on the other device.</span>
+		  <p translate style="text-align: center">Enter the pairing code received from the other device, or use your camera (icon at the upper right corner) to scan the QR code displayed on the other device.</p>
           <div class="text-warning size-12 m10b" ng-show="error">{{error|translate}}</div>
 
-          <div class="form-group m20t">
-            <div class="input-wrap">
-              <input class="m0" type="text" id="code"
-                     name="code"
-                     ng-model="code">
-              <qr-scanner on-scan="onQrCodeScanned(data)" before-scan="beforeQrCodeScan()"></qr-scanner>
-            </div>
+          <div class="input-wrap m20t">
+            <input type="text" class="m0" id="code" name="code" ng-model="code" required>
+            <qr-scanner on-scan="onQrCodeScanned(data)" before-scan="beforeQrCodeScan()"></qr-scanner>
           </div>
-
-          <div ng-style="{'text-align':'center'}">
-            <a class="btn btn_red-full"
+          <div class="row">
+            <div ng-style="{'text-align':'center'}">
+              <a class="btn btn_red-full"
                  ng-disabled="!pairingCodeForm.$valid"
                  ng-click="pair()">{{'Pair'|translate}}</a>
           </div>
@@ -63,4 +79,3 @@
 
     <div class="extra-margin-bottom"></div>
 </div>
-<div ng-include="'views/includes/menu.html'" ng-show="!index.noFocusedWallet"></div>

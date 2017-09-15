@@ -1,21 +1,17 @@
 <dag-nav-bar title="Advanced" go-back invert></dag-nav-bar>
 
 <div class="content preferences" ng-controller="preferencesAdvancedController as prefAdvanced">
-  <ul>
-    <li dag-right-icon="chevron-thin-right" ng-if="!index.shared_address" ng-disabled="index.isOffline" ng-click="prefAdvanced.setAddress()">
-      <i class="icon-arrow-right3 size-24 right text-gray"></i>
-      <div translate>Generate new address</div>
-    </li>
+    <ul>
+        <li dag-right-icon="chevron-thin-right" ui-sref="information">
+            <div translate>Wallet Information</div>
+            <i class="icon-arrow-right3 size-24 arrow-right"></i>
+        </li>
+    </ul>
 
-    <li  dag-right-icon="chevron-thin-right"  ui-sref="information">
-      <i class="icon-arrow-right3 size-24 right text-gray"></i>  
-      <div translate>Wallet Information</div>
-    </li>
-    <li ui-sref="preferencesDeleteWallet">
-      <i class="icon-arrow-right3 size-24 right text-gray"></i>
-      <div style="text-decoration: underline; background: transparent;border-bottom: none; color: #e51e25;" translate>Delete Wallet</div>
-    </li>
-  </ul>
+    <div class="m20t">
+        <a ui-sref="preferencesDeleteWallet" style="font-size: 12px;text-align: center;" class="btn btn-red color_red">Delete
+            Wallet</a>
+    </div>
 </div>
 <div class="extra-margin-bottom"></div>
 
