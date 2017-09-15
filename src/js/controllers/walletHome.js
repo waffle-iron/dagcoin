@@ -1310,7 +1310,7 @@
 
         const modalInstance = $modal.open({
           templateUrl: 'views/modals/tx-details.html',
-          windowClass: animationService.modalAnimated.slideRight,
+          windowClass: 'modal-transaction-detail',
           controller: ModalInstanceCtrl,
         });
 

@@ -1823,6 +1823,42 @@ input.ng-invalid-match, input.ng-invalid-match:focus {
   position: relative;
 }
 
+.reveal-modal{
+  background: rgba(0, 0, 0, 0.5);
+  overflow-y: auto;
+  position: fixed;
+  padding: 20px;
+
+  .modal-content{
+    width: 100%;
+    border-radius: 10px;
+    box-shadow: 0 5px 15px 2px rgba(0,0,0,0.3);
+    padding: 20px;
+    position: relative;
+    top: auto;
+
+    .modal-content-header{
+      text-align: center;
+      color: #adb3b9;
+      font-weight: 400;
+
+      h3{
+        color: #adb3b9;
+        font-weight: 600;
+      }
+
+      svg-icon{
+        margin: 10px 0;
+
+        svg{
+          height: 40px;
+          width: 40px;
+        }
+      }
+    }
+  }
+}
+
 .arrow-down:after {
   content: " \25be";
 }
