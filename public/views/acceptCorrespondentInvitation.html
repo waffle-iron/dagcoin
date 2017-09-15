@@ -4,7 +4,7 @@
   ng-init="titleSection='Accept invitation'; goBackToState = 'addCorrespondentDevice'; showCamera = true">
 </div-->
 
-<div ng-controller="acceptCorrespondentInvitationController">
+<div id="accept" ng-controller="acceptCorrespondentInvitationController">
 
 <nav class="tab-bar">
   <section class="left-small">
@@ -42,16 +42,19 @@
 		  <span translate>Enter the pairing code received from the other device, or use your camera (icon at the upper right corner) to scan the QR code displayed on the other device.</span>
           <div class="text-warning size-12 m10b" ng-show="error">{{error|translate}}</div>
 
-          <div class="input-wrap m20t">
-            <input type="text" class="m0" id="code" name="code" ng-model="code" required>
-          </div>
-          <div class="row">
-            <div ng-style="{'text-align':'center'}">
+          <div class="form-group m20t">
+            <div class="input-wrap">
+              <input class="m0" type="text" id="code"
+                     name="code"
+                     ng-model="code">
               <qr-scanner on-scan="onQrCodeScanned(data)" before-scan="beforeQrCodeScan()"></qr-scanner>
-              <a class="btn btn_red-full"
+            </div>
+          </div>
+
+          <div ng-style="{'text-align':'center'}">
+            <a class="btn btn_red-full"
                  ng-disabled="!pairingCodeForm.$valid"
                  ng-click="pair()">{{'Pair'|translate}}</a>
-            </div>
           </div>
         </form>
     </div>

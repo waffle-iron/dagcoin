@@ -7,7 +7,7 @@
     <li dag-right-icon="chevron-thin-right" ui-sref="preferencesDeviceName">
       <div translate>Device name</div>
       {{prefGlobal.deviceName}}
-      <i class="icon-arrow-right3 size-24 arrow-right"></i>
+      <i class="icon-arrow-right3 size-24 right text-gray"></i>
     </li>
 
     <!--<li ng-click="$root.go('preferencesLanguage')">
@@ -132,8 +132,8 @@
   <h4 translate>Spending Restrictions</h4>
   <ul>
     <li dag-right-icon="chevron-thin-right">
-      <div translate>Request Password</div>
       <switch id="network-name" name="encrypt" ng-model="encrypt" class="green right"></switch>
+      <div translate>Request Password</div>
     </li>
   </ul>
 
@@ -141,7 +141,7 @@
 
   <ul>
     <li ui-sref="backup" ng-hide="index.isPrivKeyExternal">
-      <i class="icon-arrow-right3 size-24 text-gray"></i>
+      <i class="icon-arrow-right3 size-24 right text-gray"></i>
       <div translate>Backup wallet seed</div>
       <div class="right text-gray">
         <span class="text-warning" ng-show="index.needsBackup">
@@ -151,16 +151,16 @@
     </li>
 
     <li ui-sref="recoveryFromSeed" ng-hide="index.isPrivKeyExternal">
-      <i class="icon-arrow-right3 size-24 text-gray"></i>
+      <i class="icon-arrow-right3 size-24 right text-gray"></i>
       <div translate>Recovery from seed</div>
     </li>
 
     <li ui-sref="export" ng-hide="index.isPrivKeyExternal">
-      <i class="icon-arrow-right3 size-24 text-gray"></i>
+      <i class="icon-arrow-right3 size-24 right text-gray"></i>
       <div translate>Full backup</div>
     </li>
     <li ui-sref="import" ng-hide="index.isPrivKeyExternal">
-      <i class="icon-arrow-right3 size-24 text-gray"></i>
+      <i class="icon-arrow-right3 size-24 right text-gray"></i>
       <div translate>Restore from full backup</div>
     </li>
   </ul>
