@@ -506,7 +506,7 @@ module.exports = function (grunt) {
 
   grunt.registerTask('dev', ['watch']);
 
-  grunt.registerTask('default', ['nggettext_compile', 'exec:version', 'stylelint', 'sass', 'concat', 'postcss', 'svgmin', 'ngtemplates']);
+  grunt.registerTask('default', ['nggettext_compile', 'exec:version', 'stylelint', 'sass', 'concat', 'postcss', 'svgmin']);
   grunt.registerTask('cordova', ['default', 'browserify']);
   grunt.registerTask('cordova-prod', ['cordova', 'uglify']);
   // grunt.registerTask('prod', ['default', 'uglify']);
