@@ -26,8 +26,17 @@ Utils.formatAmount = function (bytes, unit, opts) {
       x0 = x0.replace(/\B(?=(\d{3})+(?!\d))/g, thousands);
       return x0 + x2;
     }
+	
+	const val = parseFloat(x0 + x2);
+	let result = '';
+	
+	if (options.needToLocale) {
+		result = val.toLocaleString([], { maximumFractionDigits: 20 });
+	} else {
+		result = val.toString();
+	}
 
-    return parseFloat(x0 + x2).toLocaleString([], { maximumFractionDigits: 20 });
+    return result;
   }
   const options = opts || {};
   const u = Constants.UNITS[unit];
