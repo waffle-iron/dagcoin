@@ -5,53 +5,39 @@
 
   <ul>
     <li>
-      <div translate>Wallet Name (at creation)</div>
-      <div class="right text-gray wrappable-menu-item">
-        {{walletName}}
-      </div>
+      <div translate>Wallet Name</div>
+      <div class="value">{{walletName}}</div>
     </li>
 
 
     <li>
-      <span translate>Wallet Id</span>
-      <span class="right text-gray enable_text_select">
-          {{walletId}}
-        </span>
+      <div translate>Wallet Id</div>
+      <div class="value">{{walletId}}</div>
     </li>
 
     <li>
-      <span translate>Wallet Configuration (m-n)</span>
-      <span class="right text-gray">
-          {{M}}-{{N}}
-        </span>
+      <div translate>Wallet Configuration (m-n)</div>
+      <div class="value">{{M}}-{{N}}</div>
     </li>
 
     <li>
-      <span translate>Derivation Strategy</span>
-      <span class="right text-gray">
-          {{derivationStrategy}}
-        </span>
+      <div translate>Derivation Strategy</div>
+      <div class="value">{{derivationStrategy}}</div>
     </li>
 
     <li ng-show="index.externalSource">
-      <span>Hardware Wallet</span>
-      <span class="right text-gray capitalize">
-          {{index.externalSource}}
-        </span>
+      <div>Hardware Wallet</div>
+      <div class="value capitalize">{{index.externalSource}}</div>
     </li>
 
     <li ng-show="!index.externalSource && !index.canSign">
-      <span translate></span>
-      <span class="right text-gray capitalize">
-          No private key
-        </span>
+      <div translate></div>
+      <div class="value capitalize">No private key</div>
     </li>
 
     <li ng-show="index.account">
-      <span translate>Account</span> ({{derivationStrategy}})
-      <span class="right text-gray">
-          #{{index.account}}
-        </span>
+      <div translate>Account ({{derivationStrategy}})</div>
+      <div class="value">#{{index.account}}</div>
     </li>
   </ul>
   <h4 translate>Co-signers</h4>
@@ -69,11 +55,9 @@
   <h4 translate>Extended Public Keys</h4>
   <ul>
     <li ng-repeat="copayer in index.copayers">
-      <div class="row collapse">
-        <div class="small-4 columns">{{copayer.name||'Me'|translate}}</div>
-        <div class="small-8 columns oh text-gray">
-          <div class="ellipsis enable_text_select">{{copayer.extended_pubkey}}</div>
-        </div>
+      <div>{{copayer.name||'Me'|translate}}</div>
+      <div class="value">
+        {{copayer.extended_pubkey}}
       </div>
     </li>
   </ul>
@@ -100,6 +84,8 @@
         </button>
       </li>
     </ul>
+
+    <button class="btn btn_red-full" style="width: 300px;display: block;margin: 0 auto;" ng-click="info.setAddress()" ng-disabled="index.isOffline">{{'Generate new address' | translate}}</button>
 
     <div ng-show="hasListOfBalances()">
       <h4 translate>Balance By Address</h4>

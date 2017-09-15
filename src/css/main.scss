@@ -176,10 +176,38 @@ h4 {
   ul {
     font-size: 14px;
     background: #fff;
+    margin: 5px 0;
 
     li {
-      padding: 13px 20px;
+      line-height: 50px;
+      padding: 0 50px 0 20px;
       border-bottom: 1px solid #e9e9ec;
+      display: flex;
+      position: relative;
+
+      .arrow-right{
+        position: absolute;
+        right: 20px;
+        top: 50%;
+        margin-top: -12px;
+      }
+
+      .switch{
+        position: absolute;
+        right: 20px;
+        top: 50% !important;
+        margin-top: -16px;
+      }
+
+      >div{
+        flex: auto;
+
+        &.value{
+          color: #666;
+          font-size: 12px;
+          text-align: right;
+        }
+      }
     }
   }
 }

@@ -15,7 +15,8 @@
 
     <div class="navbar-container-triggers navbar-container-triggers-right" ng-if="triggerIcon">
         <a ng-click="triggerUrl()">
-            <svg-icon name="{{triggerIcon}}"></svg-icon>
+            <svg-icon ng-if="triggerIcon" name="{{triggerIcon}}"></svg-icon>
+            <span ng-if="triggerText">{{triggerText}}</span>
         </a>
     </div>
 </div>

@@ -2,10 +2,31 @@
   'use strict';
 
   angular.module('copayApp.controllers').controller('preferencesInformation',
-    function ($scope, $log, $timeout, isMobile, gettextCatalog, lodash, profileService, storageService, go, configService) {
+    function ($scope, $log, $timeout, isMobile, gettextCatalog, lodash, profileService, storageService, go, configService, addressService, $rootScope) {
       const constants = require('byteballcore/constants.js');
       const fc = profileService.focusedClient;
       const c = fc.credentials;
+
+      const indexScope = $scope.index;
+
+      this.setAddress = function () {
+        if (!fc) {
+          return;
+        }
+
+        if (indexScope.shared_address) {
+          throw Error('attempt to generate for shared address');
+        }
+
+        addressService.getAddress(fc.credentials.walletId, true, (err, addr) => {
+          if (err) {
+            $rootScope.$emit('Local/ShowAlert', err, 'fi-alert', () => { });
+          } else if (addr) {
+            $rootScope.$emit('Local/ShowAlert', 'New Address successfully generated.', 'fi-check', () => { });
+            this.init();
+          }
+        });
+      };
 
       this.init = function () {
         const basePath = c.getBaseAddressDerivationPath();

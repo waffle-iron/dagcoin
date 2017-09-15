@@ -134,46 +134,22 @@
             },
           },
         })
-        .state('send', {
-          url: '/send',
-          walletShouldBeComplete: true,
-          needProfile: true,
-          deepStateRedirect: true,
-          sticky: true,
-          views: {
-            main: {
-              templateUrl: 'views/send.html',
-            },
-          },
-        })
-        .state('receive', {
-          url: '/receive',
-          walletShouldBeComplete: true,
-          needProfile: true,
-          deepStateRedirect: true,
-          sticky: true,
-          views: {
-            main: {
-              templateUrl: 'views/receive.html',
-            },
-          },
-        })
         .state('unsupported', {
           url: '/unsupported',
           needProfile: false,
           views: {
             main: {
               templateUrl: 'views/unsupported.html',
-            },
-          },
+            }
+          }
         })
         .state('payment', {
           url: '/uri-payment/:data',
           templateUrl: 'views/paymentUri.html',
           views: {
             main: {
-              templateUrl: 'views/paymentUri.html',
-            },
+              templateUrl: 'views/paymentUri.html'
+            }
           },
           needProfile: true,
         })
