@@ -520,15 +520,20 @@
         const gui = require('nw.gui');
         const win = gui.Window.get();
         win.setResizable(false);
-        const nativeMenuBar = new gui.Menu({
-          type: 'menubar',
-        });
-        try {
-          nativeMenuBar.createMacBuiltin('DAGCOIN');
-        } catch (e) {
-          $log.debug('This is not OSX');
+        const os = require('os');
+        const platform = os.platform();
+
+        if (platform.indexOf('win') === -1) {
+          const nativeMenuBar = new gui.Menu({
+            type: 'menubar',
+          });
+          try {
+            nativeMenuBar.createMacBuiltin('DAGCOIN');
+          } catch (e) {
+            $log.debug('This is not OSX');
+          }
+          win.menu = nativeMenuBar;
         }
-        win.menu = nativeMenuBar;
       }
 
       $rootScope.$on('$stateChangeStart', (event, toState, toParams, fromState) => {
