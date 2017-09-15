@@ -190,7 +190,7 @@
         receive
 
         -->
-		<div id="receive" class="receive p-share tab-view" style="padding-bottom: 0px">
+		<div id="receive" class="receive p-share tab-view" style="padding-bottom: 0">
 			<div class="introduction-svg" ng-include="'views/includes/background.html'"></div>
 			<div ng-show="index.needsBackup" class="p60t row text-center">
 				<div class="large-12 columns">
@@ -210,11 +210,12 @@
 					</button>
 				</div>
 			</div>
-			<div class="p-wrap" ng-show="!index.needsBackup">
+			<div class="p-wrap text-center m20t" ng-show="!index.needsBackup">
+
+				<h2 style="padding: 10px 20px;font-weight: 400;font-size: 14px;margin-top: 40px;">Tap the <strong>QR-code</strong> to copy its address.<br/>Share it with the sender via email or text.</h2>
+
 
 				<!-- Address-->
-
-				<h2 class="text-center m10t" translate><div class="page-heading"><span>Receive <span>Dagcoin's</span></span></div> </h2>
 				<div class="page-qr text-center">
 					<div class="box-notification" ng-show="home.addrError">
                 <span class="text-warning">
@@ -222,7 +223,7 @@
                 </span>
 					</div>
 
-					<div  ng-click="home.copyAddress(home.addr[index.walletId])" ng-show="home.addr[index.walletId] || home.generatingAddress">
+					<div ng-click="home.copyAddress(home.addr[index.walletId])" ng-show="home.addr[index.walletId] || home.generatingAddress">
 						<qrcode size="220" data="{{home.protocol}}:{{home.addr[index.walletId]}}"></qrcode>
 						<div  ng-show="home.generatingAddress" style="position:relative; top:-226px; height:0px">
 							<div style="height:220px; width:220px; margin:auto; background: url(img/qr.png) white">
@@ -235,12 +236,13 @@
 								</div>
 							</div>
 						</div>
-						<div class="m10t" ng-hide>
-							<h4 ng-class="{'enable_text_select': !index.isCordova}" class="size-12">
-								{{index.shared_address || (home.generatingAddress ? '...' : home.addr[index.walletId])}}
+						<div ng-class="{'visible': tooltipCopiedShown}" class="tooltip radius tip-top"><svg-icon name="done"></svg-icon>Copied!</div>
+					</div>
+					<div class="m10t" ng-hide>
+						<h4 ng-class="{'enable_text_select': !index.isCordova}" class="size-12">
+							{{index.shared_address || (home.generatingAddress ? '...' : home.addr[index.walletId])}}
 
-							</h4>
-						</div>
+						</h4>
 					</div>
 				</div>
 				<div class="page-action">
