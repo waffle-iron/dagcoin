@@ -138,7 +138,7 @@
   <h4>BACKUP</h4>
 
   <ul>
-    <li ui-sref="backup" ng-hide="index.isPrivKeyExternal">
+    <li ui-sref="backup" ng-hide="index.isPrivKeyExternal || prefGlobal.isLight">
       <i class="icon-arrow-right3 size-24 arrow-right"></i>
       <div translate>Backup wallet seed</div>
       <div class="right text-gray">
@@ -148,7 +148,7 @@
       </div>
     </li>
 
-    <li ui-sref="recoveryFromSeed" ng-hide="index.isPrivKeyExternal">
+    <li ui-sref="recoveryFromSeed" ng-hide="index.isPrivKeyExternal || prefGlobal.isLight">
       <i class="icon-arrow-right3 size-24 arrow-right"></i>
       <div translate>Recovery from seed</div>
     </li>
