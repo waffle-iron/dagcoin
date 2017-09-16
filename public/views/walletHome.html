@@ -246,10 +246,6 @@
 					</div>
 				</div>
 				<div class="page-action">
-					<!--<a ng-if="!index.shared_address" href="#" class="btn btn_red" ng-click="home.setAddress(true)"
-                       ng-disabled="home.blockUx || index.isOffline ||home.generatingAddress" translate>
-                        Generate new address
-                    </a>-->
 					<a ng-show="index.isCordova" href="#" ng-click="home.shareAddress(home.addr[index.walletId])"
 					   class="btn btn_red-full">Share wallet link</a>
 					<div ng-show="index.isCordova" class="page-action__info">
@@ -355,7 +351,7 @@
         history
 
         -->
-		<div id="history" class="history tab-view scrollable">
+		<div id="history" class="history tab-view" style="overflow: auto !important;">
 
 			<div class="introduction-svg" ng-include="'views/includes/background.html'"></div>
 			<div class="row m20t text-center" ng-show="index.updatingTxHistory[index.walletId]">
@@ -420,17 +416,9 @@
 								</table>
 							</div>
 						</div>
-					</div>
-
-					<!--todo: add to correct place. -->
-					<div class="page-action">
-						<a href="#" ng-show="index.historyShowShowAll" ng-click="index.showAllHistory()" class="btn btn_red-full">Show all</a>
-						<!--<a class="btn btn_red-full" ng-click="index.csvHistory();">-->
-						<!--<i class="fi-page-export-csv"></i>-->
-						<!--<span translate>Download CSV file</span>-->
-						<!--</a>-->
-						<!--<input id="export_file" type="file" nwsaveas="Byteball-{{index.alias || index.walletName}}.csv" accept=".csv" style="display:none">-->
-
+            <div class="page-action">
+              <a href="#" ng-show="index.historyShowShowAll" ng-click="index.showAllHistory()" class="btn btn_red-full">Show all</a>
+            </div>
 					</div>
 				</div>
 			</div>
