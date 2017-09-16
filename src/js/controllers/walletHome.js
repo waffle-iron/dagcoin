@@ -425,7 +425,7 @@
           if (isMobile.Android() || isMobile.Windows()) {
             window.ignoreMobilePause = true;
           }
-          window.plugins.socialsharing.share(`${self.protocol}:${addr}`, null, null, null);
+          window.plugins.socialsharing.share(addr, null, null, null);
         }
       };
 
@@ -483,6 +483,7 @@
 
 
           $scope.shareAddress = function (uri) {
+            debugger
             if (isCordova) {
               if (isMobile.Android() || isMobile.Windows()) {
                 window.ignoreMobilePause = true;
