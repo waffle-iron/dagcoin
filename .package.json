@@ -53,6 +53,7 @@
     "lodash": "^4.6.1",
     "preconditions": "^1.0.8",
     "request": "^2.81.0",
+    "browser-request": "^0.3.3",
     "shelljs": "^0.3.0",
     "sjcl": "^1.0.2",
     "unzip": "git+https://github.com/xJeneKx/unzip.git",
