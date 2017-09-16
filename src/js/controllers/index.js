@@ -40,7 +40,8 @@ no-nested-ternary,no-shadow,no-plusplus,consistent-return,import/no-extraneous-d
       changeWalletTypeService,
       sharedService,
       autoRefreshClientService,
-      connectionService) {
+      connectionService,
+      newVersion) {
       const async = require('async');
       const constants = require('byteballcore/constants.js');
       const mutex = require('byteballcore/mutex.js');
@@ -183,6 +184,7 @@ no-nested-ternary,no-shadow,no-plusplus,consistent-return,import/no-extraneous-d
       eventBus.on('refresh_light_done', () => {
         console.log('refresh_light_done');
         self.setOngoingProcess('Syncing', false);
+        newVersion.askForVersion();
       });
 
       eventBus.on('confirm_on_other_devices', () => {
