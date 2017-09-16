@@ -31,11 +31,11 @@
     "gsap": "^1.20.2",
     "angular-swipe": "^0.2.1",
     "angular-swiper": "^0.4.0",
-    "angular-ui-swiper": "^2.3.6"
-  },
-  "resolutions": {
-    "angular": "1.4.6",
+    "angular-ui-swiper": "^2.3.6",
     "es6-shim": "^0.35.3",
     "es5-shim": "^4.5.9"
+  },
+  "resolutions": {
+    "angular": "1.4.6"
   }
 }
