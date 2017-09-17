@@ -15,7 +15,7 @@
       const confirmMessage = gettextCatalog.getString('Confirm');
 
       if (hasBalance) {
-        deleteMessage = `<b>${balanceMessage}</b><br/>${deleteMessage}`;
+        deleteMessage = `${balanceMessage}\n${deleteMessage}`;
       }
 
       const deleteWallet = function () {
@@ -29,7 +29,7 @@
             self.error = err.message || err;
           } else {
             notification.success(gettextCatalog.getString('Success'), gettextCatalog.getString('The wallet "{{walletName}}" was deleted', {
-              walletName,
+              walletName
             }));
           }
         });
@@ -52,7 +52,7 @@
         const modalInstance = $modal.open({
           templateUrl: 'views/modals/confirmation.html',
           windowClass: animationService.modalAnimated.slideUp,
-          controller: ModalInstanceCtrl,
+          controller: ModalInstanceCtrl
         });
 
         modalInstance.result.finally(() => {
