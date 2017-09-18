@@ -130,6 +130,8 @@
             return askForFundingNode().then((result) => {
               console.log(`TRADERS AVAILABLE: ${result}`);
             });
+
+            // TODO: pair and get a funding pair from the provider. Still pairing in discoveryService.js
           }
 
           return dagcoinProtocolService.pairAndConnectDevice(appConfig.bytesProviderDeviceAddress);
