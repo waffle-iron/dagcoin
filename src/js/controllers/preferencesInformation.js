@@ -121,13 +121,13 @@
               return;
             }
 
-            let body = `Byteball Wallet "${$scope.walletName}" Addresses.\n\n`;
+            let body = `Dagcoin Wallet "${$scope.walletName}" Addresses.\n\n`;
             body += '\n';
             body += addrs.map(v => (`* ${v.address} ${v.path} ${formatDate(v.createdOn)}`)).join('\n');
 
             window.plugins.socialsharing.shareViaEmail(
               body,
-              'Byteball Addresses',
+              'Dagcoin Addresses',
               null, // TO: must be null or an array
               null, // CC: must be null or an array
               null, // BCC: must be null or an array
