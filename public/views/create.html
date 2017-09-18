@@ -46,7 +46,7 @@
 
             <form name="setupForm" ng-submit="create.create(setupForm)" novalidate>
 
-                <div class="box-notification" ng-show="create.error">
+                <div id="error-area" class="box-notification" ng-show="create.error">
                     <span class="text-warning size-14">{{create.error|translate}}</span>
                 </div>
 
