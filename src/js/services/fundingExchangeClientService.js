@@ -117,9 +117,9 @@
         .then((config) => {
           console.log(JSON.stringify(config));
 
-          if (!config.canUseExternalBytesProvider) {
+          /* if (!config.canUseExternalBytesProvider) {
             return Promise.reject('NOT POSSIBLE TO ACTIVATE THE FUNDING EXCHANGE CLIENT. THE USER MUST FIRST AUTHORIZE IT.');
-          }
+          } */
 
           appConfig = config;
 

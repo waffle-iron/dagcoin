@@ -530,6 +530,8 @@ angular.module('copayApp.services').factory('correspondentListService',
     }
 
     eventBus.on('text', (fromAddress, body) => {
+      console.log(`NEW TEXT MESSAGE FROM ${fromAddress}`);
+
       if (discoveryService.isDiscoveryServiceAddress(fromAddress)) {
         console.log(`DISCOVERY MESSAGE FROM ${fromAddress}`);
 
