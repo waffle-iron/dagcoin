@@ -4,9 +4,7 @@
   angular.module('copayApp.services')
     .factory('discoveryService', ($q, fileSystemService, promiseService) => {
       const eventBus = require('byteballcore/event_bus.js');
-      const device = require('byteballcore/device.js');
       const objectHash = require('byteballcore/object_hash.js');
-      const db = require('byteballcore/db.js');
 
       const self = {};
 
@@ -99,6 +97,7 @@
             title: 'is-connected'
           };
 
+          const device = require('byteballcore/device.js');
           device.sendMessageToDevice(discoveryServiceDeviceAddress, 'text', JSON.stringify(keepAlive));
 
           const attempts = 12;
@@ -120,6 +119,7 @@
       }
 
       function fundingPairListener(fromAddress, body, callback) {
+        const device = require('byteballcore/device.js');
         device.readCorrespondent(fromAddress, () => {
           try {
             const jsonBody = JSON.parse(body);
@@ -193,6 +193,7 @@
 
       function lookupDeviceByPublicKey(pubkey) {
         const promise = new Promise((resolve) => {
+          const db = require('byteballcore/db.js');
           db.query('SELECT device_address FROM correspondent_devices WHERE pubkey = ? AND is_confirmed = 1', [pubkey], (rows) => {
             if (rows.length === 0) {
               console.log(`DEVICE WITH PUBKEY ${pubkey} NOT YET PAIRED`);
@@ -209,6 +210,7 @@
       }
 
       function pairDevice(pubkey, hub, pairingSecret) {
+        const device = require('byteballcore/device.js');
         const promise = new Promise((resolve) => {
           device.addUnconfirmedCorrespondent(pubkey, hub, 'New', (deviceAddress) => {
             console.log(`PAIRING WITH ${deviceAddress} ... ADD UNCONFIRMED CORRESPONDENT`);
@@ -256,6 +258,7 @@
       }
 
       function getCorrespondent(deviceAddress) {
+        const device = require('byteballcore/device.js');
         const promise = new Promise((resolve) => {
           device.readCorrespondent(deviceAddress, (cor) => {
             resolve(cor);
@@ -299,6 +302,8 @@
         }
 
         const messageTitle = 'funding-address-request';
+        const device = require('byteballcore/device.js');
+
         console.log(`Sending ${messageTitle} to ${device.getMyDeviceAddress()}:${address}`);
 
         const promise = listenToCreateNewSharedAddress(deviceAddress);
@@ -335,6 +340,7 @@
       function sendMessage(messageType, messageBody) {
         return makeSureDiscoveryServiceIsConnected().then(
           (correspondent) => {
+            const device = require('byteballcore/device.js');
             const promise = new Promise((resolve, reject) => {
               const message = {
                 protocol: 'dagcoin',
@@ -406,6 +412,7 @@
       function listenToCreateNewSharedAddress(deviceAddress) {
         const mainPromise = new Promise((mainResolve) => {
           eventBus.on('create_new_shared_address', (template, signers) => {
+            const device = require('byteballcore/device.js');
             const promise = new Promise((resolve, reject) => {
               const walletGeneral = require('byteballcore/wallet_general.js');
               walletGeneral.readMyAddresses((arrMyAddresses) => {

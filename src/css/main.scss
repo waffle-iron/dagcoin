@@ -185,24 +185,24 @@ h4 {
       display: flex;
       position: relative;
 
-      .arrow-right{
+      .arrow-right {
         position: absolute;
         right: 20px;
         top: 50%;
         margin-top: -12px;
       }
 
-      .switch{
+      .switch {
         position: absolute;
         right: 20px;
         top: 50% !important;
         margin-top: -16px;
       }
 
-      >div{
+      > div {
         flex: auto;
 
-        &.value{
+        &.value {
           color: #666;
           font-size: 12px;
           text-align: right;
@@ -1795,7 +1795,7 @@ input.ng-invalid-match, input.ng-invalid-match:focus {
   word-wrap: break-word;
 }
 
-.tooltip{
+.tooltip {
   @extend .transition;
   display: block !important;
   left: 50%;
@@ -1805,51 +1805,56 @@ input.ng-invalid-match, input.ng-invalid-match:focus {
   margin-top: -32px;
   opacity: 0;
 
-  svg-icon{
+  svg-icon {
     margin-right: 5px;
 
-    svg{
+    svg {
       width: 20px;
       height: 20px;
     }
   }
 
-  &.visible{
+  &.visible {
     opacity: 1;
   }
 }
 
-.qr_code{
+.qr_code {
   position: relative;
 }
 
-.reveal-modal{
+.reveal-modal {
   overflow-y: auto;
   position: fixed;
   padding: 20px;
+  background: rgba(0, 0, 0, 0.5);
 
-  .modal-content{
+  .modal-content {
     width: 100%;
     border-radius: 10px;
-    box-shadow: 0 5px 15px 2px rgba(0,0,0,0.3);
+    box-shadow: 0 5px 15px 2px rgba(0, 0, 0, 0.3);
     padding: 20px;
     position: relative;
     top: auto;
 
-    .modal-content-header{
+    .modal-content-header {
       text-align: center;
       color: #adb3b9;
       font-weight: 400;
 
-      h3{
-        color: #adb3b9;
+      h3 {
+        color: #3e4042;
         font-weight: 600;
       }
 
-      svg-icon{
+      p {
+        line-height: 1.2;
+      }
+
+      svg-icon {
         margin: 10px 0;
 
-        svg{
+        svg {
           height: 40px;
           width: 40px;
         }
@@ -2235,8 +2240,8 @@ a.a_none {
   }
 }
 
-#send, #accept{
-  #qr-scanner{
+#send, #accept {
+  #qr-scanner {
     position: absolute;
     right: 0;
     top: 0;
@@ -2246,14 +2251,14 @@ a.a_none {
     border-top-right-radius: 5px;
     border-bottom-right-radius: 5px;
 
-    svg-icon{
+    svg-icon {
       position: absolute;
       top: 50%;
       left: 50%;
       margin-left: -13px;
       margin-top: -14px;
 
-      svg{
+      svg {
         width: 26px;
         height: 26px;
         fill: #666;
@@ -2472,8 +2477,8 @@ canvas {
         font-size: 10px;
         padding-top: 5px;
 
-        &:not(.active){
-          &:hover{
+        &:not(.active) {
+          &:hover {
             color: darken(#cecece, 15);
           }
         }
@@ -2490,7 +2495,7 @@ canvas {
       }
 
       &.active {
-        a{
+        a {
           border-top: 2px solid $main_color;
           color: $main_color;
         }
@@ -2864,7 +2869,7 @@ input {
   background-color: #008cba;
 }
 
-section{
+section {
   &.right-small {
     left: initial;
   }

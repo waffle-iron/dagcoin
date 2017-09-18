@@ -52,7 +52,7 @@ button {
   }
 
   &[disabled]{
-    background: #a5b2bf;
+    background: #ccc;
     color: white;
     cursor: not-allowed;
   }
@@ -60,31 +60,33 @@ button {
 
 body:not(.no_animation){
   .btn{
-    @extend .transition;
-
-    &:not([disabled]){
-      &:after, &:before{
+    &.btn_red-full{
+      &:not([disabled]){
         @extend .transition;
-        content: "";
-        position: absolute;
-        top: 0;
-        width: 40px;
-        height: 100%;
-        opacity: 0.15;
-        right: -100px;
-        @include gradientBackground(#fff, darken(#fff, 10), left, right);
-        transform: skewX(30deg);
-      }
-
-      &:before{
-        margin-left: 30px;
-      }
-
-      &:hover {
-        outline: none;
 
         &:after, &:before{
-          right: 110%;
+          @extend .transition;
+          content: "";
+          position: absolute;
+          top: 0;
+          width: 40px;
+          height: 100%;
+          opacity: 0.15;
+          right: -100px;
+          @include gradientBackground(#fff, darken(#fff, 10), left, right);
+          transform: skewX(30deg);
+        }
+
+        &:before{
+          margin-left: 30px;
+        }
+
+        &:hover {
+          outline: none;
+
+          &:after, &:before{
+            right: 110%;
+          }
         }
       }
     }

@@ -15,7 +15,20 @@
 		border-bottom: none;
 		padding: 0;
 	}
+  
+  .state_icon svg-icon svg {
+    width: 100px;
+    height: 100px;
+    margin-left: -55px;
+  }
 
+  p.color_red {
+    text-align: center;
+  }
+
+  .box-notification {
+    text-align: center;
+  }
 </style>
 
 <div class="content preferences" ng-controller="recoveryFromSeed as recFromSeed">
@@ -33,12 +46,6 @@
 		</div>
 	</div>
 
-	<div class="box-notification" ng-show="recFromSeed.error">
-	<span class="text-warning">
-		{{recFromSeed.error}}
-	</span>
-	</div>
-
 	<div ng-show="recFromSeed.bLight">
 		<div class="row">
 			<div class="columns center" translate>
@@ -49,11 +56,18 @@
 	<div ng-show="!recFromSeed.bLight">
 
 		<dag-state-icon icon="warning-1"></dag-state-icon>
-
-		<ul class="warnings color_red">
-			<li translate>This will permanently delete all your existing wallets!</li>
-			<li translate>Only single-sig wallets can be recovered.</li>
+    
+    <ul class="warnings color_red">
 		</ul>
+
+    <div class="box-notification" ng-show="recFromSeed.error">
+      <span class="text-warning">
+        {{recFromSeed.error}}
+      </span>
+    </div>
+
+    <p class="color_red">This will permanently delete all your existing wallets!</p>
+    <p class="color_red">Only single-sig wallets can be recovered.</p>
 
 		<form name="settingsDeviceNameForm" class="columns" ng-submit="recFromSeed.recoveryForm()">
 			<label><span translate>Your Wallet Seed:</span></label>
