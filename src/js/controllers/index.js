@@ -65,6 +65,10 @@ no-nested-ternary,no-shadow,no-plusplus,consistent-return,import/no-extraneous-d
       self.$state = $state;
       // self.usePushNotifications = isCordova && !isMobile.Windows() && isMobile.Android();
       self.usePushNotifications = false;
+
+      self.triggerUrl = (state) => {
+        $state.go(state);
+      };
       /*
        console.log("process", process.env);
        var os = require('os');

@@ -1,4 +1,6 @@
-<dag-nav-bar title="Invite new device" invert go-back ng-init="showCamera = true"></dag-nav-bar>
+<div ng-include="'views/includes/topbar.html'"
+  ng-init="titleSection='Invite new device'; goBackToState = 'correspondentDevices.addCorrespondentDevice'; showCamera = true; invert=true;">
+</div>
 
 <div ng-controller="inviteCorrespondentDeviceController">
 

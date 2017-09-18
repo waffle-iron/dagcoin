@@ -1,4 +1,5 @@
-<dag-nav-bar title="Global preferences" invert></dag-nav-bar>
+<div ng-include="'views/includes/topbar.html'" ng-init="closeToHome = true; titleSection='Global preferences';">
+</div>
 
 
 <div class="content preferences" ng-controller="preferencesGlobalController as prefGlobal" ng-init="prefGlobal.init()">

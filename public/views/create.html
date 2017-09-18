@@ -1,111 +1,110 @@
-<dag-nav-bar title="Create New Wallet" invert></dag-nav-bar>
-
+<div
+  ng-include="'views/includes/topbar.html'"
+  ng-init="titleSection='Create new wallet';  closeToHome = true;">
+</div>
 <div class="content p20v" ng-controller="createController as create" ng-init="create.setTotalCosigners(1)">
 
-    <div class="onGoingProcess" ng-show="create.loading">
-        <div class="onGoingProcess-content" ng-style="{'background-color':'#222'}">
-            <div class="spinner">
-                <div class="rect1"></div>
-                <div class="rect2"></div>
-                <div class="rect3"></div>
-                <div class="rect4"></div>
-                <div class="rect5"></div>
-            </div>
-            <span translate>Creating Wallet...</span>
-        </div>
+  <div class="onGoingProcess" ng-show="create.loading">
+    <div class="onGoingProcess-content" ng-style="{'background-color':'#222'}">
+      <div class="spinner">
+        <div class="rect1"></div>
+        <div class="rect2"></div>
+        <div class="rect3"></div>
+        <div class="rect4"></div>
+        <div class="rect5"></div>
+      </div>
+      <span translate>Creating Wallet...</span>
     </div>
+  </div>
 
 
-    <dag-tabset ng-show="!create.loading">
-        <dag-tab heading="Plain Wallet" tab-click="create.setTotalCosigners(1)">
+  <dag-tabset ng-show="!create.loading">
+    <dag-tab heading="Plain Wallet" tab-click="create.setTotalCosigners(1)">
 
-            <form name="setupForm" ng-submit="create.create(setupForm)" novalidate>
-                <div class="box-notification" ng-show="create.error">
-                    <span class="text-warning size-14">{{create.error|translate}}</span>
-                </div>
+      <form name="setupForm" ng-submit="create.create(setupForm)" novalidate>
+        <div class="box-notification" ng-show="create.error">
+          <span class="text-warning size-14">{{create.error|translate}}</span>
+        </div>
 
-                <div ng-hide="create.hideWalletName">
-                    <label class="input-wrap">
-                        <span translate>Wallet name</span>
+        <div ng-hide="create.hideWalletName">
+          <label class="input-wrap">
+            <span translate>Wallet name</span>
 
-                        <input type="text"
-                               placeholder="{{'New wallet' | translate}}"
-                               name="walletName" ng-model="walletName" ng-required="true"
-                               ng-focus="create.formFocus('wallet-name')" ng-blur="create.formFocus(false)">
+            <input type="text"
+                   placeholder="{{'New wallet' | translate}}"
+                   name="walletName" ng-model="walletName" ng-required="true"
+                   ng-focus="create.formFocus('wallet-name')" ng-blur="create.formFocus(false)">
 
-                    </label>
-                </div>
+          </label>
+        </div>
 
-              <button type="submit" class="btn btn_red-full" ng-disabled="setupForm.$invalid || create.loading">
-                <span translate>Create new wallet</span>
-              </button>
-            </form>
-        </dag-tab>
+        <button type="submit" class="btn btn_red-full" ng-disabled="setupForm.$invalid || create.loading">
+          <span translate>Create new wallet</span>
+        </button>
+      </form>
+    </dag-tab>
 
-        <dag-tab heading="Multidevice Wallet" tab-click="create.setMultisig()">
+    <dag-tab heading="Multidevice Wallet" tab-click="create.setMultisig()">
 
-            <form name="setupForm" ng-submit="create.create(setupForm)" novalidate>
+      <form name="setupForm" ng-submit="create.create(setupForm)" novalidate>
 
-                <div id="error-area" class="box-notification" ng-show="create.error">
-                    <span class="text-warning size-14">{{create.error|translate}}</span>
-                </div>
+        <div id="error-area" class="box-notification" ng-show="create.error">
+          <span class="text-warning size-14">{{create.error|translate}}</span>
+        </div>
 
-                <div ng-hide="create.hideWalletName">
-                    <label class="input-wrap">
-                        <span translate>Wallet name</span>
-                        <input type="text"
-                               placeholder="{{'Laptop + phone + tablet' | translate}}"
-                               class="form-control" name="walletName" ng-model="walletName"
-                               ng-required="true"
-                               ng-focus="create.formFocus('wallet-name')" ng-blur="create.formFocus(false)">
-                    </label>
-                </div>
-                <div class="row" ng-show="totalCosigners != 1">
+        <div ng-hide="create.hideWalletName">
+          <label class="input-wrap">
+            <span translate>Wallet name</span>
+            <input type="text"
+                   placeholder="{{'Laptop + phone + tablet' | translate}}"
+                   class="form-control" name="walletName" ng-model="walletName"
+                   ng-required="true"
+                   ng-focus="create.formFocus('wallet-name')" ng-blur="create.formFocus(false)">
+          </label>
+        </div>
+        <div class="row" ng-show="totalCosigners != 1">
 
-                    <label class="input-wrap"><span translate>Total number of co-signers</span>
-                        <select ng-model="totalCosigners"
-                                ng-options="totalCosigners as totalCosigners for totalCosigners in create.TCValues"
-                                ng-change="create.setTotalCosigners(totalCosigners)">
-                        </select>
-                    </label>
-
-
-                    <label class="input-wrap"><span translate>Required number of signatures</span>
-                        <select ng-model="requiredCosigners"
-                                ng-options="requiredCosigners as requiredCosigners for requiredCosigners in create.RCValues"
-                                ng-disabled="totalCosigners == 1">
-                        </select>
-                    </label>
+          <label class="input-wrap"><span translate>Total number of co-signers</span>
+            <select ng-model="totalCosigners"
+                    ng-options="totalCosigners as totalCosigners for totalCosigners in create.TCValues"
+                    ng-change="create.setTotalCosigners(totalCosigners)">
+            </select>
+          </label>
 
 
-                    <div ng-repeat="cosigner in create.cosigners track by $index">
-                        <label class="input-wrap"><span translate>Co-signer {{$index+1}}:</span>
-                            <select ng-model="cosigner.device_address"
-                                    ng-disabled="$parent.totalCosigners == 1"
-                                    ng-change="create.onCorrespondentSelected(cosigner.device_address)">
-                                <option value="">-- Select co-signer --</option>
-                                <option ng-repeat="candidate_cosigner in create.candidate_cosigners"
-                                        value="{{candidate_cosigner.device_address}}">
-                                    {{candidate_cosigner.name+'
-                                    ('+candidate_cosigner.device_address.substr(0,4)+'...)'}}
-                                </option>
-                                <option value="new">[ Add new co-signer device ]</option>
-                            </select>
-                        </label>
-                    </div>
-
-                    <button type="submit"
-                            class="btn btn_red-full"
-                            ng-disabled="setupForm.$invalid || create.loading">
-                        <span translate>Create {{requiredCosigners}}-of-{{totalCosigners}} wallet</span>
-                    </button>
-                </div>
+          <label class="input-wrap"><span translate>Required number of signatures</span>
+            <select ng-model="requiredCosigners"
+                    ng-options="requiredCosigners as requiredCosigners for requiredCosigners in create.RCValues"
+                    ng-disabled="totalCosigners == 1">
+            </select>
+          </label>
 
 
+          <div ng-repeat="cosigner in create.cosigners track by $index">
+            <label class="input-wrap"><span translate>Co-signer {{$index+1}}:</span>
+              <select ng-model="cosigner.device_address"
+                      ng-disabled="$parent.totalCosigners == 1"
+                      ng-change="create.onCorrespondentSelected(cosigner.device_address)">
+                <option value="">-- Select co-signer --</option>
+                <option ng-repeat="candidate_cosigner in create.candidate_cosigners"
+                        value="{{candidate_cosigner.device_address}}">
+                  {{candidate_cosigner.name+'
+                  ('+candidate_cosigner.device_address.substr(0,4)+'...)'}}
+                </option>
+                <option value="new">[ Add new co-signer device ]</option>
+              </select>
+            </label>
+          </div>
 
-            </form>
+          <button type="submit"
+                  class="btn btn_red-full"
+                  ng-disabled="setupForm.$invalid || create.loading">
+            <span translate>Create {{requiredCosigners}}-of-{{totalCosigners}} wallet</span>
+          </button>
+        </div>
 
-        </dag-tab>
-    </dag-tabset>
+      </form>
+
+    </dag-tab>
+  </dag-tabset>
 </div>
-<div class="extra-margin-bottom"></div>

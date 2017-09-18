@@ -1,4 +1,7 @@
-<dag-nav-bar go-back invert title="Wallet Alias"></dag-nav-bar>
+<div
+  ng-include="'views/includes/topbar.html'"
+  ng-init="titleSection='Wallet Alias'; goBackToState = 'preferences'; invert = true;">
+</div>
 
 <div class="introduction-svg" ng-include="'views/includes/background.html'"></div>
 <div class="content" ng-controller="preferencesAliasController as prefAlias">

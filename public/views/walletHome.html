@@ -1,4 +1,7 @@
-<dag-nav-bar title="My Wallet"></dag-nav-bar>
+<div class="topbar-container topbar-transparent"
+     ng-include="'views/includes/topbar.html'"
+     ng-init="titleSection='My wallet'; showCamera = true">
+</div>
 
 <div ng-controller="walletHomeController as home">
 	<div class="onGoingProcess" ng-show="index.isOffline">

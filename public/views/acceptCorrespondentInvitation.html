@@ -1,8 +1,7 @@
-<!--div
-  class="topbar-container"
+<div
   ng-include="'views/includes/topbar.html'"
-  ng-init="titleSection='Accept invitation'; goBackToState = 'addCorrespondentDevice'; showCamera = true">
-</div-->
+  ng-init="titleSection='Accept invitation'; goBackToState = 'addCorrespondentDevice'; showCamera = true; invert = true;">
+</div>
 
 <style>
   #qr-scanner{
@@ -40,8 +39,6 @@
 </style>
 
 <div ng-controller="acceptCorrespondentInvitationController">
-
-  <dag-nav-bar title="{{'Accept invitation'|translate}}" go-back invert></dag-nav-bar>
     
   <div class="onGoingProcess" ng-show="onGoingProcess">
     <div class="onGoingProcess-content" ng-style="{'background-color':backgroundColor}">

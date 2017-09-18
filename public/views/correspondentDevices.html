@@ -1,6 +1,10 @@
 <div ng-controller="correspondentDevicesController">
 
-  <dag-nav-bar title="Paired Devices" invert ng-show="state.is('correspondentDevices')"></dag-nav-bar>
+  <div
+       ng-include="'views/includes/topbar.html'"
+       ng-init="titleSection='Paired devices'; showCamera = true; closeToHome = true"
+       ng-show="state.is('correspondentDevices')">
+  </div>
 
 	<div ui-view="dialog"></div>
     <div class="m20b tab-view tab-in" ng-show="state.is('correspondentDevices')" id="chat">

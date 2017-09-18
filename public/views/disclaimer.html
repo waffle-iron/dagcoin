@@ -1,6 +1,7 @@
 <div ng-controller="disclaimerController" ng-init="init()">
-
-  <dag-nav-bar ng-if="agreed && index.hasProfile" title="Terms Of Use" go-back invert></dag-nav-bar>
+  <div ng-if="agreed && index.hasProfile" ng-include="'views/includes/topbar.html'"
+    ng-init="titleSection='Terms of Use';  goBackToState = 'about'; invert = true;">
+  </div>
 
   <div class="introduction-svg" ng-include="'views/includes/background.html'"></div>
   <div class="content p20b" ng-class="{'disclaimer':!index.hasProfile}">
