@@ -1,0 +1,25 @@
+<nav class="sidebar left-off-canvas-menu">
+
+    <header>
+        <div>
+            <svg-icon name="Dagcoin_logo_color_text"></svg-icon>
+        </div>
+        <div ng-controller="versionAndWalletTypeController as v">
+            <span>v{{v.version}} Beta.</span>
+            <strong>{{v.type}}</strong>
+        </div>
+    </header>
+
+    <div ng-repeat="list in ::lists">
+        <ul class="list">
+            <li ng-repeat="link in ::list.links">
+                <a ui-sref-active="active" ui-sref="{{::link.state}}">
+                    <svg-icon name="{{::link.icon}}"></svg-icon>
+                    <span>{{::link.title}}</span>
+                </a>
+            </li>
+        </ul>
+    </div>
+
+    <dag-exchange-rate-view></dag-exchange-rate-view>
+</nav>

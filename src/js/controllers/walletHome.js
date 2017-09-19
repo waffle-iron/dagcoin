@@ -25,6 +25,7 @@
       animationService,
       addressbookService,
       correspondentListService,
+      discoveryService,
       isMobile) {
       const constants = require('byteballcore/constants.js');
       const eventBus = require('byteballcore/event_bus.js');
@@ -58,7 +59,6 @@
       this.isTestnet = constants.version.match(/t$/);
       this.testnetName = (constants.alt === '2') ? '[NEW TESTNET]' : '[TESTNET]';
       $scope.index.tab = 'walletHome'; // for some reason, current tab state is tracked in index and survives re-instatiations of walletHome.js
-
       const disablePaymentRequestListener = $rootScope.$on('paymentRequest', (event, address, amount, asset, recipientDeviceAddress) => {
         console.log(`paymentRequest event ${address}, ${amount}`);
         $rootScope.$emit('Local/SetTab', 'send');
@@ -412,6 +412,12 @@
         } else if (nodeWebkit.isDefined()) {
           nodeWebkit.writeToClipboard(addr);
         }
+
+        $scope.tooltipCopiedShown = true;
+
+        $timeout(() => {
+          $scope.tooltipCopiedShown = false;
+        }, 1000);
       };
 
       this.shareAddress = function (addr) {
@@ -419,7 +425,7 @@
           if (isMobile.Android() || isMobile.Windows()) {
             window.ignoreMobilePause = true;
           }
-          window.plugins.socialsharing.share(`${self.protocol}:${addr}`, null, null, null);
+          window.plugins.socialsharing.share(addr, null, null, null);
         }
       };
 
@@ -477,6 +483,7 @@
 
 
           $scope.shareAddress = function (uri) {
+            debugger
             if (isCordova) {
               if (isMobile.Android() || isMobile.Windows()) {
                 window.ignoreMobilePause = true;
@@ -846,6 +853,7 @@
                 arrSigningDeviceAddresses = indexScope.copayers.map(copayer => copayer.device_address);
               }
               breadcrumbs.add(`sending payment in ${asset}`);
+
               profileService.bKeepUnlocked = true;
               const opts = {
                 shared_address: indexScope.shared_address,
@@ -857,6 +865,15 @@
                 arrSigningDeviceAddresses,
                 recipientDeviceAddress,
               };
+
+              /* const userConfig = discoveryService.getUserConfig();
+
+              if (userConfig.byteOrigin) {
+                opts.shared_address = [userConfig.byteOrigin];
+              } */
+
+              console.log(`PAYMENT OPTIONS BEFORE: ${JSON.stringify(opts)}`);
+
               fc.sendMultiPayment(opts, (sendMultiPaymentError) => {
                 let error = sendMultiPaymentError;
                 // if multisig, it might take very long before the callback is called
@@ -1294,7 +1311,7 @@
 
         const modalInstance = $modal.open({
           templateUrl: 'views/modals/tx-details.html',
-          windowClass: animationService.modalAnimated.slideRight,
+          windowClass: 'modal-transaction-detail',
           controller: ModalInstanceCtrl,
         });
 

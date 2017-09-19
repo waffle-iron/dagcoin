@@ -6,6 +6,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
   <meta name="msapplication-tap-highlight" content="no">
   <meta name="format-detection" content="telephone=no">
+  <link rel="stylesheet" type="text/css" href="css/vendors.css">
   <link rel="stylesheet" type="text/css" href="css/foundation.css">
   <link rel="stylesheet" type="text/css" href="icons/foundation-icons.css">
   <link rel="stylesheet" type="text/css" href="css/dagcoin.css">
@@ -15,8 +16,8 @@
 <body ng-cloak class="ng-cloak">
 
   <div class="page"
-    ng-controller="indexController as index" 
-    ng-swipe-disable-mouse 
+    ng-controller="indexController as index"
+    ng-swipe-disable-mouse
     ng-swipe-left="index.closeMenu()"
     ng-swipe-right="index.swipeRight()">
 
@@ -24,7 +25,9 @@
       <div class="inner-wrap">
         <div ng-include="'views/includes/sidebar.html'" ng-if="index.hasProfile"></div>
 
-        <div notifications="right top"></div> 
+        <!--<dag-left-side-bar ng-if="index.hasProfile"></dag-left-side-bar>-->
+
+        <div notifications="right top"></div>
         <div ng-include="'views/includes/password.html'" ng-if="index.askPassword"></div>
         <div ng-include="'views/includes/alert.html'" ng-if="index.showAlert"></div>
         <div id="sectionContainer">
@@ -41,7 +44,6 @@
       </div>
     </div>
   </div>
-  
   <script>console.log("starting scripts...");</script>
   <script src="angular.js"></script>
 
@@ -49,6 +51,7 @@
   <!-- PLACEHOLDER: CORDOVA SRIPT -->
 
   <script src="dagcoin.js"></script>
+  <script src="templates.js" type="application/javascript"></script>
   <script>console.log("done scripts");</script>
 
 </body>

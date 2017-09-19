@@ -3,7 +3,7 @@
   'use strict';
 
   angular.module('copayApp.services')
-    .factory('fundingNodeService', ($q, $rootScope, discoveryService, fileSystemService) => {
+    .factory('fundingExchangeProviderService', ($q, $rootScope, discoveryService, fileSystemService, configService) => {
       const self = {};
 
       const settings = {
@@ -19,6 +19,7 @@
       let messageInterval = null;
       let assocBalances = null;
       let updatingConfing = false;
+      let paused = false;
 
       self.update = update;
       self.isActivated = isActivated;
@@ -29,6 +30,8 @@
       self.getSettings = getSettings;
       self.setSettings = setSettings;
       self.getUserConfig = getUserConfig;
+      self.pause = pause;
+      self.unpause = unpause;
 
       $rootScope.$on('Local/BalanceUpdatedAndWalletUnlocked', (event, ab) => {
         assocBalances = ab;
@@ -36,7 +39,45 @@
         self.init();
       });
 
+      function pause() {
+        paused = true;
+      }
+
+      function unpause() {
+        paused = false;
+        self.init();
+      }
+
+      // TODO: refine this logic to keep in account funding limits, resource availability and all parameters
+      const eventBus = require('byteballcore/event_bus.js');
+      eventBus.on('dagcoin.is-funding-available', (message, fromAddress) => {
+        const reply = {
+          protocol: 'dagcoin',
+          title: 'funding-available',
+          status: true
+        };
+
+        const device = require('byteballcore/device.js');
+        device.sendMessageToDevice(fromAddress, 'text', JSON.stringify(reply));
+      });
+
+      // One device can send such message to check whether another device can exchange messages
+      // TODO: move to correspondentListService as soon as this feature is available
+      eventBus.on('dagcoin.is-connected', (message, fromAddress) => {
+        const reply = {
+          protocol: 'dagcoin',
+          title: 'connected'
+        };
+
+        const device = require('byteballcore/device.js');
+        device.sendMessageToDevice(fromAddress, 'text', JSON.stringify(reply));
+      });
+
       function init() {
+        if (paused) {
+          return;
+        }
+
         const conf = getUserConfig();
 
         settings.exchangeFee = conf.exchangeFee || settings.exchangeFee;
@@ -46,7 +87,7 @@
 
         messageIntervalTimeout = conf.fundingNodeMessageInterval || messageIntervalTimeout;
 
-        discoveryService.sendMessage(discoveryService.messages.listTraders).then(() => { });
+        // discoveryService.sendMessage(discoveryService.messages.listTraders).then(() => { });
 
         return self.canEnable().then(() => {
           self.update(conf.fundingNode || false);
@@ -59,18 +100,11 @@
 
       function getUserConfig() {
         try {
-          const userConfFile = fileSystemService.getUserConfFilePath();
-          return requireUncached(userConfFile);
+          const config = configService.getSync();
+          return config;
         } catch (e) {
           return {}; // empty config
         }
-      }
-
-      function requireUncached(module) {
-        if (typeof require.resolve === 'function') {
-          delete require.cache[require.resolve(module)];
-        }
-        return require(module.toString());
       }
 
       function updateConfig() {
@@ -78,8 +112,7 @@
           return $q.resolve();
         }
 
-        const def = $q.defer();
-        const userConfFile = fileSystemService.getUserConfFilePath();
+        const deferred = $q.defer();
         const userConf = getUserConfig();
 
         if (userConf.fundingNode === fundingNode &&
@@ -98,17 +131,16 @@
 
         updatingConfing = true;
 
-        fileSystemService.writeFile(userConfFile, JSON.stringify(userConf, null, '\t'), 'utf8', (err) => {
-          updatingConfing = false;
-
+        configService.setWithoutMergingOld(userConf, (err) => {
           if (err) {
-            def.reject(err);
+            deferred.reject(err);
           } else {
-            def.resolve();
+            deferred.resolve();
+            updatingConfing = false;
           }
         });
 
-        return def.promise;
+        return deferred.promise;
       }
 
       function isActivated() {
@@ -223,7 +255,7 @@
           settings.bytesPerAddress = newSettings.bytesPerAddress;
           settings.maxEndUserCapacity = newSettings.maxEndUserCapacity;
 
-          return updateConfig();
+          updateConfig();
         });
       }
 

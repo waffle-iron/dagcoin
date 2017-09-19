@@ -3,18 +3,25 @@
 
   angular.module('copayApp.controllers').controller('preferencesGlobalController',
     function ($scope, $q, $rootScope, $timeout, $log, configService, uxLanguage, pushNotificationsService, profileService,
-      fundingNodeService, $modal, animationService, chooseFeeTypeService, changeWalletTypeTypeService) {
+      fundingExchangeProviderService, $modal, animationService, chooseFeeTypeService, changeWalletTypeService, sharedService) {
       const conf = require('byteballcore/conf.js');
       const self = this;
       self.fundingNodeSettings = {};
       self.isLight = conf.bLight;
-      self.canChangeWalletType = changeWalletTypeTypeService.canChange();
+      self.canChangeWalletType = changeWalletTypeService.canChange();
+      self.hasBalance = sharedService.hasBalance('stable');
+      self.hasBytes = sharedService.hasBytes('stable');
+      self.hasDags = sharedService.hasDags('stable');
 
       $scope.encrypt = !!profileService.profile.xPrivKeyEncrypted;
 
       self.initFundingNode = () => {
-        self.fundingNode = fundingNodeService.isActivated();
-        self.fundingNodeSettings = fundingNodeService.getSettings();
+        self.fundingNode = fundingExchangeProviderService.isActivated();
+        self.fundingNodeSettings = fundingExchangeProviderService.getSettings();
+
+        fundingExchangeProviderService.canEnable().then(() => {
+          self.canEnableFundingNode = true;
+        });
       };
 
       this.init = function () {
@@ -88,9 +95,9 @@
           return;
         }
 
-        fundingNodeService.canEnable().then(() => {
-          fundingNodeService.update(newVal).then(() => {
-            self.fundingNodeSettings = fundingNodeService.getSettings();
+        fundingExchangeProviderService.canEnable().then(() => {
+          fundingExchangeProviderService.update(newVal).then(() => {
+            self.fundingNodeSettings = fundingExchangeProviderService.getSettings();
           });
         }, () => {
           self.fundingNode = false;
@@ -106,7 +113,7 @@
       }
 
       self.onFundingNodeSettingBlur = function () {
-        const oldSettings = fundingNodeService.getSettings();
+        const oldSettings = fundingExchangeProviderService.getSettings();
         const newSettings = {
           exchangeFee: getCorrectValue(oldSettings.exchangeFee, self.fundingNodeSettings.exchangeFee, true),
           totalBytes: getCorrectValue(oldSettings.totalBytes, self.fundingNodeSettings.totalBytes, false),
@@ -114,10 +121,10 @@
           maxEndUserCapacity: getCorrectValue(oldSettings.maxEndUserCapacity, self.fundingNodeSettings.maxEndUserCapacity, false)
         };
 
-        fundingNodeService.setSettings(newSettings).then(() => {
-          self.fundingNodeSettings = fundingNodeService.getSettings();
+        fundingExchangeProviderService.setSettings(newSettings).then(() => {
+          self.fundingNodeSettings = fundingExchangeProviderService.getSettings();
         }, () => {
-          self.fundingNodeSettings = fundingNodeService.getSettings();
+          self.fundingNodeSettings = fundingExchangeProviderService.getSettings();
         });
       };
 
@@ -132,15 +139,48 @@
         self.typeOfPaymentFee = res;
       });
 
-      self.enableHubOption = chooseFeeTypeService.getCanBeSwitchedToHub();
       self.changeTypeOfPayment = changeTypeOfPayment;
 
       self.changeWalletType = function () {
-        changeWalletTypeTypeService.change();
+        if (self.isLight) {
+          const ModalInstanceCtrl = function ($scopeModal, $modalInstance, $sce) {
+            $scopeModal.title = $sce.trustAsHtml(`
+            The wallet will contain the most current state of the entire Dagcoin database. 
+            This option is better for privacy but will take several gigabytes of storage and the initial sync will take several days. 
+            CPU load will be high during sync. After changing to full wallet your money won't be visible until database will synchronize your transactions.`);
+
+            $scopeModal.yes_label = 'Change it';
+            $scopeModal.ok = function () {
+              $modalInstance.close(true);
+            };
+            $scopeModal.cancel = function () {
+              $modalInstance.dismiss('cancel');
+            };
+          };
+
+          const modalInstance = $modal.open({
+            templateUrl: 'views/modals/confirmation.html',
+            windowClass: animationService.modalAnimated.slideUp,
+            controller: ['$scope', '$modalInstance', '$sce', ModalInstanceCtrl],
+          });
+
+          modalInstance.result.finally(() => {
+            const m = angular.element(document.getElementsByClassName('reveal-modal'));
+            m.addClass(animationService.modalAnimated.slideOutDown);
+          });
+
+          modalInstance.result.then((ok) => {
+            if (ok) {
+              changeWalletTypeService.change();
+            }
+          });
+        } else {
+          changeWalletTypeService.change();
+        }
       };
 
       function changeTypeOfPayment(model) {
-        if (model === 'hub' && !self.enableHubOption) {
+        if (model === 'hub' && !self.hasDags) {
           self.typeOfPaymentFee = 'bytes';
         } else {
           self.typeOfPaymentFee = model;

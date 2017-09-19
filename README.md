@@ -22,16 +22,27 @@ If you are building for testnet, switch to testnet branch:
 git checkout testnet
 ```
 
-Install [bower](http://bower.io/) and [grunt](http://gruntjs.com/getting-started) if you haven't already:
+Install [bower](http://bower.io/), [grunt](http://gruntjs.com/getting-started) and [penv](https://www.npmjs.com/package/penv) if you haven't already:
 
 ```sh
 npm install -g bower
 npm install -g grunt-cli
+npm install -g penv
 ```
 
-Build Dagcoin:
+### Build Dagcoin:
 
+If you are using macOS or Linux run:
 ```sh
+make prepare-dev-tn
+```
+Then run Dagcoin desktop client:
+```sh
+/path/to/your/nwjs/nwjs .
+```
+Otherwise run:
+```sh
+penv testnet(if you are building testnet) or penv base(if you are building livenet)
 bower install
 npm install
 grunt
@@ -53,7 +64,7 @@ Then run Dagcoin desktop client:
 - Install Android SDK
 - Run `make android-debug`
 
-### macOS
+### macOS and Linux
 
 - run `make prepare-package`
 
@@ -62,13 +73,6 @@ Then run Dagcoin desktop client:
 - `grunt desktop`
 - copy `node_modules` into the app bundle ../byteballbuilds/Byteball/win64, except those that are important only for development (karma, grunt, jasmine)
 - `grunt inno64`
-
-### Linux
-
-- `grunt desktop`
-- copy `node_modules` into the app bundle ../byteballbuilds/Byteball/linux64, except those that are important only for development (karma, grunt, jasmine)
-- `grunt linux64`
-
 
 ## About Dagcoin
 
@@ -83,7 +87,18 @@ Dagcoin uses a single extended private key for all wallets, BIP44 is used for wa
 * Windows: `%LOCALAPPDATA%\dagcoin`
 
 
+## Translations
 
+Dagcoin uses standard gettext PO files for translations and [Crowdin](https://crowdin.com/project/dagcoin) as the front-end tool for translators. To join our team of translators, please create an account at [Crowdin](https://crowdin.com) and translate the Dagcoin documentation and application text into your native language.
+
+To download and build using the latest translations from Crowdin, please use the following commands:
+
+```sh
+cd i18n
+node crowdin_download.js
+```
+
+This will download all partial and complete language translations while also cleaning out any untranslated ones.
 
 
 ## Support

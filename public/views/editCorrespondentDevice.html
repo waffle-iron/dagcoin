@@ -1,61 +1,62 @@
-
 <div ng-controller="editCorrespondentDeviceController">
 
-<style>
-.purge_chat a {
-	color: #883333;
-	border: 1px dashed #883333;
-	border-width: 0 0 1px 0;
-}
-</style>
+    <style>
+        .purge_chat a {
+            color: #883333;
+            border: 1px dashed #883333;
+            border-width: 0 0 1px 0;
+        }
+    </style>
 
-<!--div
-  class="topbar-container"
-  ng-include="'views/includes/topbar.html'"
-  ng-init="titleSection='{{name}}'; goBackToState = 'correspondentDevice'; showCamera = true">
-</div-->
+    <nav class="tab-bar" style="margin-bottom: 20px;height: 50px;">
+        <section class="left-small" style="background: #fff;">
+            <a
+                    ng-click="$root.go('correspondentDevices.correspondentDevice')"><i class="icon-arrow-left3 icon-back"></i>
+                <span class="text-back">{{'Back'|translate}}</span>
+            </a>
+        </section>
 
-<nav class="tab-bar">
-  <section class="left-small">
-    <a
-      ng-click="$root.go('correspondentDevices.correspondentDevice')"><i class="icon-arrow-left3 icon-back"></i>
-      <span class="text-back">{{'Back'|translate}}</span>
-    </a>
-  </section>
+        <section class="middle tab-bar-section" style="background: #fff;">
+            <h1 class="title ellipsis" ng-style="{'color': noColor ? '#4A90E2' : index.backgroundColor}">
+                {{name}}
+            </h1>
+        </section>
+    </nav>
 
-  <section class="middle tab-bar-section">
-    <h1 class="title ellipsis" ng-style="{'color': noColor ? '#4A90E2' : index.backgroundColor}">
-      {{name}}
-    </h1>
-  </section>
-</nav>
-
-    <div class="columns m20t m20b" >
-      <div> 
-		<span translate>Full address:</span>
-        <div class="size-10 text-gray ellipsis">{{correspondent.device_address}}@{{hub}}</div>
-      </div>
+    <div class="columns m20t m20b" style="margin: 0 auto;width: 350px;float: none;">
+        <div>
+            <span translate>Full address:</span>
+            <div class="size-10 text-gray ellipsis">{{correspondent.device_address}}@{{hub}}</div>
+        </div>
 
         <form name="editForm" class="m20t" no-validate>
-          <div class="text-warning size-12 m10b" ng-show="error">{{error|translate}}</div>
-		  <span translate>Rename:</span>
-          <input type="text" id="name" name="name" ng-model="name" required>
-		  <span translate>Change hub:</span>
-          <input type="text" id="hub" name="hub" ng-model="hub" required>
-          <div class="row">
-            <div>
-              <input type="submit" 
-                     class="button expand round" 
-                     value="{{'Save'|translate}}"
-                     ng-disabled="!editForm.$valid"
-                     ng-style="{'background-color':backgroundColor}" 
-                     ng-click="save()">
+            <div class="text-warning size-12 m10b" ng-show="error">{{error|translate}}</div>
+
+            <div class="input-wrap">
+                <span translate>Rename:</span>
+                <input type="text" id="name" name="name" ng-model="name" required>
             </div>
-          </div>
+
+            <div class="input-wrap">
+                <span translate>Change hub:</span>
+                <input type="text" id="hub" name="hub" ng-model="hub" required>
+            </div>
+
+
+            <div class="row">
+                <button type="submit"
+                        class="btn btn_red-full"
+                        ng-disabled="!editForm.$valid"
+                        ng-style="{'background-color':backgroundColor}"
+                        ng-click="save()">{{'Save'|translate}}
+                </button>
+            </div>
         </form>
+
+        <div class="purge_chat columns center m20t"><a href="#" ng-click="purge_chat()" translate>clear chat history</a>
+        </div>
     </div>
-      
-    <div class="purge_chat columns"><a href="#" ng-click="purge_chat()" translate>clear chat history</a></div>
+
 
     <div class="extra-margin-bottom"></div>
 </div>

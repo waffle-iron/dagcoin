@@ -1,7 +1,7 @@
 [Desktop Entry]
 Type=Application
 Version=1.0
-Name=Byteball
+Name=Dagcoin
 Comment=A wallet for decentralized value
 Exec=bash -c 'cd $(dirname %k) && ./Dagcoin %u'
 Icon=icon-white-outline.iconset/icon_256x256.png

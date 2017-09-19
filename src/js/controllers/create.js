@@ -2,7 +2,7 @@
   'use strict';
 
   angular.module('copayApp.controllers').controller('createController',
-    function ($scope, $rootScope, $location, $timeout, $log, lodash, go, profileService, configService, isCordova, gettext, isMobile, derivationPathHelper, correspondentListService) {
+    function ($scope, $rootScope, $location, $anchorScroll, $timeout, $log, lodash, go, profileService, configService, isCordova, gettext, isMobile, derivationPathHelper, correspondentListService) {
       const self = this;
       const defaults = configService.getDefaults();
       this.isWindowsPhoneApp = isMobile.Windows() && isCordova;
@@ -93,6 +93,9 @@
 
       function setError(error) {
         self.error = gettext(error);
+
+        $location.hash('error-area');
+        $anchorScroll();
       }
 
       this.createWallet = function (opts) {
