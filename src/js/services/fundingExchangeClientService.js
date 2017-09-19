@@ -61,7 +61,7 @@
 
       function askForFundingNode() {
         console.log('ASKING FOR A FUNDING NODE');
-        process.exit();
+        // process.exit();
 
         const promise = new Promise((resolve, reject) => {
           const listener = function (message, fromAddress) {
