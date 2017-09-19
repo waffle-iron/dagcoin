@@ -658,7 +658,7 @@
         }
         return $timeout(() => {
           root.insistUnlockFC(err.message, cb);
-        }, 1000);
+        }, 200);
       });
     };
 
