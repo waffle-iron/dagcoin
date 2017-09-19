@@ -13,7 +13,7 @@
             ng-repeat="item in sidebar.wallets track by $index"
             ng-class="{'selected': item.id == index.walletId}"
             class="wallets">
-            <a ng-click="sidebar.switchWallet(item.id, index.walletId)">
+            <a ng-click="index.setTab('walletHome', false, 0, true); sidebar.switchWallet(item.id, index.walletId,'walletHome');">
                 <div class="avatar-wallet" ng-style="{'background-color':item.color}">
                     {{(item.name || item.id) | limitTo: 1}}
                 </div>
@@ -29,21 +29,21 @@
     <ul class="off-canvas-list">
 
         <li class="menu_links">
-            <a ng-click="$root.go('create')">
+            <a ui-sref="create">
                 <i class="fi-plus size-24 icon"></i>
                 <span translate>Add new wallet</span>
             </a>
         </li>
 
         <li class="menu_links">
-            <a ng-click="$root.go('correspondentDevices')">
+            <a ui-sref="correspondentDevices">
                 <i class="fi-share size-24 icon vm"></i>
                 <span translate>Paired devices</span>
             </a>
         </li>
 
         <li class="menu_links">
-            <a ng-click="$root.go('preferencesGlobal')">
+            <a ui-sref="preferencesGlobal">
                 <i class="fi-widget size-24 icon vm"></i>
                 <span translate>Settings</span>
             </a>

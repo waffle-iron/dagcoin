@@ -1,23 +1,12 @@
-<nav class="tab-bar">
-	<header class="c-header c-header-android js-header">
-		<div class="c-header__logo"><a href="#">
-			<svg class="icon icon-logo">
-				<use xlink:href="img/svg/symbol-defs.svg#icon-logo"></use>
-			</svg>
-		</a>
-		</div>
-		<div class="c-header__settings">
-			<span class="settings-trigger">
-            <a ng-click="cancel()">
-			<span>Back</span>
-			</a>
-		</span>
-		</div>
-
-	</header>
-</nav>
-
 <div class="modal-content fix-modals-touch">
+
+  <a ng-click="cancel()">X</a>
+
+  <div class="modal-content-header">
+    <svg-icon title="credit-card"></svg-icon>
+    <h3>Transaction detail</h3>
+  </div>
+
   <div class="header-modal text-center enable_text_select">
     <div class="size-42" ng-show="btx.action != 'invalid'">
 
@@ -30,8 +19,6 @@
       -
     </div>
   </div>
-
-  <h4 class="text-center size-16 p10t line-b" translate>Details:</h4>
 
   <ul class="no-bullet size-14 m0 ">
 
@@ -59,11 +46,13 @@
     </li>
 	  
     <li ng-if="btx.action == 'received'" class="line-b p10 oh">
+      <svg-icon title="vertical_align_top"></svg-icon>
       <span class="text-gray">From</span>:
 	  <div class="right small-10 columns enable_text_select ellipsis"><div ng-repeat="address in btx.arrPayerAddresses" class="right">{{address}}</div></div>
     </li>
 
     <li ng-if="btx.action == 'received'" class="line-b p10 oh">
+      <svg-icon title="vertical_align_bottom"></svg-icon>
       <span class="text-gray" translate>To</span>:
 	  <div class="right small-10 columns enable_text_select ellipsis"><div class="right">{{btx.my_address}}</div></div>
     </li>
@@ -74,6 +63,7 @@
     </div>
 
     <li ng-show="btc.message" class="line-b p10 oh">
+      <svg-icon title="textsms"></svg-icon>
       <span class="text-gray" translate>Note</span>:
       <span class="right">{{btx.message}}</span>
     </li>
@@ -84,6 +74,7 @@
     </span>
     </li>
     <li ng-if="btx.time" class="line-b p10 oh">
+      <svg-icon title="date_range"></svg-icon>
     <span class="text-gray" translate>Date</span>:
     <span class="right">
       <time>{{ btx.time * 1000 | amDateFormat:'MM/DD/YYYY HH:mm a'}}</time>
@@ -95,6 +86,7 @@
       <span class="right">{{btx.feeStr}}</span>
     </li>
     <li class="line-b p10 oh">
+      <svg-icon title="crop_square"></svg-icon>
       <span class="text-gray">Unit</span>:
       <div class="right small-10 columns enable_text_select ellipsis external-link"><a ng-click="openInExplorer()" class=" ">{{btx.unit}}</a></div>
     </li>
@@ -109,7 +101,8 @@
     </span>
     </li>
     <li ng-if="btx.time" class="line-b p10 oh">
-    <span class="text-gray" translate>Finality</span>:
+      <svg-icon title="hourglass_empty"></svg-icon>
+    <span class="text-gray" translate>Status</span>:
     <span class="right" >
       <span class="text-warning" ng-show="!btx.confirmations || btx.confirmations == 0" translate>
         Unconfirmed

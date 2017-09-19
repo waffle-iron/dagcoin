@@ -4,16 +4,14 @@
 
   angular.module('copayApp.services').factory('dagcoinProtocolService', (promiseService) => {
     const eventBus = require('byteballcore/event_bus.js');
-    const device = require('byteballcore/device.js');
-    const db = require('byteballcore/db.js');
-
     const root = {};
 
     const deviceConnectionPromiseMap = new Map();
 
     function pairAndConnectDevice(code, connectionCheckLifeSpan) {
-      return checkOrPairDevice(code).then(correspondent =>
-        makeSureDeviceIsConnected(correspondent.device_address, connectionCheckLifeSpan)
+      return checkOrPairDevice(code).then((correspondent) => {
+          return makeSureDeviceIsConnected(correspondent.device_address, connectionCheckLifeSpan);
+        }
       );
     }
 
@@ -40,14 +38,15 @@
 
         eventBus.on('dagcoin.connected', listener);
       }).then(
-        () => getCorrespondent(deviceAddress),
-        () => eventBus.removeListener('dagcoin.connected', listener)
+        () => { return getCorrespondent(deviceAddress); },
+        () => { eventBus.removeListener('dagcoin.connected', listener); }
       );
 
       const keepAlive = {
         protocol: 'dagcoin',
         title: 'is-connected'
       };
+      const device = require('byteballcore/device.js');
 
       device.sendMessageToDevice(deviceAddress, 'text', JSON.stringify(keepAlive));
 
@@ -74,6 +73,7 @@
     }
 
     function getCorrespondent(deviceAddress) {
+      const device = require('byteballcore/device.js');
       const promise = new Promise((resolve) => {
         device.readCorrespondent(deviceAddress, (cor) => {
           resolve(cor);
@@ -84,6 +84,7 @@
     }
 
     function pairDevice(pubkey, hub, pairingSecret) {
+      const device = require('byteballcore/device.js');
       const promise = new Promise((resolve) => {
         device.addUnconfirmedCorrespondent(pubkey, hub, 'New', (deviceAddress) => {
           console.log(`PAIRING WITH ${deviceAddress} ... ADD UNCONFIRMED CORRESPONDENT`);
@@ -130,7 +131,8 @@
     }
 
     function lookupDeviceByPublicKey(pubkey) {
-      const promise = new Promise((resolve) => {
+      const db = require('byteballcore/db.js');
+      return new Promise((resolve) => {
         db.query('SELECT device_address FROM correspondent_devices WHERE pubkey = ? AND is_confirmed = 1', [pubkey], (rows) => {
           if (rows.length === 0) {
             console.log(`DEVICE WITH PUBKEY ${pubkey} NOT YET PAIRED`);
@@ -142,8 +144,6 @@
           }
         });
       });
-
-      return promise;
     }
 
     function checkOrPairDevice(pairCode) {

@@ -1,12 +1,5 @@
 
 <div ng-controller="correspondentDeviceController">
-
-<!--div
-  class="topbar-container"
-  ng-include="'views/includes/topbar.html'"
-  ng-init="titleSection=correspondent.name; goBackToState = 'correspondentDevices'; showCamera = true">
-</div-->
-
   <nav class="tab-bar">
     <section class="left-small">
     <a
@@ -20,7 +13,7 @@
 	      {{correspondent.name}}
 	    </h1>
     </section>
-      
+
     <section class="right-small" ng-click="editCorrespondent()">
       <a href class="p10">
         <span class="text-close" translate>Edit</span>
@@ -296,7 +289,8 @@ Chat bubble CSS credits http://codepen.io/samuelkraft/pen/Farhl
           <div class="text-warning size-12 m10b" ng-show="index.isOffline">{{'Application in Offline mode'|translate}}</div>
            <button
           	class="chatbutton left"
-                     dropdown-toggle="#drop" ng-disabled="index.isOffline" data-options="align:top"><i class="size-18 icon-dots-three-horizontal"></i></button>
+            ng-style="{'background-color':profileService.focusedClient.backgroundColor}"
+            dropdown-toggle="#drop" ng-disabled="index.isOffline" data-options="align:top"><i class="size-18 icon-dots-three-horizontal"></i></button>
 
             <ul id="drop" class="f-dropdown drop-top" data-dropdown-content >
 			  <li><a ng-click="insertMyAddress()" translate>Insert my address</a></li>

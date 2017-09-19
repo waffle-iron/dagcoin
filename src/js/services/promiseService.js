@@ -67,6 +67,70 @@
       });
     };
 
+    root.counter = 0;
+
+    root.nextId = function () {
+      const id = root.counter;
+      root.counter += 1;
+      return id;
+    };
+
+    /**
+     * Listens to a generic event waiting for a certain instance of it with specific attributes analysed in the condition.
+     * Returns a promise that is rejected after a timeout.
+     * @param event An bus event name to listen to. Can be a generic event issue many times.
+     * @param condition A function that takes the event parameters as input and outputs a true value if the
+     * event is the one expected (true in the simplest case, any complex non-false value in others) to be returned by the promise
+     * when it resolves positively.
+     * The expectation is based on the event parameters (i.e.: some id or other properties of the event).
+     * Be careful:
+     * * 0 is false
+     * * false is false
+     * * null is false
+     * * 1 is true
+     * * an array or an object are true
+     * If you need to return a false value which means true you have to wrap it with a true wrapper
+     * * i.e.: return {'result': false}
+     * @param timeout A timeout after which the promise naturally expires.
+     * @param timeoutMessage An error message to be returned by reject when the timeout is met.
+     */
+    root.listeningTimedPromise = function (event, condition, timeout, timeoutMessage) {
+      const eb = require('byteballcore/event_bus');
+
+      const uniqueInternalEvent = `internal.dagcoin.${root.nextId()}`;
+
+      const listener = function (...args) {
+        const resolutionValue = condition(args);
+
+        if (!resolutionValue) {
+          console.log(`IGNORING USELESS EVENT ${event}`);
+          return;
+        }
+
+        eb.emit(uniqueInternalEvent, resolutionValue);
+      };
+
+      eb.on(event, listener);
+
+      const promise = new Promise((resolve) => {
+        eb.once(uniqueInternalEvent, resolve);
+      });
+
+      return root.timedPromise(promise, timeout, timeoutMessage)
+        .then(
+          (args) => {
+            console.log(`REMOVING THE INTERNAL LISTENER FROM ${event}`);
+            eb.removeListener(event, listener);
+            return Promise.resolve(args);
+          },
+          (err) => {
+            console.log(`REMOVING THE INTERNAL LISTENER FROM ${event}`);
+            eb.removeListener(event, listener);
+            return Promise.reject(err);
+          }
+        );
+    };
+
     return root;
   });
 }());

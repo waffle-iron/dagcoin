@@ -1,86 +1,85 @@
-
 <div class="topbar-container topbar-transparent"
-  ng-include="'views/includes/topbar.html'"
-	 ng-init="showCamera = true">
+     ng-include="'views/includes/topbar.html'"
+     ng-init="titleSection='My wallet'; showCamera = true">
 </div>
 
 <div ng-controller="walletHomeController as home">
-  <div class="onGoingProcess" ng-show="index.isOffline">
-    <div class="onGoingProcess-content" ng-style="{'background-color':'#222'}">
-      <div class="spinner">
-        <div class="rect1"></div>
-        <div class="rect2"></div>
-        <div class="rect3"></div>
-        <div class="rect4"></div>
-        <div class="rect5"></div>
-      </div>
-      <span translate>Reconnecting to Wallet Service...</span>
-    </div>
-  </div>
+	<div class="onGoingProcess" ng-show="index.isOffline">
+		<div class="onGoingProcess-content" ng-style="{'background-color':'#222'}">
+			<div class="spinner">
+				<div class="rect1"></div>
+				<div class="rect2"></div>
+				<div class="rect3"></div>
+				<div class="rect4"></div>
+				<div class="rect5"></div>
+			</div>
+			<span translate>Reconnecting to Wallet Service...</span>
+		</div>
+	</div>
 
-  <div class="onGoingProcess" ng-show="index.anyOnGoingProcess && !index.isOffline">
-    <div class="onGoingProcess-content" ng-style="{'background-color':'#222'}">
-      <div class="spinner">
-        <div class="rect1"></div>
-        <div class="rect2"></div>
-        <div class="rect3"></div>
-        <div class="rect4"></div>
-        <div class="rect5"></div>
-      </div>
-      <span translate ng-show="
+	<div class="onGoingProcess" ng-show="index.anyOnGoingProcess && !index.isOffline">
+		<div class="onGoingProcess-content" ng-style="{'background-color':'#222'}">
+			<div class="spinner">
+				<div class="rect1"></div>
+				<div class="rect2"></div>
+				<div class="rect3"></div>
+				<div class="rect4"></div>
+				<div class="rect5"></div>
+			</div>
+			<span translate ng-show="
         index.onGoingProcessName == 'openingWallet'
         || index.onGoingProcessName == 'updatingStatus'
         || index.onGoingProcessName == 'updatingBalance'
         || index.onGoingProcessName == 'updatingPendingTxps'
         "> Updating Wallet... </span>
-      <span translate ng-show="index.onGoingProcessName == 'scanning'">Scanning Wallet funds...</span>
-      <span translate ng-show="index.onGoingProcessName == 'recreating'">Recreating Wallet...</span>
-      <span translate ng-show="index.onGoingProcessName == 'generatingCSV'">Generating .csv file...</span>
-      <span translate ng-show="index.onGoingProcessName == 'Syncing'">Syncing... {{index.syncProgress}}</span>
-      <span translate ng-show="index.onGoingProcessName == 'sending'">Sending...</span>
-    </div>
-  </div>
+			<span translate ng-show="index.onGoingProcessName == 'scanning'">Scanning Wallet funds...</span>
+			<span translate ng-show="index.onGoingProcessName == 'recreating'">Recreating Wallet...</span>
+			<span translate ng-show="index.onGoingProcessName == 'generatingCSV'">Generating .csv file...</span>
+			<span translate ng-show="index.onGoingProcessName == 'Syncing'">Syncing... {{index.syncProgress}}</span>
+			<span translate ng-show="index.onGoingProcessName == 'sending'">Sending...</span>
+		</div>
+	</div>
 
-  <div class="onGoingProcess" ng-show="home.onGoingProcess && !index.anyOnGoingProces && !index.isOffline">
-    <div class="onGoingProcess-content" ng-style="{'background-color':'#222'}">
-      <div class="spinner">
-        <div class="rect1"></div>
-        <div class="rect2"></div>
-        <div class="rect3"></div>
-        <div class="rect4"></div>
-        <div class="rect5"></div>
-      </div>
-      {{home.onGoingProcess|translate}}...
-    </div>
-  </div>
+	<div class="onGoingProcess" ng-show="home.onGoingProcess && !index.anyOnGoingProces && !index.isOffline">
+		<div class="onGoingProcess-content" ng-style="{'background-color':'#222'}">
+			<div class="spinner">
+				<div class="rect1"></div>
+				<div class="rect2"></div>
+				<div class="rect3"></div>
+				<div class="rect4"></div>
+				<div class="rect5"></div>
+			</div>
+			{{home.onGoingProcess|translate}}...
+		</div>
+	</div>
 
-  <div class="oh" ng-show="!index.noFocusedWallet">
+	<div class="oh" ng-show="!index.noFocusedWallet">
 
 
-    <!--
+		<!--
 
-    WalletHome
+        WalletHome
 
-    -->
+        -->
 
-	  <div id="walletHome" class="walletHome tab-view tab-in">
-		  <div class="introduction-svg" ng-include="'views/includes/background.html'"></div>
-		  <div class="p-wallet js-introduction">
-			  <div class="p-wallet__price-block">
-				  <div ng-if="!index.anyOnGoingProcess || 1">
-					  <div class="text-gray text-center size-12 p10t" ng-show="index.updateError"
-						   ng-click='index.openWallet(); index.updateTxHistory()'>
-						  <span class="size-12 db m10b">{{index.updateError|translate}}</span>
-						  <button class=" btn_red tiny round" translate>Tap to retry</button>
-					  </div>
+		<div id="walletHome" class="walletHome tab-view tab-in">
+			<div class="introduction-svg" ng-include="'views/includes/background.html'"></div>
+			<div class="p-wallet js-introduction">
+				<div class="p-wallet__price-block">
+					<div ng-if="!index.anyOnGoingProcess || 1">
+						<div class="text-gray text-center size-12 p10t" ng-show="index.updateError"
+							 ng-click='index.openWallet(); index.updateTxHistory()'>
+							<span class="size-12 db m10b">{{index.updateError|translate}}</span>
+							<button class=" btn_red tiny round" translate>Tap to retry</button>
+						</div>
 
-					  <div class="text-gray text-center size-12 p10t" ng-show="index.walletScanStatus == 'error'"
-						   ng-click='index.retryScan()'>
-						  <span class="size-12 db m10b">Scan status finished with error</span>
-						  <button class=" btn_red tiny round" translate>Tap to retry</button>
-					  </div>
+						<div class="text-gray text-center size-12 p10t" ng-show="index.walletScanStatus == 'error'"
+							 ng-click='index.retryScan()'>
+							<span class="size-12 db m10b">Scan status finished with error</span>
+							<button class=" btn_red tiny round" translate>Tap to retry</button>
+						</div>
 
-					  <div ng-show="!index.updateError && index.walletScanStatus != 'error'" ng-click='index.updateAll(); index.updateHistoryFromNetwork()'>
+						<div ng-show="!index.updateError && index.walletScanStatus != 'error'" ng-click='index.updateAll(); index.updateHistoryFromNetwork()'>
 
 							<div class="price-wrapper">
 
@@ -99,359 +98,339 @@
 							</div>
 
 
-							  <span ng-if="index.dagBalance.pending" class="ballance">Pending wallet balance: {{index.dagBalance.pendingStr}}</span>
-							  <span ng-if="!index.dagBalance.pending" class="ballance">Wallet balance</span>
+							<span ng-if="index.dagBalance.pending" class="ballance">Pending wallet balance: {{index.dagBalance.pendingStr}}</span>
+							<span ng-if="!index.dagBalance.pending" class="ballance">Wallet balance</span>
 
-					  </div>
+						</div>
 
-				  </div>
+					</div>
 
-				  <div ng-if="index.anyOnGoingProcess && 0">
-					  <div class="size-36">
-						  <strong>...</strong>
-					  </div>
-				  </div>
+					<div ng-if="index.anyOnGoingProcess && 0">
+						<div class="size-36">
+							<strong>...</strong>
+						</div>
+					</div>
 
-			  </div>
+				</div>
 
-			  <div class="transactions">
-				  <div class="transactions__head">
-					  <span>Recent transactions</span>
-				  </div>
-				  <div class="oh text-center" ng-show=" index.updatingTxHistory">
+				<div class="transactions">
+					<div class="transactions__head">
+						<span>Recent transactions</span>
+					</div>
+					<div class="oh text-center" ng-show=" index.updatingTxHistory">
 
 					<span ng-show="!index.txHistory[0] && index.txHistoryError" ng-click='index.updateTxHistory()'>
 					  <p class="size-12 m10b db text-gray" translate>Could not fetch transaction history</p>
 					  <button class="btn_red-full round light-gray tiny" translate>Tap to retry</button>
 					</span>
-					  <br/>
-					  <div class="onGoingProcess-content" ng-style="{'background-color':'#222'}">
-						  <div class="spinner">
-							  <div class="rect1"></div>
-							  <div class="rect2"></div>
-							  <div class="rect3"></div>
-							  <div class="rect4"></div>
-							  <div class="rect5"></div>
-						  </div>
-					  </div>
-				  </div>
+						<br/>
+						<div class="onGoingProcess-content" ng-style="{'background-color':'#222'}">
+							<div class="spinner">
+								<div class="rect1"></div>
+								<div class="rect2"></div>
+								<div class="rect3"></div>
+								<div class="rect4"></div>
+								<div class="rect5"></div>
+							</div>
+						</div>
+					</div>
 
-				  <div class="oh text-center"
-					   ng-show="!index.updatingTxHistory">
+					<div class="oh text-center"
+						 ng-show="!index.updatingTxHistory">
 					<span class="text-center" ng-show="!index.txHistory[0] && !index.txHistoryError">
 					  No recent transactions yet
 					</span>
-				  </div>
-				  <div ng-show="index.txHistory[0] && !index.updatingTxHistory">
-					  <div class="transactions__table ">
-						  <table>
-							  <tbody>
-							  <tr ng-repeat="btx in index.txHistory" class="row ">
-								  <td><span class="details-price"
-														 ng-class="btx.action == 'received'? 'success':'danger'">{{btx.amountStr}}</span>
-									  <div class="details-wrap"><span class="details-info">My Account</span>
-										  <svg class="icon"
-											   ng-class="btx.action == 'received'? 'icon-arrow-left':'icon-arrow-right'">
-											  <use
-												  xlink:href="{{index.getSvgSrc(btx.action == 'received'? 'icon-arrow-left':'icon-arrow-right')}}"></use>
-										  </svg>
+					</div>
+					<div ng-show="index.txHistory[0] && !index.updatingTxHistory">
+						<div class="transactions__table ">
+							<table>
+								<tbody>
+								<tr ng-repeat="btx in index.txHistory | limitTo: 3" class="row ">
+									<td><span class="details-price"
+											  ng-class="btx.action == 'received'? 'success':'danger'">{{btx.amountStr}}</span>
+										<div class="details-wrap"><span class="details-info">My Account</span>
+											<svg class="icon"
+												 ng-class="btx.action == 'received'? 'icon-arrow-left':'icon-arrow-right'">
+												<use
+														xlink:href="{{index.getSvgSrc(btx.action == 'received'? 'icon-arrow-left':'icon-arrow-right')}}"></use>
+											</svg>
 
-										  <span ng-if="btx.action == 'received'"
-												ng-repeat="address in btx.arrPayerAddresses" class="details-info">{{address}}</span>
-										  <span ng-if="btx.action == 'sent'"
-												class="details-info">{{btx.addressTo}}</span>
-									  </div>
-								  </td>
-								  <td><span class="details-time">{{ btx.time * 1000 | amDateFormat:'HH:mm'}}</span>
-									  <span class="details-date">{{ btx.time * 1000 | amDateFormat:'MM.DD.YYYY'}}</span>
-								  </td>
-							  </tr>
-							  </tbody>
-						  </table>
-					  </div>
-				  </div>
-			  </div>
+											<span ng-if="btx.action == 'received'"
+												  ng-repeat="address in btx.arrPayerAddresses" class="details-info">{{address}}</span>
+											<span ng-if="btx.action == 'sent'"
+												  class="details-info">{{btx.addressTo}}</span>
+										</div>
+									</td>
+									<td><span class="details-time">{{ btx.time * 1000 | amDateFormat:'HH:mm'}}</span>
+										<span class="details-date">{{ btx.time * 1000 | amDateFormat:'MM.DD.YYYY'}}</span>
+									</td>
+								</tr>
+								</tbody>
+							</table>
+						</div>
+					</div>
+				</div>
 
-			  <div ng-if="index.txps[0]">
-				  <h4 ng-show="index.requiresMultipleSignatures" class="title m0" translate>Payment Proposals</h4>
-				  <h4 ng-show="!index.requiresMultipleSignatures" class="title m0" translate>Unsent transactions</h4>
-				  <div class="last-transactions pr" ng-repeat="tx in index.txps"
-					   ng-include="index.txTemplateUrl">
-				  </div>
+				<div ng-if="index.txps[0]">
+					<h4 ng-show="index.requiresMultipleSignatures" class="title m0" translate>Payment Proposals</h4>
+					<h4 ng-show="!index.requiresMultipleSignatures" class="title m0" translate>Unsent transactions</h4>
+					<div class="last-transactions pr" ng-repeat="tx in index.txps"
+						 ng-include="index.txTemplateUrl">
+					</div>
 
-				  <div class="text-gray text-center size-12 p10t"
-					   ng-show="index.lockedBalanceBytes && !index.updatingStatus">
-					  <span translate>Total Locked Balance</span>:
-					  <b>{{index.lockedBalanceStr}} </b>
-				  </div>
-			  </div>
-			  <div class="extra-margin-bottom"></div>
-		  </div> <!-- END WalletHome -->
-	  </div>
+					<div class="text-gray text-center size-12 p10t"
+						 ng-show="index.lockedBalanceBytes && !index.updatingStatus">
+						<span translate>Total Locked Balance</span>:
+						<b>{{index.lockedBalanceStr}} </b>
+					</div>
+				</div>
+				<div class="extra-margin-bottom"></div>
+			</div> <!-- END WalletHome -->
+		</div>
 
-    <!--
+		<!--
 
-    receive
+        receive
 
-    -->
-    <div id="receive" class="receive p-share tab-view" style="padding-bottom: 0px">
-	  <div class="introduction-svg" ng-include="'views/includes/background.html'"></div>
-      <div ng-show="index.needsBackup" class="p60t row text-center">
-        <div class="large-12 columns">
-          <div class="text-warning text-bold m15b">
-            <i class="fi-alert"></i>
-            <span translate>
+        -->
+		<div id="receive" class="receive p-share tab-view cordova-scrollable" style="padding-bottom: 0">
+			<div class="introduction-svg" ng-include="'views/includes/background.html'"></div>
+			<div ng-show="index.needsBackup" class="p60t row text-center">
+				<div class="large-12 columns">
+					<div class="text-warning text-bold m15b">
+						<i class="fi-alert"></i>
+						<span translate>
               WARNING: Backup needed
             </span>
-          </div>
-          <div class="text-gray" translate>
-            Before receiving funds, it is highly recommended you backup your wallet keys.
-          </div>
+					</div>
+					<div class="text-gray" translate>
+						Before receiving funds, it is highly recommended you backup your wallet keys.
+					</div>
 
-          <button class="m20t button black expand round"
-            ng-click="$root.go('backup')" ng-style="{'background-color':index.backgroundColor}" >
-            <span translate>Backup now</span>
-          </button>
-        </div>
-      </div>
-      <div class="p-wrap" ng-show="!index.needsBackup">
+					<button class="m20t button black expand round"
+							ng-click="$root.go('backup')" ng-style="{'background-color':index.backgroundColor}" >
+						<span translate>Backup now</span>
+					</button>
+				</div>
+			</div>
+			<div class="p-wrap text-center m20t" ng-show="!index.needsBackup">
 
-          <!-- Address-->
+				<h2 style="padding: 10px 20px;font-weight: 400;font-size: 14px;margin-top: 40px;">Tap the <strong>QR-code</strong> to copy its address.<br/>Share it with the sender via email or text.</h2>
 
-            <h2 class="text-center m10t" translate><div class="page-heading"><span>Receive <span>Dagcoin's</span></span></div> </h2>
-            <div class="page-qr text-center">
-              <div class="box-notification" ng-show="home.addrError">
+
+				<!-- Address-->
+				<div class="page-qr text-center">
+					<div class="box-notification" ng-show="home.addrError">
                 <span class="text-warning">
                   {{home.addrError|translate}}
                 </span>
-              </div>
+					</div>
 
-              <div  ng-click="home.copyAddress(home.addr[index.walletId])" ng-show="home.addr[index.walletId] || home.generatingAddress">
-                <qrcode size="220" data="{{home.protocol}}:{{home.addr[index.walletId]}}"></qrcode>
-                <div  ng-show="home.generatingAddress" style="position:relative; top:-226px; height:0px">
-                  <div style="height:220px; width:220px; margin:auto; background: url(img/qr.png) white">
-                    <div class="spinner" style="margin-top:80px">
-                      <div class="rect1"></div>
-                      <div class="rect2"></div>
-                      <div class="rect3"></div>
-                      <div class="rect4"></div>
-                      <div class="rect5"></div>
-                    </div>
-                  </div>
-                </div>
-                <div class="m10t" ng-hide>
-                  <h4 ng-class="{'enable_text_select': !index.isCordova}" class="size-12">
-                    {{index.shared_address || (home.generatingAddress ? '...' : home.addr[index.walletId])}}
+					<div ng-click="home.copyAddress(home.addr[index.walletId])" ng-show="home.addr[index.walletId] || home.generatingAddress">
+						<qrcode size="220" data="{{home.protocol}}:{{home.addr[index.walletId]}}"></qrcode>
+						<div  ng-show="home.generatingAddress" style="position:relative; top:-226px; height:0px">
+							<div style="height:220px; width:220px; margin:auto; background: url(img/qr.png) white">
+								<div class="spinner" style="margin-top:80px">
+									<div class="rect1"></div>
+									<div class="rect2"></div>
+									<div class="rect3"></div>
+									<div class="rect4"></div>
+									<div class="rect5"></div>
+								</div>
+							</div>
+						</div>
+						<div ng-class="{'visible': tooltipCopiedShown}" class="tooltip radius tip-top"><svg-icon name="done"></svg-icon>Copied!</div>
+					</div>
+					<div class="m10t" ng-hide>
+						<h4 ng-class="{'enable_text_select': !index.isCordova}" class="size-12">
+							{{index.shared_address || (home.generatingAddress ? '...' : home.addr[index.walletId])}}
 
-                  </h4>
-                </div>
-              </div>
-            </div>
-		  <div class="page-action">
-			  <!--<a ng-if="!index.shared_address" href="#" class="btn btn_red" ng-click="home.setAddress(true)"
-				 ng-disabled="home.blockUx || index.isOffline ||home.generatingAddress" translate>
-				  Generate new address
-			  </a>-->
-			  <a ng-show="index.isCordova" href="#" ng-click="home.shareAddress(home.addr[index.walletId])"
-				 class="btn btn_red-full">Share wallet link</a>
-			  <div ng-show="index.isCordova" class="page-action__info">
-				  <span>Share the link above to receive payments.</span></div>
+						</h4>
+					</div>
+				</div>
+				<div class="page-action">
+					<a ng-show="index.isCordova" href="#" ng-click="home.shareAddress(home.addr[index.walletId])"
+					   class="btn btn_red-full">Share wallet link</a>
+					<div ng-show="index.isCordova" class="page-action__info">
+						<span>Share the link above to receive payments.</span></div>
 
-		  </div>
+				</div>
 
-      </div>
-    </div> <!-- END Receive -->
+			</div>
+		</div> <!-- END Receive -->
 
 
-    <!--
+		<!--
 
-    send
+        send
 
-    -->
-	  <div id="send" class="send tab-view">
-		  <div class="row m20t text-center" ng-show="home.current_payment_key">
-			  <div class="columns large-12 medium-12 small-12">
-				  <div class="spinner">
-					  <div class="rect1"></div>
-					  <div class="rect2"></div>
-					  <div class="rect3"></div>
-					  <div class="rect4"></div>
-					  <div class="rect5"></div>
-				  </div>
-			  </div>
-		  </div>
-
-		  <div class="introduction-svg" ng-include="'views/includes/background.html'"></div>
-		  <div class="p-share js-introduction">
-			  <div class="p-wrap">
-				  <div class="page-heading"><span>Send <span>Dagcoins</span></span></div>
-				  <form class="page-form" name="sendForm" ng-submit="home.submitForm()"
-						ng-disabled="home.blockUx || home.onGoingProcess" novalidate>
-					  <div class="box-notification" ng-show="home.error" ng-click="home.resetError()">
+        -->
+		<div id="send" class="send tab-view cordova-scrollable">
+			<div class="introduction-svg" ng-include="'views/includes/background.html'"></div>
+			<div class="p-share js-introduction">
+				<div class="p-wrap" style="width: 300px;margin: 0 auto;">
+					<div class="page-heading"><span>Send <span>dagcoins</span></span></div>
+					<form class="page-form" name="sendForm" ng-submit="home.submitForm()"
+						  ng-disabled="home.blockUx || home.onGoingProcess" novalidate>
+						<div class="box-notification" ng-show="home.error" ng-click="home.resetError()">
 					  <span class="text-warning">
 						{{home.error|translate}}
 					  </span>
-					  </div>
-					  <div class="form-group">
-						  <div class="title clearfix"><span class="name">Amount</span>
-							  <div class="left" ng-hide="sendForm.amount.$pristine ">
+						</div>
+						<div class="form-group">
+							<div class="title clearfix"><span class="name">Amount</span>
+								<div class="left" ng-hide="sendForm.amount.$pristine ">
 									<span class="has-error right size-12" ng-if="sendForm.amount.$invalid">
 										<i class="icon-close-circle size-14"></i>
 										<span clas="vm" translate>Not valid</span>
 									</span>
-								  <small class="text-primary right" ng-if="!sendForm.amount.$invalid">
-									  <i class="icon-checkmark-circle size-14"></i>
-								  </small>
-							  </div>
-							  <span class="available">Available <span>{{index.dagBalance.stable / 1e6}}</span></span>
-						  </div>
+									<small class="text-primary right" ng-if="!sendForm.amount.$invalid">
+										<i class="icon-checkmark-circle size-14"></i>
+									</small>
+								</div>
+								<span class="available">Available <span>{{index.dagBalance.stable / 1e6}}</span></span>
+							</div>
 
-						  <div class="input-wrap input-icon">
-							  <input type="number" id="amount" ng-disabled="home.blockUx || home.lockAmount"
-									 name="amount" ng-attr-placeholder="{{'Amount'|translate}}" min="0.00000001"
-									 ng-minlength="0.00000001" ng-maxlength="10000000000" ng-model="_amount"
-									 ng-required="!home.bSendAll"
-									 autocomplete="off" ng-focus="home.formFocus('amount')"
-									 ng-blur="home.formFocus(false)">
+							<div class="input-wrap input-icon">
+								<input type="number" id="amount" ng-disabled="home.blockUx || home.lockAmount"
+									   name="amount" ng-attr-placeholder="{{'Amount'|translate}}" min="0.00000001"
+									   ng-minlength="0.00000001" ng-maxlength="10000000000" ng-model="_amount"
+									   ng-required="!home.bSendAll"
+									   autocomplete="off" ng-focus="home.formFocus('amount')"
+									   ng-blur="home.formFocus(false)">
 
 
-							  <svg class="icon icon-d">
-								  <use xlink:href="img/svg/symbol-defs.svg#icon-d"></use>
-							  </svg>
+								<svg class="icon icon-d">
+									<use xlink:href="img/svg/symbol-defs.svg#icon-d"></use>
+								</svg>
 
-						  </div>
+							</div>
 
-					  </div>
-					  <div class="form-group">
+						</div>
+						<div class="form-group">
 
-						  <div class="title clearfix"><span class="name">Receiver</span>
-							  <div class="left" ng-hide="sendForm.address.$pristine ">
+							<div class="title clearfix"><span class="name">Receiver</span>
+								<div class="left" ng-hide="sendForm.address.$pristine ">
 									<span class="has-error right size-12"
 										  ng-show="sendForm.address.$invalid && _address">
 								<i class="icon-close-circle size-14"></i>
 								<span class="vm" translate>Not valid</span>
 							</span>
-								  <small class="right text-primary" ng-show="!sendForm.address.$invalid">
-									  <i class="icon-checkmark-circle size-14"></i>
-								  </small>
-							  </div>
+									<small class="right text-primary" ng-show="!sendForm.address.$invalid">
+										<i class="icon-checkmark-circle size-14"></i>
+									</small>
+								</div>
 
-						  </div>
+							</div>
 
-						  <div class="input-wrap">
-							  <input class="m0" type="text" id="address"
-									 name="address"
-									 ng-attr-placeholder="{{home.canSendExternalPayment() ? 'DAG address' : 'DAG address of your other wallet &#8594;'}}"
-									 ng-model="_address" valid-address required
-									 ng-blur="home.formFocus(false)">
+							<div class="input-wrap">
+								<input class="m0" type="text" id="address"
+									   name="address"
+									   ng-attr-placeholder="{{home.canSendExternalPayment() ? 'DAG address' : 'DAG address of your other wallet &#8594;'}}"
+									   ng-model="_address" valid-address required
+									   ng-blur="home.formFocus(false)">
 
-						  </div>
+								<qr-scanner ng-show="index.isComplete" on-scan="index.onQrCodeScanned(data)" before-scan="index.onBeforeScan()"></qr-scanner>
 
-
-					  </div>
-
-				  </form>
-				  <div class="page-action">
-					  <qr-scanner ng-show="index.isComplete" on-scan="index.onQrCodeScanned(data)" before-scan="index.onBeforeScan()"></qr-scanner>
-					  <a href="#" class="btn btn_red-full" ng-click="home.submitForm()">Send</a>
-
-				  </div>
-				  </div>
-
-			  </div>
-	  </div>
+							</div>
 
 
-    <!--
+						</div>
 
-    history
+					</form>
+					<div class="page-action">
 
-    -->
-    <div id="history" class="history tab-view scrollable">
+						<a href="#" class="btn btn_red-full" ng-click="home.submitForm()">Send</a>
 
-	  <div class="introduction-svg" ng-include="'views/includes/background.html'"></div>
-      <div class="row m20t text-center" ng-show="index.updatingTxHistory[index.walletId]">
-        <div class="columns large-12 medium-12 small-12">
-          <div class="spinner">
-            <div class="rect1"></div>
-            <div class="rect2"></div>
-            <div class="rect3"></div>
-            <div class="rect4"></div>
-            <div class="rect5"></div>
-          </div>
-        </div>
-        <div ng-show="index.txProgress > 6" translate class="size-12 text-gray m20t" style="margin-left: 40px;">
-          Initial transaction history synchronization can take some minutes for wallets with many transactions.<br/>
-          Please stand by.
-        </div>
-        <div ng-show="index.txProgress > 6" class="size-14 text-gray m20t">
-          <b>{{index.txProgress}}</b>
-          <span translate>Transactions<br> Downloaded</span>
-        </div>
-      </div>
+					</div>
+				</div>
+
+			</div>
+		</div>
 
 
-		<div class="p-history js-introduction">
-			<div class="p-wrap">
-				<div class="page-heading"><span>Your transaction history</span></div>
-				<div  class="transactions" >
-					<div class="oh text-center" ng-show="!index.txHistory[0] || index.updatingTxHistory[index.walletId]">
+		<!--
+
+        history
+
+        -->
+		<div id="history" class="history tab-view" style="overflow: auto !important;">
+
+			<div class="introduction-svg" ng-include="'views/includes/background.html'"></div>
+			<div class="row m20t text-center" ng-show="index.updatingTxHistory[index.walletId]">
+				<div class="columns large-12 medium-12 small-12">
+					<div class="spinner">
+						<div class="rect1"></div>
+						<div class="rect2"></div>
+						<div class="rect3"></div>
+						<div class="rect4"></div>
+						<div class="rect5"></div>
+					</div>
+				</div>
+				<div ng-show="index.txProgress > 6" translate class="size-12 text-gray m20t" style="margin-left: 40px;">
+					Initial transaction history synchronization can take some minutes for wallets with many transactions.<br/>
+					Please stand by.
+				</div>
+				<div ng-show="index.txProgress > 6" class="size-14 text-gray m20t">
+					<b>{{index.txProgress}}</b>
+					<span translate>Transactions<br> Downloaded</span>
+				</div>
+			</div>
+
+
+			<div class="p-history js-introduction">
+				<div class="p-wrap">
+					<div class="page-heading"><span>Your transaction history</span></div>
+					<div  class="transactions" >
+						<div class="oh text-center" ng-show="!index.txHistory[0] || index.updatingTxHistory[index.walletId]">
 						<span ng-show="index.txHistoryError" ng-click='index.updateTxHistory()'>
 						  <p class="size-12 m10b db text-gray" translate>Could not fetch transaction history</p>
 						  <button class="btn_red-full round light-gray tiny" translate>Tap to retry</button>
 						</span>
-						<span ng-if="!index.txHistoryError" translate>
+							<span ng-if="!index.txHistoryError" translate>
 						  No transactions yet
 						</span>
+						</div>
+
+						<div ng-show="index.txHistory[0] && !index.updatingTxHistory[index.walletId]">
+							<div class="transactions__head"><span></span></div>
+							<div class="transactions__table">
+								<table>
+									<tbody>
+									<tr  ng-repeat="btx in index.txHistory" ng-click="home.openTxModal(btx)"
+										 class="row  last-transactions-content">
+										<td><span class="details-price" ng-class="btx.action == 'received'? 'success':'danger'">{{btx.amountStr}}</span>
+											<div class="details-wrap"><span class="details-info">My Account</span>
+												<svg class="icon" ng-class="btx.action == 'received'? 'icon-arrow-left':'icon-arrow-right'">
+													<use
+															xlink:href="{{index.getSvgSrc(btx.action == 'received'? 'icon-arrow-left':'icon-arrow-right')}}"></use>
+												</svg>
+												<span ng-if="btx.action == 'received'" ng-repeat="address in btx.arrPayerAddresses" class="details-info">{{address}}</span>
+
+												<span ng-if="btx.action == 'sent'" class="details-info">{{btx.addressTo}}</span>
+
+											</div>
+										</td>
+										<td>
+											<span class="details-time">{{ btx.time * 1000 | amDateFormat:'HH:mm'}}</span>
+											<span class="details-date">{{ btx.time * 1000 | amDateFormat:'MM.DD.YYYY'}}</span></td>
+									</tr>
+									</tbody>
+								</table>
+							</div>
+						</div>
+            <div class="page-action">
+              <a href="#" ng-show="index.historyShowShowAll" ng-click="index.showAllHistory()" class="btn btn_red-full">Show all</a>
+            </div>
 					</div>
-
-					<div ng-show="index.txHistory[0] && !index.updatingTxHistory[index.walletId]">
-					<div class="transactions__head"><span></span></div>
-					<div class="transactions__table">
-						<table>
-							<tbody>
-							<tr  ng-repeat="btx in index.txHistory" ng-click="home.openTxModal(btx)"
-								 class="row  last-transactions-content">
-								<td><span class="details-price" ng-class="btx.action == 'received'? 'success':'danger'">{{btx.amountStr}}</span>
-									<div class="details-wrap"><span class="details-info">My Account</span>
-										<svg class="icon" ng-class="btx.action == 'received'? 'icon-arrow-left':'icon-arrow-right'">
-											<use
-												xlink:href="{{index.getSvgSrc(btx.action == 'received'? 'icon-arrow-left':'icon-arrow-right')}}"></use>
-										</svg>
-										<span ng-if="btx.action == 'received'" ng-repeat="address in btx.arrPayerAddresses" class="details-info">{{address}}</span>
-
-										<span ng-if="btx.action == 'sent'" class="details-info">{{btx.addressTo}}</span>
-
-									</div>
-								</td>
-								<td>
-									<span class="details-time">{{ btx.time * 1000 | amDateFormat:'HH:mm'}}</span>
-									<span class="details-date">{{ btx.time * 1000 | amDateFormat:'MM.DD.YYYY'}}</span></td>
-							</tr>
-							</tbody>
-						</table>
-					</div>
-					</div>
-				</div>
-
-				<!--todo: add to correct place. -->
-				<div class="page-action">
-					<a href="#" ng-show="index.historyShowShowAll" ng-click="index.showAllHistory()" class="btn btn_red-full">Show all</a>
-				<!--<a class="btn btn_red-full" ng-click="index.csvHistory();">-->
-					<!--<i class="fi-page-export-csv"></i>-->
-					<!--<span translate>Download CSV file</span>-->
-				<!--</a>-->
-					<!--<input id="export_file" type="file" nwsaveas="Byteball-{{index.alias || index.walletName}}.csv" accept=".csv" style="display:none">-->
-
 				</div>
 			</div>
+		</div> <!-- END History -->
+
+		<div id="{{view.id}}" class="{{view.class}} tab-view" ng-repeat="view in index.addonViews" ng-include="view.template">
 		</div>
-    </div> <!-- END History -->
 
-    <div id="{{view.id}}" class="{{view.class}} tab-view" ng-repeat="view in index.addonViews" ng-include="view.template">
-    </div>
-
-  </div>
+	</div>
 </div>
 <div class="extra-margin-bottom"></div>
 <div ng-include="'views/includes/menu.html'" ng-show="!index.noFocusedWallet"></div>

@@ -1,0 +1,70 @@
+@import "variables";
+
+.navbar-container {
+  position: relative;
+  z-index: 2;
+  height: $nav_bar_height;
+  background: $main_color;
+  color: #fff;
+
+  .navbar-container-triggers {
+    position: absolute;
+    z-index: 1;
+    height: $nav_bar_height;
+    line-height: $nav_bar_height;
+    left: 0;
+    top: 0;
+    width: 50px;
+    text-align: center;
+
+    &.navbar-container-triggers-right{
+      left: auto;
+      right: 0;
+    }
+  }
+
+  .navbar-container-title {
+    width: 100%;
+    padding: 0 80px;
+    text-align: center;
+    line-height: $nav_bar_height;
+    font-weight: 600;
+    font-size: 16px;
+    text-transform: uppercase;
+  }
+
+  .navbar-container-back-trigger {
+    svg {
+      width: 16px;
+      height: 16px;
+      margin-top: -8px;
+    }
+  }
+
+  svg-icon {
+    svg {
+      width: 22px;
+      height: 22px;
+    }
+
+    &.svg-icon-add{
+      svg{
+        width: 16px;
+        height: 16px;
+      }
+    }
+  }
+
+  a{
+    color: currentColor;
+  }
+
+  &.invert {
+    background: transparent;
+    color: $main_color;
+  }
+
+  &:not(.invert) {
+    text-shadow: 1px 1px 1px darken($main_color, 10);
+  }
+}

@@ -24,19 +24,20 @@
         profileService.signout();
       };
 
-      self.switchWallet = function (selectedWalletId, currentWalletId) {
+      self.switchWallet = function (selectedWalletId, currentWalletId,state) {
         backButton.menuOpened = false;
         if (selectedWalletId === currentWalletId) {
+          $state.go(state);
           return;
         }
         self.walletSelection = false;
-        profileService.setAndStoreFocus(selectedWalletId, () => {
+        return profileService.setAndStoreFocus(selectedWalletId, () => {
+          $state.go(state);
         });
       };
 
       self.switchWalletOpenPreferences = function (selectedWalletId, currentWalletId) {
-        self.switchWallet(selectedWalletId, currentWalletId);
-        $state.go('preferences');
+        self.switchWallet(selectedWalletId, currentWalletId, 'preferences');
       };
 
       self.toggleWalletSelection = function () {

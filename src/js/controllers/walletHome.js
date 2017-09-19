@@ -412,6 +412,12 @@
         } else if (nodeWebkit.isDefined()) {
           nodeWebkit.writeToClipboard(addr);
         }
+
+        $scope.tooltipCopiedShown = true;
+
+        $timeout(() => {
+          $scope.tooltipCopiedShown = false;
+        }, 1000);
       };
 
       this.shareAddress = function (addr) {
@@ -419,7 +425,7 @@
           if (isMobile.Android() || isMobile.Windows()) {
             window.ignoreMobilePause = true;
           }
-          window.plugins.socialsharing.share(`${self.protocol}:${addr}`, null, null, null);
+          window.plugins.socialsharing.share(addr, null, null, null);
         }
       };
 
@@ -477,6 +483,7 @@
 
 
           $scope.shareAddress = function (uri) {
+            debugger
             if (isCordova) {
               if (isMobile.Android() || isMobile.Windows()) {
                 window.ignoreMobilePause = true;
@@ -1304,7 +1311,7 @@
 
         const modalInstance = $modal.open({
           templateUrl: 'views/modals/tx-details.html',
-          windowClass: animationService.modalAnimated.slideRight,
+          windowClass: 'modal-transaction-detail',
           controller: ModalInstanceCtrl,
         });
 

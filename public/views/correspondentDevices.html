@@ -1,10 +1,10 @@
 <div ng-controller="correspondentDevicesController">
 
-<div class="topbar-container"
-  ng-include="'views/includes/topbar.html'"
-  ng-init="showCamera = true"
-  ng-show="state.is('correspondentDevices')">
-</div>
+  <div
+       ng-include="'views/includes/topbar.html'"
+       ng-init="titleSection='Paired devices'; showCamera = true; closeToHome = true"
+       ng-show="state.is('correspondentDevices')">
+  </div>
 
 	<div ui-view="dialog"></div>
     <div class="m20b tab-view tab-in" ng-show="state.is('correspondentDevices')" id="chat">
@@ -38,9 +38,5 @@
           </a>
         </li>
       </ul>
-
-
     </div>
-    
 </div>
-<div ng-include="'views/includes/menu.html'" ng-show="!index.noFocusedWallet"></div>

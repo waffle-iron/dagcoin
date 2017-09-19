@@ -1,12 +1,30 @@
-/* eslint-disable no-alert,no-shadow,no-undef,no-unused-vars */
-(function () {
+/* global angular */
+// todo: disabled no-unused-vars for makeSwipeDirective method because currently we are not using directive. in future it might be removed
+/* eslint-disable no-unused-vars */
+
+(() => {
   'use strict';
 
-  angular.module('copayApp.directives')
-  .directive('qrScanner', ['$rootScope', '$timeout', '$modal', 'isCordova', 'gettextCatalog',
-    function ($rootScope, $timeout, $modal, isCordova, gettextCatalog) {
-      const breadcrumbs = require('byteballcore/breadcrumbs.js');
-      const controller = function ($scope) {
+  const breadcrumbs = require('byteballcore/breadcrumbs.js');
+
+  /**
+   * @desc qr-code scanner directive
+   * @example <qr-scanner></qr-scanner>
+   */
+  angular
+    .module('copayApp.directives')
+    .directive('qrScanner', qrScanner);
+
+  qrScanner.$inject = ['$rootScope', '$timeout', '$modal', 'isCordova', 'gettextCatalog'];
+
+  function qrScanner($rootScope, $timeout, $modal, isCordova, gettextCatalog) {
+    return {
+      restrict: 'E',
+      scope: {
+        onScan: '&',
+        beforeScan: '&',
+      },
+      controller: ($scope) => {
         $scope.cordovaOpenScanner = function () {
           window.ignoreMobilePause = true;
           window.plugins.spinnerDialog.show(null, gettextCatalog.getString('Preparing camera...'), true);
@@ -21,10 +39,10 @@
 
                 $timeout(() => {
                   const data = result.text;
-                  $scope.onScan({ data });
+                  $scope.onScan({data});
                 }, 1000);
               },
-              () => {
+              (error) => {
                 $timeout(() => {
                   window.ignoreMobilePause = false;
                   window.plugins.spinnerDialog.hide();
@@ -48,7 +66,7 @@
             let localMediaStream;
             let prevResult;
 
-            const scan = function () {
+            var _scan = function (evt) {
               if (localMediaStream) {
                 context.drawImage(video, 0, 0, 300, 225);
                 try {
@@ -57,13 +75,13 @@
                   // qrcodeError(e);
                 }
               }
-              $timeout(scan, 800);
+              $timeout(_scan, 800);
             };
 
-            const scanStop = function () {
+            const _scanStop = function () {
               if (localMediaStream && localMediaStream.active) {
                 const localMediaStreamTrack = localMediaStream.getTracks();
-                for (let i = 0; i < localMediaStreamTrack.length; i += 1) {
+                for (let i = 0; i < localMediaStreamTrack.length; i++) {
                   localMediaStreamTrack[i].stop();
                 }
               } else {
@@ -80,22 +98,22 @@
             };
 
             qrcode.callback = function (data) {
-              if (prevResult !== data) {
+              if (prevResult != data) {
                 prevResult = data;
                 return;
               }
-              scanStop();
+              _scanStop();
               $modalInstance.close(data);
             };
 
-            const successCallback = function (stream) {
+            const _successCallback = function (stream) {
               video.src = (window.URL && window.URL.createObjectURL(stream)) || stream;
               localMediaStream = stream;
               video.play();
-              $timeout(scan, 1000);
+              $timeout(_scan, 1000);
             };
 
-            const videoError = function () {
+            const _videoError = function (err) {
               breadcrumbs.add('qr scanner video error');
               $scope.cancel();
             };
@@ -120,7 +138,6 @@
                 }
                 context = canvas.getContext('2d');
 
-
                 video = document.getElementById('qrcode-scanner-video');
                 $video = angular.element(video);
                 canvas.width = 300;
@@ -129,18 +146,17 @@
 
                 navigator.getUserMedia({
                   video: true,
-                }, successCallback, videoError);
+                }, _successCallback, _videoError);
               }, 500);
             };
 
             $scope.cancel = function () {
               breadcrumbs.add('qr scanner cancel');
-              scanStop();
+              _scanStop();
               try {
                 $modalInstance.dismiss('cancel');
               } catch (e) {
                 e.bIgnore = true;
-                // throw e;
               }
             };
           };
@@ -153,7 +169,7 @@
             keyboard: false,
           });
           modalInstance.result.then((data) => {
-            parentScope.onScan({ data });
+            parentScope.onScan({data});
           });
         };
 
@@ -164,18 +180,9 @@
             $scope.modalOpenScanner();
           }
         };
-      };
-
-      return {
-        restrict: 'E',
-        scope: {
-          onScan: '&',
-          beforeScan: '&',
-        },
-        controller,
-        replace: true,
-        template: '<a id="camera-icon" class="btn btn_red" ng-click="openScanner()">Scan QR Code</a>',
-      };
-    },
-  ]);
-}());
+      },
+      replace: true,
+      template: '<a id="qr-scanner" ng-click="openScanner()"><svg-icon name="barcode-scan"></svg-icon></a>',
+    };
+  }
+})();

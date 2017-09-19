@@ -4,9 +4,7 @@
   angular.module('copayApp.services')
     .factory('discoveryService', ($q, fileSystemService, promiseService) => {
       const eventBus = require('byteballcore/event_bus.js');
-      const device = require('byteballcore/device.js');
       const objectHash = require('byteballcore/object_hash.js');
-      const db = require('byteballcore/db.js');
 
       const self = {};
 
@@ -14,10 +12,10 @@
       // const code = 'ApwhbsSyD7cF22UWxlZyH53y1vLpjsPk5gu4AW7AIdq0@byteball.org/bb-test#0000';
 
       // Yary's public testnet server
-      const code = 'AhHZrVJAABB2fVTbO2CNZjvXjUi0QwaazL1uy5OMbn5O@byteball.org/bb-test#0000';
+      self.code = 'AnqLjlEMkQsoP6yZ/vDwT41F3IE6ItfggF0oxyYsUj42@byteball.org/bb-test#0000';
 
       // Local to Yary's machine
-      // const code = 'A8EImXA5RtFDBstX3u1CzcVmcKm8jmBBYlMm93FAHQ0z@byteball.org/bb-test#0000';
+      // self.code = 'A8EImXA5RtFDBstX3u1CzcVmcKm8jmBBYlMm93FAHQ0z@byteball.org/bb-test#0000';
 
       const discoveryServiceAddresses = [];
 
@@ -53,7 +51,7 @@
       } */
 
       function isDiscoveryServiceAddress(deviceAddress) {
-        return !!discoveryServiceAddresses.find(obj => obj === deviceAddress);
+        return !!discoveryServiceAddresses.find((obj) => { return obj === deviceAddress; });
       }
 
       function isJsonString(str) {
@@ -69,7 +67,7 @@
        * Ensures the discovery service is connected and responsive.
        */
       function makeSureDiscoveryServiceIsConnected() {
-        return checkOrPairDevice(code)
+        return checkOrPairDevice(self.code)
         .then((correspondent) => {
           const discoveryServiceDeviceAddress = correspondent.device_address;
 
@@ -99,6 +97,7 @@
             title: 'is-connected'
           };
 
+          const device = require('byteballcore/device.js');
           device.sendMessageToDevice(discoveryServiceDeviceAddress, 'text', JSON.stringify(keepAlive));
 
           const attempts = 12;
@@ -120,6 +119,7 @@
       }
 
       function fundingPairListener(fromAddress, body, callback) {
+        const device = require('byteballcore/device.js');
         device.readCorrespondent(fromAddress, () => {
           try {
             const jsonBody = JSON.parse(body);
@@ -163,9 +163,9 @@
             .then((correspondent) => {
               console.log(`CORRESPONDENT: ${JSON.stringify(correspondent)}`);
               return readMyAddress()
-                .then(address => askForFundingAddress(correspondent.device_address, address))
+                .then((address) => { return askForFundingAddress(correspondent.device_address, address); })
                 .then(() => {
-                  const promise = new Promise((resolve, reject) => {
+                  return new Promise((resolve, reject) => {
                     // Timed rejection: can't wait more than 30 seconds
                     const err = `No funding pair received from ${correspondent.device_address} on time (30s timeout)`;
                     const timeoutId = setTimeout(reject(err), 30000);
@@ -181,18 +181,17 @@
                   }).catch(() => {
                     eventBus.removeListener('text', fundingPairListener);
                   });
-
-                  return promise;
                 });
-            }, err => console.log(err))
-            .then(() => Promise.resolve(true));
+            }, (err) => { console.log(err); })
+            .then(() => { Promise.resolve(true); });
           default:
             return Promise.resolve(false);
         }
       }
 
       function lookupDeviceByPublicKey(pubkey) {
-        const promise = new Promise((resolve) => {
+        return new Promise((resolve) => {
+          const db = require('byteballcore/db.js');
           db.query('SELECT device_address FROM correspondent_devices WHERE pubkey = ? AND is_confirmed = 1', [pubkey], (rows) => {
             if (rows.length === 0) {
               console.log(`DEVICE WITH PUBKEY ${pubkey} NOT YET PAIRED`);
@@ -204,12 +203,11 @@
             }
           });
         });
-
-        return promise;
       }
 
       function pairDevice(pubkey, hub, pairingSecret) {
-        const promise = new Promise((resolve) => {
+        const device = require('byteballcore/device.js');
+        return new Promise((resolve) => {
           device.addUnconfirmedCorrespondent(pubkey, hub, 'New', (deviceAddress) => {
             console.log(`PAIRING WITH ${deviceAddress} ... ADD UNCONFIRMED CORRESPONDENT`);
             discoveryServiceAddresses.push(deviceAddress);
@@ -217,7 +215,7 @@
           });
         }).then((deviceAddress) => {
           console.log(`PAIRING WITH ${deviceAddress} ... ADD UNCONFIRMED CORRESPONDENT WAITING FOR PAIRING`);
-          const waitForPairing = new Promise((resolve) => {
+          return new Promise((resolve) => {
             device.startWaitingForPairing((reversePairingInfo) => {
               resolve({
                 deviceAddress,
@@ -225,10 +223,8 @@
               });
             });
           });
-
-          return waitForPairing;
         }).then((params) => {
-          const sendingPairingMessage = new Promise((resolve, reject) => {
+          return new Promise((resolve, reject) => {
             console.log(`PAIRING WITH ${params.deviceAddress} ... SENDING PAIRING MESSAGE`);
 
             device.sendPairingMessage(
@@ -245,29 +241,24 @@
               }
             );
           });
-
-          return sendingPairingMessage;
         }).then((deviceAddress) => {
           console.log(`LOOKING UP CORRESPONDENT WITH DEVICE ADDRESS ${deviceAddress}`);
           return getCorrespondent(deviceAddress);
         });
-
-        return promise;
       }
 
       function getCorrespondent(deviceAddress) {
-        const promise = new Promise((resolve) => {
+        const device = require('byteballcore/device.js');
+        return new Promise((resolve) => {
           device.readCorrespondent(deviceAddress, (cor) => {
             resolve(cor);
           });
         });
-
-        return promise;
       }
 
       // TODO: should have some dagcoins on it
       function readMyAddress() {
-        const promise = new Promise((resolve, reject) => {
+        return new Promise((resolve, reject) => {
           const walletGeneral = require('byteballcore/wallet_general.js');
           walletGeneral.readMyAddresses((arrMyAddresses) => {
             if (arrMyAddresses.length === 0) {
@@ -277,8 +268,6 @@
             }
           });
         });
-
-        return promise;
       }
 
       function askForFundingAddress(deviceAddress, address) {
@@ -299,6 +288,8 @@
         }
 
         const messageTitle = 'funding-address-request';
+        const device = require('byteballcore/device.js');
+
         console.log(`Sending ${messageTitle} to ${device.getMyDeviceAddress()}:${address}`);
 
         const promise = listenToCreateNewSharedAddress(deviceAddress);
@@ -318,6 +309,10 @@
       }
 
       function checkOrPairDevice(pairCode) {
+        if (!pairCode) {
+          return Promise.reject('NO PAIRING CODE AVAILABLE');
+        }
+
         const matches = pairCode.match(/^([\w\/+]+)@([\w.:\/-]+)#([\w\/+-]+)$/);
         const pubkey = matches[1];
         const hub = matches[2];
@@ -335,7 +330,8 @@
       function sendMessage(messageType, messageBody) {
         return makeSureDiscoveryServiceIsConnected().then(
           (correspondent) => {
-            const promise = new Promise((resolve, reject) => {
+            const device = require('byteballcore/device.js');
+            return new Promise((resolve, reject) => {
               const message = {
                 protocol: 'dagcoin',
                 title: `request.${messageType}`,
@@ -352,8 +348,6 @@
                 }
               });
             });
-
-            return promise;
           },
           (error) => {
             console.log(`COULD NOT DELIVER ${messageType} TO DISCOVERY SERVICE: ${error}`);
@@ -404,9 +398,10 @@
       }
 
       function listenToCreateNewSharedAddress(deviceAddress) {
-        const mainPromise = new Promise((mainResolve) => {
+        return new Promise((mainResolve) => {
           eventBus.on('create_new_shared_address', (template, signers) => {
-            const promise = new Promise((resolve, reject) => {
+            const device = require('byteballcore/device.js');
+            return new Promise((resolve, reject) => {
               const walletGeneral = require('byteballcore/wallet_general.js');
               walletGeneral.readMyAddresses((arrMyAddresses) => {
                 if (arrMyAddresses.length === 0) {
@@ -441,12 +436,8 @@
               mainResolve(true);
               return Promise.resolve(true);
             });
-
-            return promise;
           });
         });
-
-        return mainPromise;
       }
 
       return self;
