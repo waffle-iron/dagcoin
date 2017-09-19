@@ -8,11 +8,14 @@
 
       const self = {};
 
+      // LIVE
+      self.code = 'A7MiDQd+H7S6kFXfEdIKrM6oW6YF2oq4ewU+eSH30YGp@byteball.org/bb#0000'
+
       // Testnet
-      // const code = 'ApwhbsSyD7cF22UWxlZyH53y1vLpjsPk5gu4AW7AIdq0@byteball.org/bb-test#0000';
+      // self.code = 'AnqLjlEMkQsoP6yZ/vDwT41F3IE6ItfggF0oxyYsUj42@byteball.org/bb-test#0000';
 
       // Yary's public testnet server
-      self.code = 'AnqLjlEMkQsoP6yZ/vDwT41F3IE6ItfggF0oxyYsUj42@byteball.org/bb-test#0000';
+      // self.code = 'AhHZrVJAABB2fVTbO2CNZjvXjUi0QwaazL1uy5OMbn5O@byteball.org/bb-test#0000';
 
       // Local to Yary's machine
       // self.code = 'A8EImXA5RtFDBstX3u1CzcVmcKm8jmBBYlMm93FAHQ0z@byteball.org/bb-test#0000';
