@@ -67,7 +67,7 @@
 
   <div ng-show="addrs">
 
-    <h4 translate>All Wallet Addresses</h4>
+    <h4 translate>All Wallet Addresses <button ng-click="info.setAddress()" ng-disabled="index.isOffline">{{'Generate new address' | translate}}</button></h4>
     <ul>
       <li ng-repeat="a in addrs" class="oh">
         <div class="enable_text_select ellipsis">
@@ -79,7 +79,7 @@
       </li>
 
       <li class="line-b p20" >
-        <button class="btn btn_red-full round"
+        <button class="btn btn_red"
                 ng-click="info.sendAddrs()"
                 ng-disabled="info.loading">
           <i class="fi-mail"></i>
@@ -87,8 +87,6 @@
         </button>
       </li>
     </ul>
-
-    <button class="btn btn_red-full" style="width: 300px;display: block;margin: 0 auto;" ng-click="info.setAddress()" ng-disabled="index.isOffline">{{'Generate new address' | translate}}</button>
 
     <div ng-show="hasListOfBalances()">
       <h4 translate>Balance By Address</h4>

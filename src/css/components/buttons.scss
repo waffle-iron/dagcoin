@@ -30,11 +30,12 @@ button {
   &:not([disabled]){
     &.btn_red {
       border-color: $main_color;
-      background: #fff;
+      background: transparent;
       color: $main_color;
 
       &:hover {
         color: $main_color;
+        background: transparent;
       }
     }
 
@@ -60,6 +61,7 @@ button {
 
 body:not(.no_animation){
   .btn{
+
     &.btn_red-full{
       &:not([disabled]){
         @extend .transition;

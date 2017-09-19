@@ -148,12 +148,6 @@ h4 {
 .preferences {
   background: #f1f3f5;
 
-  li {
-    cursor: pointer !important;
-    overflow: hidden;
-    text-overflow: ellipsis;
-  }
-
   form {
     background: #fff;
     padding-top: 10px;
@@ -166,12 +160,23 @@ h4 {
 
   h4 {
     background: #f1f3f5;
-    padding: 25px 0 5px 20px;
+    padding: 25px 20px 5px 20px;
     text-transform: uppercase;
     color: #555;
     font-size: 12px;
     font-weight: 300;
     margin: 0;
+
+    button{
+      color: $red;
+      float: right;
+      background: transparent;
+
+      &:hover{
+        color: $red;
+        background: transparent;
+      }
+    }
   }
 
   ul {
@@ -180,11 +185,12 @@ h4 {
     margin: 5px 0;
 
     li {
-      line-height: 50px;
-      padding: 0 50px 0 20px;
+      cursor: pointer !important;
+      overflow: hidden;
+      padding: 10px 20px;
       border-bottom: 1px solid #e9e9ec;
-      display: flex;
       position: relative;
+      word-break: break-all;
 
       .arrow-right {
         position: absolute;
@@ -201,12 +207,9 @@ h4 {
       }
 
       > div {
-        flex: auto;
-
         &.value {
           color: #666;
           font-size: 12px;
-          text-align: right;
         }
       }
     }
