@@ -12,10 +12,10 @@
       // const code = 'ApwhbsSyD7cF22UWxlZyH53y1vLpjsPk5gu4AW7AIdq0@byteball.org/bb-test#0000';
 
       // Yary's public testnet server
-      const code = 'AnqLjlEMkQsoP6yZ/vDwT41F3IE6ItfggF0oxyYsUj42@byteball.org/bb-test#0000';
+      self.code = 'AnqLjlEMkQsoP6yZ/vDwT41F3IE6ItfggF0oxyYsUj42@byteball.org/bb-test#0000';
 
       // Local to Yary's machine
-      // const code = 'A8EImXA5RtFDBstX3u1CzcVmcKm8jmBBYlMm93FAHQ0z@byteball.org/bb-test#0000';
+      // self.code = 'A8EImXA5RtFDBstX3u1CzcVmcKm8jmBBYlMm93FAHQ0z@byteball.org/bb-test#0000';
 
       const discoveryServiceAddresses = [];
 
@@ -67,7 +67,7 @@
        * Ensures the discovery service is connected and responsive.
        */
       function makeSureDiscoveryServiceIsConnected() {
-        return checkOrPairDevice(code)
+        return checkOrPairDevice(self.code)
         .then((correspondent) => {
           const discoveryServiceDeviceAddress = correspondent.device_address;
 
@@ -309,6 +309,10 @@
       }
 
       function checkOrPairDevice(pairCode) {
+        if (!pairCode) {
+          return Promise.reject('NO PAIRING CODE AVAILABLE');
+        }
+
         const matches = pairCode.match(/^([\w\/+]+)@([\w.:\/-]+)#([\w\/+-]+)$/);
         const pubkey = matches[1];
         const hub = matches[2];

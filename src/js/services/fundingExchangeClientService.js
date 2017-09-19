@@ -4,8 +4,6 @@
 
   angular.module('copayApp.services')
     .factory('fundingExchangeClientService', (discoveryService, configService, dagcoinProtocolService, promiseService, fileSystemService) => {
-      const eventBus = require('byteballcore/event_bus.js');
-
       const self = {};
 
       function clearRequireCache(module) {
@@ -61,14 +59,13 @@
 
       function askForFundingNode() {
         console.log('ASKING FOR A FUNDING NODE');
-        // process.exit();
 
-        const promise = new Promise((resolve, reject) => {
-          const listener = function (message, fromAddress) {
+        const promise = promiseService.listeningTimedPromise(
+          `dagcoin.response.${discoveryService.messages.listTraders}`,
+          (message, fromAddress) => {
             if (!discoveryService.isDiscoveryServiceAddress(fromAddress)) {
               console.log(`RECEIVED A LIST OF TRADERS FROM AN ADDRESS THAT IS NOT MY DISCOVERY SERVICE: ${fromAddress}`);
-              eventBus.once(`dagcoin.response.${discoveryService.messages.listTraders}`, listener);
-              return;
+              return false;
             }
 
             console.log(`THE DISCOVERY SERVICE (${fromAddress}) SENT A MESSAGE: ${JSON.stringify(message)}`);
@@ -76,17 +73,20 @@
             const body = message.messageBody;
 
             if (!body) {
-              reject(`DISCOVERY SERVICE (${fromAddress}) SENT A TRADERS LIST WITH NO BODY`);
+              console.log(`DISCOVERY SERVICE (${fromAddress}) SENT A TRADERS LIST WITH NO BODY`);
+              return false;
             }
 
             const traders = body.traders;
 
             if (!traders) {
-              reject(`DISCOVERY SERVICE (${fromAddress}) SENT A TRADERS LIST MESSAGE BODY WITH NO TRADERS' SECTION`);
+              console.log(`DISCOVERY SERVICE (${fromAddress}) SENT A TRADERS LIST MESSAGE BODY WITH NO TRADERS' SECTION`);
+              return false;
             }
 
             if (traders.length === 0) {
-              reject(`DISCOVERY SERVICE (${fromAddress}) HAS NO TRADERS AVAILABLE`);
+              console.log(`DISCOVERY SERVICE (${fromAddress}) HAS NO TRADERS AVAILABLE`);
+              return false;
             }
 
             traders.sort((a, b) => {
@@ -96,21 +96,17 @@
               return -1;
             });
 
-            resolve(traders[0]);
-          };
-
-          eventBus.once(`dagcoin.response.${discoveryService.messages.listTraders}`, listener);
-        });
-
-        discoveryService.sendMessage(discoveryService.messages.listTraders);
-
-        const timeoutInSeconds = 30;
-
-        return promiseService.timedPromise(
-          promise,
-          timeoutInSeconds * 1000,
-          `NO REPLY FROM THE DISCOVERY SERVICE AFTER ${timeoutInSeconds}s`
+            return traders[0];
+          },
+          30 * 1000,
+          'NO LIST OF TRADERS FROM THE DISCOVERY SERVICE'
         );
+
+        console.log('BEFORE SENDING A MESSAGE TO THE DISCOVERY SERVICE');
+        discoveryService.sendMessage(discoveryService.messages.listTraders);
+        console.log('AFTER SENDING A MESSAGE TO THE DISCOVERY SERVICE');
+
+        return promise;
       }
 
       function activate() {
