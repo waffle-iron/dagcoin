@@ -1,23 +1,39 @@
-<div
-	class="topbar-container"
-	ng-include="'views/includes/topbar.html'"
-	ng-init="titleSection='Recovery'; goBackToState = 'preferencesGlobal'">
+<div ng-include="'views/includes/topbar.html'"
+  ng-init="titleSection='Recovery'; goBackToState = 'preferencesGlobal'; invert = true">
 </div>
-
 <style>
+	.preferences{
+		background: #fff;
+		top: 0;
+	}
+
 	.preferences ul.warnings{
-		margin-left: 0px;
+		margin: 20px 0;
 		background-color: transparent;
+		text-align: center;
 	}
+
 	.preferences ul.warnings li{
-		cursor: auto !important;
-		overflow: auto;
-		white-space: normal;
+		border-bottom: none;
+		padding: 0;
 	}
+  
+  .state_icon svg-icon svg {
+    width: 100px;
+    height: 100px;
+    margin-left: -55px;
+  }
+
+  p.color_red {
+    text-align: center;
+  }
+
+  .box-notification {
+    text-align: center;
+  }
 </style>
 
 <div class="content preferences" ng-controller="recoveryFromSeed as recFromSeed">
-	<h4></h4>
 
 	<div class="onGoingProcess" ng-show="recFromSeed.scanning">
 		<div class="onGoingProcess-content" ng-style="{'background-color':index.backgroundColor}">
@@ -32,12 +48,6 @@
 		</div>
 	</div>
 
-	<div class="box-notification" ng-show="recFromSeed.error">
-	<span class="text-warning">
-		{{recFromSeed.error}}
-	</span>
-	</div>
-
 	<div ng-show="recFromSeed.bLight">
 		<div class="row">
 			<div class="columns center" translate>
@@ -46,21 +56,26 @@
 		</div>
 	</div>
 	<div ng-show="!recFromSeed.bLight">
+
+		<dag-state-icon icon="warning-1"></dag-state-icon>
+    
+    <ul class="warnings color_red">
+		</ul>
+
+    <div class="box-notification" ng-show="recFromSeed.error">
+      <span class="text-warning">
+        {{recFromSeed.error}}
+      </span>
+    </div>
+
+    <p class="color_red">This will permanently delete all your existing wallets!</p>
+    <p class="color_red">Only single-sig wallets can be recovered.</p>
+
 		<form name="settingsDeviceNameForm" class="columns" ng-submit="recFromSeed.recoveryForm()">
 			<label><span translate>Your Wallet Seed:</span></label>
 			<textarea id="inputMnemonic" ng-model="recFromSeed.inputMnemonic"></textarea>
-			<input ng-show="!recFromSeed.scanning" type="submit" class="button expand black round"
-				   value="{{'Recover'|translate}}" ng-style="{'background-color':index.backgroundColor}">
+			<button ng-show="!recFromSeed.scanning" type="submit" class="btn btn_red-full">{{'Recover'|translate}}</button>
 		</form>
-		<div class="text-alert size-12 columns">
-			<span translate>WARNINGS:</span>
-			<ul class="warnings">
-				<li translate>This will permanently delete all your existing wallets!</li>
-				<li translate>Private assets (such as blackbytes) are not recovered.</li>
-				<li translate>Only single-sig wallets can be recovered.</li>
-				<li translate>Correspondents are not restored.</li>
-			</ul>
-		</div>
 	</div>
 
 </div>

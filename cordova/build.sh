@@ -100,7 +100,7 @@ if [ ! -d $PROJECT ]; then
 	cordova plugin add cordova-plugin-statusbar
 	checkOK
 
-	cordova plugin add cordova-plugin-customurlscheme --variable URL_SCHEME=dagcoin
+	cordova plugin add cordova-plugin-customurlscheme --variable URL_SCHEME=$2
 	checkOK
 
 	cordova plugin add cordova-plugin-inappbrowser
@@ -156,7 +156,7 @@ if [ ! -d $PROJECT ]; then
 
 	phonegap local plugin add https://github.com/phonegap-build/PushPlugin.git
 	checkOK
-	
+
 	cordova plugin add https://github.com/xJeneKx/MFileChooser.git
 	checkOK
 
@@ -166,7 +166,7 @@ if $DBGJS
 then
 	echo "${OpenColor}${Green}* Generating byteball bundle (debug js)...${CloseColor}"
 	cd $BUILDDIR/..
-	grunt cordova-prod
+	grunt cordova
 	checkOK
 else
 	echo "${OpenColor}${Green}* Generating byteball bundle...${CloseColor}"
@@ -195,15 +195,15 @@ checkOK
 
 if [ $CURRENT_OS == "ANDROID" ]; then
 	echo "Android project!!!"
-	
-	cat $BUILDDIR/android/android.css >> $PROJECT/www/css/byteball.css
+
+	cat $BUILDDIR/android/android.css >> $PROJECT/www/css/dagcoin.css
 
 	mkdir -p $PROJECT/platforms/android/res/xml/
 	checkOK
 
 #  cp android/AndroidManifest.xml $PROJECT/platforms/android/AndroidManifest.xml
 #  checkOK
-	
+
 	cp android/build-extras.gradle $PROJECT/platforms/android/build-extras.gradle
 	checkOK
 

@@ -26,7 +26,7 @@
 
     root.Utils = bwcService.getUtils();
     root.formatAmount = function (amount, asset, opts) {
-      const options = opts || { dontRound: true };
+      const options = opts || { dontRound: true, needToLocale: asset !== 'DAG' };
       const config = configService.getSync().wallet.settings;
       // if (config.unitCode == 'byte') return amount;
 
@@ -658,7 +658,7 @@
         }
         return $timeout(() => {
           root.insistUnlockFC(err.message, cb);
-        }, 1000);
+        }, 200);
       });
     };
 

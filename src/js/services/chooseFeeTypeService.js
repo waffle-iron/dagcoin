@@ -5,13 +5,12 @@
     .module('copayApp.services')
     .factory('chooseFeeTypeService', chooseFeeTypeService);
 
-  chooseFeeTypeService.$inject = ['$modal', 'go', 'animationService', 'fundingNodeService', '$rootScope', '$q', 'fileSystemService'];
+  chooseFeeTypeService.$inject = ['$modal', 'go', 'animationService', 'fundingExchangeProviderService', '$rootScope', '$q', 'fileSystemService', 'configService'];
 
   /* @ngInject */
-  function chooseFeeTypeService($modal, go, animationService, fundingNodeService, $rootScope, $q, fileSystemService) {
+  function chooseFeeTypeService($modal, go, animationService, fundingExchangeProviderService, $rootScope, $q, fileSystemService, configService) {
     const service = {
       getFeeDefaultMethod,
-      getCanBeSwitchedToHub,
       setUpFeeDefaultMethod,
       openNotPossibleToExchangeModal
     };
@@ -33,7 +32,7 @@
             }
 
             if (hasDags && !hasBytes) {
-              openNotPossibleToExchangeModal();
+              // openNotPossibleToExchangeModal();
             }
           }
         });
@@ -41,18 +40,12 @@
 
     return service;
 
-    function getCanBeSwitchedToHub() {
-      const constants = require('byteballcore/constants.js');
-
-      return (currentBalance && currentBalance[constants.DAGCOIN_ASSET] && currentBalance[constants.DAGCOIN_ASSET].stable > 0);
-    }
-
     function getFeeDefaultMethod() {
       const deferred = $q.defer();
-      const userConf = fundingNodeService.getUserConfig();
+      const config = configService.getSync();
 
-      if (userConf && userConf.feeMethod) {
-        deferred.resolve(userConf.feeMethod);
+      if (config && config.feeMethod) {
+        deferred.resolve(config.feeMethod);
       } else {
         deferred.resolve(false);
       }
@@ -62,18 +55,16 @@
 
     function setUpFeeDefaultMethod(way) {
       const deferred = $q.defer();
-      const userConfFile = fileSystemService.getUserConfFilePath();
-      const userConf = fundingNodeService.getUserConfig();
+      const config = { feeMethod: way };
 
-      userConf.feeMethod = way;
-
-      fileSystemService.writeFile(userConfFile, JSON.stringify(userConf, null, '\t'), 'utf8', (err) => {
+      configService.set(config, (err) => {
         if (err) {
           deferred.reject(err);
         } else {
           deferred.resolve();
         }
       });
+
       return deferred.promise;
     }
 

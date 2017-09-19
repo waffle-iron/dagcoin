@@ -295,12 +295,12 @@
 
       return root;
     }).factory('$exceptionHandler', ($log) => {
-      const myExceptionHandler = (exception, cause) => {
+      const exHandler = (exception, cause) => {
         console.log('angular $exceptionHandler');
         $log.error(exception, cause);
         eventBus.emit('uncaught_error', `An e xception occurred: ${exception}; cause: ${cause}`, exception);
       };
-      return myExceptionHandler;
+      return exHandler;
     });
 
   function tempHandleUri(url) {
@@ -316,7 +316,7 @@
   }
 
   window.onerror = function (msg, url, line, col, error) {
-    console.log('onerror');
+    console.log(`Javascript error: ${msg}`, error);
     eventBus.emit('uncaught_error', `Javascript error: ${msg}`, error);
   };
 

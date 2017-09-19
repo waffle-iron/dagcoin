@@ -1,5 +1,9 @@
 @import "variables";
 @import "mobile";
+@import "dagNavBar";
+/* Components */
+@import "components/buttons";
+@import "components/inputs";
 
 html {
   height: 100%;
@@ -28,6 +32,18 @@ body {
 
 h1, h2, h3, h4, h5, h6 {
   color: #2c3e50;
+}
+
+svg-icon {
+  display: inline-block;
+  position: relative;
+  vertical-align: middle;
+  fill: currentColor;
+  line-height: 0;
+}
+
+.color_red {
+  color: $red;
 }
 
 .panel {
@@ -129,16 +145,8 @@ h4 {
   }
 }
 
-
 .preferences {
   background: #f1f3f5;
-
-  li {
-    cursor: pointer !important;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-  }
 
   form {
     background: #fff;
@@ -152,21 +160,58 @@ h4 {
 
   h4 {
     background: #f1f3f5;
-    padding: 25px 0 5px 20px;
+    padding: 25px 20px 5px;
     text-transform: uppercase;
     color: #555;
     font-size: 12px;
     font-weight: 300;
     margin: 0;
+
+    button{
+      color: $red;
+      float: right;
+      background: transparent;
+
+      &:hover{
+        color: $red;
+        background: transparent;
+      }
+    }
   }
 
   ul {
     font-size: 14px;
     background: #fff;
+    margin: 5px 0;
 
     li {
-      padding: 13px 20px;
+      cursor: pointer !important;
+      overflow: hidden;
+      padding: 10px 20px;
       border-bottom: 1px solid #e9e9ec;
+      position: relative;
+      word-break: break-all;
+
+      .arrow-right {
+        position: absolute;
+        right: 20px;
+        top: 50%;
+        margin-top: -12px;
+      }
+
+      .switch {
+        position: absolute;
+        right: 20px;
+        top: 50% !important;
+        margin-top: -16px;
+      }
+
+      > div {
+        &.value {
+          color: #666;
+          font-size: 12px;
+        }
+      }
     }
   }
 }
@@ -284,7 +329,7 @@ ul.button-group {
 a {
   color: $main_color;
 
-  &:hover{
+  &:hover {
     color: darken($main_color, 10);
   }
 
@@ -360,13 +405,17 @@ input:-webkit-autofill, textarea:-webkit-autofill, select:-webkit-autofill, inpu
 .content {
   width: 100%;
   position: absolute;
-  top: 45px;
+  top: $nav_bar_height;
   bottom: 0;
   overflow: auto;
 
   &.disclaimer {
     top: 0;
   }
+}
+
+.content_hero {
+  @include gradientBackground($main_color, darken($main_color, 10), top, bottom);
 }
 
 .box-setup-footer {
@@ -855,22 +904,6 @@ ul.manage li {
 
 .wallet-settings {
   font: normal 400 normal 18px "foundation-icons";
-}
-
-.sidebar {
-  li {
-    &.nav-item {
-      &.selected {
-        .name-wallet {
-          color: #fff;
-
-          i {
-            color: #b6e9df;
-          }
-        }
-      }
-    }
-  }
 }
 
 .locked {
@@ -1524,6 +1557,8 @@ input.ng-invalid-match, input.ng-invalid-match:focus {
 
   > .content {
     padding: 0;
+    position: relative;
+    top: 0;
   }
 }
 
@@ -1764,6 +1799,74 @@ input.ng-invalid-match, input.ng-invalid-match:focus {
   word-wrap: break-word;
 }
 
+.tooltip {
+  @extend .transition;
+  display: block !important;
+  left: 50%;
+  width: 100px;
+  margin-left: -50px;
+  top: 50%;
+  margin-top: -32px;
+  opacity: 0;
+
+  svg-icon {
+    margin-right: 5px;
+
+    svg {
+      width: 20px;
+      height: 20px;
+    }
+  }
+
+  &.visible {
+    opacity: 1;
+  }
+}
+
+.qr_code {
+  position: relative;
+}
+
+.reveal-modal {
+  overflow-y: auto;
+  position: fixed;
+  padding: 20px;
+  background: rgba(0, 0, 0, 0.5);
+
+  .modal-content {
+    width: 100%;
+    border-radius: 10px;
+    box-shadow: 0 5px 15px 2px rgba(0, 0, 0, 0.3);
+    padding: 20px;
+    position: relative;
+    top: auto;
+
+    .modal-content-header {
+      text-align: center;
+      color: #adb3b9;
+      font-weight: 400;
+
+      h3 {
+        color: #3e4042;
+        font-weight: 600;
+      }
+
+      p {
+        line-height: 1.2;
+      }
+
+      svg-icon {
+        margin: 10px 0;
+
+        svg {
+          height: 40px;
+          width: 40px;
+        }
+      }
+    }
+  }
+}
+
 .arrow-down:after {
   content: " \25be";
 }
@@ -1796,6 +1899,7 @@ input.ng-invalid-match, input.ng-invalid-match:focus {
     display: inline-block;
     vertical-align: middle;
     margin-left: 10px;
+    width: calc(100% - 35px);
   }
 
   .radio-box {
@@ -1840,22 +1944,23 @@ input.ng-invalid-match, input.ng-invalid-match:focus {
   visibility: visible;
 }
 
-.input-wrap > input[type="text"],
-.input-wrap > input[type="number"],
-.input-wrap > input[type="email"],
-.input-wrap > input[type="password"] {
+.input-wrap input[type="text"],
+.input-wrap input[type="number"],
+.input-wrap input[type="email"],
+.input-wrap input[type="password"],
+.input-wrap select {
   border: 2px solid #eee;
   border-radius: 5px;
   padding: 14px 22px;
   height: auto;
-  font-family: "Montserrat", sans-serif;
   font-size: 14px;
-  font-weight: 300;
-  color: #aaa;
-  max-width: 300px;
+  font-weight: 400;
+  color: #666;
+  max-width: 100%;
   width: 100%;
   outline: none;
   box-shadow: none;
+  background: #fff;
 
   &.min {
     padding: 4px 10px;
@@ -1906,7 +2011,6 @@ input.ng-invalid-match, input.ng-invalid-match:focus {
 /**
  * in this file all global variables of colors
 **/
-
 
 .ico {
   vertical-align: middle;
@@ -2102,87 +2206,6 @@ a.a_none {
   display: none;
 }
 
-button {
-  display: inline-block;
-  margin: 0;
-  padding: 0;
-  border: 0;
-  background-color: transparent;
-}
-
-.btn {
-  display: inline-block;
-  border-radius: 5px;
-  font-weight: 600;
-  padding: 15px;
-  max-width: 300px;
-  width: 100%;
-  border: 2px solid transparent;
-  background-color: transparent;
-  color: inherit;
-  transition: color ease 0.3s;
-  font-size: 16px;
-  letter-spacing: 0.3px;
-  overflow: hidden;
-  position: relative;
-  outline: none;
-
-  &:not([disabled]){
-    &.btn_red {
-      border-color: $main_color;
-      background: #fff;
-      color: $main_color;
-
-      &:hover {
-        color: $main_color;
-      }
-    }
-
-    &.btn_red-full {
-      color: #fff;
-      @include gradientBackground($main_color, darken($main_color, 10), left, right);
-      text-shadow: 1px 1px 0 darken($main_color, 10);
-      border: 2px solid;
-
-      &:hover {
-        color: #fff;
-        @include gradientBackground(darken($main_color, 2), darken($main_color, 12), left, right);
-      }
-    }
-
-    &:after, &:before{
-      @extend .transition;
-      content: "";
-      position: absolute;
-      top: 0;
-      width: 40px;
-      height: 100%;
-      opacity: 0.15;
-      right: -100px;
-      @include gradientBackground(#fff, darken(#fff, 10), left, right);
-      transform: skewX(30deg);
-    }
-
-    &:before{
-      margin-left: 30px;
-    }
-
-    &:hover {
-      &:after, &:before{
-        right: 110%;
-      }
-    }
-  }
-
-  &[disabled]{
-    cursor: not-allowed;
-  }
-}
-
-a.btn {
-  text-decoration: none;
-}
-
 .c-header {
   position: relative;
   left: 0;
@@ -2216,6 +2239,33 @@ a.btn {
 
       a {
         padding: 10px 20px;
+      }
+    }
+  }
+}
+
+#send, #accept {
+  #qr-scanner {
+    position: absolute;
+    right: 0;
+    top: 0;
+    height: 100%;
+    background: #eee;
+    width: 50px;
+    border-top-right-radius: 5px;
+    border-bottom-right-radius: 5px;
+
+    svg-icon {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      margin-left: -13px;
+      margin-top: -14px;
+
+      svg {
+        width: 26px;
+        height: 26px;
+        fill: #666;
       }
     }
   }
@@ -2359,7 +2409,7 @@ canvas {
   }
 }
 
-.p-wallet{
+.p-wallet {
   position: relative;
   width: 100%;
   padding-top: 60px;
@@ -2431,8 +2481,8 @@ canvas {
         font-size: 10px;
         padding-top: 5px;
 
-        &:not(.active){
-          &:hover{
+        &:not(.active) {
+          &:hover {
             color: darken(#cecece, 15);
           }
         }
@@ -2449,7 +2499,7 @@ canvas {
       }
 
       &.active {
-        a{
+        a {
           border-top: 2px solid $main_color;
           color: $main_color;
         }
@@ -2459,7 +2509,6 @@ canvas {
   }
 }
 
-
 .p-wallet__price-block {
   position: relative;
   right: 0;
@@ -2467,6 +2516,8 @@ canvas {
   width: 100%;
   z-index: 2;
   text-align: center;
+  color: #fff;
+  padding: 30px 0 0;
 
   .price-wrapper {
     color: #d52026;
@@ -2518,7 +2569,7 @@ canvas {
   font-size: 16px;
 }
 
-.transactions__table{
+.transactions__table {
   margin-top: 20px;
   overflow-x: hidden;
   //overflow-y: scroll;
@@ -2601,7 +2652,7 @@ canvas {
   padding-bottom: 70px;
 }
 
-.send.tab-in .p-wrap{
+.send.tab-in .p-wrap {
   max-height: 485px;
   overflow-y: auto;
 }
@@ -2632,7 +2683,7 @@ canvas {
 }
 
 .page-action {
-  margin-top: 48px;
+  margin-top: 20px;
 }
 
 .page-action__info {
@@ -2653,16 +2704,21 @@ canvas {
 
 input {
   border: 2px solid #eee;
-  border-radius: 40px;
+  border-radius: 5px;
   padding: 14px 22px;
   font-family: "Montserrat", sans-serif;
   font-size: 14px;
   font-weight: 300;
-  color: #aaa;
+  color: #333;
   max-width: 300px;
   width: 100%;
   outline: none;
   box-shadow: none;
+
+  &[type="checkbox"] {
+    width: auto;
+    margin: 0;
+  }
 }
 
 .form-group {
@@ -2740,22 +2796,26 @@ input {
   height: 100%;
 }
 
-.topbar-transparent{
+.topbar-transparent {
   .tab-bar {
     background: transparent;
     border: 0;
   }
 }
 
-.topbar-container{
-  position: relative;
-  z-index: 2;
-  border-bottom: 1px solid #eee;
-}
+.tab-view {
+  transform: translate3d(-100%, 0, 0);
+  width: 100%;
+  position: absolute;
+  padding-top: 0;
+  top: 45px;
+  bottom: 37px;
+  overflow: hidden;
+  padding-bottom: 40px;
 
-.button:hover {
-  background: #d52026;
-  color: #0078a0;
+  &.tab-in {
+    transform: translate3d(0, 0, 0) !important;
+  }
 }
 
 .wrappable-menu-item {
@@ -2778,32 +2838,43 @@ input {
   text-overflow: ellipsis;
   overflow: hidden;
 }
-.radios{
-  li{
+
+.radios {
+  li {
     display: flex;
     justify-content: space-between;
     align-items: baseline;
-    input{
+    input {
       margin: 0;
       width: 5%;
     }
-    input:hover{
+    input:hover {
       cursor: pointer;
     }
   }
 }
-.no-bytes-modal-msg{
+
+.no-bytes-modal-msg {
   text-align: center;
 }
-.btns-wrapper{
+
+.btns-wrapper {
   display: flex;
   justify-content: space-around;
 }
-.btns-wrapper button{
+
+.btns-wrapper button {
   padding: 0.5rem 0.6rem 0.531rem;
   font-size: 0.8rem;
   border-radius: 15px;
 }
-.btns-wrapper button:hover{
+
+.btns-wrapper button:hover {
   background-color: #008cba;
+}
+
+section {
+  &.right-small {
+    left: initial;
+  }
 }

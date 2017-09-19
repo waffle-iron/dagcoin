@@ -2,10 +2,10 @@
   'use strict';
 
   angular.module('copayApp.controllers').controller('splashController',
-    function ($scope, $timeout, $log, configService, profileService, storageService, fileSystemService, go, isCordova, changeWalletTypeTypeService) {
+    function ($scope, $timeout, $log, configService, profileService, storageService, fileSystemService, go, isCordova) {
       const self = this;
 
-      function saveDeviceName() {
+      this.saveDeviceName = function () {
         console.log(`saveDeviceName: ${self.deviceName}`);
         const device = require('byteballcore/device.js');
         device.setDeviceName(self.deviceName);
@@ -14,8 +14,9 @@
           if (err) {
             self.$emit('Local/DeviceError', err);
           }
+          self.bDeviceNameSet = true;
         });
-      }
+      };
 
       configService.get((err, config) => {
         if (err) {
@@ -24,8 +25,17 @@
         self.deviceName = config.deviceName;
       });
 
-      this.step = isCordova ? 'device_name' : 'wallet_type';
+      this.step = isCordova ? 'device_name' : 'registration_type';
+      this.registration_type = 'default';
       this.wallet_type = 'light';
+
+      this.setRegistrationType = function () {
+        if (this.registration_type === 'default') {
+          this.setWalletType();
+        } else {
+          this.step = 'wallet_type';
+        }
+      };
 
       this.setWalletType = function () {
         const bLight = (self.wallet_type === 'light');
@@ -54,7 +64,6 @@
           return console.log('already creating profile');
         }
         self.creatingProfile = true;
-        saveDeviceName();
 
         return $timeout(() => {
           profileService.create({ noWallet }, (err) => {
@@ -77,16 +86,6 @@
 
           if (profileService.profile) {
             go.walletHome();
-          }
-
-          if (changeWalletTypeTypeService.isInProgress()) {
-            const newWalletSettings = changeWalletTypeTypeService.getNewWalletSettings();
-
-            self.deviceName = newWalletSettings.deviceName;
-            self.step = '';
-            self.create();
-
-            changeWalletTypeTypeService.finish();
           }
         });
       };

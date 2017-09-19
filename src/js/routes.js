@@ -93,9 +93,16 @@
               templateUrl: 'views/splash.html',
             },
           },
-        });
-
-      $stateProvider
+        })
+        .state('intro', {
+          url: '/intro',
+          needProfile: false,
+          views: {
+            main: {
+              templateUrl: 'controllers/intro/intro.template.html'
+            },
+          },
+        })
         .state('translators', {
           url: '/translators',
           walletShouldBeComplete: true,
@@ -133,16 +140,16 @@
           views: {
             main: {
               templateUrl: 'views/unsupported.html',
-            },
-          },
+            }
+          }
         })
         .state('payment', {
           url: '/uri-payment/:data',
           templateUrl: 'views/paymentUri.html',
           views: {
             main: {
-              templateUrl: 'views/paymentUri.html',
-            },
+              templateUrl: 'views/paymentUri.html'
+            }
           },
           needProfile: true,
         })
@@ -496,7 +503,7 @@
           needProfile: false,
         });
     })
-    .run(($rootScope, $state, $stateParams, $log, uriHandler, isCordova, profileService, $timeout, nodeWebkit, uxLanguage, animationService) => {
+    .run(($rootScope, $state, $stateParams, $log, uriHandler, isCordova, profileService, $timeout, nodeWebkit, uxLanguage, animationService, backButton, go) => {
       $rootScope.$state = $state;
       $rootScope.$stateParams = $stateParams;
 
@@ -513,18 +520,27 @@
         const gui = require('nw.gui');
         const win = gui.Window.get();
         win.setResizable(false);
-        const nativeMenuBar = new gui.Menu({
-          type: 'menubar',
-        });
-        try {
-          nativeMenuBar.createMacBuiltin('DAGCOIN');
-        } catch (e) {
-          $log.debug('This is not OSX');
+        const os = require('os');
+        const platform = os.platform();
+
+        if (platform.indexOf('win') === -1) {
+          const nativeMenuBar = new gui.Menu({
+            type: 'menubar',
+          });
+          try {
+            nativeMenuBar.createMacBuiltin('DAGCOIN');
+          } catch (e) {
+            $log.debug('This is not OSX');
+          }
+          win.menu = nativeMenuBar;
         }
-        win.menu = nativeMenuBar;
       }
 
       $rootScope.$on('$stateChangeStart', (event, toState, toParams, fromState) => {
+        $rootScope.params = toParams;
+
+        backButton.menuOpened = false;
+        go.swipe();
         if (!profileService.profile && toState.needProfile) {
           // Give us time to open / create the profile
           event.preventDefault();
@@ -534,10 +550,10 @@
             if (err) {
               if (err.message && err.message.match('NOPROFILE')) {
                 $log.debug('No profile... redirecting');
-                $state.transitionTo('splash');
+                $state.go('splash');
               } else if (err.message && err.message.match('NONAGREEDDISCLAIMER')) {
                 $log.debug('Display disclaimer... redirecting');
-                $state.transitionTo('disclaimer');
+                $state.go('intro');
               } else {
                 throw new Error(err); // TODO
               }

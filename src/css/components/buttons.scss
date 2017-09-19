@@ -1,0 +1,96 @@
+button {
+  display: inline-block;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background-color: transparent;
+}
+
+.btn {
+  display: inline-block;
+  border-radius: 5px;
+  font-weight: 600;
+  padding: 15px;
+  max-width: 100%;
+  width: 100%;
+  border: none;
+  background-color: transparent;
+  color: inherit;
+  transition: color ease 0.3s;
+  font-size: 16px;
+  letter-spacing: 0.3px;
+  overflow: hidden;
+  position: relative;
+  text-decoration: none;
+
+  & + .btn {
+    margin-top: 13px;
+  }
+
+  &:not([disabled]){
+    &.btn_red {
+      border-color: $main_color;
+      background: transparent;
+      color: $main_color;
+
+      &:hover {
+        color: $main_color;
+        background: transparent;
+      }
+    }
+
+    &.btn_red-full {
+      box-shadow:inset 0 2px 0 0 rgba(255,255,255,0.4);
+      color: #fff;
+      @include gradientBackground($main_color, darken($main_color, 10), left, right);
+      text-shadow: 1px 1px 0 darken($main_color, 10);
+
+      &:hover {
+        color: #fff;
+        @include gradientBackground(darken($main_color, 2), darken($main_color, 12), left, right);
+      }
+    }
+  }
+
+  &[disabled]{
+    background: #ccc;
+    color: white;
+    cursor: not-allowed;
+  }
+}
+
+body:not(.no_animation){
+  .btn{
+
+    &.btn_red-full{
+      &:not([disabled]){
+        @extend .transition;
+
+        &:after, &:before{
+          @extend .transition;
+          content: "";
+          position: absolute;
+          top: 0;
+          width: 40px;
+          height: 100%;
+          opacity: 0.15;
+          right: -100px;
+          @include gradientBackground(#fff, darken(#fff, 10), left, right);
+          transform: skewX(30deg);
+        }
+
+        &:before{
+          margin-left: 30px;
+        }
+
+        &:hover {
+          outline: none;
+
+          &:after, &:before{
+            right: 110%;
+          }
+        }
+      }
+    }
+  }
+}

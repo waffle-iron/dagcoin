@@ -29,7 +29,7 @@
         totalCosigners: 6,
       },
 
-      hub: (constants.alt === '2' && isTestnet) ? 'byteball.org/bb-test' : 'byteball.org/bb',
+      hub: (constants.alt === '2' && isTestnet) ? 'testnetexplorer.dagcoin.org/wss/' : 'byteball.org/bb',
 
       // requires bluetooth permission on android
       // deviceName: /*isCordova ? cordova.plugins.deviceName.name : */require('os').hostname(),
@@ -161,6 +161,22 @@
 
         storageService.storeConfig(JSON.stringify(config), cb);
       });
+    };
+
+    root.setWithoutMergingOld = function (newOpts, cb) {
+      let config = defaultConfig;
+      let newOptions = newOpts;
+
+      if (lodash.isString(config)) {
+        config = JSON.parse(config);
+      }
+      if (lodash.isString(newOptions)) {
+        newOptions = JSON.parse(newOptions);
+      }
+      lodash.merge(config, newOptions);
+      configCache = config;
+
+      storageService.storeConfig(JSON.stringify(config), cb);
     };
 
     root.reset = function (cb) {
