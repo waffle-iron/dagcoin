@@ -51,7 +51,7 @@
       } */
 
       function isDiscoveryServiceAddress(deviceAddress) {
-        return !!discoveryServiceAddresses.find(obj => obj === deviceAddress);
+        return !!discoveryServiceAddresses.find((obj) => { return obj === deviceAddress; });
       }
 
       function isJsonString(str) {
@@ -163,9 +163,9 @@
             .then((correspondent) => {
               console.log(`CORRESPONDENT: ${JSON.stringify(correspondent)}`);
               return readMyAddress()
-                .then(address => askForFundingAddress(correspondent.device_address, address))
+                .then((address) => { return askForFundingAddress(correspondent.device_address, address); })
                 .then(() => {
-                  const promise = new Promise((resolve, reject) => {
+                  return new Promise((resolve, reject) => {
                     // Timed rejection: can't wait more than 30 seconds
                     const err = `No funding pair received from ${correspondent.device_address} on time (30s timeout)`;
                     const timeoutId = setTimeout(reject(err), 30000);
@@ -181,18 +181,16 @@
                   }).catch(() => {
                     eventBus.removeListener('text', fundingPairListener);
                   });
-
-                  return promise;
                 });
-            }, err => console.log(err))
-            .then(() => Promise.resolve(true));
+            }, (err) => { console.log(err); })
+            .then(() => { Promise.resolve(true); });
           default:
             return Promise.resolve(false);
         }
       }
 
       function lookupDeviceByPublicKey(pubkey) {
-        const promise = new Promise((resolve) => {
+        return new Promise((resolve) => {
           const db = require('byteballcore/db.js');
           db.query('SELECT device_address FROM correspondent_devices WHERE pubkey = ? AND is_confirmed = 1', [pubkey], (rows) => {
             if (rows.length === 0) {
@@ -205,13 +203,11 @@
             }
           });
         });
-
-        return promise;
       }
 
       function pairDevice(pubkey, hub, pairingSecret) {
         const device = require('byteballcore/device.js');
-        const promise = new Promise((resolve) => {
+        return new Promise((resolve) => {
           device.addUnconfirmedCorrespondent(pubkey, hub, 'New', (deviceAddress) => {
             console.log(`PAIRING WITH ${deviceAddress} ... ADD UNCONFIRMED CORRESPONDENT`);
             discoveryServiceAddresses.push(deviceAddress);
@@ -219,7 +215,7 @@
           });
         }).then((deviceAddress) => {
           console.log(`PAIRING WITH ${deviceAddress} ... ADD UNCONFIRMED CORRESPONDENT WAITING FOR PAIRING`);
-          const waitForPairing = new Promise((resolve) => {
+          return new Promise((resolve) => {
             device.startWaitingForPairing((reversePairingInfo) => {
               resolve({
                 deviceAddress,
@@ -227,10 +223,8 @@
               });
             });
           });
-
-          return waitForPairing;
         }).then((params) => {
-          const sendingPairingMessage = new Promise((resolve, reject) => {
+          return new Promise((resolve, reject) => {
             console.log(`PAIRING WITH ${params.deviceAddress} ... SENDING PAIRING MESSAGE`);
 
             device.sendPairingMessage(
@@ -247,30 +241,24 @@
               }
             );
           });
-
-          return sendingPairingMessage;
         }).then((deviceAddress) => {
           console.log(`LOOKING UP CORRESPONDENT WITH DEVICE ADDRESS ${deviceAddress}`);
           return getCorrespondent(deviceAddress);
         });
-
-        return promise;
       }
 
       function getCorrespondent(deviceAddress) {
         const device = require('byteballcore/device.js');
-        const promise = new Promise((resolve) => {
+        return new Promise((resolve) => {
           device.readCorrespondent(deviceAddress, (cor) => {
             resolve(cor);
           });
         });
-
-        return promise;
       }
 
       // TODO: should have some dagcoins on it
       function readMyAddress() {
-        const promise = new Promise((resolve, reject) => {
+        return new Promise((resolve, reject) => {
           const walletGeneral = require('byteballcore/wallet_general.js');
           walletGeneral.readMyAddresses((arrMyAddresses) => {
             if (arrMyAddresses.length === 0) {
@@ -280,8 +268,6 @@
             }
           });
         });
-
-        return promise;
       }
 
       function askForFundingAddress(deviceAddress, address) {
@@ -341,7 +327,7 @@
         return makeSureDiscoveryServiceIsConnected().then(
           (correspondent) => {
             const device = require('byteballcore/device.js');
-            const promise = new Promise((resolve, reject) => {
+            return new Promise((resolve, reject) => {
               const message = {
                 protocol: 'dagcoin',
                 title: `request.${messageType}`,
@@ -358,8 +344,6 @@
                 }
               });
             });
-
-            return promise;
           },
           (error) => {
             console.log(`COULD NOT DELIVER ${messageType} TO DISCOVERY SERVICE: ${error}`);
@@ -410,10 +394,10 @@
       }
 
       function listenToCreateNewSharedAddress(deviceAddress) {
-        const mainPromise = new Promise((mainResolve) => {
+        return new Promise((mainResolve) => {
           eventBus.on('create_new_shared_address', (template, signers) => {
             const device = require('byteballcore/device.js');
-            const promise = new Promise((resolve, reject) => {
+            return new Promise((resolve, reject) => {
               const walletGeneral = require('byteballcore/wallet_general.js');
               walletGeneral.readMyAddresses((arrMyAddresses) => {
                 if (arrMyAddresses.length === 0) {
@@ -448,12 +432,8 @@
               mainResolve(true);
               return Promise.resolve(true);
             });
-
-            return promise;
           });
         });
-
-        return mainPromise;
       }
 
       return self;

@@ -60,6 +60,9 @@
       }
 
       function askForFundingNode() {
+        console.log('ASKING FOR A FUNDING NODE');
+        process.exit();
+
         const promise = new Promise((resolve, reject) => {
           const listener = function (message, fromAddress) {
             if (!discoveryService.isDiscoveryServiceAddress(fromAddress)) {
