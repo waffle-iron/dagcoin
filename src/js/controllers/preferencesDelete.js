@@ -37,6 +37,7 @@
 
       const modalDeleteWallet = function () {
         const ModalInstanceCtrl = function ($scope, $modalInstance, $sce) {
+          $scope.header = $sce.trustAsHtml('Delete wallet');
           $scope.title = $sce.trustAsHtml(deleteMessage);
           $scope.loading = false;
 

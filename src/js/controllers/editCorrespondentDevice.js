@@ -22,6 +22,7 @@
 
       $scope.purge_chat = function () {
         const ModalInstanceCtrl = function ($scopeModal, $modalInstance, $sce) {
+          $scopeModal.header = $sce.trustAsHtml('Clear chat history');
           $scopeModal.title = $sce.trustAsHtml(`Delete the whole chat history with ${correspondent.name}?`);
 
           $scopeModal.ok = function () {

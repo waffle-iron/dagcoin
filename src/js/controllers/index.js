@@ -290,6 +290,7 @@ no-nested-ternary,no-shadow,no-plusplus,consistent-return,import/no-extraneous-d
 
       const modalRequestApproval = function (question, callbacks) {
         const ModalInstanceCtrl = function ($scope, $modalInstance, $sce) {
+          $scope.header = $sce.trustAsHtml('Request approval');
           $scope.title = $sce.trustAsHtml(question);
           $scope.yes_icon = 'fi-check';
           $scope.yes_button_class = 'primary';

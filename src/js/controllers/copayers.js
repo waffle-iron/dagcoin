@@ -46,6 +46,7 @@
 
       const modalDeleteWallet = function () {
         const ModalInstanceCtrl = function ($scope, $modalInstance, $sce) {
+          $scope.header = $sce.trustAsHtml('Delete wallet');
           $scope.title = $sce.trustAsHtml(deleteMessage);
           $scope.yes_icon = 'fi-trash';
           $scope.yes_button_class = 'warning';
@@ -64,7 +65,7 @@
         const modalInstance = $modal.open({
           templateUrl: 'views/modals/confirmation.html',
           windowClass: animationService.modalAnimated.slideUp,
-          controller: ModalInstanceCtrl,
+          controller: ModalInstanceCtrl
         });
 
         modalInstance.result.finally(() => {
