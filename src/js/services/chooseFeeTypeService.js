@@ -15,25 +15,11 @@
       openNotPossibleToExchangeModal
     };
 
-    let currentBalance = null;
-
-    $rootScope.$on('Local/BalanceUpdatedAndWalletUnlocked', (event, ab) => {
-      currentBalance = ab;
-
+    $rootScope.$on('Local/BalanceUpdatedAndWalletUnlocked', () => {
       getFeeDefaultMethod()
         .then((res) => {
           if (!res) {
-            const constants = require('byteballcore/constants.js');
-            const hasDags = (currentBalance && currentBalance[constants.DAGCOIN_ASSET] && currentBalance[constants.DAGCOIN_ASSET].stable > 0);
-            const hasBytes = (currentBalance && currentBalance.base && currentBalance.base.stable > 0);
-
-            if (hasBytes) {
-              setUpFeeDefaultMethod('bytes').then(() => {});
-            }
-
-            if (hasDags && !hasBytes) {
-              // openNotPossibleToExchangeModal();
-            }
+            setUpFeeDefaultMethod('hub').then(() => {});
           }
         });
     });

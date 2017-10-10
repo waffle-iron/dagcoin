@@ -46,7 +46,7 @@ module.exports = function (grunt) {
         innosetupTemplateMyAppExeName: 'Dagcoin.exe',
         innosetupTemplateMyAppFolderName: 'dagcoin'
       },
-      functions: {},
+      functions: {}
     },
     template: {
       'process-html-template': {
@@ -56,7 +56,7 @@ module.exports = function (grunt) {
             myAppPackageName: '<%= process.env.innosetupTemplateMyAppPackageName %>',
             myAppVersion: '<%= process.env.innosetupTemplateMyAppVersion %>',
             myAppExeName: '<%= process.env.innosetupTemplateMyAppExeName %>',
-            myAppFolderName: '<%= process.env.innosetupTemplateMyAppFolderName %>',
+            myAppFolderName: '<%= process.env.innosetupTemplateMyAppFolderName %>'
           }
         },
         files: {
@@ -153,7 +153,7 @@ module.exports = function (grunt) {
     concat: {
       options: {
         sourceMap: false,
-        sourceMapStyle: 'link', // embed, link, inline
+        sourceMapStyle: 'link' // embed, link, inline
       },
       angular: {
         src: [
@@ -216,9 +216,9 @@ module.exports = function (grunt) {
           'bower_components/animate.css/animate.css',
           'bower_components/foundation/css/foundation.css',
           'bower_components/angular-ui-switch/angular-ui-switch.css',
-          'bower_components/angular-carousel/dist/angular-carousel.css',
+          'bower_components/angular-carousel/dist/angular-carousel.css'
         ],
-        dest: 'public/css/foundation.css',
+        dest: 'public/css/foundation.css'
       },
       cssVendors: {
         src: [
@@ -297,7 +297,7 @@ module.exports = function (grunt) {
             expand: true,
             cwd: './webkitbuilds/',
             src: ['dagcoin.desktop', '../public/img/icons/icon-white-outline.iconset/icon_256x256.png'],
-            dest: '../byteballbuilds/DAGCOIN-TN/linux32/',
+            dest: '../byteballbuilds/Dagcoin/linux32/',
             flatten: true,
             filter: 'isFile',
             options: { timestamp: true, mode: true }
@@ -306,7 +306,7 @@ module.exports = function (grunt) {
             expand: true,
             cwd: './webkitbuilds/',
             src: ['dagcoin.desktop', '../public/img/icons/icon-white-outline.iconset/icon_256x256.png'],
-            dest: '../byteballbuilds/DAGCOIN-TN/linux64/',
+            dest: '../byteballbuilds/Dagcoin/linux64/',
             flatten: true,
             filter: 'isFile',
             options: { timestamp: true, mode: true }
@@ -322,7 +322,7 @@ module.exports = function (grunt) {
       prod: {
         configFile: 'test/karma.conf.js',
         singleRun: false
-      },
+      }
     },
     coveralls: {
       options: {
@@ -352,7 +352,7 @@ module.exports = function (grunt) {
             CFBundleURLSchemes: ['<%= process.env.nwjsCFBundleURLSchemes %>']
           }],
           LSHasLocalizedDisplayName: 0
-          /* CFBundleIconFile: 'nw.icns',*/
+          /* CFBundleIconFile: 'nw.icns', */
         }
       },
       src: ['./package.json', './public/**/*', './angular-bitcore-wallet-client/**/*']
@@ -363,7 +363,7 @@ module.exports = function (grunt) {
           archive: '../byteballbuilds/dagcoin-linux32.zip'
         },
         expand: true,
-        cwd: '../byteballbuilds/DAGCOIN-TN/linux32/',
+        cwd: '../byteballbuilds/Dagcoin/linux32/',
         src: ['**/*'],
         dest: 'dagcoin-linux32/'
       },
@@ -372,10 +372,10 @@ module.exports = function (grunt) {
           archive: '../byteballbuilds/dagcoin-linux64.zip'
         },
         expand: true,
-        cwd: '../byteballbuilds/DAGCOIN-TN/linux64/',
+        cwd: '../byteballbuilds/Dagcoin/linux64/',
         src: ['**/*'],
         dest: 'dagcoin-linux64/'
-      },
+      }
     },
     browserify: {
       dist: {
@@ -385,7 +385,7 @@ module.exports = function (grunt) {
         },
         src: 'public/dagcoin.js',
         dest: 'public/dagcoin.js'
-      },
+      }
     },
     // .deb proved to be very slow to produce and install: lintian spends a lot of time verifying a .bin file
     debian_package: {
@@ -396,8 +396,8 @@ module.exports = function (grunt) {
             cwd: '../byteballbuilds/dagcoin-test/linux64/',
             src: ['**/*'],
             dest: '/opt/dagcoin-test/'
-          },
-          //{expand: true, cwd: '../byteballbuilds/byteball-test/linux64', src: ['dagcoin.desktop'], dest: '/usr/share/applications/byteball-test.desktop'}
+          }
+          // {expand: true, cwd: '../byteballbuilds/byteball-test/linux64', src: ['dagcoin.desktop'], dest: '/usr/share/applications/byteball-test.desktop'}
         ],
         options: {
           maintainer: {
@@ -406,8 +406,8 @@ module.exports = function (grunt) {
           },
           long_description: 'A wallet for decentralized value',
           target_architecture: 'amd64'
-        },
-      },
+        }
+      }
     },
     innosetup_compiler: {
       win64: {
@@ -423,7 +423,7 @@ module.exports = function (grunt) {
           verbose: false
         },
         script: 'webkitbuilds/setup-win32.iss'
-      },
+      }
     },
     svgmin: {
       options: {
@@ -434,8 +434,8 @@ module.exports = function (grunt) {
             removeUselessStrokeAndFill: true
           }, {
             removeEmptyAttrs: true
-          },
-        ],
+          }
+        ]
       },
       dist: {
         files: [{

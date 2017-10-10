@@ -59,7 +59,6 @@
         },
       },
 
-
       rates: {
         url: 'https://insight.bitpay.com:443/api/rates',
       },
@@ -83,7 +82,6 @@
     };
 
     let configCache = null;
-
 
     root.getSync = function () {
       if (!configCache) {

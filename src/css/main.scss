@@ -167,12 +167,12 @@ h4 {
     font-weight: 300;
     margin: 0;
 
-    button{
+    button {
       color: $red;
       float: right;
       background: transparent;
 
-      &:hover{
+      &:hover {
         color: $red;
         background: transparent;
       }
@@ -1834,13 +1834,13 @@ input.ng-invalid-match, input.ng-invalid-match:focus {
   background: rgba(0, 0, 0, 0.5);
   color: #3e4042;
 
-  .close_modal{
+  .close_modal {
     position: absolute;
     right: 15px;
     top: 15px;
     color: #3e4042;
 
-    &:hover{
+    &:hover {
       color: darken(#3e4042, 10);
     }
   }
@@ -1875,49 +1875,49 @@ input.ng-invalid-match, input.ng-invalid-match:focus {
       }
     }
 
-    .modal-content-body{
-      ul{
+    .modal-content-body {
+      ul {
         list-style-type: none;
         margin-bottom: 30px;
 
-        &:last-child{
+        &:last-child {
           margin-bottom: 0;
         }
 
-        li{
+        li {
           color: lighten(#3e4042, 10);
           font-size: 12px;
           border-bottom: 1px solid #efeef3;
           padding: 10px;
 
-          &:last-child{
+          &:last-child {
             border-bottom: none;
           }
 
-          svg{
+          svg {
             width: 18px;
             height: 18px;
             line-height: 14px;
             margin-right: 5px;
           }
 
-          div{
-            &.value{
+          div {
+            &.value {
               color: #3e4042;
               font-size: 14px;
 
-              a{
+              a {
                 color: $main_color;
                 padding: 0;
                 font-weight: 400;
                 border-bottom: 1px dotted $main_color;
               }
 
-              &:not(.right){
+              &:not(.right) {
                 margin-top: 5px;
               }
 
-              &.value_big{
+              &.value_big {
                 font-size: 16px;
                 font-weight: 700;
               }
@@ -2303,6 +2303,77 @@ a.a_none {
         padding: 10px 20px;
       }
     }
+  }
+}
+
+.navbar-container {
+  position: relative;
+  z-index: 2;
+  height: 50px;
+  background: #d51f26;
+  color: #fff;
+
+  .navbar-container-triggers {
+    position: absolute;
+    z-index: 1;
+    height: 50px;
+    line-height: 50px;
+    left: 0;
+    top: 0;
+    width: 50px;
+    text-align: center;
+
+    &.navbar-container-triggers-right {
+      left: auto;
+      right: 0
+    }
+  }
+
+  .navbar-container-title {
+    width: 100%;
+    padding: 0 50px;
+    text-align: center;
+    line-height: 50px;
+    font-weight: 600;
+    font-size: 16px;
+    text-transform: uppercase;
+
+    @media only screen and (max-width: 350px) {
+      font-size: 14px;
+    }
+  }
+
+  .navbar-container-back-trigger svg {
+    width: 16px;
+    height: 16px;
+    margin-top: -8px
+  }
+
+  svg-icon{
+    svg {
+      width: 22px;
+      height: 22px
+    }
+
+    &.svg-icon-add{
+      svg {
+        width: 16px;
+        height: 16px
+      }
+    }
+  }
+
+  a {
+    color: currentColor
+  }
+
+  &.invert {
+    background: transparent;
+    color: #d51f26
+  }
+
+  &:not(.invert) {
+    text-shadow: 1px 1px 1px #a8191e
   }
 }
 

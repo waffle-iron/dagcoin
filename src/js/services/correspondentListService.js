@@ -517,7 +517,7 @@ angular.module('copayApp.services').factory('correspondentListService',
 
     function readCorrespondentAndForwardMessage(fromAddress, body) {
       const promise = new Promise((resolve) => {
-        device.readCorrespondent(fromAddress, correspondent => resolve(correspondent));
+        device.readCorrespondent(fromAddress, (correspondent) => { resolve(correspondent); });
       }).then((correspondent) => {
         if (correspondent == null) {
           return Promise.reject(`CORRESPONDENT WITH ADDRESS ${fromAddress} NOT FOUND`);
@@ -532,7 +532,7 @@ angular.module('copayApp.services').factory('correspondentListService',
     eventBus.on('text', (fromAddress, body) => {
       console.log(`NEW TEXT MESSAGE FROM ${fromAddress}`);
 
-      if (discoveryService.isDiscoveryServiceAddress(fromAddress)) {
+      /* if (discoveryService.isDiscoveryServiceAddress(fromAddress)) {
         console.log(`DISCOVERY MESSAGE FROM ${fromAddress}`);
 
         discoveryService.processMessage(body).then((isRelatedToFunding) => {
@@ -545,9 +545,9 @@ angular.module('copayApp.services').factory('correspondentListService',
           // It wasn't a request related to funding.
           readCorrespondentAndForwardMessage(fromAddress, body);
         });
-      } else {
+      } else { */
         return readCorrespondentAndForwardMessage(fromAddress, body);
-      }
+      // }
     });
 
     eventBus.on('chat_recording_pref', (correspondentAddress, enabled) => {

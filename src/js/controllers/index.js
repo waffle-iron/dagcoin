@@ -36,7 +36,6 @@ no-nested-ternary,no-shadow,no-plusplus,consistent-return,import/no-extraneous-d
       bwcService,
       backButton,
       faucetService,
-      chooseFeeTypeService,
       changeWalletTypeService,
       sharedService,
       autoRefreshClientService,
@@ -65,6 +64,8 @@ no-nested-ternary,no-shadow,no-plusplus,consistent-return,import/no-extraneous-d
       self.$state = $state;
       // self.usePushNotifications = isCordova && !isMobile.Windows() && isMobile.Android();
       self.usePushNotifications = false;
+
+      fundingExchangeClientService.setIndex(this);
 
       self.triggerUrl = (state) => {
         $state.go(state);
@@ -192,7 +193,8 @@ no-nested-ternary,no-shadow,no-plusplus,consistent-return,import/no-extraneous-d
       });
 
       eventBus.on('confirm_on_other_devices', () => {
-        $rootScope.$emit('Local/ShowAlert', 'Transaction created.\nPlease approve it on the other devices.', 'fi-key', () => {
+        // todo: originally the mesage was: 'Transaction created. \nPlease approve it on the other devices.'. we have to bring this back and think about better solution.
+        $rootScope.$emit('Local/ShowAlert', 'Transaction created.', 'fi-key', () => {
           go.walletHome();
         });
       });
@@ -385,7 +387,7 @@ no-nested-ternary,no-shadow,no-plusplus,consistent-return,import/no-extraneous-d
             ifNo() {
               console.log('===== NO CLICKED');
               walletDefinedByKeys.cancelWallet(walletId, arrDeviceAddresses, arrOtherCosigners);
-            },
+            }
           });
         });
       });
@@ -517,12 +519,32 @@ no-nested-ternary,no-shadow,no-plusplus,consistent-return,import/no-extraneous-d
                     refuseSignature();
                     assocChoicesByUnit[unit] = 'refuse';
                     unlock();
-                  },
+                  }
                 });
               }); // eachSeries
           });
         });
       });
+
+      self.selectSubWallet = function (sharedAddress) {
+        const walletDefinedByAddresses = require('byteballcore/wallet_defined_by_addresses');
+        self.shared_address = sharedAddress;
+        if (sharedAddress) {
+          walletDefinedByAddresses.determineIfHasMerkle(sharedAddress, (bHasMerkle) => {
+            self.bHasMerkle = bHasMerkle;
+            walletDefinedByAddresses.readSharedAddressCosigners(sharedAddress, (cosigners) => {
+              self.shared_address_cosigners = cosigners.map((cosigner) => { return cosigner.name; }).join(', ');
+              $timeout(() => {
+                $rootScope.$apply();
+              });
+            });
+          });
+        } else {
+          self.bHasMerkle = false;
+        }
+
+        self.updateAll();
+      };
 
       self.openSubwalletModal = function () {
         $rootScope.modalOpened = true;
@@ -573,7 +595,7 @@ no-nested-ternary,no-shadow,no-plusplus,consistent-return,import/no-extraneous-d
         const modalInstance = $modal.open({
           templateUrl: 'views/modals/select-subwallet.html',
           windowClass: animationService.modalAnimated.slideUp,
-          controller: ModalInstanceCtrl,
+          controller: ModalInstanceCtrl
         });
 
         const disableCloseModal = $rootScope.$on('closeModal', () => {
@@ -596,19 +618,19 @@ no-nested-ternary,no-shadow,no-plusplus,consistent-return,import/no-extraneous-d
       self.menu = [{
         title: gettext('Home'),
         icon: 'icon-home',
-        link: 'walletHome',
+        link: 'walletHome'
       }, {
         title: gettext('Receive'),
         icon: 'icon-recieve',
-        link: 'receive',
+        link: 'receive'
       }, {
         title: gettext('Send'),
         icon: 'icon-send',
-        link: 'send',
+        link: 'send'
       }, {
         title: gettext('History'),
         icon: 'icon-history',
-        link: 'history',
+        link: 'history'
       }];
 
       self.getSvgSrc = function (id) {
@@ -888,7 +910,7 @@ no-nested-ternary,no-shadow,no-plusplus,consistent-return,import/no-extraneous-d
             }
             $log.debug('Wallet Opened');
             self.updateAll(lodash.isObject(walletStatus) ? {
-              walletStatus,
+              walletStatus
             } : null);
             // $rootScope.$apply();
           });
@@ -1215,7 +1237,7 @@ no-nested-ternary,no-shadow,no-plusplus,consistent-return,import/no-extraneous-d
           close(err) {
             self.showAlert = null;
             if (cb) return cb(err);
-          },
+          }
         };
         $timeout(() => {
           $rootScope.$apply();
@@ -1470,7 +1492,7 @@ no-nested-ternary,no-shadow,no-plusplus,consistent-return,import/no-extraneous-d
         self.updateAll({
           walletStatus: null,
           untilItChanges: true,
-          triggerTxUpdate: true,
+          triggerTxUpdate: true
         });
       });
 
@@ -1480,18 +1502,18 @@ no-nested-ternary,no-shadow,no-plusplus,consistent-return,import/no-extraneous-d
         self.updateAll({
           walletStatus: null,
           untilItChanges: true,
-          triggerTxUpdate: true,
+          triggerTxUpdate: true
         });
       });
 
       lodash.each(['NewTxProposal', 'TxProposalFinallyRejected', 'TxProposalRemoved', 'NewOutgoingTxByThirdParty',
-        'Local/NewTxProposal', 'Local/TxProposalAction',
+        'Local/NewTxProposal', 'Local/TxProposalAction'
       ], (eventName) => {
         $rootScope.$on(eventName, (event, untilItChanges) => {
           self.updateAll({
             walletStatus: null,
             untilItChanges,
-            triggerTxUpdate: true,
+            triggerTxUpdate: true
           });
         });
       });
@@ -1500,7 +1522,7 @@ no-nested-ternary,no-shadow,no-plusplus,consistent-return,import/no-extraneous-d
         $log.debug('Scan Finished. Updating history');
         self.updateAll({
           walletStatus: null,
-          triggerTxUpdate: true,
+          triggerTxUpdate: true
         });
       });
 
@@ -1558,7 +1580,7 @@ no-nested-ternary,no-shadow,no-plusplus,consistent-return,import/no-extraneous-d
           callback(err, pass) {
             self.askPassword = null;
             return cb(err, pass);
-          },
+          }
         };
         $timeout(() => {
           $rootScope.$apply();

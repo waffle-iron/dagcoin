@@ -269,9 +269,8 @@
 			<div class="introduction-svg" ng-include="'views/includes/background.html'"></div>
 			<div class="p-share js-introduction">
 				<div class="p-wrap" style="width: 300px;margin: 0 auto;">
-					<div class="page-heading"><span>Send <span>dagcoins</span></span></div>
-					<form class="page-form" name="sendForm" ng-submit="home.submitForm()"
-						  ng-disabled="home.blockUx || home.onGoingProcess" novalidate>
+					<div class="page-heading"><span>Send <span>dags</span></span></div>
+          <form class="page-form" name="sendForm" novalidate>
 						<div class="box-notification" ng-show="home.error" ng-click="home.resetError()">
 					  <span class="text-warning">
 						{{home.error|translate}}
@@ -336,13 +335,10 @@
 
 
 						</div>
-
+            <div class="page-action">
+              <button ng-disabled="sendForm.$invalid || index.onGoingProcessName == 'sending'" class="btn btn_red-full" ng-click="home.submitForm()">Send</button>
+            </div>
 					</form>
-					<div class="page-action">
-
-						<a href="#" class="btn btn_red-full" ng-click="home.submitForm()">Send</a>
-
-					</div>
 				</div>
 
 			</div>

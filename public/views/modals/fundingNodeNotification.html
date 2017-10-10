@@ -1,0 +1,17 @@
+<div class="modal-content">
+
+  <div class="modal-content-header">
+    <h3>Funding hub</h3>
+    <p class="m20t" ng-bind-html="title | translate"></p>
+  </div>
+
+  <div class="modal-content-body p20h text-center">
+    <div id="buttons" class="row">
+      <div class="columns">
+        <button class="btn btn_red-full round" ng-disabled="loading" ng-class="yes_button_class" ng-click="ok()">
+          <i ng-class="yes_icon"></i> <span translate>{{yes_label || 'OK'}}</span>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

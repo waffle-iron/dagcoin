@@ -100,7 +100,7 @@
       const uniqueInternalEvent = `internal.dagcoin.${root.nextId()}`;
 
       const listener = function (...args) {
-        const resolutionValue = condition(args);
+        const resolutionValue = condition(...args);
 
         if (!resolutionValue) {
           console.log(`IGNORING USELESS EVENT ${event}`);

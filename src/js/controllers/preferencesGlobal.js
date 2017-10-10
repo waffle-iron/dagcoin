@@ -9,9 +9,9 @@
       self.fundingNodeSettings = {};
       self.isLight = conf.bLight;
       self.canChangeWalletType = changeWalletTypeService.canChange();
-      self.hasBalance = sharedService.hasBalance('stable');
-      self.hasBytes = sharedService.hasBytes('stable');
-      self.hasDags = sharedService.hasDags('stable');
+      self.hasBalance = sharedService.hasBalance('total');
+      self.hasBytes = sharedService.hasBytes('total');
+      self.hasDags = sharedService.hasDags('total');
 
       $scope.encrypt = !!profileService.profile.xPrivKeyEncrypted;
 

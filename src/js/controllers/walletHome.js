@@ -26,7 +26,10 @@
       addressbookService,
       correspondentListService,
       discoveryService,
-      isMobile) {
+      isMobile,
+      fundingExchangeClientService,
+      go,
+      chooseFeeTypeService) {
       const constants = require('byteballcore/constants.js');
       const eventBus = require('byteballcore/event_bus.js');
       const breadcrumbs = require('byteballcore/breadcrumbs.js');
@@ -467,12 +470,15 @@
             if (!asset) {
               throw Error('no asset');
             }
-            if (asset === 'base') {
-              amountInSmallestUnits = parseInt((amount * $scope.unitValue).toFixed(0));
-            } else if (asset === constants.DAGCOIN_ASSET) {
-              amountInSmallestUnits = parseInt((amount * $scope.dagUnitValue).toFixed(0));
-            } else {
-              amountInSmallestUnits = amount;
+            switch (asset) {
+              case 'base':
+                amountInSmallestUnits = parseInt((amount * $scope.unitValue).toFixed(0));
+                break;
+              case constants.DAGCOIN_ASSET:
+                amountInSmallestUnits = parseInt((amount * $scope.dagUnitValue).toFixed(0));
+                break;
+              default:
+                amountInSmallestUnits = amount;
             }
             return $timeout(() => {
               $scope.customizedAmountUnit = `${amount} ${(asset === 'base') ? $scope.unitName : (asset === constants.DAGCOIN_ASSET ? $scope.dagUnitName : `of ${asset}`)}`;
@@ -483,7 +489,6 @@
 
 
           $scope.shareAddress = function (uri) {
-            debugger
             if (isCordova) {
               if (isMobile.Android() || isMobile.Windows()) {
                 window.ignoreMobilePause = true;
@@ -673,6 +678,11 @@
         const fc = profileService.focusedClient;
         const unitValue = this.unitValue;
         const dagUnitValue = this.dagUnitValue;
+        let feeType;
+        chooseFeeTypeService.getFeeDefaultMethod()
+        .then((res) => {
+          feeType = res;
+        });
 
         if (isCordova && this.isWindowsPhoneApp) {
           this.hideAddress = false;
@@ -832,17 +842,28 @@
                     self.setSendError(err);
                   },
                   ifOk(sharedAddress) {
-                    composeAndSend(sharedAddress);
+                    composeAndSend(sharedAddress, feeType);
                   },
                 });
               });
             } else {
-              composeAndSend(address);
+              composeAndSend(address, feeType);
             }
 
             // compose and send
-            function composeAndSend(toAddress) {
+            function composeAndSend(toAddress, feeType) {
               let arrSigningDeviceAddresses = []; // empty list means that all signatures are required (such as 2-of-2)
+              let opts = {
+                shared_address: indexScope.shared_address,
+                  merkleProof,
+                  asset,
+                  to_address: toAddress,
+                  amount,
+                  send_all: self.bSendAll,
+                  arrSigningDeviceAddresses,
+                  recipientDeviceAddress,
+              };
+
               if (fc.credentials.m < fc.credentials.n) {
                 $scope.index.copayers.forEach((copayer) => {
                   if (copayer.me || copayer.signs) {
@@ -855,72 +876,104 @@
               breadcrumbs.add(`sending payment in ${asset}`);
 
               profileService.bKeepUnlocked = true;
-              const opts = {
-                shared_address: indexScope.shared_address,
-                merkleProof,
-                asset,
-                to_address: toAddress,
-                amount,
-                send_all: self.bSendAll,
-                arrSigningDeviceAddresses,
-                recipientDeviceAddress,
-              };
 
-              /* const userConfig = discoveryService.getUserConfig();
-
-              if (userConfig.byteOrigin) {
-                opts.shared_address = [userConfig.byteOrigin];
-              } */
-
-              console.log(`PAYMENT OPTIONS BEFORE: ${JSON.stringify(opts)}`);
-
-              fc.sendMultiPayment(opts, (sendMultiPaymentError) => {
-                let error = sendMultiPaymentError;
-                // if multisig, it might take very long before the callback is called
-                indexScope.setOngoingProcess(gettext('sending'), false);
-                breadcrumbs.add(`done payment in ${asset}, err=${sendMultiPaymentError}`);
-                delete self.current_payment_key;
-                profileService.bKeepUnlocked = false;
-                if (sendMultiPaymentError) {
-                  if (sendMultiPaymentError.match(/device address/)) {
-                    error = 'This is a private asset, please send it only by clicking links from chat';
+              const paymentPromise = new Promise((resolve, reject) => {
+                if (feeType === 'hub') { // Using a shared address
+                  const sharedAddress = fundingExchangeClientService.byteOrigin;
+                  if (!fundingExchangeClientService.active) {
+                    return reject('THE FUNDING EXCHANGE CLIENT IS NOT READY.');
                   }
-                  if (sendMultiPaymentError.match(/no funded/)) {
-                    error = 'Not enough confirmed funds';
-                  }
-                  return self.setSendError(error);
-                }
-                const binding = self.binding;
-                self.resetForm();
-                $rootScope.$emit('NewOutgoingTx');
-                if (recipientDeviceAddress) { // show payment in chat window
-                  eventBus.emit('sent_payment', recipientDeviceAddress, amount || 'all', asset);
-                  if (binding && binding.reverseAmount) { // create a request for reverse payment
-                    if (!myAddress) {
-                      throw Error('my address not known');
+
+                  return fundingExchangeClientService.getSharedAddressBalance(sharedAddress).then((assocBalances) => {
+                    console.log(`BALANCE FOR ${sharedAddress}: ${JSON.stringify(assocBalances)}`);
+                    console.log(assocBalances);
+                    if (assocBalances.base.stable === 0 || assocBalances.base.stable < 1500) {
+                      reject('Funding hub is fueling your wallet, it may take several minutes. Please try again a bit later.');
+                    } else {
+                      opts = {
+                        from_address: fundingExchangeClientService.walletAddresses,
+                        main_address: fundingExchangeClientService.dagcoinOrigin,
+                        shared_address: sharedAddress,
+                        merkleProof,
+                        asset,
+                        /* to_address: toAddress,
+                        amount, */
+                        send_all: self.bSendAll,
+                        arrSigningDeviceAddresses,
+                        recipientDeviceAddress,
+                        externallyFundedPayment: true,
+                        asset_outputs: [
+                          {
+                            address: fundingExchangeClientService.dagcoinDestination,
+                            amount: 500 // TODO: this is the transaction fee in micro dagcoins 1000 = 0.001 dagcoins
+                          }, {
+                            address: toAddress,
+                            amount
+                          }
+                        ]
+                      };
+                      resolve();
                     }
-                    const paymentRequestCode = `byteball:${myAddress}?amount=${binding.reverseAmount}&asset=${encodeURIComponent(binding.reverseAsset)}`;
-                    const paymentRequestText = `[reverse payment](${paymentRequestCode})`;
-                    device.sendMessageToDevice(recipientDeviceAddress, 'text', paymentRequestText);
-                    correspondentListService.messageEventsByCorrespondent[recipientDeviceAddress].push({
-                      bIncoming: false,
-                      message: correspondentListService.formatOutgoingMessage(paymentRequestText)
-                    });
-                    // issue next address to avoid reusing the reverse payment address
-                    walletDefinedByKeys.issueNextAddress(fc.credentials.walletId, 0, () => {
-                    });
-                  }
-                } else {
-                  // redirect to history
-                  $rootScope.$emit('Local/SetTab', 'history');
+                  });
                 }
+                  resolve();
+              }).then(() => {
+                return new Promise((resolve, reject) => {
+                  console.log(`PAYMENT OPTIONS BEFORE: ${JSON.stringify(opts)}`);
+                  fc.sendMultiPayment(opts, (sendMultiPaymentError) => {
+                    let error = sendMultiPaymentError;
+                    // if multisig, it might take very long before the callback is called
+                    indexScope.setOngoingProcess(gettext('sending'), false);
+                    breadcrumbs.add(`done payment in ${asset}, err=${sendMultiPaymentError}`);
+                    delete self.current_payment_key;
+                    profileService.bKeepUnlocked = false;
+                    if (sendMultiPaymentError) {
+                      if (sendMultiPaymentError.match(/no funded/) || sendMultiPaymentError.match(/not enough asset coins/)) {
+                        error = 'Not enough dagcoins';
+                      }
+
+                      return self.setSendError(error);
+                    }
+                    const binding = self.binding;
+                    self.resetForm();
+                    $rootScope.$emit('NewOutgoingTx');
+                    if (recipientDeviceAddress) { // show payment in chat window
+                      eventBus.emit('sent_payment', recipientDeviceAddress, amount || 'all', asset);
+                      if (binding && binding.reverseAmount) { // create a request for reverse payment
+                        if (!myAddress) {
+                          throw Error('my address not known');
+                        }
+                        const paymentRequestCode = `byteball:${myAddress}?amount=${binding.reverseAmount}&asset=${encodeURIComponent(binding.reverseAsset)}`;
+                        const paymentRequestText = `[reverse payment](${paymentRequestCode})`;
+                        device.sendMessageToDevice(recipientDeviceAddress, 'text', paymentRequestText);
+                        correspondentListService.messageEventsByCorrespondent[recipientDeviceAddress].push({
+                          bIncoming: false,
+                          message: correspondentListService.formatOutgoingMessage(paymentRequestText)
+                        });
+                        // issue next address to avoid reusing the reverse payment address
+                        walletDefinedByKeys.issueNextAddress(fc.credentials.walletId, 0, () => {
+                        });
+                      }
+                    } else {
+                      // redirect to history
+                      $rootScope.$emit('Local/SetTab', 'history');
+                    }
+                    resolve();
+                  });
+                  /*
+                   if (fc.credentials.n > 1){
+                   $rootScope.$emit('Local/ShowAlert', "Transaction created.\nPlease approve it on the other devices.", 'fi-key', function(){
+                   go.walletHome();
+                   });
+                   } */
+                  $scope.sendForm.$setPristine();
+                });
+              })
+              .catch((error) => {
+                delete self.current_payment_key;
+                indexScope.setOngoingProcess(gettext('sending'), false);
+                $rootScope.$emit('Local/ShowAlert', error, 'fi-alert', () => {});
               });
-              /*
-               if (fc.credentials.n > 1){
-               $rootScope.$emit('Local/ShowAlert', "Transaction created.\nPlease approve it on the other devices.", 'fi-key', function(){
-               go.walletHome();
-               });
-               } */
             }
           });
         }, 100);

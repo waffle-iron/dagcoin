@@ -36,7 +36,7 @@
               self.arrBackupFiles.push({
                 name: name.replace(dateNow, new Date(dateNow).toLocaleString()),
                 originalName: name,
-                time: dateNow,
+                time: dateNow
               });
             });
           }
@@ -115,11 +115,11 @@
               if (existsConfJson) {
                 fileSystemService.nwMoveFile(`${dbDirPath}temp/conf.json`, `${dbDirPath}conf.json`, callback);
               } else if (existsLight && !existsConfJson) {
-                fileSystemService.nwWriteFile(`${dbDirPath}conf.json`, JSON.stringify({ bLight: true }, null, '\t'), callback);
+                fileSystemService.nwWriteFile(`${dbDirPath}conf.json`, JSON.stringify({ bLight: true }, null, '\t'), 'utf8', callback);
               } else if (!existsLight && conf.bLight) {
                 const config = require(`${dbDirPath}conf.json`);
                 config.bLight = false;
-                fileSystemService.nwWriteFile(`${dbDirPath}conf.json`, JSON.stringify(config, null, '\t'), callback);
+                fileSystemService.nwWriteFile(`${dbDirPath}conf.json`, JSON.stringify(config, null, '\t'), 'utf8', callback);
               } else {
                 callback();
               }
@@ -137,7 +137,7 @@
                   });
                 });
               });
-            },
+            }
           ], (err) => {
             cb(err);
           });

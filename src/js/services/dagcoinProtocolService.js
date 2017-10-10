@@ -74,25 +74,23 @@
 
     function getCorrespondent(deviceAddress) {
       const device = require('byteballcore/device.js');
-      const promise = new Promise((resolve) => {
+      return new Promise((resolve) => {
         device.readCorrespondent(deviceAddress, (cor) => {
           resolve(cor);
         });
       });
-
-      return promise;
     }
 
     function pairDevice(pubkey, hub, pairingSecret) {
       const device = require('byteballcore/device.js');
-      const promise = new Promise((resolve) => {
+      return new Promise((resolve) => {
         device.addUnconfirmedCorrespondent(pubkey, hub, 'New', (deviceAddress) => {
           console.log(`PAIRING WITH ${deviceAddress} ... ADD UNCONFIRMED CORRESPONDENT`);
           resolve(deviceAddress);
         });
       }).then((deviceAddress) => {
         console.log(`PAIRING WITH ${deviceAddress} ... ADD UNCONFIRMED CORRESPONDENT WAITING FOR PAIRING`);
-        const waitForPairing = new Promise((resolve) => {
+        return new Promise((resolve) => {
           device.startWaitingForPairing((reversePairingInfo) => {
             resolve({
               deviceAddress,
@@ -100,10 +98,8 @@
             });
           });
         });
-
-        return waitForPairing;
       }).then((params) => {
-        const sendingPairingMessage = new Promise((resolve, reject) => {
+        return new Promise((resolve, reject) => {
           console.log(`PAIRING WITH ${params.deviceAddress} ... SENDING PAIRING MESSAGE`);
 
           device.sendPairingMessage(
@@ -120,14 +116,10 @@
             }
           );
         });
-
-        return sendingPairingMessage;
       }).then((deviceAddress) => {
         console.log(`LOOKING UP CORRESPONDENT WITH DEVICE ADDRESS ${deviceAddress}`);
         return getCorrespondent(deviceAddress);
       });
-
-      return promise;
     }
 
     function lookupDeviceByPublicKey(pubkey) {
@@ -147,6 +139,10 @@
     }
 
     function checkOrPairDevice(pairCode) {
+      if (!pairCode) {
+        return Promise.reject('NO PAIRING CODE PROVIDED');
+      }
+
       const matches = pairCode.match(/^([\w\/+]+)@([\w.:\/-]+)#([\w\/+-]+)$/);
       const pubkey = matches[1];
       const hub = matches[2];

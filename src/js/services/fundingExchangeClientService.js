@@ -3,58 +3,76 @@
   'use strict';
 
   angular.module('copayApp.services')
-    .factory('fundingExchangeClientService', (discoveryService, configService, dagcoinProtocolService, promiseService, fileSystemService) => {
+    .factory('fundingExchangeClientService', ($rootScope,
+                                              discoveryService,
+                                              configService,
+                                              dagcoinProtocolService,
+                                              promiseService,
+                                              addressService,
+                                              profileService,
+                                              $interval,
+                                              go,
+                                              $modal,
+                                              animationService) => {
       const self = {};
+      let sharedAddressFundsIntervalId;
 
-      function clearRequireCache(module) {
-        if (typeof require.resolve === 'function') {
-          delete require.cache[require.resolve(module)];
-        }
-      }
+      const modalRequestApproval = function (question, callbacks) {
+        const ModalInstanceCtrl = function ($scope, $modalInstance, $sce) {
+          $scope.title = $sce.trustAsHtml(question);
+          $scope.yes_icon = 'fi-check';
+          $scope.yes_button_class = 'primary';
+          $scope.loading = false;
 
-      function requireUncached(module) {
-        clearRequireCache(module);
-        return require(module.toString());
-      }
+          $scope.ok = function () {
+            $scope.loading = true;
+            $modalInstance.close('OK');
+          };
+        };
 
-      function getConfiguration() {
-        return new Promise((resolve, reject) => {
-          configService.get((err, config) => {
-            if (err) {
-              reject(err);
-            }
-
-            try {
-              const userConfFile = fileSystemService.getUserConfFilePath();
-              resolve(Object.assign({}, config, requireUncached(userConfFile)));
-            } catch (e) {
-              reject(e);
-            }
-          });
+        const modalInstance = $modal.open({
+          templateUrl: 'views/modals/fundingNodeNotification.html',
+          windowClass: animationService.modalAnimated.slideUp,
+          controller: ModalInstanceCtrl
         });
-      }
+
+        modalInstance.result.finally(() => {
+          const m = angular.element(document.getElementsByClassName('reveal-modal'));
+          m.addClass(animationService.modalAnimated.slideOutDown);
+        });
+
+        modalInstance.result.then(callbacks.ifYes);
+      };
+
+      // Statuses
+      self.active = false;
+      self.activating = false;
+
+      self.dagcoinOrigin = null;
+
+      self.bytesProviderDeviceAddress = null;
+      self.byteOrigin = null;
+      self.dagcoinDestination = null;
 
       function isFundingPairPresent() {
-        return getConfiguration().then((config) => {
-          let fundingPairAvailable = true;
+        let fundingPairAvailable = true;
 
-          if (!config.bytesProviderDeviceAddress) {
-            console.log('MISSING bytesProviderDeviceAddress IN THE CONFIGURATION');
-            fundingPairAvailable = false;
-          }
+        if (!self.bytesProviderDeviceAddress) {
+          console.log('MISSING bytesProviderDeviceAddress IN THE CONFIGURATION');
+          fundingPairAvailable = false;
+        }
 
-          if (!config.byteOrigin) {
-            console.log('MISSING byteOrigin IN THE CONFIGURATION');
-            fundingPairAvailable = false;
-          }
+        if (!self.byteOrigin) {
+          console.log('MISSING byteOrigin IN THE CONFIGURATION');
+          fundingPairAvailable = false;
+        }
 
-          if (!config.dagcoinDestination) {
-            console.log('MISSING dagcoinDestination IN THE CONFIGURATION');
-            fundingPairAvailable = false;
-          }
+        if (!self.dagcoinDestination) {
+          console.log('MISSING dagcoinDestination IN THE CONFIGURATION');
+          fundingPairAvailable = false;
+        }
 
-          return Promise.resolve(fundingPairAvailable);
-        });
+        return fundingPairAvailable;
       }
 
       function askForFundingNode() {
@@ -110,39 +128,313 @@
       }
 
       function activate() {
-        let appConfig = null;
+        if (self.active) {
+          return Promise.resolve(true);
+        }
 
-        getConfiguration()
-        .then((config) => {
-          console.log(JSON.stringify(config));
+        if (self.activating) {
+          return Promise.resolve(false);
+        }
 
-          /* if (!config.canUseExternalBytesProvider) {
-            return Promise.reject('NOT POSSIBLE TO ACTIVATE THE FUNDING EXCHANGE CLIENT. THE USER MUST FIRST AUTHORIZE IT.');
-          } */
+        self.activating = true;
 
-          appConfig = config;
+        if (isFundingPairPresent()) {
+          self.activating = false;
+          self.active = true;
+          return Promise.resolve(true);
+        }
 
-          return isFundingPairPresent();
-        })
-        .then((fundingPairAvailable) => {
-          if (!fundingPairAvailable) {
-            return askForFundingNode().then((result) => {
-              console.log(`TRADERS AVAILABLE: ${result}`);
-            });
-
-            // TODO: pair and get a funding pair from the provider. Still pairing in discoveryService.js
+        return readFundingClientConfiguration().then((ready) => {
+          if (ready) {
+            console.log('A SHARED ADDRESS WAS FOUND IN THE DATABASE USED THAT ONE TO INITIALIZE');
+            self.activating = false;
+            self.active = true;
+            return Promise.resolve();
           }
 
-          return dagcoinProtocolService.pairAndConnectDevice(appConfig.bytesProviderDeviceAddress);
-        })
-        .catch((error) => {
-          console.log(`COULD NOT ACTIVATE THE FUNDING EXCHANGE CLIENT: ${error}`);
+          return queryDiscoveryService();
         });
       }
 
-      activate();
+      function readFundingClientConfiguration() {
+        return readMyAddress().then((myAddress) => {
+          if (!myAddress) {
+            return Promise.reject('COULD NOT FIND ANY ADDRESS IN THE DATABASE');
+          }
+
+          self.dagcoinOrigin = myAddress;
+
+          return new Promise((resolve, reject) => {
+            const db = require('byteballcore/db.js');
+            db.query(
+              'SELECT shared_address, address, device_address FROM shared_address_signing_paths WHERE address not in (select address from my_addresses) and address not in (select shared_address from shared_addresses)',
+              [],
+              (rows) => {
+                if (rows.length === 0) {
+                  console.log('NO SHARED ADDRESSES FOUND. QUERYING THE DISCOVERY SERVICE FOR A FUNDING NODE');
+                  resolve(false);
+                } else if (rows.length > 1) {
+                  reject(`THERE ARE TOO MANY SHARED ADDRESSES: ${JSON.stringify(rows)}`);
+                } else {
+                  self.byteOrigin = rows[0].shared_address;
+                  self.dagcoinDestination = rows[0].address;
+                  self.bytesProviderDeviceAddress = rows[0].device_address;
+
+                  resolve(true);
+                }
+              }
+            );
+          });
+        });
+      }
+
+      function queryDiscoveryService() {
+        return askForFundingNode().then((fundingNode) => {
+          console.log(`TRADERS AVAILABLE: ${JSON.stringify(fundingNode)}`);
+
+          self.bytesProviderDeviceAddress = fundingNode.deviceAddress;
+
+          return dagcoinProtocolService.pairAndConnectDevice(fundingNode.pairCode);
+        }).then(() => {
+          console.log(`SUCCESSFULLY PAIRED WITH ${self.bytesProviderDeviceAddress}`);
+
+          if (self.dagcoinOrigin) {
+            return Promise.resolve(self.dagcoinOrigin);
+          }
+
+          return readMyAddress();
+        }).then((myAddress) => {
+          if (!myAddress) {
+            return Promise.reject('COULD NOT FIND ANY ADDRESS IN THE DATABASE');
+          }
+
+          self.dagcoinOrigin = myAddress;
+
+          const device = require('byteballcore/device');
+
+          self.myDeviceAddress = device.getMyDeviceAddress();
+
+          return askForFundingAddress();
+        })
+          .then(
+          (result) => {
+            self.activating = false;
+            self.active = true;
+            // self.index.selectSubWallet(self.byteOrigin);
+            return Promise.resolve(result);
+          },
+          (err) => {
+            self.activating = false;
+            return Promise.reject(err);
+          }
+        );
+      }
+
+      function askForFundingAddress() {
+        if (self.isWaitingForFundingAddress) {
+          return Promise.reject('Already requesting a funding address');
+        }
+
+        console.log(`REQUESTING A FUNDING ADDRESS TO ${self.bytesProviderDeviceAddress} TO BE USED WITH ${self.dagcoinOrigin}`);
+
+        self.isWaitingForFundingAddress = true;
+
+        const messageTitle = 'request.share-funded-address';
+        const device = require('byteballcore/device.js');
+        const messageId = discoveryService.nextMessageId();
+
+        console.log(`Sending ${messageTitle} to ${device.getMyDeviceAddress()}:${self.dagcoinOrigin}`);
+
+        const promise = listenToCreateNewSharedAddress();
+
+        device.sendMessageToDevice(
+          self.bytesProviderDeviceAddress,
+          'text',
+          JSON.stringify({
+            protocol: 'dagcoin',
+            title: messageTitle,
+            id: messageId,
+            deviceAddress: device.getMyDeviceAddress(),
+            address: self.dagcoinOrigin
+          })
+        );
+
+        return promise;
+      }
+
+      function listenToCreateNewSharedAddress() {
+        return new Promise((resolve) => {
+          const eventBus = require('byteballcore/event_bus');
+          const device = require('byteballcore/device');
+
+          eventBus.on('create_new_shared_address', (template, signers) => {
+            console.log(`CREATE NEW SHARED ADDRESS FOR ${self.dagcoinOrigin} TEMPLATE: ${JSON.stringify(template)}`);
+            console.log(`CREATE NEW SHARED ADDRESS FOR ${self.dagcoinOrigin} SIGNERS: ${JSON.stringify(signers)}`);
+
+            const localSigners = {
+              r: {
+                address: self.dagcoinOrigin,
+                device_address: device.getMyDeviceAddress()
+              }
+            };
+
+            const objectHash = require('byteballcore/object_hash');
+            const addressTemplateCHash = objectHash.getChash160(template);
+
+            device.sendMessageToDevice(self.bytesProviderDeviceAddress, 'approve_new_shared_address', {
+              address_definition_template_chash: addressTemplateCHash,
+              address: self.dagcoinOrigin,
+              device_addresses_by_relative_signing_paths: localSigners
+            });
+
+            resolve();
+          });
+        }).then(() => {
+          return checkConfigurationInTime(10);
+        });
+      }
+
+      function checkConfigurationInTime(times) {
+        if (times <= 0) {
+          return Promise.reject(`WON'T CHECK AGAIN. GIVEN UP AFTER ${times} TIMES`);
+        }
+
+        return new Promise((resolve) => {
+          setTimeout(() => {
+            readFundingClientConfiguration().then((ready) => {
+              resolve(ready);
+            });
+          }, 6000);
+        }).then((ready) => {
+          if (ready) {
+            return Promise.resolve();
+          }
+
+          return checkConfigurationInTime(times - 1);
+        });
+      }
+      // todo: needs refactoring
+      function readMyAddresses() {
+        return new Promise((resolve, reject) => {
+          const fc = profileService.focusedClient;
+          addressService.getAddresses(fc.credentials.walletId, (err, addr) => {
+            if (!addr) {
+              reject('NO ADDRESSES AVAILABLE');
+            } else {
+              console.log(`FOUND AN ADDRESS: ${addr}`);
+              resolve(addr);
+            }
+          });
+        });
+      }
+
+      // TODO: should have some dagcoins on it
+      function readMyAddress() {
+        return new Promise((resolve, reject) => {
+          const fc = profileService.focusedClient;
+          addressService.getAddress(fc.credentials.walletId, false, (err, addr) => {
+            if (!addr) {
+              reject('NO ADDRESSES AVAILABLE');
+            } else {
+              console.log(`FOUND AN ADDRESS: ${addr}`);
+              resolve(addr);
+            }
+          });
+        });
+      }
+
+      self.getSharedAddressBalance = (sharedAddress) => {
+        const db = require('byteballcore/db.js');
+        return new Promise((resolve) => {
+          db.query(
+            'SELECT asset, address, is_stable, SUM(amount) AS balance \n\ ' +
+            'FROM outputs CROSS JOIN units USING(unit) \n\ ' +
+            'WHERE is_spent=0 AND sequence=\'good\' AND address = ? \n\ ' +
+            'GROUP BY asset, address, is_stable \n\ ' +
+            'UNION ALL \n\ ' +
+            'SELECT NULL AS asset, address, 1 AS is_stable, SUM(amount) AS balance FROM witnessing_outputs \n\ ' +
+            'WHERE is_spent=0 AND address = ? GROUP BY address \n\ ' +
+            'UNION ALL \n\ ' +
+            'SELECT NULL AS asset, address, 1 AS is_stable, SUM(amount) AS balance FROM headers_commission_outputs \n\ ' +
+            'WHERE is_spent=0 AND address = ? GROUP BY address',
+            [sharedAddress, sharedAddress, sharedAddress],
+            (rows) => {
+              const assocBalances = {};
+
+              assocBalances.base = { stable: 0, pending: 0, total: 0 };
+
+              for (let i = 0; i < rows.length; i += 1) {
+                const row = rows[i];
+
+                console.log(`SOMETHING FOR ${sharedAddress}: ${JSON.stringify(row)}`);
+
+                const asset = row.asset || 'base';
+
+                if (!assocBalances[asset]) {
+                  assocBalances[asset] = { stable: 0, pending: 0, total: 0 };
+                  console.log(`CREATED THE BALANCES ARRAY OF ADDRESS ${sharedAddress} FOR ASSET ${asset}`);
+                }
+
+                console.log(`UPDATING BALANCE OF ${sharedAddress} FOR ASSET ${asset}: ${row.is_stable ? 'stable' : 'pending'} ${row.balance}`);
+                assocBalances[asset][row.is_stable ? 'stable' : 'pending'] += row.balance;
+                assocBalances[asset].total += row.balance;
+              }
+
+              resolve(assocBalances);
+            }
+          );
+        });
+      };
+
+      $rootScope.$on('Local/BalanceUpdatedAndWalletUnlocked', () => {
+        readMyAddresses().then((myAddresses) => {
+          if (!myAddresses) {
+            console.log('THIS WALLET DOES NOT HAVE ADDRESSES');
+          }
+          self.walletAddresses = [];
+          myAddresses.forEach((addr) => {
+            self.walletAddresses.push(addr.address);
+          });
+        });
+        console.log('ACTIVATING');
+        self.activate().then(
+          (active) => {
+            if (active) {
+              console.log('FUNDING EXCHANGE CLIENT ACTIVATED');
+              let firsTime = true;
+              if (!sharedAddressFundsIntervalId) {
+                sharedAddressFundsIntervalId = $interval(() => {
+                  self.getSharedAddressBalance(self.byteOrigin).then((assocBalances) => {
+                    console.log(`BALANCE FOR ${self.byteOrigin}: ${JSON.stringify(assocBalances)}`);
+                    if (assocBalances.base.stable > 0) {
+                      $interval.cancel(sharedAddressFundsIntervalId);
+                    }
+                    if (assocBalances.base.stable === 0 || assocBalances.base.stable < 1500) {
+                      if (firsTime) {
+                        modalRequestApproval('Not able to make transactions until funding hub has fuelled your wallet. It may take several minutes, please try again a bit later.', () => {
+                          firsTime = false;
+                          go.walletHome();
+                        });
+                      }
+                    }
+                  });
+                }, 300000);
+              }
+            } else {
+              console.log('FUNDING EXCHANGE CLIENT STILL ACTIVATING. BE PATIENT');
+            }
+          },
+          (err) => {
+            console.log(`COULD NOT ACTIVATE FUNDING EXCHANGE CLIENT: ${err}`);
+          }
+        );
+      });
 
       self.activate = activate;
+
+      self.setIndex = (index) => {
+        self.index = index;
+      };
 
       return self;
     });

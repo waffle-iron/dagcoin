@@ -48,6 +48,19 @@
         });
       }
     };
+    // todo: needs refactor
+    root.getAddresses = function (walletId, cb) {
+      const client = profileService.getClient(walletId);
+      client.getAddresses({ reverse: true }, (err, addrs) => {
+        if (err) {
+          return cb(err);
+        }
+        if (addrs.length > 0) {
+          return cb(null, addrs);
+        }
+        return root.getAddress(walletId, true, cb);
+      });
+    };
 
     return root;
   });

@@ -5,24 +5,41 @@ Red='\033[0;31m'
 CloseColor='\033[0m'
 
 NodeVersion="v5.12.0"
-Sqlite3Path='./node_modules/sqlite3/lib/binding'
 
-if [ "$(uname)" == "Darwin" ]; then
- PackagePath='../byteballbuilds/DAGCOIN/osx64/DAGCOIN.app/Contents/Resources/app.nw/'
- Action=linux64
-elif [ "$(expr substr $(uname -s) 1 5)" == "Linux" ]; then
- PackagePath='../byteballbuilds/DAGCOIN/linux64/'
- Action=dmg
-fi
-
+echo "${Green}* Checking Node version...${CloseColor}"
 if ! node -v | grep -q ${NodeVersion}; then
  echo "${Red}* ERROR. Please use Node v5.12.0...${CloseColor}"
  exit
 fi
-
 echo "${Green}* Node version OK${CloseColor}"
+if ! type bower > /dev/null; then
+  echo "${Red}* ERROR. Please install bower${CloseColor}"
+  echo "${Red}* npm install -g bower${CloseColor}"
+  exit
+fi
+if ! type grunt > /dev/null; then
+  echo "${Red}* ERROR. Please install grunt${CloseColor}"
+  echo "${Red}* npm install -g grunt-cli${CloseColor}"
+  exit
+fi
+if ! type penv > /dev/null; then
+  echo "${Red}* ERROR. Please install penv${CloseColor}"
+  echo "${Red}* npm install -g penv${CloseColor}"
+  exit
+fi
+
+Sqlite3Path='./node_modules/sqlite3/lib/binding'
+
+if [ "$(uname)" == "Darwin" ]; then
+ PackagePath='../byteballbuilds/DAGCOIN/osx64/DAGCOIN.app/Contents/Resources/app.nw/'
+ Action=dmg
+elif [ "$(expr substr $(uname -s) 1 5)" == "Linux" ]; then
+ PackagePath='../byteballbuilds/Dagcoin/linux64/'
+ Action=linux64
+fi
 
 grunt desktop:$1
+
 if [ -d "./node_modules" ]; then
   echo "Moving existing node_modules to temp ..."
   mv "./node_modules" "./node_modules-temp"
@@ -34,14 +51,21 @@ npm install --production
 
 echo "Copying ..."
 
-if [ ! -d "${PackagePath}" ]; then
-  echo "${Red}* ERROR. ${PackagePath} doesn't exists. Please make sure that grunt desktop task was executed properly...${CloseColor}"
-  exit
+if [ "$(uname)" == "Darwin" ]; then
+  if [ -d "${Sqlite3Path}/node-webkit-v0.14.7-darwin-x64" ]; then
+    grunt
+    exit
+  fi
+  mkdir "${Sqlite3Path}/node-webkit-v0.14.7-darwin-x64"
+  cp "${Sqlite3Path}/node-v47-darwin-x64/node_sqlite3.node" "${Sqlite3Path}/node-webkit-v0.14.7-darwin-x64"
+elif [ "$(expr substr $(uname -s) 1 5)" == "Linux" ]; then
+  if [ -d "${Sqlite3Path}/node-webkit-v0.14.7-linux-x64" ]; then
+    grunt
+    exit
+  fi
+  mkdir "${Sqlite3Path}/node-webkit-v0.14.7-linux-x64"
+  cp "${Sqlite3Path}/node-v47-linux-x64/node_sqlite3.node" "${Sqlite3Path}/node-webkit-v0.14.7-linux-x64"
 fi
-
-mkdir "${Sqlite3Path}/node-webkit-v0.14.7-darwin-x64"
-
-cp "${Sqlite3Path}/node-v47-darwin-x64/node_sqlite3.node" "${Sqlite3Path}/node-webkit-v0.14.7-darwin-x64"
 
 cp -r "./node_modules" "${PackagePath}"
 
