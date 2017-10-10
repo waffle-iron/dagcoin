@@ -167,7 +167,7 @@
           return new Promise((resolve, reject) => {
             const db = require('byteballcore/db.js');
             db.query(
-              'SELECT shared_address, address, device_address FROM shared_address_signing_paths WHERE address not in (select address from my_addresses) and address not in (select shared_address from shared_addresses)',
+              'SELECT distinct shared_address, address, device_address FROM shared_address_signing_paths WHERE address not in (select address from my_addresses) and address not in (select shared_address from shared_addresses)',
               [],
               (rows) => {
                 if (rows.length === 0) {
