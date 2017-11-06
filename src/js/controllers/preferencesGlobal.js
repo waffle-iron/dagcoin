@@ -3,16 +3,12 @@
 
   angular.module('copayApp.controllers').controller('preferencesGlobalController',
     function ($scope, $q, $rootScope, $timeout, $log, configService, uxLanguage, pushNotificationsService, profileService,
-      fundingExchangeProviderService, $modal, animationService, chooseFeeTypeService, changeWalletTypeService, sharedService) {
+      fundingExchangeProviderService, $modal, animationService, changeWalletTypeService) {
       const conf = require('byteballcore/conf.js');
       const self = this;
       self.fundingNodeSettings = {};
       self.isLight = conf.bLight;
       self.canChangeWalletType = changeWalletTypeService.canChange();
-      self.hasBalance = sharedService.hasBalance('total');
-      self.hasBytes = sharedService.hasBytes('total');
-      self.hasDags = sharedService.hasDags('total');
-
       $scope.encrypt = !!profileService.profile.xPrivKeyEncrypted;
 
       self.initFundingNode = () => {
@@ -134,13 +130,6 @@
         unwatchFundingNode();
       });
 
-      chooseFeeTypeService.getFeeDefaultMethod()
-      .then((res) => {
-        self.typeOfPaymentFee = res;
-      });
-
-      self.changeTypeOfPayment = changeTypeOfPayment;
-
       self.changeWalletType = function () {
         if (self.isLight) {
           const ModalInstanceCtrl = function ($scopeModal, $modalInstance, $sce) {
@@ -179,15 +168,5 @@
           changeWalletTypeService.change();
         }
       };
-
-      function changeTypeOfPayment(model) {
-        if (model === 'hub' && !self.hasDags) {
-          self.typeOfPaymentFee = 'bytes';
-        } else {
-          self.typeOfPaymentFee = model;
-        }
-
-        chooseFeeTypeService.setUpFeeDefaultMethod(self.typeOfPaymentFee).then(() => {});
-      }
     });
 }());

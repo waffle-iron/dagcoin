@@ -122,6 +122,9 @@
              $rootScope.$emit('Local/ShowAlert', "Please approve wallet creation on other devices", 'fi-key', function(){
              go.walletHome();
              }); */
+            if (opts.isSingleAddress) {
+              profileService.setSingleAddressFlag(true);
+            }
           });
         }, 100);
       };
@@ -142,6 +145,7 @@
           name: form.walletName.$modelValue,
           networkName: 'livenet',
           cosigners: [],
+          isSingleAddress: form.isSingleAddress.$viewValue
         };
         if ($scope.totalCosigners > 1) {
           opts.cosigners = lodash.uniq(self.cosigners.map(cosigner => cosigner.device_address));

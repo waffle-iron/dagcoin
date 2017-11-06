@@ -117,8 +117,7 @@
         self.connection = connection;
         saveFile(null, (path) => {
           if (!path) return;
-          const password = Buffer.from(self.password);
-          const cipher = crypto.createCipheriv('aes-256-ctr', crypto.pbkdf2Sync(password, '', 100000, 32, 'sha512'), crypto.createHash('sha1').update(password).digest().slice(0, 16));
+          const cipher = crypto.createCipher('aes-256-ctr', self.password);
           jsZip = new Zip(path, {
             compressed: self.bCompression ? 6 : 0,
             cipher,

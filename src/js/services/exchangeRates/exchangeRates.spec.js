@@ -1,5 +1,5 @@
+/* eslint-disable no-undef */
 describe('exchange rate api service', () => {
-
   let $exchangeRate;
 
   beforeEach(module('copayApp.services'));

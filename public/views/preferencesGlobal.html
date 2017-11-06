@@ -26,89 +26,73 @@
     </li>-->
   </ul>
 
-  <h4 translate ng-show="false">Funding Node</h4>
-  <ul class="no-bullet m0 enable_text_select" ng-show="false">
-    <li>
-      <switch id="funding-node" name="funding-node" ng-model="prefGlobal.fundingNode"
-              ng-change="prefGlobal.onFundingNodeChange()" class="green right"></switch>
-      <div translate>Active</div>
-    </li>
-  </ul>
-  <h4 ng-show="false" translate>Funding Node Settings</h4>
-  <ul ng-show="false" class="no-bullet m0 enable_text_select">
-    <li class="input-wrap">
-      <input id="exchange-fee"
-             type="text"
-             name="exchange-fee"
-             min="0.00000001"
-             ng-minlength="0.00000001"
-             ng-maxlength="10000000000"
-             ng-required="true"
-             autocomplete="off"
-             ng-blur="prefGlobal.onFundingNodeSettingBlur()"
-             ng-model="prefGlobal.fundingNodeSettings.exchangeFee"
-             class="right min text-right">
-      <div translate>Exchange fee</div>
-    </li>
-    <li class="input-wrap">
-      <input id="total-bytes"
-             type="text"
-             name="total-bytes"
-             min="1"
-             ng-minlength="1"
-             ng-maxlength="10000000000"
-             ng-required="true"
-             autocomplete="off"
-             ng-blur="prefGlobal.onFundingNodeSettingBlur()"
-             ng-model="prefGlobal.fundingNodeSettings.totalBytes"
-             class="right min text-right">
-      <div translate>Total bytes per month</div>
-    </li>
-    <li class="input-wrap">
-      <input id="bytes-per-address"
-             type="text"
-             name="bytes-per-address"
-             min="1"
-             ng-minlength="1"
-             ng-maxlength="10000000000"
-             ng-required="true"
-             autocomplete="off"
-             ng-blur="prefGlobal.onFundingNodeSettingBlur()"
-             ng-model="prefGlobal.fundingNodeSettings.bytesPerAddress"
-             class="right min text-right">
-      <div translate>Bytes per shared address per month</div>
-    </li>
-    <li class="input-wrap">
-      <input id="end-user-max-capacity"
-             type="text"
-             name="end-user-max-capacity"
-             min="1"
-             ng-minlength="1"
-             ng-maxlength="10000000000"
-             ng-required="true"
-             autocomplete="off"
-             ng-blur="prefGlobal.onFundingNodeSettingBlur()"
-             ng-model="prefGlobal.fundingNodeSettings.maxEndUserCapacity"
-             class="right min text-right">
-      <div translate>End-user max capacity</div>
-    </li>
-  </ul>
-
-
-
-  <h4 ng-if="prefGlobal.hasBalance" translate>Choose how to pay fee</h4>
-  <ul ng-if="prefGlobal.hasBalance" class="no-bullet m0 radios">
-    <li ng-if="prefGlobal.hasBytes">
-      <span>Use own bytes</span>
-      <input type="radio" ng-model="prefGlobal.typeOfPaymentFee" value="bytes"
-             ng-change="prefGlobal.changeTypeOfPayment(prefGlobal.typeOfPaymentFee)">
-    </li>
-    <li ng-if="prefGlobal.hasDags">
-      <span>Subscribe to a funding hub</span>
-      <input type="radio" ng-model="prefGlobal.typeOfPaymentFee" value="hub"
-             ng-change="prefGlobal.changeTypeOfPayment(prefGlobal.typeOfPaymentFee)">
-    </li>
-  </ul>
+  <!--<h4 translate ng-show="false">Funding Node</h4>-->
+  <!--<ul class="no-bullet m0 enable_text_select" ng-show="false">-->
+    <!--<li>-->
+      <!--<switch id="funding-node" name="funding-node" ng-model="prefGlobal.fundingNode"-->
+              <!--ng-change="prefGlobal.onFundingNodeChange()" class="green right"></switch>-->
+      <!--<div translate>Active</div>-->
+    <!--</li>-->
+  <!--</ul>-->
+  <!--<h4 ng-show="false" translate>Funding Node Settings</h4>-->
+  <!--<ul ng-show="false" class="no-bullet m0 enable_text_select">-->
+    <!--<li class="input-wrap">-->
+      <!--<input id="exchange-fee"-->
+             <!--type="text"-->
+             <!--name="exchange-fee"-->
+             <!--min="0.00000001"-->
+             <!--ng-minlength="0.00000001"-->
+             <!--ng-maxlength="10000000000"-->
+             <!--ng-required="true"-->
+             <!--autocomplete="off"-->
+             <!--ng-blur="prefGlobal.onFundingNodeSettingBlur()"-->
+             <!--ng-model="prefGlobal.fundingNodeSettings.exchangeFee"-->
+             <!--class="right min text-right">-->
+      <!--<div translate>Exchange fee</div>-->
+    <!--</li>-->
+    <!--<li class="input-wrap">-->
+      <!--<input id="total-bytes"-->
+             <!--type="text"-->
+             <!--name="total-bytes"-->
+             <!--min="1"-->
+             <!--ng-minlength="1"-->
+             <!--ng-maxlength="10000000000"-->
+             <!--ng-required="true"-->
+             <!--autocomplete="off"-->
+             <!--ng-blur="prefGlobal.onFundingNodeSettingBlur()"-->
+             <!--ng-model="prefGlobal.fundingNodeSettings.totalBytes"-->
+             <!--class="right min text-right">-->
+      <!--<div translate>Total bytes per month</div>-->
+    <!--</li>-->
+    <!--<li class="input-wrap">-->
+      <!--<input id="bytes-per-address"-->
+             <!--type="text"-->
+             <!--name="bytes-per-address"-->
+             <!--min="1"-->
+             <!--ng-minlength="1"-->
+             <!--ng-maxlength="10000000000"-->
+             <!--ng-required="true"-->
+             <!--autocomplete="off"-->
+             <!--ng-blur="prefGlobal.onFundingNodeSettingBlur()"-->
+             <!--ng-model="prefGlobal.fundingNodeSettings.bytesPerAddress"-->
+             <!--class="right min text-right">-->
+      <!--<div translate>Bytes per shared address per month</div>-->
+    <!--</li>-->
+    <!--<li class="input-wrap">-->
+      <!--<input id="end-user-max-capacity"-->
+             <!--type="text"-->
+             <!--name="end-user-max-capacity"-->
+             <!--min="1"-->
+             <!--ng-minlength="1"-->
+             <!--ng-maxlength="10000000000"-->
+             <!--ng-required="true"-->
+             <!--autocomplete="off"-->
+             <!--ng-blur="prefGlobal.onFundingNodeSettingBlur()"-->
+             <!--ng-model="prefGlobal.fundingNodeSettings.maxEndUserCapacity"-->
+             <!--class="right min text-right">-->
+      <!--<div translate>End-user max capacity</div>-->
+    <!--</li>-->
+  <!--</ul>-->
   <!--todo: new pushnotifications should be implemented old one is depreciated -->
   <!--<div ng-show="index.usePushNotifications">-->
     <!--<h4></h4>-->
@@ -139,7 +123,7 @@
   <h4>BACKUP</h4>
 
   <ul>
-    <li ui-sref="backup" ng-hide="index.isPrivKeyExternal || prefGlobal.isLight">
+    <li ui-sref="backup" ng-hide="index.isPrivKeyExternalt">
       <i class="icon-arrow-right3 size-24 arrow-right"></i>
       <div translate>Backup wallet seed</div>
       <div class="right text-gray">
@@ -149,7 +133,7 @@
       </div>
     </li>
 
-    <li ui-sref="recoveryFromSeed" ng-hide="index.isPrivKeyExternal || prefGlobal.isLight">
+    <li ui-sref="recoveryFromSeed" ng-hide="index.isPrivKeyExternal">
       <i class="icon-arrow-right3 size-24 arrow-right"></i>
       <div translate>Recovery from seed</div>
     </li>

@@ -1,7 +1,7 @@
 (function () {
   'use strict';
 
-  angular.module('copayApp.services').factory('backButton', ($log, $rootScope, gettextCatalog, $deepStateRedirect, $document, $timeout, go,lodash, $state) => {
+  angular.module('copayApp.services').factory('backButton', ($log, $rootScope, gettextCatalog, $deepStateRedirect, $document, $timeout, go, lodash, $state) => {
     const root = {};
 
     root.menuOpened = false;
@@ -53,7 +53,7 @@
       }
     }
 
-    function askAndExit(){
+    function askAndExit() {
       if (shownExitMessage) {
         navigator.app.exitApp();
       } else {

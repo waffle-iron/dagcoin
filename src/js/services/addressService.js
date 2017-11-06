@@ -2,7 +2,10 @@
   'use strict';
 
   angular.module('copayApp.services')
-  .factory('addressService', (profileService, $log) => {
+  .factory('addressService', (
+    profileService,
+    $log
+  ) => {
     const root = {};
 
 
@@ -22,6 +25,7 @@
         if (err) {
           throw Error('impossible err creating address');
         }
+
         return cb(null, addr.address);
       });
     };

@@ -24,7 +24,7 @@
         profileService.signout();
       };
 
-      self.switchWallet = function (selectedWalletId, currentWalletId,state) {
+      self.switchWallet = function (selectedWalletId, currentWalletId, state) {
         backButton.menuOpened = false;
         if (selectedWalletId === currentWalletId) {
           $state.go(state);

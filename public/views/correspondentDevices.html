@@ -9,7 +9,9 @@
 	<div ui-view="dialog"></div>
     <div class="m20b tab-view tab-in" ng-show="state.is('correspondentDevices')" id="chat">
       <ul class="no-bullet m0 correspondentList" ng-init="readList()">
-        <li class="p10 line-b" ng-repeat="correspondent in list | orderBy:newMsgByAddressComparator">
+        <li class="p10 line-b"
+            ng-repeat="correspondent in list | orderBy:newMsgByAddressComparator"
+            ng-class="{'noclick': !correspondent.removable}">
           <a ng-show="selectedCorrespondentList[correspondent.device_address]" 
             ng-hide="hideRemoveButton(correspondent.removable)"
             class="removeCorrespondentList" 

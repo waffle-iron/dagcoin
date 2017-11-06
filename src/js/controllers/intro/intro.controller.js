@@ -10,9 +10,7 @@
     $scope.swiper = {};
     $scope.active_index = 0;
 
-    $scope.isLastSlide = () => {
-      return ($scope.active_index === 2 ? true : false);
-    };
+    $scope.isLastSlide = () => ($scope.active_index === 2);
 
     $scope.next = () => {
       $scope.swiper.slideNext();

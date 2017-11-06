@@ -1,3 +1,4 @@
+/* eslint-disable no-undef */
 (() => {
   'use strict';
 
@@ -26,7 +27,7 @@
       scope: {},
       templateUrl: 'directives/dagTabs/dagTabs.template.html',
       controllerAs: 'tabset',
-      controller: function ($scope, $element) {
+      controller($scope, $element) {
         const self = this;
         self.tabs = [];
         self.activeTab = 0;

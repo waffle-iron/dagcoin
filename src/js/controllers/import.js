@@ -194,30 +194,27 @@
             console.log('Incorrect password or file', err);
           });
         } else {
-          const bufferPassword = Buffer.from(password);
-          const decipher = crypto.createDecipheriv('aes-256-ctr', crypto.pbkdf2Sync(bufferPassword, '', 100000, 32, 'sha512'), crypto.createHash('sha1').update(bufferPassword).digest().slice(0, 16));
-          data.pipe(decipher).pipe(unzip.Extract({ path: `${fileSystemService.getDatabaseDirPath()}/temp/` })).on('error', (err) => {
-            if (err.message === 'Invalid signature in zip file') {
-              showError('Incorrect password or file');
-            } else {
-              showError(err);
-            }
-          }).on('finish', () => {
-            setTimeout(() => {
-              writeDBAndFileStoragePC((err) => {
-                if (err) {
-                  return showError(err);
+          const decipher = crypto.createDecipher('aes-256-ctr', password);
+          data.pipe(decipher).pipe(unzip.Extract({ path: `${fileSystemService.getDatabaseDirPath()}/temp/` }).on('close', () => {
+            writeDBAndFileStoragePC((err) => {
+              if (err) {
+                return showError(err);
+              }
+              self.imported = false;
+              return $rootScope.$emit('Local/ShowAlert', 'Import successfully completed, please restart the application.', 'fi-check', () => {
+                if (navigator && navigator.app) {
+                  navigator.app.exitApp();
+                } else if (process.exit) {
+                  process.exit();
                 }
-                self.imported = false;
-                return $rootScope.$emit('Local/ShowAlert', 'Import successfully completed, please restart the application.', 'fi-check', () => {
-                  if (navigator && navigator.app) {
-                    navigator.app.exitApp();
-                  } else if (process.exit) {
-                    process.exit();
-                  }
-                });
               });
-            }, 100);
+            });
+          })).on('error', (err) => {
+            if (err.message === 'Invalid signature in zip file') {
+              return showError('Incorrect password or file');
+            }
+
+            return showError(err);
           });
         }
       }

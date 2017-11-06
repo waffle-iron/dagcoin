@@ -30,7 +30,6 @@ module.exports = function (grunt) {
         innosetupTemplateMyAppVersion: '<%= pkg.version %>',
         innosetupTemplateMyAppExeName: 'Dagcoin-TN.exe',
         innosetupTemplateMyAppFolderName: 'dagcoin-tn'
-
       },
       live: {
         // nwjs task
@@ -297,7 +296,7 @@ module.exports = function (grunt) {
             expand: true,
             cwd: './webkitbuilds/',
             src: ['dagcoin.desktop', '../public/img/icons/icon-white-outline.iconset/icon_256x256.png'],
-            dest: '../byteballbuilds/Dagcoin/linux32/',
+            dest: '../byteballbuilds/<%= process.env.nwjsAppName %>/linux32/',
             flatten: true,
             filter: 'isFile',
             options: { timestamp: true, mode: true }
@@ -306,7 +305,7 @@ module.exports = function (grunt) {
             expand: true,
             cwd: './webkitbuilds/',
             src: ['dagcoin.desktop', '../public/img/icons/icon-white-outline.iconset/icon_256x256.png'],
-            dest: '../byteballbuilds/Dagcoin/linux64/',
+            dest: '../byteballbuilds/<%= process.env.nwjsAppName %>/linux64/',
             flatten: true,
             filter: 'isFile',
             options: { timestamp: true, mode: true }
@@ -360,21 +359,19 @@ module.exports = function (grunt) {
     compress: {
       linux32: {
         options: {
-          archive: '../byteballbuilds/dagcoin-linux32.zip'
+          archive: '../byteballbuilds/<%= process.env.nwjsAppName %>-linux64.zip'
         },
         expand: true,
-        cwd: '../byteballbuilds/Dagcoin/linux32/',
-        src: ['**/*'],
-        dest: 'dagcoin-linux32/'
+        cwd: '../byteballbuilds/<%= process.env.nwjsAppName %>/linux64/',
+        src: ['**/*']
       },
       linux64: {
         options: {
-          archive: '../byteballbuilds/dagcoin-linux64.zip'
+          archive: '../byteballbuilds/<%= process.env.nwjsAppName %>-linux64.zip'
         },
         expand: true,
-        cwd: '../byteballbuilds/Dagcoin/linux64/',
-        src: ['**/*'],
-        dest: 'dagcoin-linux64/'
+        cwd: '../byteballbuilds/<%= process.env.nwjsAppName %>/linux64/',
+        src: ['**/*']
       }
     },
     browserify: {
@@ -521,8 +518,10 @@ module.exports = function (grunt) {
   grunt.registerTask('desktop:testnet', ['env:testnet', 'default', 'nwjs']);
   grunt.registerTask('desktop:live', ['env:live', 'default', 'nwjs']);
   grunt.registerTask('dmg', ['copy:osx', 'exec:osx64']);
-  grunt.registerTask('linux64', ['copy:linux', 'compress:linux64']);
-  grunt.registerTask('linux32', ['copy:linux', 'compress:linux32']);
+  grunt.registerTask('linux64:testnet', ['env:testnet', 'template', 'copy:linux', 'compress:linux64']);
+  grunt.registerTask('linux64:live', ['env:live', 'template', 'copy:linux', 'compress:linux64']);
+  grunt.registerTask('linux32:testnet', ['env:testnet', 'template', 'copy:linux', 'compress:linux32']);
+  grunt.registerTask('linux32:live', ['env:live', 'template', 'copy:linux', 'compress:linux32']);
   grunt.registerTask('deb', ['debian_package:linux64']);
   grunt.registerTask('inno64:testnet', ['env:testnet', 'template', 'innosetup_compiler:win64']);
   grunt.registerTask('inno64:live', ['env:live', 'template', 'innosetup_compiler:win64']);

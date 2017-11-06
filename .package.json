@@ -2,7 +2,7 @@
   "name": "dagcoin",
   "description": "A wallet for decentralized value",
   "author": "Dagcoin",
-  "version": "1.3.1",
+  "version": "1.3.2",
   "discoveryServicePairingCode": "A7MiDQd+H7S6kFXfEdIKrM6oW6YF2oq4ewU+eSH30YGp@byteball.org/bb#0000",
   "keywords": [
     "wallet",
@@ -48,7 +48,7 @@
     "bip38": "^1.4.0",
     "bitcore-lib": "^0.13.14",
     "bitcore-mnemonic": "~1.0.0",
-    "byteballcore": "git+https://github.com/byteball/byteballcore.git#b6eb2547e76517d95d48f34bba77b0b59e17fe04",
+    "byteballcore": "git+https://github.com/byteball/byteballcore.git",
     "chokidar": "^1.7.0",
     "jszip": "^3.1.3",
     "lodash": "^4.6.1",
@@ -57,7 +57,7 @@
     "browser-request": "^0.3.3",
     "shelljs": "^0.3.0",
     "sjcl": "^1.0.2",
-    "unzip": "git+https://github.com/xJeneKx/unzip.git",
+    "unzip": "git+https://github.com/byteball/unzip.git",
     "zip": "git+https://github.com/xJeneKx/zip.git"
   },
   "optionalDependencies": {
@@ -117,6 +117,7 @@
     "karma-nodewebkit-launcher": "0.0.13",
     "karma-phantomjs-launcher": "^0.1.4",
     "karma-spec-reporter": "0.0.31",
+    "nw-dev": "^3.0.1",
     "phantomjs": "^2.1.7",
     "pixrem": "^4.0.1",
     "sqlite3": "^3.1.9",

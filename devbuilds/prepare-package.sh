@@ -34,8 +34,19 @@ if [ "$(uname)" == "Darwin" ]; then
  PackagePath='../byteballbuilds/DAGCOIN/osx64/DAGCOIN.app/Contents/Resources/app.nw/'
  Action=dmg
 elif [ "$(expr substr $(uname -s) 1 5)" == "Linux" ]; then
- PackagePath='../byteballbuilds/Dagcoin/linux64/'
- Action=linux64
+  if [ "$1" == "testnet" ]; then
+    PackagePath='../byteballbuilds/Dagcoin-TN/linux64/'
+    Action=linux64:testnet
+  else
+    PackagePath='../byteballbuilds/Dagcoin/linux64/'
+    Action=linux64:live
+  fi
+fi
+
+if [ "$1" == "testnet" ]; then
+  penv testnet
+else
+  penv base
 fi
 
 grunt desktop:$1

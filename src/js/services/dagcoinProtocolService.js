@@ -6,12 +6,12 @@
     const eventBus = require('byteballcore/event_bus.js');
     const root = {};
 
+    root.messageCounter = 0;
+
     const deviceConnectionPromiseMap = new Map();
 
     function pairAndConnectDevice(code, connectionCheckLifeSpan) {
-      return checkOrPairDevice(code).then((correspondent) => {
-          return makeSureDeviceIsConnected(correspondent.device_address, connectionCheckLifeSpan);
-        }
+      return checkOrPairDevice(code).then(correspondent => makeSureDeviceIsConnected(correspondent.device_address, connectionCheckLifeSpan)
       );
     }
 
@@ -38,7 +38,7 @@
 
         eventBus.on('dagcoin.connected', listener);
       }).then(
-        () => { return getCorrespondent(deviceAddress); },
+        () => getCorrespondent(deviceAddress),
         () => { eventBus.removeListener('dagcoin.connected', listener); }
       );
 
@@ -98,8 +98,7 @@
             });
           });
         });
-      }).then((params) => {
-        return new Promise((resolve, reject) => {
+      }).then(params => new Promise((resolve, reject) => {
           console.log(`PAIRING WITH ${params.deviceAddress} ... SENDING PAIRING MESSAGE`);
 
           device.sendPairingMessage(
@@ -115,8 +114,7 @@
               }
             }
           );
-        });
-      }).then((deviceAddress) => {
+        })).then((deviceAddress) => {
         console.log(`LOOKING UP CORRESPONDENT WITH DEVICE ADDRESS ${deviceAddress}`);
         return getCorrespondent(deviceAddress);
       });
@@ -157,10 +155,75 @@
       });
     }
 
+    function nextMessageId() {
+      const id = root.messageCounter;
+      root.messageCounter += 1;
+      return id;
+    }
+
+    function sendRequest(deviceAddress, subject, messageBody) {
+      root.sendMessage(deviceAddress, 'request', subject, messageBody);
+    }
+
+    function sendResponse(deviceAddress, request, messageBody) {
+      root.sendMessage(deviceAddress, 'response', request.title.split('.').pop(), messageBody, request.id);
+    }
+
+    function sendMessage(deviceAddress, messageType, subject, messageBody, messageId) {
+      if (!deviceAddress) {
+        throw Error('PARAMETER deviceAddress UNSPECIFIED');
+      }
+
+      if (!messageType) {
+        throw Error('PARAMETER messageType UNSPECIFIED');
+      }
+
+      if (!subject) {
+        throw Error('PARAMETER subject UNSPECIFIED');
+      }
+
+      return makeSureDeviceIsConnected(deviceAddress, 30 * 60 * 1000).then(
+        (correspondent) => {
+          const device = require('byteballcore/device.js');
+
+          let responseId = messageId;
+
+          if (responseId == null) {
+            responseId = nextMessageId();
+          }
+
+          return new Promise((resolve, reject) => {
+            const message = {
+              protocol: 'dagcoin',
+              title: `${messageType}.${subject}`,
+              id: responseId,
+              messageType,
+              messageBody
+            };
+
+            device.sendMessageToDevice(correspondent.device_address, 'text', JSON.stringify(message), {
+              ifOk() {
+                resolve();
+              },
+              ifError(error) {
+                reject(error);
+              }
+            });
+          });
+        },
+        (error) => {
+          console.log(`COULD NOT DELIVER ${messageType} TO DISCOVERY SERVICE: ${error}`);
+        }
+      );
+    }
+
     root.FOREVER = -1;
 
     root.pairAndConnectDevice = pairAndConnectDevice;
     root.makeSureDeviceIsConnected = makeSureDeviceIsConnected;
+    root.sendMessage = sendMessage;
+    root.sendRequest = sendRequest;
+    root.sendResponse = sendResponse;
 
     return root;
   });

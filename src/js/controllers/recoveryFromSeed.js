@@ -1,22 +1,24 @@
-/* eslint-disable no-useless-concat,import/no-extraneous-dependencies */
+/* eslint-disable no-useless-concat,import/no-extraneous-dependencies,no-shadow */
 (function () {
   'use strict';
 
   angular.module('copayApp.controllers').controller('recoveryFromSeed',
-    function ($rootScope, $scope, $log, $timeout, profileService, isCordova) {
+    function ($rootScope, $scope, $log, $timeout, profileService) {
       const async = require('async');
       const conf = require('byteballcore/conf.js');
       const walletDefinedByKeys = require('byteballcore/wallet_defined_by_keys.js');
       const objectHash = require('byteballcore/object_hash.js');
       let ecdsa;
       try {
-        ecdsa = isCordova ? null : require('secp256k1');
+        ecdsa = require('secp256k1');
       } catch (e) {
         ecdsa = require('byteballcore/node_modules/secp256k1' + '');
       }
       const Mnemonic = require('bitcore-mnemonic');
       const Bitcore = require('bitcore-lib');
       const db = require('byteballcore/db.js');
+      const network = require('byteballcore/network');
+      const myWitnesses = require('byteballcore/my_witnesses');
 
       const self = this;
 
@@ -29,9 +31,7 @@
 
       function determineIfAddressUsed(address, cb) {
         db.query('SELECT 1 FROM outputs WHERE address = ? LIMIT 1', [address], (outputsRows) => {
-          if (outputsRows.length === 1) {
-            cb(true);
-          } else {
+          if (outputsRows.length === 1) { cb(true); } else {
             db.query('SELECT 1 FROM unit_authors WHERE address = ? LIMIT 1', [address], (unitAuthorsRows) => {
               cb(unitAuthorsRows.length === 1);
             });
@@ -46,7 +46,6 @@
         let lastUsedWalletIndex = -1;
         let currentAddressIndex = 0;
         let currentWalletIndex = 0;
-        const arrWalletIndexes = [];
         const assocMaxAddressIndexes = {};
 
         function checkAndAddCurrentAddress(isChange) {
@@ -68,10 +67,9 @@
                 if (isChange) {
                   if (lastUsedAddressIndex !== -1) {
                     lastUsedWalletIndex = currentWalletIndex;
-                    arrWalletIndexes.push(currentWalletIndex);
                   }
                   if (currentWalletIndex - lastUsedWalletIndex >= 20) {
-                    cb(assocMaxAddressIndexes, arrWalletIndexes);
+                    cb(assocMaxAddressIndexes);
                   } else {
                     currentWalletIndex += 1;
                     setCurrentWallet();
@@ -184,39 +182,116 @@
         createWallet(0);
       }
 
-      self.recoveryForm = function () {
-        if (self.inputMnemonic) {
-          if ((self.inputMnemonic.split(' ').length % 3 === 0) && Mnemonic.isValid(self.inputMnemonic)) {
-            self.scanning = true;
-            scanForAddressesAndWallets(self.inputMnemonic, (assocMaxAddressIndexes, arrWalletIndexes) => {
-              if (arrWalletIndexes.length) {
-                removeAddressesAndWallets(() => {
-                  const myDeviceAddress = objectHash.getDeviceAddress(ecdsa.publicKeyCreate(self.xPrivKey.derive("m/1'").privateKey.bn.toBuffer({ size: 32 }), true).toString('base64'));
-                  profileService.replaceProfile(self.xPrivKey.toString(), self.inputMnemonic, myDeviceAddress, () => {
-                    createWallets(arrWalletIndexes, () => {
-                      createAddresses(assocMaxAddressIndexes, () => {
-                        self.scanning = false;
-                        $rootScope.$emit('Local/ShowAlert', `${arrWalletIndexes.length} wallets recovered, please restart the application to finish.`, 'fi-check', () => {
-                          if (navigator && navigator.app) {
-                            // android
-                            navigator.app.exitApp();
-                          } else if (process.exit) {
-                            // nwjs
-                            process.exit();
-                          }
-                        });
-                      });
-                    });
-                  });
-                });
-              } else {
-                self.error = 'No active addresses found.';
+      function scanForAddressesAndWalletsInLightClient(mnemonic, cb) {
+        self.xPrivKey = new Mnemonic(mnemonic).toHDPrivateKey();
+        let xPubKey;
+        let currentWalletIndex = 0;
+        let lastUsedWalletIndex = -1;
+        const assocMaxAddressIndexes = {};
+
+        function checkAndAddCurrentAddresses(isChange) {
+          if (!assocMaxAddressIndexes[currentWalletIndex]) {
+            assocMaxAddressIndexes[currentWalletIndex] = {
+              main: 0,
+              change: 0
+            };
+          }
+          const arrTmpAddresses = [];
+          for (let i = 0; i < 20; i += 1) {
+            const index = (isChange ? assocMaxAddressIndexes[currentWalletIndex].change : assocMaxAddressIndexes[currentWalletIndex].main) + i;
+            arrTmpAddresses.push(objectHash.getChash160(['sig', { pubkey: walletDefinedByKeys.derivePubkey(xPubKey, `m/${isChange}/${index}`) }]));
+          }
+          myWitnesses.readMyWitnesses((arrWitnesses) => {
+            network.requestFromLightVendor('light/get_history', {
+              addresses: arrTmpAddresses,
+              witnesses: arrWitnesses
+            }, (ws, request, response) => {
+              if (response && response.error) {
+                const breadcrumbs = require('byteballcore/breadcrumbs.js');
+                breadcrumbs.add(`Error scanForAddressesAndWalletsInLightClient: ${response.error}`);
+                self.error = 'When scanning an error occurred, please try again later.';
                 self.scanning = false;
                 $timeout(() => {
                   $rootScope.$apply();
                 });
+                return;
+              }
+              if (Object.keys(response).length) {
+                lastUsedWalletIndex = currentWalletIndex;
+                if (isChange) {
+                  assocMaxAddressIndexes[currentWalletIndex].change += 20;
+                } else {
+                  assocMaxAddressIndexes[currentWalletIndex].main += 20;
+                }
+                checkAndAddCurrentAddresses(isChange);
+              } else if (isChange) {
+                if (assocMaxAddressIndexes[currentWalletIndex].change === 0
+                  && assocMaxAddressIndexes[currentWalletIndex].main === 0) {
+                  delete assocMaxAddressIndexes[currentWalletIndex];
+                }
+                currentWalletIndex += 1;
+                if (currentWalletIndex - lastUsedWalletIndex > 3) {
+                  cb(assocMaxAddressIndexes);
+                } else {
+                  setCurrentWallet();
+                }
+              } else {
+                checkAndAddCurrentAddresses(1);
               }
             });
+          });
+        }
+
+        function setCurrentWallet() {
+          xPubKey = Bitcore.HDPublicKey(self.xPrivKey.derive(`m/44'/0'/${currentWalletIndex}'`));
+          checkAndAddCurrentAddresses(0);
+        }
+
+        setCurrentWallet();
+      }
+
+      function cleanAndAddWalletsAndAddresses(assocMaxAddressIndexes) {
+        const device = require('byteballcore/device');
+        const arrWalletIndexes = Object.keys(assocMaxAddressIndexes);
+        if (arrWalletIndexes.length) {
+          removeAddressesAndWallets(() => {
+            const myDeviceAddress = objectHash.getDeviceAddress(ecdsa.publicKeyCreate(self.xPrivKey.derive("m/1'").privateKey.bn.toBuffer({ size: 32 }), true).toString('base64'));
+            profileService.replaceProfile(self.xPrivKey.toString(), self.inputMnemonic, myDeviceAddress, () => {
+              device.setDevicePrivateKey(self.xPrivKey.derive("m/1'").privateKey.bn.toBuffer({ size: 32 }));
+              createWallets(arrWalletIndexes, () => {
+                createAddresses(assocMaxAddressIndexes, () => {
+                  self.scanning = false;
+                  $rootScope.$emit('Local/ShowAlert', `${arrWalletIndexes.length} wallets recovered, please restart the application to finish.`, 'fi-check', () => {
+                    if (navigator && navigator.app) {  // android
+                      navigator.app.exitApp();
+                    } else if (process.exit) { // nwjs
+                      process.exit();
+                    }
+                  });
+                });
+              });
+            });
+          });
+        } else {
+          self.error = 'No active addresses found.';
+          self.scanning = false;
+          $timeout(() => {
+            $rootScope.$apply();
+          });
+        }
+      }
+
+      self.recoveryForm = function () {
+        if (self.inputMnemonic) {
+          self.error = '';
+          self.inputMnemonic = self.inputMnemonic.toLowerCase();
+          if ((self.inputMnemonic.split(' ').length % 3 === 0) && Mnemonic.isValid(self.inputMnemonic)) {
+            self.scanning = true;
+            if (self.bLight) {
+              scanForAddressesAndWalletsInLightClient(self.inputMnemonic, cleanAndAddWalletsAndAddresses);
+            } else {
+              scanForAddressesAndWallets(self.inputMnemonic, cleanAndAddWalletsAndAddresses);
+            }
           } else {
             self.error = 'Seed is not valid';
           }

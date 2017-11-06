@@ -2,7 +2,23 @@
   'use strict';
 
   angular.module('copayApp.controllers').controller('preferencesInformation',
-    function ($scope, $log, $timeout, isMobile, gettextCatalog, lodash, profileService, storageService, go, configService, addressService, $rootScope) {
+    function (
+      $scope,
+      $log,
+      $timeout,
+      isMobile,
+      gettextCatalog,
+      lodash,
+      profileService,
+      storageService,
+      go,
+      configService,
+      addressService,
+      $rootScope,
+      fundingExchangeClientService,
+      proofingService,
+      dagcoinProtocolService
+    ) {
       const constants = require('byteballcore/constants.js');
       const fc = profileService.focusedClient;
       const c = fc.credentials;
@@ -24,6 +40,13 @@
           } else if (addr) {
             $rootScope.$emit('Local/ShowAlert', 'New Address successfully generated.', 'fi-check', () => { });
             this.init();
+            proofingService.proofCurrentAddress().then((proof) => {
+              dagcoinProtocolService.sendRequest(
+                fundingExchangeClientService.bytesProviderDeviceAddress,
+                'link-address',
+                proof
+              );
+            });
           }
         });
       };

@@ -3011,3 +3011,29 @@ section {
     left: initial;
   }
 }
+
+.preferences ul.warnings{
+  margin: 20px 0;
+  background-color: transparent;
+  text-align: center;
+}
+
+.preferences ul.warnings li {
+  border-bottom: none;
+  padding: 0;
+}
+
+.state_icon svg-icon svg {
+  width: 100px;
+  height: 100px;
+  margin-left: -55px;
+}
+
+p.color_red {
+  text-align: center;
+}
+
+.noclick {
+  pointer-events: none;
+  color: #8597a7;
+}

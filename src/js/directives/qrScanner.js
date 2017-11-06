@@ -1,6 +1,6 @@
 /* global angular */
 // todo: disabled no-unused-vars for makeSwipeDirective method because currently we are not using directive. in future it might be removed
-/* eslint-disable no-unused-vars */
+/* eslint-disable no-unused-vars,no-shadow,no-undef */
 
 (() => {
   'use strict';
@@ -39,7 +39,7 @@
 
                 $timeout(() => {
                   const data = result.text;
-                  $scope.onScan({data});
+                  $scope.onScan({ data });
                 }, 1000);
               },
               (error) => {
@@ -66,7 +66,7 @@
             let localMediaStream;
             let prevResult;
 
-            var _scan = function (evt) {
+            const scan = function (evt) {
               if (localMediaStream) {
                 context.drawImage(video, 0, 0, 300, 225);
                 try {
@@ -75,13 +75,13 @@
                   // qrcodeError(e);
                 }
               }
-              $timeout(_scan, 800);
+              $timeout(scan, 800);
             };
 
-            const _scanStop = function () {
+            const scanStop = function () {
               if (localMediaStream && localMediaStream.active) {
                 const localMediaStreamTrack = localMediaStream.getTracks();
-                for (let i = 0; i < localMediaStreamTrack.length; i++) {
+                for (let i = 0; i < localMediaStreamTrack.length; i += 1) {
                   localMediaStreamTrack[i].stop();
                 }
               } else {
@@ -98,22 +98,22 @@
             };
 
             qrcode.callback = function (data) {
-              if (prevResult != data) {
+              if (prevResult !== data) {
                 prevResult = data;
                 return;
               }
-              _scanStop();
+              scanStop();
               $modalInstance.close(data);
             };
 
-            const _successCallback = function (stream) {
+            const successCallback = function (stream) {
               video.src = (window.URL && window.URL.createObjectURL(stream)) || stream;
               localMediaStream = stream;
               video.play();
-              $timeout(_scan, 1000);
+              $timeout(scan, 1000);
             };
 
-            const _videoError = function (err) {
+            const videoError = function (err) {
               breadcrumbs.add('qr scanner video error');
               $scope.cancel();
             };
@@ -146,13 +146,13 @@
 
                 navigator.getUserMedia({
                   video: true,
-                }, _successCallback, _videoError);
+                }, successCallback, videoError);
               }, 500);
             };
 
             $scope.cancel = function () {
               breadcrumbs.add('qr scanner cancel');
-              _scanStop();
+              scanStop();
               try {
                 $modalInstance.dismiss('cancel');
               } catch (e) {
@@ -169,7 +169,7 @@
             keyboard: false,
           });
           modalInstance.result.then((data) => {
-            parentScope.onScan({data});
+            parentScope.onScan({ data });
           });
         };
 

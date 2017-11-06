@@ -37,6 +37,15 @@
 
           </label>
         </div>
+        
+        <div ng-hide="create.hideWalletName">
+          <div class="description m10b">
+          	Single address wallets will not spawn new addresses for every transaction, change will always go to the one and only address the wallet contains.
+          </div>
+          <label><span translate class="left m10t">Single address wallet</span>
+            <switch name="isSingleAddress" ng-model="isSingleAddress" class="red right m10b"></switch>
+          </label>
+        </div>
 
         <button type="submit" class="btn btn_red-full" ng-disabled="setupForm.$invalid || create.loading">
           <span translate>Create new wallet</span>

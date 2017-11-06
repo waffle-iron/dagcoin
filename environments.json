@@ -1,7 +1,7 @@
 {
   "testnet": {
     "name": "dagcoin-tn",
-    "version": "1.3.1t",
+    "version": "1.3.2t",
     "discoveryServicePairingCode": "AnqLjlEMkQsoP6yZ/vDwT41F3IE6ItfggF0oxyYsUj42@byteball.org/bb-test#0000",
     "dependencies": {
       "async": "^1.5.2",
@@ -17,29 +17,7 @@
       "browser-request": "^0.3.3",
       "shelljs": "^0.3.0",
       "sjcl": "^1.0.2",
-      "unzip": "git+https://github.com/xJeneKx/unzip.git",
-      "zip": "git+https://github.com/xJeneKx/zip.git"
-    }
-  },
-  "dev": {
-    "name": "dagcoin-tn",
-    "version": "1.3.1t",
-    "discoveryServicePairingCode": "A8EImXA5RtFDBstX3u1CzcVmcKm8jmBBYlMm93FAHQ0z@byteball.org/bb-test#0000",
-    "dependencies": {
-      "async": "^1.5.2",
-      "bip38": "^1.4.0",
-      "bitcore-lib": "^0.13.14",
-      "bitcore-mnemonic": "~1.0.0",
-      "byteballcore": "git+https://github.com/byteball/byteballcore.git#testnet",
-      "chokidar": "^1.7.0",
-      "jszip": "^3.1.3",
-      "lodash": "^4.6.1",
-      "preconditions": "^1.0.8",
-      "request": "^2.81.0",
-      "browser-request": "^0.3.3",
-      "shelljs": "^0.3.0",
-      "sjcl": "^1.0.2",
-      "unzip": "git+https://github.com/xJeneKx/unzip.git",
+      "unzip": "git+https://github.com/byteball/unzip.git",
       "zip": "git+https://github.com/xJeneKx/zip.git"
     }
   }

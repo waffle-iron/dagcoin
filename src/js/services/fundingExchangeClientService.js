@@ -10,39 +10,8 @@
                                               promiseService,
                                               addressService,
                                               profileService,
-                                              $interval,
-                                              go,
-                                              $modal,
-                                              animationService) => {
+                                              proofingService) => {
       const self = {};
-      let sharedAddressFundsIntervalId;
-
-      const modalRequestApproval = function (question, callbacks) {
-        const ModalInstanceCtrl = function ($scope, $modalInstance, $sce) {
-          $scope.title = $sce.trustAsHtml(question);
-          $scope.yes_icon = 'fi-check';
-          $scope.yes_button_class = 'primary';
-          $scope.loading = false;
-
-          $scope.ok = function () {
-            $scope.loading = true;
-            $modalInstance.close('OK');
-          };
-        };
-
-        const modalInstance = $modal.open({
-          templateUrl: 'views/modals/fundingNodeNotification.html',
-          windowClass: animationService.modalAnimated.slideUp,
-          controller: ModalInstanceCtrl
-        });
-
-        modalInstance.result.finally(() => {
-          const m = angular.element(document.getElementsByClassName('reveal-modal'));
-          m.addClass(animationService.modalAnimated.slideOutDown);
-        });
-
-        modalInstance.result.then(callbacks.ifYes);
-      };
 
       // Statuses
       self.active = false;
@@ -241,23 +210,22 @@
 
         const messageTitle = 'request.share-funded-address';
         const device = require('byteballcore/device.js');
-        const messageId = discoveryService.nextMessageId();
-
-        console.log(`Sending ${messageTitle} to ${device.getMyDeviceAddress()}:${self.dagcoinOrigin}`);
 
         const promise = listenToCreateNewSharedAddress();
 
-        device.sendMessageToDevice(
-          self.bytesProviderDeviceAddress,
-          'text',
-          JSON.stringify({
-            protocol: 'dagcoin',
-            title: messageTitle,
-            id: messageId,
-            deviceAddress: device.getMyDeviceAddress(),
-            address: self.dagcoinOrigin
-          })
-        );
+        proofingService.proofMasterAddress().then((proof) => {
+          proof.protocol = 'dagcoin';
+          proof.title = messageTitle;
+          proof.id = discoveryService.nextMessageId();
+
+          console.log(`SENDING TO ${device.getMyDeviceAddress()}: ${JSON.stringify(proof)}`);
+
+          device.sendMessageToDevice(
+            self.bytesProviderDeviceAddress,
+            'text',
+            JSON.stringify(proof)
+          );
+        });
 
         return promise;
       }
@@ -289,9 +257,7 @@
 
             resolve();
           });
-        }).then(() => {
-          return checkConfigurationInTime(10);
-        });
+        }).then(() => checkConfigurationInTime(10));
       }
 
       function checkConfigurationInTime(times) {
@@ -321,7 +287,6 @@
             if (!addr) {
               reject('NO ADDRESSES AVAILABLE');
             } else {
-              console.log(`FOUND AN ADDRESS: ${addr}`);
               resolve(addr);
             }
           });
@@ -386,6 +351,50 @@
         });
       };
 
+      self.getByteOrigin = function () {
+        const db = require('byteballcore/db.js');
+
+        return new Promise((resolve, reject) => {
+          db.query(
+            'SELECT shared_address, address FROM shared_address_signing_paths sasp WHERE sasp.address IN (SELECT address FROM my_addresses)',
+            [],
+            (rows) => {
+              if (!rows || rows.length === 0) {
+                resolve(null);
+              } else if (rows.length > 1) {
+                reject('MULTIPLE SHARED ADDRESSES ARE NOT YET SUPPORTED');
+              } else {
+                resolve(rows[0]);
+              }
+            }
+          );
+        }).then((sharedAddressObject) => {
+          if (!sharedAddressObject) {
+            return Promise.resolve(null);
+          }
+
+          return new Promise((resolve) => {
+            db.query(
+              'SELECT wallet FROM my_addresses WHERE address = ?',
+              [sharedAddressObject.address],
+              (rows) => {
+                if (!rows || rows.length === 0) {
+                  resolve(null);
+                } else {
+                  const focusedClient = profileService.focusedClient;
+
+                  if (focusedClient.credentials.walletId === rows[0].wallet) {
+                    resolve(sharedAddressObject.shared_address);
+                  } else {
+                    resolve(null);
+                  }
+                }
+              }
+            );
+          });
+        });
+      };
+
       $rootScope.$on('Local/BalanceUpdatedAndWalletUnlocked', () => {
         readMyAddresses().then((myAddresses) => {
           if (!myAddresses) {
@@ -401,25 +410,15 @@
           (active) => {
             if (active) {
               console.log('FUNDING EXCHANGE CLIENT ACTIVATED');
-              let firsTime = true;
-              if (!sharedAddressFundsIntervalId) {
-                sharedAddressFundsIntervalId = $interval(() => {
-                  self.getSharedAddressBalance(self.byteOrigin).then((assocBalances) => {
-                    console.log(`BALANCE FOR ${self.byteOrigin}: ${JSON.stringify(assocBalances)}`);
-                    if (assocBalances.base.stable > 0) {
-                      $interval.cancel(sharedAddressFundsIntervalId);
-                    }
-                    if (assocBalances.base.stable === 0 || assocBalances.base.stable < 1500) {
-                      if (firsTime) {
-                        modalRequestApproval('Not able to make transactions until funding hub has fuelled your wallet. It may take several minutes, please try again a bit later.', () => {
-                          firsTime = false;
-                          go.walletHome();
-                        });
-                      }
-                    }
-                  });
-                }, 300000);
-              }
+              proofingService.readMasterAddress().then((masterAddress) => {
+                dagcoinProtocolService.sendRequest(
+                  self.bytesProviderDeviceAddress,
+                  'load-address',
+                  {
+                    address: masterAddress
+                  }
+                );
+              });
             } else {
               console.log('FUNDING EXCHANGE CLIENT STILL ACTIVATING. BE PATIENT');
             }

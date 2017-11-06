@@ -171,7 +171,8 @@ then
 else
 	echo "${OpenColor}${Green}* Generating byteball bundle...${CloseColor}"
 	cd $BUILDDIR/..
-	grunt cordova-prod
+	#grunt cordova-prod byteball core has some error, so uglify doesn't work.
+	grunt cordova
 	checkOK
 fi
 

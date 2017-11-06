@@ -2,7 +2,12 @@
   'use strict';
 
   angular.module('copayApp.controllers').controller('preferencesAdvancedController',
-    function ($scope, $rootScope, profileService, addressService) {
+    function (
+      $scope,
+      $rootScope,
+      profileService,
+      addressService
+    ) {
       const indexScope = $scope.index;
 
       this.setAddress = function () {

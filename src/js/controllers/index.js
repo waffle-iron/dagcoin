@@ -37,7 +37,6 @@ no-nested-ternary,no-shadow,no-plusplus,consistent-return,import/no-extraneous-d
       backButton,
       faucetService,
       changeWalletTypeService,
-      sharedService,
       autoRefreshClientService,
       connectionService,
       newVersion) {
@@ -64,6 +63,9 @@ no-nested-ternary,no-shadow,no-plusplus,consistent-return,import/no-extraneous-d
       self.$state = $state;
       // self.usePushNotifications = isCordova && !isMobile.Windows() && isMobile.Android();
       self.usePushNotifications = false;
+
+      constants.DAG_FEE = 500; // TODO: this is the transaction fee in micro dagcoins 1000 = 0.001 dagcoins
+      constants.MIN_BYTE_FEE = 950;
 
       fundingExchangeClientService.setIndex(this);
 
@@ -341,7 +343,7 @@ no-nested-ternary,no-shadow,no-plusplus,consistent-return,import/no-extraneous-d
       };
 
       // in arrOtherCosigners, 'other' is relative to the initiator
-      eventBus.on('create_new_wallet', (walletId, arrWalletDefinitionTemplate, arrDeviceAddresses, walletName, arrOtherCosigners) => {
+      eventBus.on('create_new_wallet', (walletId, arrWalletDefinitionTemplate, arrDeviceAddresses, walletName, arrOtherCosigners, isSingleAddress) => {
         const device = require('byteballcore/device.js');
         const walletDefinedByKeys = require('byteballcore/wallet_defined_by_keys.js');
         device.readCorrespondentsByDeviceAddresses(arrDeviceAddresses, (arrCorrespondentInfos) => {
@@ -373,6 +375,9 @@ no-nested-ternary,no-shadow,no-plusplus,consistent-return,import/no-extraneous-d
                       walletClient.credentials.addWalletInfo(walletName, m, n);
                       updatePublicKeyRing(walletClient);
                       profileService.addWalletClient(walletClient, {}, () => {
+                        if (isSingleAddress) {
+                          profileService.setSingleAddressFlag(true);
+                        }
                         console.log(`switched to newly approved wallet ${walletId}`);
                       });
                     });
@@ -533,7 +538,7 @@ no-nested-ternary,no-shadow,no-plusplus,consistent-return,import/no-extraneous-d
           walletDefinedByAddresses.determineIfHasMerkle(sharedAddress, (bHasMerkle) => {
             self.bHasMerkle = bHasMerkle;
             walletDefinedByAddresses.readSharedAddressCosigners(sharedAddress, (cosigners) => {
-              self.shared_address_cosigners = cosigners.map((cosigner) => { return cosigner.name; }).join(', ');
+              self.shared_address_cosigners = cosigners.map(cosigner => cosigner.name).join(', ');
               $timeout(() => {
                 $rootScope.$apply();
               });
@@ -925,6 +930,10 @@ no-nested-ternary,no-shadow,no-plusplus,consistent-return,import/no-extraneous-d
 
         lodash.each(txs, (tx) => {
           const transaction = txFormatService.processTx(tx);
+          const fundingNodeTx = txs.filter(x => (x.time === tx.time && x.unit === tx.unit &&
+                x.amount === constants.DAG_FEE && x.amount === tx.amount));
+
+          transaction.isFundingNodeTransaction = fundingNodeTx.length > 0;
 
           // no future transactions...
           if (transaction.time > now) {
@@ -950,6 +959,14 @@ no-nested-ternary,no-shadow,no-plusplus,consistent-return,import/no-extraneous-d
         self.backgroundColor = '#d51f26'; // config.colorFor[self.walletId] || '#4A90E2';
         const fc = profileService.focusedClient;
         fc.backgroundColor = '#d51f26'; // self.backgroundColor;
+      };
+
+      self.updateSingleAddressFlag = function () {
+        const config = configService.getSync();
+        config.isSingleAddress = config.isSingleAddress || {};
+        self.isSingleAddress = config.isSingleAddress[self.walletId];
+        const fc = profileService.focusedClient;
+        fc.isSingleAddress = self.isSingleAddress;
       };
 
       self.setBalance = function (assocBalances, assocSharedBalances) {
@@ -1397,6 +1414,13 @@ no-nested-ternary,no-shadow,no-plusplus,consistent-return,import/no-extraneous-d
 
       $rootScope.$on('Local/AliasUpdated', () => {
         self.updateAlias();
+        $timeout(() => {
+          $rootScope.$apply();
+        });
+      });
+
+      $rootScope.$on('Local/SingleAddressFlagUpdated', () => {
+        self.updateSingleAddressFlag();
         $timeout(() => {
           $rootScope.$apply();
         });

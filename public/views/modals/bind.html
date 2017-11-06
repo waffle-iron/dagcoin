@@ -22,7 +22,7 @@
 	<h4 class="title m0 row" translate>The peer receives this payment if:</h4>
 	<div class="row columns m10t">
 		<select ng-model="binding.type">
-			<option value="reverse_payment" selected translate>I receive another payment:</option>
+			<option value="reverse_payment" ng-if="!isSingleAddress" selected translate>I receive another payment:</option>
 			<option value="data" translate>An event is posted by an oracle:</option>
 		</select>
 	</div>

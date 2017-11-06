@@ -438,7 +438,7 @@ API.prototype.createWallet = function (walletName, m, n, opts, cb) {
     // self.credentials.account = account;
   }
 
-  return walletDefinedByKeys.createWalletByDevices(self.credentials.xPubKey, options.account || 0, m, options.cosigners || [], walletName, (wallet) => {
+  return walletDefinedByKeys.createWalletByDevices(self.credentials.xPubKey, options.account || 0, m, options.cosigners || [], walletName, opts.isSingleAddressWallet, (wallet) => {
     self.credentials.walletId = wallet;
     console.log('wallet created', self.credentials);
     if (network !== self.credentials.network) {
@@ -447,7 +447,7 @@ API.prototype.createWallet = function (walletName, m, n, opts, cb) {
 
     self.credentials.addWalletInfo(walletName, m, n);
     return cb(null);
-  });
+    });
 };
 
 

@@ -58,9 +58,7 @@
 
       function isDiscoveryServiceAddress(deviceAddress) {
         console.log(`DISCOVERY SERVICE ADDRESSES: ${JSON.stringify(discoveryServiceAddresses)}`);
-        return !!discoveryServiceAddresses.find((obj) => {
-          return obj === deviceAddress;
-        });
+        return !!discoveryServiceAddresses.find(obj => obj === deviceAddress);
       }
 
       /**
@@ -154,8 +152,7 @@
               });
             });
           });
-        }).then((params) => {
-          return new Promise((resolve, reject) => {
+        }).then(params => new Promise((resolve, reject) => {
             console.log(`PAIRING WITH ${params.deviceAddress} ... SENDING PAIRING MESSAGE`);
 
             device.sendPairingMessage(
@@ -171,8 +168,7 @@
                 }
               }
             );
-          });
-        }).then((deviceAddress) => {
+          })).then((deviceAddress) => {
           console.log(`LOOKING UP CORRESPONDENT WITH DEVICE ADDRESS ${deviceAddress}`);
           return getCorrespondent(deviceAddress);
         });

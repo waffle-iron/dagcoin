@@ -1,7 +1,14 @@
+function getLocationHref() {
+  return (document && document.location && document.location.href ? document.location.href : '');
+}
+
+console.log(getLocationHref());
+
 (function () {
   'use strict';
 
   const chokidar = require('chokidar');
+
   function triggerReload() {
     console.warn('Reloading app...');
 
@@ -13,7 +20,7 @@
   if (window.location.href.indexOf('chrome') > -1) {
     const watcher = chokidar.watch('public', {
       ignored: /[\/\\]\./,
-      persistent: true,
+      persistent: true
     });
     let reloading = false;
 
