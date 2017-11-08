@@ -6,12 +6,21 @@ src/js/translations.js
 # version
 src/js/version.js
 
+# dev css
+src/css/main.css
+src/css/main.css.map
+src/js/**/*.css
+
 # cordova
 cordova/project/*
 cordova/*.keystore
 
 # node-webkit
 cache
+
+# testing
+build/src
+build/test
 
 
 # Logs
@@ -89,3 +98,14 @@ public/languages
 
 # IntelliJ Idea
 .idea/*
+.sass-cache
+
+# eslint
+.eslintcache
+
+#webkitbuilds
+webkitbuilds/setup-win32.iss
+webkitbuilds/setup-win64.iss
+
+#generated package.json
+package.json

@@ -1,0 +1,60 @@
+@import "../../../css/variables";
+
+.dag_tabs {
+  position: relative;
+
+  .dag_tabs_list {
+    position: relative;
+
+    > .dag_tabs_slider {
+      position: absolute;
+      left: 0;
+      height: 2px;
+      width: 0;
+      bottom: 0;
+      background: $main_color;
+      transform: translate3d(0, 0, 0);
+    }
+
+    > ul {
+      display: flex;
+      list-style-type: none;
+      border-bottom: 1px solid #ddd;
+      margin: 0;
+      padding: 0;
+    }
+
+    .dag_tabs_list_link {
+      flex: 1;
+      background: #fff;
+
+      a {
+        text-align: center;
+        display: block;
+        padding: 15px 0;
+        font-weight: 700;
+        text-transform: uppercase;
+        font-size: 12px;
+        color: #666;
+      }
+
+      &.active {
+        a {
+          color: #000;
+        }
+      }
+    }
+  }
+
+  .dag_tabs_tabpanel{
+    padding: 15px;
+  }
+}
+
+body.no_animation {
+  .dag_tabs_list_link {
+    &.active {
+      border-bottom: 2px solid $main_color;
+    }
+  }
+}

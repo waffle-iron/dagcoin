@@ -1,0 +1,13 @@
+[Desktop Entry]
+Type=Application
+Version=1.0
+Name=Dagcoin
+Comment=A wallet for decentralized value
+Exec=bash -c 'cd $(dirname %k) && ./Dagcoin %u'
+Icon=icon-white-outline.iconset/icon_256x256.png
+Terminal=false
+Categories=Office;Finance;
+MimeType=x-scheme-handler/dagcoin-tn;
+X-Ubuntu-Touch=true
+X-Ubuntu-StageHint=SideStage
+

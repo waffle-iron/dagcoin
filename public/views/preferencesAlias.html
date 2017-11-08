@@ -1,31 +1,26 @@
 <div
-	class="topbar-container topbar-transparent"
-	ng-include="'views/includes/topbar.html'"
-	ng-init="titleSection='Wallet Alias'; goBackToState = 'preferences'">
+  ng-include="'views/includes/topbar.html'"
+  ng-init="titleSection='Wallet Alias'; goBackToState = 'preferences'; invert = true;">
 </div>
+
 <div class="introduction-svg" ng-include="'views/includes/background.html'"></div>
 <div class="content" ng-controller="preferencesAliasController as prefAlias">
-	<div class="p-share js-introduction">
-		<div class="p-wrap">
-			<form name="settingsAliasForm" ng-submit="prefAlias.save()" class="page-form">
-				<div class="form-group">
-					<div class="title clearfix">
-
-						<span class="name" translate>Alias for <i>{{index.walletName}}</i></span>
-					</div>
-					<div class="input-wrap">
-						<input type="text" id="alias2" type="text" name="alias2" ng-model="prefAlias.alias">
-					</div>
-				</div>
-				<input type="submit" class="button expand btn_red-full round" value="{{'Save'|translate}}">
-			</form>
-			<div class="text-gray size-12 text-center" translate>Changing wallet alias only affects the local wallet
-				name.
-			</div>
-		</div>
-
-	</div>
+  <div class="p-share js-introduction">
+    <div class="p-wrap">
+      <form name="settingsAliasForm" ng-submit="prefAlias.save()" class="page-form">
+        <div class="form-group">
+          <div class="title clearfix">
+            <span class="name" translate>Wallet alias</i></span>
+          </div>
+          <div class="input-wrap">
+            <input type="text" id="alias2" type="text" name="alias2" ng-model="prefAlias.alias">
+          </div>
+        </div>
+        <button type="submit" class="btn btn_red-full">{{'Save'|translate}}</button>
+      </form>
+      <div class="text-gray size-12 text-center" translate>Changing wallet alias only affects the local wallet
+        name.
+      </div>
+    </div>
+  </div>
 </div>
-<div class="extra-margin-bottom"></div>
-
-

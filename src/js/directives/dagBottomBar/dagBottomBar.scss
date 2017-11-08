@@ -1,0 +1,55 @@
+@import "../../../css/variables";
+
+.bottom_navbar {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  width: 100%;
+  background: #fff;
+  border-top: 1px solid #f8f8f8;
+  z-index: 2;
+  padding: 0 10px;
+  height: 50px;
+
+  .bottom_navbar_buttons{
+    display: flex;
+  }
+
+  a {
+    display: block;
+    margin: 0;
+    height: 100%;
+    border-top: 2px solid transparent;
+    color: #cecece;
+    position: relative;
+    flex: 1;
+    text-align: center;
+
+    &:not(.active){
+      &:hover{
+        color: darken(#cecece, 15);
+      }
+    }
+
+    &.active {
+      border-top: 2px solid $main_color;
+      color: $main_color;
+    }
+
+    svg-icon{
+      top: 5px;
+    }
+
+    svg {
+      width: 20px;
+      height: 20px;
+    }
+
+    span {
+      display: block;
+      font-size: 10px;
+      margin-top: 5px;
+    }
+  }
+}

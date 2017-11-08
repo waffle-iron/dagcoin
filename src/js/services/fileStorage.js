@@ -1,89 +1,101 @@
-'use strict';
+(function () {
+  'use strict';
 
-angular.module('copayApp.services')
-  .factory('fileStorageService', function(lodash, $log) {
-    var root = {},
-      _fs, _dir;
+  angular.module('copayApp.services')
+  .factory('fileStorageService', (lodash, $log) => {
+    const root = {};
+    let fileSystem;
+    let directory;
 
-    root.init = function(cb) {
-      if (_dir) return cb(null, _fs, _dir);
+    root.init = function (cb) {
+      if (directory) {
+        return cb(null, fileSystem, directory);
+      }
 
-      function onFileSystemSuccess(fileSystem) {
-        console.log('File system started: ', fileSystem.name, fileSystem.root.name);
-        _fs = fileSystem;
-        root.getDir(function(err, newDir) {
+      function onFileSystemSuccess(fs) {
+        console.log('File system started: ', fs.name, fs.root.name);
+        fileSystem = fs;
+        root.getDir((err, newDir) => {
           if (err || !newDir.nativeURL) return cb(err);
-          _dir = newDir
-          $log.debug("Got main dir:", _dir.nativeURL);
-          return cb(null, _fs, _dir);
+          directory = newDir;
+          $log.debug('Got main dir:', directory.nativeURL);
+          return cb(null, fileSystem, directory);
         });
       }
 
       function fail(evt) {
-        var msg = 'Could not init file system: ' + evt.target.error.code;
+        const msg = `Could not init file system: ${evt.target.error.code}`;
         console.log(msg);
         return cb(msg);
-      };
+      }
 
-      window.requestFileSystem(LocalFileSystem.PERSISTENT, 0, onFileSystemSuccess, fail);
+      return window.requestFileSystem(LocalFileSystem.PERSISTENT, 0, onFileSystemSuccess, fail);
     };
 
-    root.get = function(k, cb) {
-      root.init(function(err, fs, dir) {
-        if (err) return cb(err);
-        dir.getFile(k, {
+    root.get = function (k, cb) {
+      root.init((err, fs, dir) => {
+        if (err) {
+          return cb(err);
+        }
+        return dir.getFile(k, {
           create: false,
-        }, function(fileEntry) {
-          if (!fileEntry) return cb();
-          fileEntry.file(function(file) {
-            var reader = new FileReader();
+        }, (fileEntry) => {
+          if (!fileEntry) {
+            return cb();
+          }
+          return fileEntry.file((file) => {
+            const reader = new FileReader();
 
-            reader.onloadend = function(e) {
-              if (this.result)
-                $log.debug("Read: ", this.result);
-              return cb(null, this.result)
-            }
+            reader.onloadend = function () {
+              if (this.result) {
+                $log.debug('Read: ', this.result);
+              }
+              return cb(null, this.result);
+            };
 
             reader.readAsText(file);
           });
-        }, function(err) {
+        }, (error) => {
           // Not found
-          if (err.code == 1) return cb();
-          else return cb(err);
+          if (error.code === 1) {
+            return cb();
+          }
+          return cb(error);
         });
-      })
+      });
     };
 
-    root.set = function(k, v, cb) {
-      root.init(function(err, fs, dir) {
-        if (err) return cb(err);
-        dir.getFile(k, {
+    root.set = function (k, v, cb) {
+      root.init((err, fs, dir) => {
+        if (err) {
+          return cb(err);
+        }
+        return dir.getFile(k, {
           create: true,
-        }, function(fileEntry) {
+        }, (fileEntry) => {
           // Create a FileWriter object for our FileEntry (log.txt).
-          fileEntry.createWriter(function(fileWriter) {
-
-            fileWriter.onwriteend = function(e) {
+          fileEntry.createWriter((fileWriter) => {
+            fileWriter.onwriteend = function () {
               console.log('Write completed.');
               return cb();
             };
 
-            fileWriter.onerror = function(e) {
-              var err = e.error ? e.error : JSON.stringify(e);
-              console.log('Write failed: ' + err);
-              return cb('Fail to write:' + err);
+            fileWriter.onerror = function (e) {
+              const error = e.error ? e.error : JSON.stringify(e);
+              console.log(`Write failed: ${error}`);
+              return cb(`Fail to write:${error}`);
             };
-
-            if (lodash.isObject(v))
-              v = JSON.stringify(v);
-
-            if (!lodash.isString(v)){
-              v = v.toString();
+            let val = v;
+            if (lodash.isObject(val)) {
+              val = JSON.stringify(val);
             }
 
-            $log.debug('Writing:', k, v);
-            fileWriter.write(v);
+            if (!lodash.isString(val)) {
+              val = val.toString();
+            }
 
+            $log.debug('Writing:', k, val);
+            fileWriter.write(val);
           }, cb);
         }, cb);
       });
@@ -91,31 +103,31 @@ angular.module('copayApp.services')
 
 
     // See https://github.com/apache/cordova-plugin-file/#where-to-store-files
-    root.getDir = function(cb) {
+    root.getDir = function (cb) {
       if (!cordova.file) {
         return cb('Could not write on device storage');
       }
 
-      var url = cordova.file.dataDirectory;
+      const url = cordova.file.dataDirectory;
       // This could be needed for windows
       // if (cordova.file === undefined) {
       //   url = 'ms-appdata:///local/';
-      window.resolveLocalFileSystemURL(url, function(dir) {
-        return cb(null, dir);
-      }, function(err) {
+      return window.resolveLocalFileSystemURL(url, dir => cb(null, dir), (err) => {
         $log.warn(err);
-        return cb(err || 'Could not resolve filesystem:' + url);
+        return cb(err || `Could not resolve filesystem:${url}`);
       });
     };
 
-    root.remove = function(k, cb) {
-      root.init(function(err, fs, dir) {
-        if (err) return cb(err);
-        dir.getFile(k, {
+    root.remove = function (k, cb) {
+      root.init((err, fs, dir) => {
+        if (err) {
+          return cb(err);
+        }
+        return dir.getFile(k, {
           create: false,
-        }, function(fileEntry) {
+        }, (fileEntry) => {
           // Create a FileWriter object for our FileEntry (log.txt).
-          fileEntry.remove(function() {
+          fileEntry.remove(() => {
             console.log('File removed.');
             return cb();
           }, cb);
@@ -126,16 +138,16 @@ angular.module('copayApp.services')
     /**
      * Same as setItem, but fails if an item already exists
      */
-    root.create = function(name, value, callback) {
+    root.create = function (name, value, callback) {
       root.get(name,
-        function(err, data) {
+        (err, data) => {
           if (data) {
             return callback('EEXISTS');
-          } else {
-            return root.set(name, value, callback);
           }
+          return root.set(name, value, callback);
         });
     };
 
     return root;
   });
+}());

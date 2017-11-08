@@ -1,31 +1,32 @@
-'use strict';
-angular.module('copayApp.services')
-  .factory('applicationService', function($rootScope, $timeout, isCordova, nodeWebkit, go) {
-    var root = {};
+(function () {
+  'use strict';
 
-    root.restart = function() {
-      var hashIndex = window.location.href.indexOf('#/');
+  /* eslint-disable import/no-extraneous-dependencies,import/no-unresolved */
+  angular.module('copayApp.services')
+  .factory('applicationService', ($rootScope, $timeout, isCordova, nodeWebkit, go) => {
+    const root = {};
+
+    root.restart = function () {
+      const hashIndex = window.location.href.indexOf('#/');
       if (isCordova) {
         window.location = window.location.href.substr(0, hashIndex);
-        $timeout(function() {
+        $timeout(() => {
           $rootScope.$digest();
         }, 1);
-
-      } else {
+      } else if (nodeWebkit.isDefined()) {
         // Go home reloading the application
-        if (nodeWebkit.isDefined()) {
-          go.walletHome();
-          $timeout(function() {
-            var win = require('nw.gui').Window.get();
-            win.reload(3);
-            //or
-            win.reloadDev();
-          }, 100);
-        } else {
-          window.location = window.location.href.substr(0, hashIndex);
-        }
+        go.walletHome();
+        $timeout(() => {
+          const win = require('nw.gui').Window.get();
+          win.reload(3);
+          // or
+          win.reloadDev();
+        }, 100);
+      } else {
+        window.location = window.location.href.substr(0, hashIndex);
       }
     };
 
     return root;
   });
+}());

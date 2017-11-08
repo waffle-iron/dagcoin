@@ -1,80 +1,88 @@
-'use strict';
+/* eslint-disable no-shadow */
+(function () {
+  'use strict';
 
-angular.module('copayApp.controllers').controller('preferencesDeleteWalletController',
-  function($scope, $rootScope, $filter, $timeout, $modal, $log, storageService, notification, profileService, isCordova, go, gettext, gettextCatalog, animationService) {
-    this.isCordova = isCordova;
-    this.error = null;
+  angular.module('copayApp.controllers').controller('preferencesDeleteWalletController',
+    function ($scope, $rootScope, $filter, $timeout, $modal, $log, storageService, notification, profileService, isCordova, go, gettext, gettextCatalog, animationService, sharedService) {
+      this.isCordova = isCordova;
+      this.error = null;
 
-    var delete_msg = gettextCatalog.getString('Are you sure you want to delete this wallet?');
-    var accept_msg = gettextCatalog.getString('Accept');
-    var cancel_msg = gettextCatalog.getString('Cancel');
-    var confirm_msg = gettextCatalog.getString('Confirm');
+      let deleteMessage = gettextCatalog.getString('Are you sure you want to delete this wallet?');
+      const balanceMessage = gettextCatalog.getString('This Wallet has positive balance.');
+      const hasBalance = sharedService.hasBalance(sharedService.balanceStatuses.total);
+      const acceptMessage = gettextCatalog.getString('Accept');
+      const cancelMessage = gettextCatalog.getString('Cancel');
+      const confirmMessage = gettextCatalog.getString('Confirm');
 
-    var _modalDeleteWallet = function() {
-      var ModalInstanceCtrl = function($scope, $modalInstance, $sce, gettext) {
-        $scope.title = $sce.trustAsHtml(delete_msg);
-        $scope.loading = false;
+      if (hasBalance) {
+        deleteMessage = `${balanceMessage}\n${deleteMessage}`;
+      }
 
-        $scope.ok = function() {
-          $scope.loading = true;
-          $modalInstance.close(accept_msg);
+      const deleteWallet = function () {
+        const fc = profileService.focusedClient;
+        const name = fc.credentials.walletName;
+        const walletName = `${fc.alias || ''} [${name}]`;
+        const self = this;
 
-        };
-        $scope.cancel = function() {
-          $modalInstance.dismiss(cancel_msg);
-        };
+        profileService.deleteWallet({}, (err) => {
+          if (err) {
+            self.error = err.message || err;
+          } else {
+            notification.success(gettextCatalog.getString('Success'), gettextCatalog.getString('The wallet "{{walletName}}" was deleted', {
+              walletName
+            }));
+          }
+        });
       };
 
-      var modalInstance = $modal.open({
-        templateUrl: 'views/modals/confirmation.html',
-        windowClass: animationService.modalAnimated.slideUp,
-        controller: ModalInstanceCtrl
-      });
+      const modalDeleteWallet = function () {
+        const ModalInstanceCtrl = function ($scope, $modalInstance, $sce) {
+          $scope.header = $sce.trustAsHtml('Delete wallet');
+          $scope.title = $sce.trustAsHtml(deleteMessage);
+          $scope.loading = false;
 
-      modalInstance.result.finally(function() {
-        var m = angular.element(document.getElementsByClassName('reveal-modal'));
-        m.addClass(animationService.modalAnimated.slideOutDown);
-      });
+          $scope.ok = function () {
+            $scope.loading = true;
+            $modalInstance.close(acceptMessage);
+          };
+          $scope.cancel = function () {
+            $modalInstance.dismiss(cancelMessage);
+          };
+        };
 
-      modalInstance.result.then(function(ok) {
-        if (ok) {
-          _deleteWallet();
+        const modalInstance = $modal.open({
+          templateUrl: 'views/modals/confirmation.html',
+          windowClass: animationService.modalAnimated.slideUp,
+          controller: ModalInstanceCtrl
+        });
+
+        modalInstance.result.finally(() => {
+          const m = angular.element(document.getElementsByClassName('reveal-modal'));
+          m.addClass(animationService.modalAnimated.slideOutDown);
+        });
+
+        modalInstance.result.then((ok) => {
+          if (ok) {
+            deleteWallet();
+          }
+        });
+      };
+
+      this.deleteWallet = function () {
+        if (profileService.profile.credentials.length === 1 || profileService.getWallets().length === 1) {
+          return $rootScope.$emit('Local/ShowErrorAlert', "Can't delete the last remaining wallet");
         }
-      });
-    };
-
-    var _deleteWallet = function() {
-      var fc = profileService.focusedClient;
-      var name = fc.credentials.walletName;
-      var walletName = (fc.alias || '') + ' [' + name + ']';
-      var self = this;
-
-      profileService.deleteWallet({}, function(err) {
-        if (err) {
-          self.error = err.message || err;
-        } else {
-          notification.success(gettextCatalog.getString('Success'), gettextCatalog.getString('The wallet "{{walletName}}" was deleted', {
-            walletName: walletName
-          }));
+        if (isCordova) {
+          return navigator.notification.confirm(
+            deleteMessage,
+            (buttonIndex) => {
+              if (buttonIndex === 1) {
+                deleteWallet();
+              }
+            },
+            confirmMessage, [acceptMessage, cancelMessage]);
         }
-      });
-    };
-
-    this.deleteWallet = function() {
-	  if (profileService.profile.credentials.length === 1 || profileService.getWallets().length === 1)
-		  return $rootScope.$emit('Local/ShowErrorAlert', "Can't delete the last remaining wallet");
-      if (isCordova) {
-        navigator.notification.confirm(
-          delete_msg,
-          function(buttonIndex) {
-            if (buttonIndex == 1) {
-              _deleteWallet();
-            }
-          },
-          confirm_msg, [accept_msg, cancel_msg]
-        );
-      } else {
-        _modalDeleteWallet();
-      }
-    };
-  });
+        return modalDeleteWallet();
+      };
+    });
+}());

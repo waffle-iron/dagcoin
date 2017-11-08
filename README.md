@@ -1,6 +1,10 @@
+
 [![Waffle.io - Columns and their card count](https://badge.waffle.io/dagcoin/dagcoin.png?columns=all)](https://waffle.io/dagcoin/dagcoin?utm_source=badge)
 [![Stories in Ready](https://badge.waffle.io/dagcoin/dagcoin.png?label=ready&title=Ready)](https://waffle.io/dagcoin/dagcoin?utm_source=badge)
 [![Stories in Ready](https://badge.waffle.io/DagcoinOY/dagcoin.png?label=ready&title=Ready)](https://waffle.io/DagcoinOY/dagcoin?utm_source=badge)
+
+[![Build Status](https://travis-ci.org/dagcoin/dagcoin.svg?branch=master)](https://travis-ci.org/dagcoin/dagcoin)
+
 Dagcoin as cryptocurrency is built on a new technology called DAG chain, offering scalable, low cost and secure payments. Dagcoin uses byteball network as an underlying platform. Our mission is to provide alternative currency for everyday using, focusing on Asian market to help unbanked people manage their funds better. By doing that, Dagcoin will be the most widely used open source cryptocurrency in the world.
 
 ## Main Features
@@ -14,7 +18,7 @@ Download and install [NW.js v0.14.7 LTS](https://dl.nwjs.io/v0.14.7) and [Node.j
 Clone the source:
 
 ```sh
-git clone https://github.com/ignite/dagcoin.git
+git clone https://github.com/dagcoin/dagcoin.git
 cd dagcoin
 ```
 
@@ -23,16 +27,27 @@ If you are building for testnet, switch to testnet branch:
 git checkout testnet
 ```
 
-Install [bower](http://bower.io/) and [grunt](http://gruntjs.com/getting-started) if you haven't already:
+Install [bower](http://bower.io/), [grunt](http://gruntjs.com/getting-started) and [penv](https://www.npmjs.com/package/penv) if you haven't already:
 
 ```sh
 npm install -g bower
 npm install -g grunt-cli
+npm install -g penv
 ```
 
-Build Dagcoin:
+### Build Dagcoin:
 
+If you are using macOS or Linux run:
 ```sh
+make prepare-dev-tn
+```
+Then run Dagcoin desktop client:
+```sh
+/path/to/your/nwjs/nwjs .
+```
+Otherwise run:
+```sh
+penv testnet(if you are building testnet) or penv base(if you are building livenet)
 bower install
 npm install
 grunt
@@ -54,7 +69,7 @@ Then run Dagcoin desktop client:
 - Install Android SDK
 - Run `make android-debug`
 
-### macOS
+### macOS and Linux
 
 - run `make prepare-package`
 
@@ -63,13 +78,6 @@ Then run Dagcoin desktop client:
 - `grunt desktop`
 - copy `node_modules` into the app bundle ../byteballbuilds/Byteball/win64, except those that are important only for development (karma, grunt, jasmine)
 - `grunt inno64`
-
-### Linux
-
-- `grunt desktop`
-- copy `node_modules` into the app bundle ../byteballbuilds/Byteball/linux64, except those that are important only for development (karma, grunt, jasmine)
-- `grunt linux64`
-
 
 ## About Dagcoin
 
@@ -84,12 +92,23 @@ Dagcoin uses a single extended private key for all wallets, BIP44 is used for wa
 * Windows: `%LOCALAPPDATA%\dagcoin`
 
 
+## Translations
 
+Dagcoin uses standard gettext PO files for translations and [Crowdin](https://crowdin.com/project/dagcoin) as the front-end tool for translators. To join our team of translators, please create an account at [Crowdin](https://crowdin.com) and translate the Dagcoin documentation and application text into your native language.
+
+To download and build using the latest translations from Crowdin, please use the following commands:
+
+```sh
+cd i18n
+node crowdin_download.js
+```
+
+This will download all partial and complete language translations while also cleaning out any untranslated ones.
 
 
 ## Support
 
-* [GitHub Issues](https://github.com/ignite/dagcoin/issues)
+* [GitHub Issues](https://github.com/dagcoin/dagcoin/issues)
   * Open an issue if you are having problems with this project
 * [Email Support](mailto:support@dagcoin.org)
 

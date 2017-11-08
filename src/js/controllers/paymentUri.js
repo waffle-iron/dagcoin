@@ -1,53 +1,56 @@
-'use strict';
-angular.module('copayApp.controllers').controller('paymentUriController',
-  function($rootScope, $stateParams, $location, $timeout, profileService, configService, lodash, bitcore, go) {
+(function () {
+  'use strict';
 
-    function strip(number) {
-      return (parseFloat(number.toPrecision(12)));
-    };
-
-    // Build bitcoinURI with querystring
-    this.checkBitcoinUri = function() {
-      var query = [];
-      angular.forEach($location.search(), function(value, key) {
-        query.push(key + "=" + value);
-      });
-      var queryString = query ? query.join("&") : null;
-      this.bitcoinURI = $stateParams.data + (queryString ? '?' + queryString : '');
-
-      var URI = bitcore.URI;
-      var isUriValid = URI.isValid(this.bitcoinURI);
-      if (!URI.isValid(this.bitcoinURI)) {
-        this.error = true;
-        return;
+  angular.module('copayApp.controllers').controller('paymentUriController',
+    function ($rootScope, $stateParams, $location, $timeout, profileService, configService, lodash, bitcore, go) {
+      function strip(number) {
+        return (parseFloat(number.toPrecision(12)));
       }
-      var uri = new URI(this.bitcoinURI);
 
-      if (uri && uri.address) {
-        var config = configService.getSync().wallet.settings;
-        var unitValue = config.unitValue;
-        var unitName = config.unitName;
+      // Build bitcoinURI with querystring
+      this.checkBitcoinUri = function () {
+        const query = [];
+        angular.forEach($location.search(), (value, key) => {
+          query.push(`${key}=${value}`);
+        });
+        const queryString = query ? query.join('&') : null;
+        this.bitcoinURI = $stateParams.data + (queryString ? `?${queryString}` : '');
 
-        if (uri.amount) {
-          uri.amount = strip(uri.amount / unitValue) + ' ' + unitName;
+        const URI = bitcore.URI;
+        // const isUriValid = URI.isValid(this.bitcoinURI);
+        if (!URI.isValid(this.bitcoinURI)) {
+          this.error = true;
+          return;
         }
-        uri.network = uri.address.network.name;
-        this.uri = uri;
-      }
-    };
+        const uri = new URI(this.bitcoinURI);
 
-    this.getWallets = function(network) {
-      return profileService.getWallets(network);
-    };
+        if (uri && uri.address) {
+          const config = configService.getSync().wallet.settings;
+          const unitValue = config.unitValue;
+          const unitName = config.unitName;
 
-    this.selectWallet = function(wid) {
-      var self = this;
-      if (wid != profileService.focusedClient.credentials.walletId) {
-        profileService.setAndStoreFocus(wid, function() {});
-      }
-      go.send();
-      $timeout(function() {
-        $rootScope.$emit('paymentUri', self.bitcoinURI);
-      }, 100);
-    };
-  });
+          if (uri.amount) {
+            uri.amount = `${strip(uri.amount / unitValue)} ${unitName}`;
+          }
+          uri.network = uri.address.network.name;
+          this.uri = uri;
+        }
+      };
+
+      this.getWallets = function (network) {
+        return profileService.getWallets(network);
+      };
+
+      this.selectWallet = function (wid) {
+        const self = this;
+        if (wid !== profileService.focusedClient.credentials.walletId) {
+          profileService.setAndStoreFocus(wid, () => {
+          });
+        }
+        go.send();
+        $timeout(() => {
+          $rootScope.$emit('paymentUri', self.bitcoinURI);
+        }, 100);
+      };
+    });
+}());

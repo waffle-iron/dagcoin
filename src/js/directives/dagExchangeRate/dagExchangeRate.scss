@@ -1,0 +1,43 @@
+.exchange_rate{
+  display: block;
+  text-align: center;
+  position: absolute;
+  bottom: 15px;
+  left: 0;
+  width: 100%;
+
+  .exchange_rate_price{
+    display: inline-block;
+    padding: 0 10px;
+    font-size: 12px;
+    background: #fbfbfb;
+    border-radius: 5px;
+    border: 1px solid #eee;
+    color: #122232;
+    height: 36px;
+    line-height: 36px;
+
+    svg{
+      width: 12px;
+      height: 12px;
+      margin: 0 5px;
+      position: relative;
+    }
+
+    .exchange_rate_percent_change{
+      color: #f44336;
+      margin-left: 5px;
+
+      &:before{
+        content: "|";
+        position: relative;
+        color: #d0d0d0;
+        margin-right: 5px;
+      }
+
+      &.positive{
+        color: #2ecc71;
+      }
+    }
+  }
+}

@@ -1,0 +1,13 @@
+<div class="dag_tabs">
+    <div class="dag_tabs_list" ng-mouseleave="tabset.restoreSlide()">
+        <div class="dag_tabs_slider" ng-if="!no_animation" style="width: {{tabset.slider_width}}px;"></div>
+        <ul>
+            <li class="dag_tabs_list_link" ng-repeat="tab in tabset.tabs" ng-mouseover="tabset.moveSlide($index)" ng-class="{'active': tab.active}">
+                <a href="" ng-click="tabset.select(tab, $index); tab.tabClick()">{{tab.heading}}</a>
+            </li>
+        </ul>
+    </div>
+
+    <ng-transclude>
+    </ng-transclude>
+</div>

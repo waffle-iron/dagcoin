@@ -1,0 +1,8 @@
+<div class="bottom_navbar">
+    <div class="bottom_navbar_buttons">
+        <a class="bottom_navbar_button" ng-repeat="link in ::links" ui-sref-active="active" ui-sref="{{::link.state}}" id="menu-{{::link.state}}">
+            <svg-icon name="{{::link.icon}}"></svg-icon>
+            <span>{{::link.title}}</span>
+        </a>
+    </div>
+</div>

@@ -1,7 +1,8 @@
-<div class="topbar-container topbar-transparent "
-	ng-include="'views/includes/topbar.html'"
-	ng-init="titleSection='Device name'; goBackToState = 'preferencesGlobal'">
+<div
+  ng-include="'views/includes/topbar.html'"
+  ng-init="titleSection='Device name'; goBackToState = 'preferencesGlobal'; invert = true">
 </div>
+
 <div class="introduction-svg" ng-include="'views/includes/background.html'"></div>
 <div class="content " ng-controller="preferencesDeviceNameController as prefDeviceName">
 	<div class="p-share js-introduction">
@@ -18,7 +19,7 @@
 				</div>
 
 
-				<input type="submit" class="button expand btn_red-full round" value="{{'Save'|translate}}">
+				<button type="submit" class="btn btn_red-full">{{'Save'|translate}}</button>
 			</form>
 			<div class="text-gray size-12 text-center" translate>Device name is visible to other devices you communicate
 				with.

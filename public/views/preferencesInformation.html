@@ -1,142 +1,116 @@
-<div 
-  class="topbar-container" 
-  ng-include="'views/includes/topbar.html'"
-  ng-init="titleSection='Wallet Information'; goBackToState = 'preferencesAdvanced'">
+<div ng-include="'views/includes/topbar.html'"
+     ng-init="titleSection='Wallet Information'; goBackToState = 'preferencesAdvanced'; invert = true">
 </div>
 
+
 <div class="content preferences" ng-controller="preferencesInformation as info" ng-init="info.init()">
-    <h4 class="title m0" translate>Wallet Information</h4>
+  <h4 translate>Wallet Information</h4>
 
-    <ul class="no-bullet m0 size-14">
-      <li class="line-b p20 oh">
-        <span translate>Wallet Name (at creation)</span>
-        <span class="right text-gray">
-          {{walletName}}
-        </span>
-      </li>
+  <ul>
+    <li>
+      <div translate>Wallet Name</div>
+      <div class="value">{{walletName}}</div>
+    </li>
 
 
-      <li class="line-b p20 oh">
-        <span translate>Wallet Id</span>
-        <span class="right text-gray enable_text_select">
-          {{walletId}}
-        </span>
-      </li>
+    <li>
+      <div translate>Wallet Id</div>
+      <div class="value">{{walletId}}</div>
+    </li>
 
-      <li class="line-b p20 oh">
-        <span translate>Wallet Configuration (m-n)</span>
-        <span class="right text-gray">
-          {{M}}-{{N}}
-        </span>
-      </li>
+    <li>
+      <div translate>Wallet Configuration (m-n)</div>
+      <div class="value">{{M}}-{{N}}</div>
+    </li>
 
+    <li>
+      <div translate>Derivation Strategy</div>
+      <div class="value">{{derivationStrategy}}</div>
+    </li>
 
+    <li ng-show="index.externalSource">
+      <div>Hardware Wallet</div>
+      <div class="value capitalize">{{index.externalSource}}</div>
+    </li>
 
-       <!--li class="line-b p20 oh">
-        <span translate>Wallet Network</span>
-        <span class="right text-gray">
-          {{network}}
-        </span>
-      </li-->
+    <li ng-show="!index.externalSource && !index.canSign">
+      <div translate></div>
+      <div class="value capitalize">No private key</div>
+    </li>
 
-
-      <li class="line-b p20 oh">
-        <span translate>Derivation Strategy</span>
-        <span class="right text-gray">
-          {{derivationStrategy}}
-        </span>
-      </li>
-
-      <li class="line-b p20 oh" ng-show="index.externalSource">
-        <span>Hardware Wallet</span>
-        <span class="right text-gray capitalize">
-          {{index.externalSource}}
-        </span>
-      </li>
-
-      <li class="line-b p20 oh" ng-show="!index.externalSource && !index.canSign">
-        <span translate></span>
-        <span class="right text-gray capitalize">
-          No private key
-        </span>
-      </li>
- 
-      <li class="line-b p20 oh" ng-show="index.account">
-        <span translate>Account</span> ({{derivationStrategy}})
-        <span class="right text-gray">
-          #{{index.account}}
-        </span>
-      </li>
-
-
-
-    <h4 class="title m0" translate>Co-signers</h4>
-      <li ng-repeat="copayer in index.copayers">
+    <li ng-show="index.account">
+      <div translate>Account ({{derivationStrategy}})</div>
+      <div class="value">#{{index.account}}</div>
+    </li>
+  </ul>
+  <h4 translate>Co-signers</h4>
+  <ul>
+    <li ng-repeat="copayer in index.copayers">
         <span class="size-12" ng-show="copayer.me">
           <i class="icon-contact size-24 m10r"></i>{{'Me'|translate}} <i class="fi-check m5 right"></i>
         </span>
-        <span class="size-12 text-gray" ng-show="!copayer.me">
+      <span class="size-12 text-gray" ng-show="!copayer.me">
           <i class="icon-contact size-24 m10r"></i> {{copayer.name}}<i class="fi-check m5 right"></i>
         </span>
-      </li>
+    </li>
+  </ul>
 
-    <h4 class="title m0" translate>Extended Public Keys</h4>
-      <li  ng-repeat="copayer in index.copayers">
-        <div class="row collapse">
-          <div class="small-4 columns">{{copayer.name||'Me'|translate}}</div>
-          <div class="small-8 columns oh text-gray">
-            <div class="ellipsis enable_text_select">{{copayer.extended_pubkey}}</div>
-          </div>
+  <h4 translate>Extended Public Keys</h4>
+  <ul>
+    <li ng-repeat="copayer in index.copayers">
+      <div>{{copayer.name||'Me'|translate}}</div>
+      <div class="value">
+        {{copayer.extended_pubkey}}
+      </div>
+    </li>
+  </ul>
+
+  <div ng-show="addrs">
+    <!--todo: bring back generate new address when funding hub will support mutliple address. -->
+    <h4 translate>All Wallet Addresses <button ng-click="info.setAddress()" ng-disabled="index.isOffline">{{'Generate new address' | translate}}</button></h4>
+    <ul>
+      <li ng-repeat="a in addrs" class="oh">
+        <div class="enable_text_select ellipsis">
+          {{a.address}}
+        </div>
+        <div class="text-gray size-12 right enable_text_select">
+          {{a.path}} &middot; {{a.createdOn *1000 | amDateFormat:'MMMM Do YYYY, h:mm a' }}
         </div>
       </li>
-    </ul>
-    
-    <ul class="no-bullet m0 size-14" ng-show="addrs">
-    <h4 class="title m0" translate>All Wallet Addresses</h4>
-      <li  ng-repeat="a in addrs" class="oh">
-          <div class="enable_text_select ellipsis">
-            {{a.address}} 
-          </div>
-          <div class="text-gray size-12 right enable_text_select">
-            {{a.path}} &middot;  {{a.createdOn *1000  | amDateFormat:'MMMM Do YYYY, h:mm a' }}
-          </div>
-      </li>
-
-      <ul class="no-bullet m0 size-14" ng-show="hasListOfBalances()">
-        <div>
-          <h4 class="title m0" translate>Balance By Address</h4>
-          <li class="line-b p20 oh"  ng-repeat="(key, value) in assocListOfBalances">
-            <div class="enable_text_select ellipsis">
-              {{key}}
-            </div>
-            <div class="text-gray text-right" ng-repeat="row in value">
-              {{row.amount}}
-            </div>
-          </li>
-        </div>
-      </ul>
 
       <li class="line-b p20" ng-show="index.isCordova">
-          <button class="black round small expand" 
-            ng-style="{'background-color':index.backgroundColor}" 
-            ng-click="info.sendAddrs()"
-            ng-disabled="info.loading">
-            <i class="fi-mail"></i>
-            <span translate>Send addresses by email</span>
-          </button>
-      </li>
-    </ul>   
-
-    <!--ul class="no-bullet m0 size-14">
-      <h4 class="title m0" translate>Transaction history</h4>
-      <li class="line-b p20 oh">
-        <button class="black round small expand"  ng-style="{'background-color':index.backgroundColor}" ng-click="info.clearTransactionHistory();">
-          <span translate>Clear history</span>
+        <button class="btn btn_red"
+                ng-click="info.sendAddrs()"
+                ng-disabled="info.loading">
+          <i class="fi-mail"></i>
+          <span translate>Send addresses by email</span>
         </button>
       </li>
-    </ul-->
+    </ul>
 
-    <h4></h4>
+    <div ng-show="hasListOfBalances()">
+      <h4 translate>Balance By Address</h4>
+      <ul>
+        <li class="line-b p20 oh" ng-repeat="(key, value) in assocListOfBalances">
+          <div class="enable_text_select ellipsis">
+            {{key}}
+          </div>
+          <div class="text-gray text-right" ng-repeat="row in value">
+            {{row.amount}}
+          </div>
+        </li>
+      </ul>
+    </div>
+  </div>
 
-    <div class="extra-margin-bottom"></div>
+  <!--ul class="no-bullet m0 size-14">
+    <h4 class="title m0" translate>Transaction history</h4>
+    <li class="line-b p20 oh">
+      <button class="black round small expand"  ng-style="{'background-color':index.backgroundColor}" ng-click="info.clearTransactionHistory();">
+        <span translate>Clear history</span>
+      </button>
+    </li>
+  </ul-->
+
+  <div class="extra-margin-bottom"></div>
 </div>

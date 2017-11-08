@@ -1,12 +1,12 @@
-'use strict';
+(function () {
+  'use strict';
 
-angular.module('copayApp.controllers').controller('topbarController', function ($scope, $rootScope, go) {
+  angular.module('copayApp.controllers').controller('topbarController', function ($scope, $rootScope, go) {
+    this.onBeforeScan = function () {
+    };
 
-	this.onBeforeScan = function () {
-	};
-
-	this.goHome = function () {
-		go.walletHome();
-	};
-
-});
+    this.goHome = function () {
+      go.walletHome();
+    };
+  });
+}());

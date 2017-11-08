@@ -1,0 +1,11 @@
+# ignored this file temporary. We are not using it yet.
+src/js/directives/ngSwipe.js
+src/js/controllers/preferencesEditWitness.js
+src/js/controllers/preferencesColor.js
+
+# version
+src/js/version.js
+
+#generated files
+public/angular.js
+public/dagcoin.js

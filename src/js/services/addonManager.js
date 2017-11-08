@@ -1,34 +1,32 @@
-'use strict';
+(function () {
+  'use strict';
 
-angular.module('copayApp.services').service('addonManager', function (lodash) {
-  var addons = [];
+  angular.module('copayApp.services').service('addonManager', function (lodash) {
+    const addons = [];
 
-  this.registerAddon = function (addonSpec) {
-    addons.push(addonSpec);
-  };
+    this.registerAddon = function (addonSpec) {
+      addons.push(addonSpec);
+    };
 
-  this.addonMenuItems = function () {
-    return lodash.map(addons, function (addonSpec) {
-      return addonSpec.menuItem;
-    });
-  };
+    this.addonMenuItems = function () {
+      return lodash.map(addons, addonSpec => addonSpec.menuItem);
+    };
 
-  this.addonViews = function () {
-    return lodash.map(addons, function (addonSpec) {
-      return addonSpec.view;
-    });
-  };
+    this.addonViews = function () {
+      return lodash.map(addons, addonSpec => addonSpec.view);
+    };
 
-  this.formatPendingTxp = function (txp) {
-    lodash.each(addons, function (addon) {
-      if (addon.formatPendingTxp) {
-        addon.formatPendingTxp(txp);
-      }
-    });
-  };
+    this.formatPendingTxp = function (txp) {
+      lodash.each(addons, (addon) => {
+        if (addon.formatPendingTxp) {
+          addon.formatPendingTxp(txp);
+        }
+      });
+    };
 
-  this.txTemplateUrl = function() {
-    var addon = lodash.find(addons, 'txTemplateUrl');
-    return addon ? addon.txTemplateUrl() : null;
-  }
-});
+    this.txTemplateUrl = function () {
+      const addon = lodash.find(addons, 'txTemplateUrl');
+      return addon ? addon.txTemplateUrl() : null;
+    };
+  });
+}());

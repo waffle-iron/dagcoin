@@ -1,7 +1,9 @@
-'use strict';
-angular.module('copayApp.services')
-  .factory('uxLanguage', function languageService($log, lodash, gettextCatalog, amMoment, configService) {
-    var root = {};
+(function () {
+  'use strict';
+
+  angular.module('copayApp.services')
+  .factory('uxLanguage', ($log, lodash, gettextCatalog, amMoment, configService) => {
+    const root = {};
 
     root.availableLanguages = [{
       name: 'English',
@@ -57,11 +59,12 @@ angular.module('copayApp.services')
 
     root.currentLanguage = null;
 
-    root._detect = function() {
+    root.detect = function () {
       // Auto-detect browser language
-      var userLang, androidLang;
+      let userLang;
+      const androidLang = navigator.userAgent.match(/android.*\W(\w\w)-(\w\w)\W/i);
 
-      if (navigator && navigator.userAgent && (androidLang = navigator.userAgent.match(/android.*\W(\w\w)-(\w\w)\W/i))) {
+      if (navigator && navigator.userAgent && androidLang) {
         userLang = androidLang[1];
       } else {
         // works for iOS and Android 4.x
@@ -72,55 +75,57 @@ angular.module('copayApp.services')
       return userLang;
     };
 
-    root._set = function(lang) {
-      $log.debug('Setting default language: ' + lang);
+    root.set = function (lang) {
+      $log.debug(`Setting default language: ${lang}`);
       gettextCatalog.setCurrentLanguage(lang);
-	  if (lang !== 'en')
-		  gettextCatalog.loadRemote("languages/" + lang + ".json");
+      if (lang !== 'en') {
+        gettextCatalog.loadRemote(`languages/${lang}.json`);
+      }
       amMoment.changeLocale(lang);
       root.currentLanguage = lang;
     };
 
-    root.getCurrentLanguage = function() {
+    root.getCurrentLanguage = function () {
       return root.currentLanguage;
     };
 
-    root.getCurrentLanguageName = function() {
+    root.getCurrentLanguageName = function () {
       return root.getName(root.currentLanguage);
     };
 
-    root.getCurrentLanguageInfo = function() {
+    root.getCurrentLanguageInfo = function () {
       return lodash.find(root.availableLanguages, {
-        'isoCode': root.currentLanguage
+        isoCode: root.currentLanguage,
       });
     };
 
-    root.getLanguages = function() {
+    root.getLanguages = function () {
       return root.availableLanguages;
     };
 
-    root.init = function() {
-      root._set(root._detect());
+    root.init = function () {
+      root.set(root.detect());
     };
 
-    root.update = function() {
-      var userLang = configService.getSync().wallet.settings.defaultLanguage;
+    root.update = function () {
+      let userLang = configService.getSync().wallet.settings.defaultLanguage;
 
       if (!userLang) {
-        userLang = root._detect();
+        userLang = root.detect();
       }
 
-      if (userLang != gettextCatalog.getCurrentLanguage()) {
-        root._set(userLang);
+      if (userLang !== gettextCatalog.getCurrentLanguage()) {
+        root.set(userLang);
       }
       return userLang;
     };
 
-    root.getName = function(lang) {
+    root.getName = function (lang) {
       return lodash.result(lodash.find(root.availableLanguages, {
-        'isoCode': lang
+        isoCode: lang,
       }), 'name');
     };
 
     return root;
   });
+}());
